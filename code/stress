@@ -1,0 +1,244 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * I use this script to test the performance of the application.
+ * The script creates x games and play this games until it draws or a winner is chosen.
+ * This creates good load on the server when it's called in parallel.
+ *
+ * Usage: ./stress [host] [numberOfGamesToPlay]
+ */
+
+final class AvarageTimeCalculator
+{
+    const MAXMIUM_NUMBER_OF_ITEMS = 500;
+
+    /**
+     * @var int[]|SplQueue
+     */
+    private $times;
+
+    /**
+     * @var int
+     */
+    private $totalNumberOfTimes;
+
+    /**
+     * @var int
+     */
+    private $minimum;
+
+    /**
+     * @var int
+     */
+    private $maximum;
+
+    /**
+     * TimeCalculator constructor.
+     */
+    public function __construct()
+    {
+        $this->minimum = PHP_INT_MAX;
+        $this->maximum = 0;
+        $this->times = new SplQueue();
+    }
+
+    public function add(int $time)
+    {
+        $this->totalNumberOfTimes++;
+
+        if ($this->times->count() == self::MAXMIUM_NUMBER_OF_ITEMS) {
+            $this->times->dequeue();
+        }
+
+        if ($time > $this->maximum) {
+            $this->maximum = $time;
+        }
+
+        if ($time < $this->minimum) {
+            $this->minimum = $time;
+        }
+
+        $this->times[] = $time;
+    }
+
+    public function average(): int
+    {
+        return (int)(array_sum(iterator_to_array($this->times)) / $this->times->count());
+    }
+
+    public function minimum(): int
+    {
+        return $this->minimum;
+    }
+
+    public function maximum(): int
+    {
+        return $this->maximum;
+    }
+
+    public function totalNumberOfTimes(): int
+    {
+        return $this->totalNumberOfTimes;
+    }
+}
+
+final class Client
+{
+    /**
+     * @var string $endpoint
+     */
+    private $endpoint;
+
+    /**
+     * @var string $sessionId
+     */
+    private $sessionId;
+
+    /**
+     * @var AvarageTimeCalculator $avarageTimeCalculator
+     */
+    private $avarageTimeCalculator;
+
+    /**
+     * Client constructor.
+     *
+     * @param string $endpoint
+     */
+    public function __construct(string $endpoint, AvarageTimeCalculator $avarageTimeCalculator)
+    {
+        $this->endpoint = $endpoint;
+        $this->sessionId = '';
+        $this->avarageTimeCalculator = $avarageTimeCalculator;
+
+        $headers = $this->request(false, 'GET', '/')['headers'];
+
+        foreach ($headers as $header) {
+            if (preg_match('/PHPSESSID=([^;]+);/', $header, $matches)) {
+                $this->sessionId = $matches[1];
+                break;
+            }
+        }
+    }
+
+    public function game($id)
+    {
+        return $this->request(true, 'GET', '/api/connect-four/games/' . $id)['content'];
+    }
+
+    public function open()
+    {
+        return $this->request(true, 'POST', '/api/connect-four/games/open')['content'];
+    }
+
+    public function join($id)
+    {
+        return $this->request(true, 'POST', sprintf(
+            '/api/connect-four/games/%s/join',
+            $id
+        ))['content'];
+    }
+
+    public function move($id, $column)
+    {
+        return $this->request(true, 'POST', sprintf(
+            '/api/connect-four/games/%s/move',
+            $id
+        ), ['column' => $column])['content'];
+    }
+
+    private function request($json, $method, $url, array $content = [])
+    {
+        $opts = [
+            'http' =>
+                [
+                    'method'  => $method,
+                    'header'  => 'Content-type: application/x-www-form-urlencoded',
+                    'content' => http_build_query($content)
+                ]
+        ];
+
+        if ($this->sessionId) {
+            $opts['http']['header'] .= "\r\nCookie: PHPSESSID=" . $this->sessionId;
+        }
+
+        $start = microtime(true);
+
+        $response = @file_get_contents(
+            $this->endpoint . $url,
+            false,
+            stream_context_create($opts)
+        );
+
+        $this->avarageTimeCalculator->add(
+            (microtime(true) - $start) * 1000
+        );
+
+        return [
+            'headers' => $http_response_header,
+            'content' => $json ? json_decode($response, true) : $response
+        ];
+    }
+}
+
+if (count($argv) !== 3) {
+    die(
+        PHP_EOL .
+        'Usage: ./stress [host] [numberOfGamesToPlay]' .
+        PHP_EOL .
+        'For example: ./stress http://localhost 10' .
+        PHP_EOL .
+        PHP_EOL
+    );
+}
+
+$avarageTimeCalculator = new AvarageTimeCalculator();
+$start = microtime(true);
+$baseUrl = (string)$argv[1];
+$player1 = new Client($baseUrl, $avarageTimeCalculator);
+$player2 = new Client($baseUrl, $avarageTimeCalculator);
+
+$games = [];
+$totalNumberOfGames = (int)$argv[2];
+
+for ($i = 0; $i < $totalNumberOfGames; $i++) {
+    $id = $player1->open()['gameId'];
+
+    $games[] = [
+        'id'        => $id,
+        'color'     => 1,
+        'nextColor' => 2
+    ];
+
+    $player2->join($id);
+}
+
+while (count($games) > 0) {
+    performMove($player1, $games);
+    performMove($player2, $games);
+
+    system('clear');
+    echo "Average:\t" . $avarageTimeCalculator->average() . ' ms' . PHP_EOL;
+    echo "Minumum:\t" . $avarageTimeCalculator->minimum() . ' ms' . PHP_EOL;
+    echo "Maximum:\t" . $avarageTimeCalculator->maximum() . ' ms' . PHP_EOL;
+    echo "Total:\t\t" . $avarageTimeCalculator->totalNumberOfTimes() . ' requests' . PHP_EOL;
+    echo "Running:\t" . (int)(microtime(true) - $start) . ' seconds' . PHP_EOL;
+    echo PHP_EOL;
+    echo "Games:\t\t" . ($totalNumberOfGames - count($games)) . ' / ' . $totalNumberOfGames . PHP_EOL;
+    foreach ($games as $game) {
+        echo $baseUrl . '/game/' . $game['id'] . PHP_EOL;
+    }
+}
+
+function performMove(Client $client, &$games)
+{
+    foreach ($games as $key => $game) {
+        $column = rand(1, 7);
+
+        $client->move($game['id'], $column);
+
+        if ($client->game($game['id'])['finished']) {
+            unset($games[$key]);
+        }
+    }
+}

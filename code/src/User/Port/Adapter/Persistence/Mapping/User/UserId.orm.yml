@@ -1,0 +1,7 @@
+Gambling\User\Domain\Model\User\UserId:
+    type: embeddable
+    id:
+        userId:
+            column: id
+            type: string
+            length: 64

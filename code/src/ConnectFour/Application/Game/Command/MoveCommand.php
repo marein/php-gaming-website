@@ -1,0 +1,59 @@
+<?php
+
+namespace Gambling\ConnectFour\Application\Game\Command;
+
+final class MoveCommand
+{
+    /**
+     * @var string
+     */
+    private $gameId;
+
+    /**
+     * @var string
+     */
+    private $playerId;
+
+    /**
+     * @var int
+     */
+    private $column;
+
+    /**
+     * MoveCommand constructor.
+     *
+     * @param string $gameId
+     * @param string $playerId
+     * @param int    $column
+     */
+    public function __construct(string $gameId, string $playerId, int $column)
+    {
+        $this->gameId = $gameId;
+        $this->playerId = $playerId;
+        $this->column = $column;
+    }
+
+    /**
+     * @return string
+     */
+    public function gameId(): string
+    {
+        return $this->gameId;
+    }
+
+    /**
+     * @return string
+     */
+    public function playerId(): string
+    {
+        return $this->playerId;
+    }
+
+    /**
+     * @return int
+     */
+    public function column(): int
+    {
+        return $this->column;
+    }
+}

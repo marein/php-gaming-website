@@ -1,0 +1,58 @@
+services:
+
+    chat.predis:
+        class: Predis\Client
+        public: false
+        arguments:
+            - '%chat.predis.client.url%'
+            -
+                prefix: 'chat.'
+
+    chat.message-broker:
+        class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
+        public: false
+        arguments:
+            - '%chat.rabbit-mq.dsn%'
+
+    chat.event-store:
+        class: Gambling\Common\EventStore\DoctrineEventStore
+        public: false
+        arguments:
+            - '@doctrine.dbal.chat_connection'
+            - 'event_store'
+
+    chat.chat-gateway:
+        class: Gambling\Chat\Model\ChatGateway
+        public: false
+        arguments:
+            - '@doctrine.dbal.chat_connection'
+            - '@chat.event-store'
+
+    chat.chat-controller:
+        class: Gambling\Chat\Http\ChatController
+        public: false
+        arguments:
+            - '@chat.chat-gateway'
+
+    ###############################################
+    #      Stored Event Subscriber / Commands     #
+    ###############################################
+
+    chat.publish-stored-events-to-rabbit-mq-command:
+        class: Gambling\Chat\Console\PublishStoredEventsToRabbitMqCommand
+        public: false
+        arguments:
+            - '@chat.event-store'
+            - '@chat.predis'
+            - '@chat.message-broker'
+        tags:
+            -  { name: console.command }
+
+    chat.rabbit-mq-command-listener-command:
+        class: Gambling\Chat\Console\RabbitMqCommandListenerCommand
+        public: false
+        arguments:
+            - '@chat.message-broker'
+            - '@chat.chat-gateway'
+        tags:
+            -  { name: console.command }

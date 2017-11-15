@@ -1,0 +1,17 @@
+{% extends '@web-interface/base.html.twig' %}
+
+{% block content %}
+    <div class="box">
+        <table>
+            {% for game in games %}
+                <tr>
+                    <td>
+                        <a href="{{ path('game', {id: game}) }}">
+                            Anonymous - Anonymous
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

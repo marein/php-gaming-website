@@ -1,0 +1,47 @@
+<?php
+
+namespace Gambling\WebInterface\Presentation\Http;
+
+use Gambling\WebInterface\Application\ChatService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+
+final class ChatController
+{
+    /**
+     * @var ChatService
+     */
+    private $chatService;
+
+    /**
+     * ChatController constructor.
+     *
+     * @param ChatService $chatService
+     */
+    public function __construct(ChatService $chatService)
+    {
+        $this->chatService = $chatService;
+    }
+
+    public function writeMessageAction(Request $request, string $chatId): JsonResponse
+    {
+        return new JsonResponse(
+            $this->chatService->writeMessage(
+                $chatId,
+                $request->getSession()->get('user'),
+                $request->request->get('message')
+            )
+        );
+    }
+
+    public function messagesAction(string $chatId): JsonResponse
+    {
+        return new JsonResponse(
+            $this->chatService->messages(
+                $chatId,
+                0,
+                10000
+            )
+        );
+    }
+}

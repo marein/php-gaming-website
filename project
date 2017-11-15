@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+
+help() {
+    echo
+    echo ------------------
+    echo Available commands
+    echo ------------------
+    echo build
+    echo Build the environment for development.
+    echo
+    echo speedup
+    echo Run this on the development environment to speed up the php autoloader.
+    echo
+    echo up
+    echo Shorthand to start an already built project.
+    echo
+    echo stop
+    echo Shorthand to stop a started project.
+    echo
+    echo assets
+    echo Build assets for the browser and watch for changes.
+    echo
+    echo removeGeneratedFiles
+    echo Remove vendors, databases, frontend builds and symfony cache.
+    echo
+}
+
+build() {
+    docker-compose stop
+    docker-compose rm -f
+    removeSymfonyCache
+    removeDatabaseFiles
+    docker-compose build --pull
+    startDatabaseServices
+    docker-compose run frontend-building make; true
+    docker-compose run composer composer install
+    createDatabases
+    docker-compose up --remove-orphan
+}
+
+speedup() {
+    removeSymfonyCache
+    docker-compose run composer composer install --optimize-autoloader --no-dev --classmap-authoritative
+    startDatabaseServices
+    docker-compose up -d
+}
+
+up() {
+    removeSymfonyCache
+    startDatabaseServices
+    docker-compose up
+}
+
+stop() {
+    docker-compose stop
+}
+
+assets() {
+    docker-compose run frontend-building watch -n 1 make
+}
+
+removeGeneratedFiles() {
+    removeSymfonyCache
+    removeDatabaseFiles
+    removeVendors
+    removeFrontendBuilds
+}
+
+removeSymfonyCache() {
+    rm -rf code/var/*
+}
+
+removeDatabaseFiles() {
+    rm -rf container/mysql/data/*
+    rm -rf container/redis/data/*
+    rm -rf container/rabbit-mq/data/*
+}
+
+removeVendors() {
+    rm -rf code/vendor/*
+}
+
+removeFrontendBuilds() {
+    rm -f code/web/main.js
+    rm -f code/web/main.css
+}
+
+createDatabases() {
+    docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=chat
+    docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=connect_four
+    docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=user
+    docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/chat/migrations.yml --db=chat -n
+    docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/connect-four/migrations.yml --db=connect_four -n
+    docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/user/migrations.yml --db=user -n
+}
+
+startDatabaseServices() {
+    docker-compose up -d mysql
+    docker-compose up -d redis
+    docker-compose up -d rabbit-mq
+    docker-compose up -d nchan
+
+    # Wait for the databases
+    sleep 15
+}
+
+if [ "$*" = "" ]
+then
+    help
+else
+    $*
+fi

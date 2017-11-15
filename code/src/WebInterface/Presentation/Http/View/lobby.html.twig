@@ -1,0 +1,59 @@
+{% extends '@web-interface/base.html.twig' %}
+
+{% block content %}
+    <section class="left">
+        <div class="box">
+            <p>
+                <span id="running-games">
+                    {{ runningGames.count }}
+                </span>
+                running games
+            </p>
+        </div>
+    </section>
+    <section class="middle">
+        <ul class="game-list" id="games">
+        </ul>
+    </section>
+    <section class="right">
+        <div class="box">
+            <p>
+                <button class="button" data-open-game-button>
+                    + Open a new game
+                </button>
+            </p>
+        </div>
+    </section>
+    <template id="game-template">
+        <li class="game-list__game" data-game-id="---id---">
+            <button data-game-id="---id---">
+                <span>Anonymous</span>
+            </button>
+        </li>
+    </template>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        (function () {
+            new Gambling.ConnectFour.RunningGames(
+                app.eventPublisher,
+                document.getElementById('running-games')
+            );
+            new Gambling.ConnectFour.GameList(
+                app.eventPublisher,
+                app.gameService,
+                Gambling.Common.Template.fromSelector('#game-template'),
+                document.getElementById('games'),
+                    {{ openGames|json_encode|raw }},
+                    {{ maximumNumberOfGamesInList }}
+            );
+            new Gambling.ConnectFour.OpenGameButton(
+                app.eventPublisher,
+                app.gameService,
+                document.querySelector('[data-open-game-button]')
+            );
+            startEventSource(top.location.protocol + '//' + top.location.host + ':8080/sub?id=lobby');
+        })();
+    </script>
+{% endblock %}

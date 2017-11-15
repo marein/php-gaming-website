@@ -1,0 +1,175 @@
+version: '2'
+
+services:
+    mysql:
+        image: mysql:5.7
+        command: mysqld
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+           - ./container/mysql/data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+    redis:
+        image: redis:3.0
+        command: redis-server --appendonly yes
+        volumes:
+            - ./container/redis/data:/data
+    rabbit-mq:
+        image: rabbitmq:3.6-management
+        hostname: rabbit-mq
+        volumes:
+            - ./container/rabbit-mq/data:/var/lib/rabbitmq/mnesia
+        ports:
+            - "15672:15672"
+    nchan:
+        build:
+            context: ./container/nchan
+        ports:
+            - "8080:80"
+        links:
+            - redis
+            - nginx
+        depends_on:
+            - redis
+            - nginx
+    nginx:
+        build:
+            context: ./container/nginx
+        volumes:
+            - ./code:/project
+        ports:
+            - "80:80"
+            - "443:433"
+        links:
+            - php-fpm
+        depends_on:
+            - php-fpm
+    composer:
+        build:
+            context: ./container/composer
+        volumes:
+            - ./code:/app
+    php-fpm:
+        build:
+            context: ./container/php-fpm
+        env_file:
+            - ./container/environment.env
+        volumes:
+            - ./code:/project
+    frontend-building:
+        build:
+            context: ./container/frontend-building
+        working_dir: /project
+        volumes:
+            - ./code:/project
+
+    ##############################
+    #   Stored Event Subscriber  #
+    ##############################
+    php-build-query-model:
+        build:
+            context: ./container/php
+        command: /project/bin/console connect-four:build-query-model --env=prod
+        env_file:
+            - ./container/environment.env
+        volumes:
+            - ./code:/project
+        links:
+            - mysql
+            - redis
+        depends_on:
+            - mysql
+            - redis
+    php-connect-four-publish-stored-events-to-rabbit-mq:
+        build:
+            context: ./container/php
+        command: /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
+        env_file:
+            - ./container/environment.env
+        volumes:
+            - ./code:/project
+        links:
+            - mysql
+            - rabbit-mq
+        depends_on:
+            - mysql
+            - rabbit-mq
+    php-chat-publish-stored-events-to-rabbit-mq:
+        build:
+            context: ./container/php
+        command: /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
+        env_file:
+            - ./container/environment.env
+        volumes:
+            - ./code:/project
+        links:
+            - mysql
+            - rabbit-mq
+        depends_on:
+            - mysql
+            - rabbit-mq
+
+    ##############################
+    #    Long Running Process    #
+    ##############################
+    php-web-interface-publish-running-games-count-to-nchan:
+        build:
+            context: ./container/php
+        command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
+        env_file:
+            - ./container/environment.env
+        volumes:
+            - ./code:/project
+        links:
+            - mysql
+            - nchan
+        depends_on:
+            - mysql
+            - nchan
+
+    ##############################
+    #     RabbitMq Subscriber    #
+    ##############################
+    php-web-interface-publish-rabbit-mq-events-to-nchan:
+        build:
+            context: ./container/php
+        command: /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
+        env_file:
+            - ./container/environment.env
+        volumes:
+            - ./code:/project
+        links:
+            - rabbit-mq
+            - nchan
+        depends_on:
+            - rabbit-mq
+            - nchan
+    php-chat-command-listener:
+        build:
+            context: ./container/php
+        command: /project/bin/console chat:command-listener --env=prod
+        env_file:
+            - ./container/environment.env
+        volumes:
+            - ./code:/project
+        links:
+            - mysql
+            - rabbit-mq
+        depends_on:
+            - mysql
+            - rabbit-mq
+    php-connect-four-referee:
+        build:
+            context: ./container/php
+        command: /project/bin/console connect-four:referee --env=prod
+        env_file:
+            - ./container/environment.env
+        volumes:
+            - ./code:/project
+        links:
+            - mysql
+            - rabbit-mq
+        depends_on:
+            - mysql
+            - rabbit-mq

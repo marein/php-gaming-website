@@ -1,0 +1,4 @@
+name: User Migrations
+migrations_namespace: Gambling\User\Port\Adapter\Persistence\Migration
+table_name: migration_versions
+migrations_directory: "../../../src/User/Port/Adapter/Persistence/Migration"

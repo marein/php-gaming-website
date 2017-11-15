@@ -1,0 +1,4 @@
+name: Chat Migrations
+migrations_namespace: Gambling\Chat\Migration
+table_name: migration_versions
+migrations_directory: "../../../src/Chat/Migration"
