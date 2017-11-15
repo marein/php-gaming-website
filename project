@@ -32,7 +32,7 @@ build() {
     removeDatabaseFiles
     docker-compose build --pull
     startDatabaseServices
-    docker-compose run frontend-building make; true
+    docker-compose run frontend-building make
     docker-compose run composer composer install
     createDatabases
     docker-compose up --remove-orphan
