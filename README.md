@@ -266,6 +266,44 @@ I just added this abstraction layer to write this section.__
 
 ## Scale-Out the application
 
+Scale-Out is a technique where you can put as much servers in parallel as possible to handle high loads.
+I've set this requirement for this application. This section describe how this requirement is fulfilled.
+
+The application code is stateless. To scale that is very easy.
+Just put a
+[Load Balancer](https://en.wikipedia.org/wiki/Load_balancing_(computing))
+in front of the application servers.
+
+In the next step we have to scale the databases. We divide this into two parts
+1. First thing we've todo is scale the databases which are accessed for read purposes. Since there's no concurrency
+issue here, we can just add replications for the MySQL and Redis storages.
+2. The second thing is a little bit trickier. We've to scale the databases for write purposes.
+I will describe this using the Connect Four and the chat context. I've put much effort to allow scaling the Connect Four
+context properly. Because we use the CQRS pattern to decouple the queries that span multiple games,
+such as counting running games or listing open games, it's easy to scale the command side. We've just to throw in a
+technique called
+[sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture)).
+The shard key is, of course, the UUID of the game. It's used to determine which shard to use.
+I'll implement this later as an example. To anticipate it: Define two or more connections to the database and use
+this as a pool to determine which shard to use based on the UUID. Voilà, you'll find the game you want.
+To scale the command side at the Chat context, nothing needs to be done. There are no queries that span multiple chats.
+Just be sure you store the chat and the related messages to the same shard. But since we use the UUID of the chat
+in every query and command, this should be easy. The rest is as described above.
+
+__Note that the sharding technique described here is a manual technique. The application decides which shard to use.
+There are certainly other variants.__
+
+You may have seen that currently only one MySQL and one Redis instance is configured. This is done for simplicity.
+I don't want to wait hours until the development environment is starting.
+Of course, that's different in the production environment.
+You can for sure configure different databases for the contexts. Have look at the
+[configuration file](/container/environment.env). We can split this even further.
+For example, we can create a redis instance per query in the "Connect Four" context.
+Of course, the code must be adapted. Whether it's worth it is another question.
+
+__Note that the sharding technique described here is a manual technique. The application decides which shard to use.
+There are certainly other variants.__
+
 ## Chosen technologies
 
 It's mainly written with PHP, but also JavaScript
