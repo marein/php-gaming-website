@@ -89,7 +89,8 @@ This context is very simple. To organize the business logic, the
 uses the 
 [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html)
 pattern. Its only job is to initiate chats, list messages by chat
-and to write messages in the chat. The layering chosen in the other contexts isn't worthwhile here.
+and to write messages in the chat. If authors are assigned to a chat, only those authors can write and read messages.
+The layering chosen in the other contexts isn't worthwhile here.
 
 The public interface is formed by a
 [controller](/code/src/Chat/Http/ChatController.php),
@@ -105,6 +106,8 @@ This happens in the same transaction in which the commands are executed.
 After that, a
 [command line task](/code/src/Chat/Console/PublishStoredEventsToRabbitMqCommand.php)
 publish these stored events to the message broker.
+
+I've chosen MySQL as the storage.
 
 ### Common
 
