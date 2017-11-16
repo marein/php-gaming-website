@@ -29,7 +29,7 @@ concepts of
 [Domain Driven Design](http://domainlanguage.com/ddd/reference/)
 and Scale-Out techniques in mind.
 The sections
-[Content is king](#context-is-king),
+[Context is king](#context-is-king),
 [Transition to Microservices](#transition-to-microservices)
 and
 [Scale-Out the application](#scale-out-the-application)
