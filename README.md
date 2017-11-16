@@ -278,7 +278,7 @@ In the next step we have to scale the databases. We divide this into two parts
 1. First thing we've todo is scale the databases which are accessed for read purposes. Since there's no concurrency
 issue here, we can just add replications for the MySQL and Redis storages.
 2. The second thing is a little bit trickier. We've to scale the databases for write purposes.
-I will describe this using the Connect Four and the chat context. I've put much effort to allow scaling the Connect Four
+I will describe this using the Connect Four and the Chat context. I've put much effort to allow scaling the Connect Four
 context properly. Because we use the CQRS pattern to decouple the queries that span multiple games,
 such as counting running games or listing open games, it's easy to scale the command side. We've just to throw in a
 technique called
@@ -296,13 +296,10 @@ There are certainly other variants.__
 You may have seen that currently only one MySQL and one Redis instance is configured. This is done for simplicity.
 I don't want to wait hours until the development environment is starting.
 Of course, that's different in the production environment.
-You can for sure configure different databases for the contexts. Have look at the
+You can for sure configure different databases for the contexts. Have a look at the
 [configuration file](/container/environment.env). We can split this even further.
-For example, we can create a redis instance per query in the "Connect Four" context.
+For example, we can create a Redis instance per query model in the "Connect Four" context.
 Of course, the code must be adapted. Whether it's worth it is another question.
-
-__Note that the sharding technique described here is a manual technique. The application decides which shard to use.
-There are certainly other variants.__
 
 ## Chosen technologies
 
