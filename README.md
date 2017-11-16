@@ -125,6 +125,25 @@ model. It's really just a store for events.
 
 ### Web Interface
 
+The
+[Web Interface](/code/src/WebInterface)
+acts like an
+[Api Gateway](http://microservices.io/patterns/apigateway.html).
+All browser interactions go through this context, because its main responsibility is the session management
+and the aggregation of the data from the other contexts. The
+[JavaScript](/code/src/WebInterface/Presentation/Http/JavaScript)
+and
+[StyleSheet](/code/src/WebInterface/Presentation/Http/StyleSheet)
+are also defined here.
+
+There're currently two pages.
+
+The first page is the game lobby. Users can come together here to open or join games.
+If John opens a game and Jane clicks on it, both have a game against each other.
+If John clicks on his own game, the game will be aborted.
+
+The second page is the user profile. Users can see a history of past games here.
+
 ## Transition to Microservices
 
 ## Scale-Out the application
