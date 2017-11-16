@@ -112,10 +112,10 @@ The
 [Common](/code/src/Common)
 folder provide reusable components. If the project is more advanced, I'll outsource them as libraries.
 But there're already battle tested implementations out there (like a
-[Bus](https://tactician.thephpleague.com) by Tactician,
-or an
-[Event Store](https://github.com/prooph/event-store) by prooph).
-You may use them, instead of mine. The
+[Bus](https://tactician.thephpleague.com)
+by Tactician, or an
+[Event Store](https://github.com/prooph/event-store)
+by prooph). You may use them, instead of mine. The
 [Event Store](/code/src/Common/EventStore)
 implementation inside
 [Common](/code/src/Common)
@@ -140,13 +140,15 @@ and
 [StyleSheet](/code/src/WebInterface/Presentation/Http/StyleSheet)
 are also defined here.
 
-There're currently two pages.
+There're currently three pages.
 
 The first page is the game lobby. Users can come together here to open or join games.
 If John opens a game and Jane clicks on it, both have a game against each other.
 If John clicks on his own game, the game will be aborted.
 
-The second page is the user profile. Users can see a history of past games here.
+The second page is the game itself. The users play against each other and can write messages.
+
+The third page is the user profile. Users can see a history of past games here.
 
 ## Transition to Microservices
 
