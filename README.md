@@ -10,7 +10,9 @@ __Table of contents__
   * [Connect Four](#connect-four)
   * [User](#user)
   * [Web Interface](#web-interface)
-* [Technologies](#technologies)
+* [Transition to Microservices](#transition-to-microservices)
+* [Scale-Out the application](#scale-out-the-application)
+* [Chosen technologies](#chosen-technologies)
 * [A note on testing](#a-note-on-testing)
 
 ## Overview
@@ -18,53 +20,22 @@ __Table of contents__
 This is my playground project to explore new ideas and concepts. It's a gambling website where people can play against
 each other. Currently, the only game is [Connect Four](#connect-four) but I plan other games to show more concepts.
 
-To get a ready-to-start project, the code and the development environment are in one git repository.
+Before you start looking at the code, I recommend reading this documentation to understand what concepts I use
+and why I apply these concepts for this particular application.
 
-The application is split into several parts
-([Bounded Context](https://martinfowler.com/bliki/BoundedContext.html)).
-None of them has hard dependencies (namely type dependencies) to each other.
-I used modelling techniques like
+The application is built with a
+[Microservice Architecture](https://martinfowler.com/articles/microservices.html),
+concepts of
 [Domain Driven Design](http://domainlanguage.com/ddd/reference/)
+and Scale-Out techniques in mind.
+The sections
+[Context is king](#context-is-king),
+[Transition to Microservices](#transition-to-microservices)
 and
-[Event Storming](https://en.wikipedia.org/wiki/Event_storming)
-to define them. Well, you only see the result and not the breakthroughs I went through.
+[Scale-Out the application](#scale-out-the-application)
+describe whats done to apply these concepts.
 
-Some people say "I need a showcase how to do Domain Driven Design, I don't get the concepts." or
-"How to code with Domain Driven Design?". Firstly, Domain Driven Design isn't a technically approach. It's used to
-refine your domain. Get the real insights and so on. So, Domain Driven Design isn't code but rather a modelling
-technique. Technically patterns like repositories, aggregates or domain models have less to do with the concept.
-It can be used in some contexts where it fits. But other contexts are better made simple with CRUD-ish implementations.
-However, I also was at the point where I don't know how to start. And I asked the questions above myself too.
-This project is my example showcase for the community. It's not perfect. Every day is a learning day.
-
-As integration techniques I choose
-[REST](https://martinfowler.com/articles/enterpriseREST.html),
-messaging via a
-[Message Broker](https://en.wikipedia.org/wiki/Message_broker)
-or direct method invocation.
-There're many other patterns, more of technically nature, I used in some contexts where it makes sense.
-They're defined in the section which describes the respective context, but I presuppose you've read
-[Implementing Domain Driven Design](https://vaughnvernon.co/?page_id=168#iddd)
-by Vaughn Vernon and
-[Tackling Complexity in the Heart of Software](http://dddcommunity.org/book/evans_2003/)
-by Eric Evans.
-
-This application is built with a
-[Microservice Architecture](https://martinfowler.com/articles/microservices.html) and scale out techniques
-in mind. Some parts of the application talks via messaging. All synchronous calls are
-done via method invocation. I know, method invocation isn't an inter-service call (for example with http),
-so the parts of the application must be deployed together, but there're very few steps to reach
-the fully microservice approach. The first step is to split out the folders (at
-[config](/code/app/config)
-and
-[src](/code/src))
-in a separate application for each context. After that, the
-[Web Interface](#web-interface)
-needs a short rewrite as described in its section.
-
-You may recognize that there is only one mysql and one redis instance. But when you look at the
-[Environment File](/container/environment.env), you'll see that you can define different servers for each context.
-So, each part scales nicely.
+To get a ready-to-start project, the code and the development environment are in one git repository.
 
 ## Installation and requirements
 
@@ -82,7 +53,6 @@ cd php-gambling-website
 
 __Note__  
 If you update your local repository, you have to "./project build" again.
-I don't write any migration scripts on schema changes. Especially for the Connect Four context.
 This project is in development and I don't pollute the code with schema changes at this stage.
 
 There're several other commands in the project script. You see them with
@@ -91,54 +61,68 @@ There're several other commands in the project script. You see them with
 ./project help
 ```
 
-Since I use the latest JavaScript techniques, like EcmaScript 6, it does not work in all browsers.
-Currently, it's only tested with Safari. And also don't look at the frontend design. This is by all means not my domain.
+Since I use the latest JavaScript techniques, like EcmaScript 6, it doesn't work in all browsers.
+Currently, it's only tested with Safari.
+Don't look at the front end design, this is by no means my domain.
 
 ## Context is king
 
-As stated above, the application is split into different contexts. Each with its own responsibilities and techniques.
-They're defined below. Because I want a showcase with many different techniques,
-they're all rely on different patterns.
+The application is split into several
+[Bounded Contexts](https://martinfowler.com/bliki/BoundedContext.html).
+I've chosen modeling techniques like
+[Domain Driven Design](http://domainlanguage.com/ddd/reference/)
+and
+[Event Storming](https://en.wikipedia.org/wiki/Event_storming)
+to define them. Well, you only see the result and not the breakthroughs I went through.
+The following sections describe what techniques I use in the respective context.
+
+I presuppose you've read
+[Implementing Domain Driven Design](https://vaughnvernon.co/?page_id=168#iddd)
+by Vaughn Vernon and
+[Tackling Complexity in the Heart of Software](http://dddcommunity.org/book/evans_2003/)
+by Eric Evans.
 
 ### Chat
 
-The
+This context is very simple. To organize the business logic, the
 [Chat](/code/src/Chat)
-is a really simple one. There's only one business rule. That's why I used a
+uses the 
 [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html)
-to implement the business logic. There's no domain model or something. The simplicity of this context is also
-not worth the layering chosen by the other contexts. So, everything is just thrown in the root folder.
+pattern. Its only job is to initiate chats, list messages by chat
+and to write messages in the chat. If authors are assigned to a chat, only those authors can write and read messages.
+The layering chosen in the other contexts isn't worthwhile here.
 
-Other services can interact with this service through the
-[controller](/code/src/Chat/Http/ChatController.php)
-for query and some command calls, or through the message broker for command calls.
-The message broker adapter is defined in a
-[console task](/code/src/Chat/Console/RabbitMqCommandListenerCommand.php).
+The public interface is formed by a
+[controller](/code/src/Chat/Http/ChatController.php),
+which can be called up via http, and a
+[command line task](/code/src/Chat/Console/RabbitMqCommandListenerCommand.php),
+which serves as an interface to a message broker.
 
-The published
+This context publishes
 [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
-gets persisted to the event store. A
-[console task](/code/src/Chat/Console/PublishStoredEventsToRabbitMqCommand.php)
-pick up this events and publish them to the message broker so other contexts are informed about whats happened.
+through the message broker to inform other contexts what's happened here.
+First the domain events are stored to the event store.
+This happens in the same transaction in which the commands are executed.
+After that, a
+[command line task](/code/src/Chat/Console/PublishStoredEventsToRabbitMqCommand.php)
+publish these stored events to the message broker.
 
-__Short description of what's going on here__  
-A chat can be initiated, and its messages can be shown. If a chat has explicitly authors assigned, only those authors
-are allowed to access the chat. Messages are cut to 140 characters.
+I've chosen MySQL as the storage.
 
 ### Common
 
 The
 [Common](/code/src/Common)
-folder provides reusable components. If the project is more advanced,
-I may split them out. But there're already battle tested implementations out there (like a
-[Bus](https://tactician.thephpleague.com) by Tactician,
-or an
-[Event Store](https://github.com/prooph/event-store) by prooph).
-You may use them, instead of mine. The
+folder provide reusable components. If the project is more advanced, I'll outsource them as libraries.
+But there're already battle tested implementations out there (like a
+[Bus](https://tactician.thephpleague.com)
+by Tactician, or an
+[Event Store](https://github.com/prooph/event-store)
+by prooph). You may use them, instead of mine. The
 [Event Store](/code/src/Common/EventStore)
 implementation inside
 [Common](/code/src/Common)
-isn't used to be a fully store for an
+isn't used to be a storage for an
 [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
 model. It's really just a store for events.
 
@@ -146,86 +130,91 @@ model. It's really just a store for events.
 
 The
 [Connect Four](/code/src/ConnectFour)
-is the "heart of the software". Its logic is definitely worth to build a proper
-[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html).
+is the context where I put the most effort in. The business logic is definitely worth building a proper
+[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html). Players can open, join, abort and resign a game.
+Of course they can also perform moves. The game can be aborted until the second move.
+After the second move, players can only resign or finish the game. The referee, which sits near the game desks,
+ensure that the people can talk to each other. This process is described below.
 
-I also use MySQL as a document storage, and store the games as json.
-
-As the folder structure reveals, this context uses the "Ports and Adapters" architecture. The
+As the
+[folder structure](/code/src/ConnectFour)
+shows, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
-uses a command and query bus. The opposite of this approach is the traditional application service I used in the
+uses a command and query bus. The opposite of this approach is the traditional application service I use in the
 [User](#user)
 context. It boils down to one class with many methods vs. many classes with one method.
 
-Because the domain model is very complex, I don't want to leak its internals to the
-[Adapter Layer](/code/src/ConnectFour/Port/Adapter). That's why I used
-[CQRS](https://martinfowler.com/bliki/CQRS.html)
-to split the model into the read and into the write side. This isn't only done for the classes in code,
-but also at the storage layer. The game at the command side is stored to MySQL. The game and all its
-query methods at the read side is stored to Redis. When a game at the command side is stored, the published
+The public interface is formed by a
+[controller](/code/src/ConnectFour/Port/Adapter/Http/GameController.php),
+which can be called up via http.
+
+This context publishes
 [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
-are also stored in the same transaction to MySQL. A little bit later a
-[console task](/code/src/ConnectFour/Port/Adapter/Console/BuildQueryModelCommand.php)
-pick up these events and build the query models. This way, the command side can scale independently from the read side.
-The game is usually a hot aggregate. Maybe later we have to scale out and add more MySQL instances to handle the load at
-the write side. The sharding of the games is really straightforward, since we can use the uuids.
-"SELECT COUNT(id) FROM game WHERE status = 'open';" does not work anymore, because the games are in many
-different servers. The idea is, that the query model builder pick the domain events
-from all MySQL instances and create the open games in Redis. That's the concept of
-[eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency).
-A disadvantage from this approach is, that the data isn't immediately consistent, but the domain allows it. The
-browser didn't miss a player move, because nchan (the pubsub server I use in this project) hold every event for
-10 seconds in its buffer, and publish this events to the client which connects to the system. The query builder has
-enough time to compensate the eventually consistent lack.
-This model adds risky complexity to the codebase. Be sure you need it, before you use it in your own projects.
+through the message broker to inform other contexts what's happened here.
+First the domain events are stored to the event store.
+This happens in the same transaction in which the commands are executed.
+After that, a
+[command line task](/code/src/ConnectFour/Port/Adapter/Console/PublishStoredEventsToRabbitMqCommand.php)
+publish these stored events to the message broker.
+
+The Connect Four context applies the
+[CQRS](https://martinfowler.com/bliki/CQRS.html)
+pattern. Not only the domain model is divided into command and query side, but also the storage layer.
+The query model is stored in an
+[eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency)
+manner. A
+[command line task](/code/src/ConnectFour/Port/Adapter/Console/BuildQueryModelCommand.php)
+retrieves the stored events from the event store and then builds the query model.
+This is done for scalability reasons. Why exactly this was done is described in the section
+"[Scale-Out the application](#scale-out-the-application)".
+Before you use it in your application, you should check if you really need it.
+This model adds risky complexity to the codebase. Also note that nothing I've done here is required to
+apply the basics of the CQRS pattern. Look at
+"[Busting some CQRS myths](https://lostechies.com/jimmybogard/2012/08/22/busting-some-cqrs-myths/)"
+by Jimmy Bogard for further reading.
 
 There's also a
 [Process Manager](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html)
-involved as a
-[console task](/code/src/ConnectFour/Port/Adapter/Console/RefereeCommand.php).
-Its name is referee and it picks up a player joined event and ensures, that a chat is initiated.
-When the chat is initiated it assigns the chat to the game. This is done, so the storage of games and chats
-can be on different MySQL instances. This allows, to scale the games and the chats independently, but ensures
-consistency with
+involved.
+Its name is referee and it's a
+[command line task](/code/src/ConnectFour/Port/Adapter/Console/RefereeCommand.php).
+The referee picks up a player joined event and ensures, that a chat is initiated.
+When the chat is initiated, it assigns the chat to the game.
+This is done, so the storage of games and chats can be on different MySQL instances.
+This allows to scale the games and the chats independently, but ensures consistency with
 [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency).
 
-The published
-[Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
-gets persisted to the event store. A
-[console task](/code/src/ConnectFour/Port/Adapter/Console/PublishStoredEventsToRabbitMqCommand.php)
-pick up this events and publish them to the message broker so other contexts are informed about whats happened.
-
-Everything within the game aggregate, except the game itself, is a
-[Value Object](https://martinfowler.com/bliki/ValueObject.html).
-I like the concept of immutability. It helps a lot to write robust code.
-
-__Short description of what's going on here__  
-The player can open a game and decide which winning rules (horizontal, vertical, diagonal)
-and which board size he wants (this is technically possible, but the ui doesn't ask for this at the moment).
-The game remains open until another player joins the party. The game can be aborted until the second move is done. After
-the second move, a player can resign the game (currently not implemented). The game gets played until there's a draw,
-a winner or a player resigns. When a player joins the party, the referee initiate a chat, so the players can talk
-to each other.
+I've chosen MySQL as the command side storage. Since the games are stored as json, MySQL is used as a document store.
+On the query side, I've chosen Redis as the storage, since there are no relational queries to perform.
+Of course, I could've used Redis for the command side, but I'm more familiar with MySQL.
+Note that you need to have a database that allows you to store the domain model as well as
+the events in a single transaction. Another possibility is to use
+[Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
+as the storage model. With this model, only the events are saved.
 
 ### User
 
-The
+This context is currently only set up. Nothing interacts with it.
+
+Although the
 [User](/code/src/User)
-context is currently just bootstrapped. Nothing is interacting with this service.
+context is another simple context, like the chat context, I still use an ORM for it. In this case
+I've chosen Doctrine because it's a really matured ORM that applies the
+[Data Mapper](https://martinfowler.com/eaaCatalog/dataMapper.html)
+pattern. The main responsibilities are that users can sign up, change username and change password.
 
-As the folder structure reveals, this context uses the "Ports and Adapters" architecture. It also uses
-[Doctrine](http://www.doctrine-project.org)
-to throw an OR-Mapper in the mix. I also used to create a traditional
-[Application Service](https://martinfowler.com/eaaCatalog/serviceLayer.html).
-For example, all user interactions are defined in the
-[user application service](/code/src/User/Application/User/UserService.php).
-The opposite of this approach is the command and query bus I used in the
+As the
+[folder structure](/code/src/User)
+shows, this context uses the "Ports and Adapters" architecture. The
+[Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
+uses a traditional application service. The opposite of this approach is the
+command and query bus I use in the
 [Connect Four](#connect-four)
-context. It boils down to one class with many methods vs. many classes with one method. The domain model will also
-float around to the [Adapter Layer](/code/src/User/Port/Adapter). Mapping forth and back isn't worth in this context.
+context. It boils down to one class with many methods vs. many classes with one method.
 
-__Short description of what's going on here__  
-A user can sign up with an username and a password. The user can also change its username and password.
+The public interface is formed by a
+[controller](/code/src/User/Port/Adapter/Http/UserController.php),
+which can be called up via http.
 
 ### Web Interface
 
@@ -240,30 +229,87 @@ and
 [StyleSheet](/code/src/WebInterface/Presentation/Http/StyleSheet)
 are also defined here.
 
-This is the only context which does direct method calls to
-the others. But that's strictly defined too, because it uses only the controllers defined in the other contexts. These
-controllers already return a json response. Surely, for the current implementation this abstraction is an overkill,
-but as stated above, it helps to easily transition to a microservice approach. I don't recommend this
-layer of abstraction if you don't need it in your project. It's totally fine to invoke the
-[Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
-of the other contexts directly. It helps with type safety and adds other advantages you get from a monolithic approach.
-The classes which must be changed/added to make http calls to the other context live under
-[code/src/WebInterface/Infrastructure/Integration](/code/src/WebInterface/Infrastructure/Integration)
-and must implement the interfaces at
+There're currently three pages.
+1. The first page is the game lobby. Users can come together here to open or join games.
+If John opens a game and Jane clicks on it, both have a game against each other.
+If John clicks on his own game, the game will be aborted.
+2. The second page is the game itself. The users play against each other and can write messages.
+3. The third page is the user profile. Users can see a history of past games here.
+
+## Transition to Microservices
+
+This application matches all requirements to be a so called
+[Microservice Architecture](https://martinfowler.com/articles/microservices.html),
+except for deployment. This section describe the steps which needs to be done to fulfill the microservice requirement.
+The true microservice approach isn't done, because I don't need it. I'm a single developer and it isn't worthwhile
+here. The only requirement I've set myself is the high scalability which is described in the next section. However,
+I've assigned an abstraction layer to the Web Interface context for easier migration to the microservice architecture.
+
+To have single deployable units, the following steps needs to be done
+1. Copy the folders (at
+[config](/code/app/config)
+and
+[src](/code/src))
+in a separate application for each context or the context that's worthwhile to be a single deployable unit.
+Don't forget to define the routing for the controllers in the new application.
+2. The Web Interface is the only context which performs direct method invocations to the others.
+This needs to be rewritten. You've to write new implementations for the interfaces at
 [code/src/WebInterface/Application](/code/src/WebInterface/Application).
+The current implementations are at
+[code/src/WebInterface/Infrastructure/Integration](/code/src/WebInterface/Infrastructure/Integration).
+They're need to make real http calls.
+3. Be happy.
 
-__Short description of what's going on here__  
-There's the lobby, where users can open a game. When the user clicks at his own game, it will be aborted.
-When another user clicks his game, the user joins and the two users have a match. In the game they can
-play against each other and can send chat messages. All users are anonymous until they sign up with a real
-username (not implemented yet). The profile shows the non aborted games of the current user.
+__Note that's totally fine to invoke the application layer of the other contexts directly.
+It helps with type safety and adds other benefits that you get from a monolithic approach.
+I just added this abstraction layer to write this section.__
 
-## Technologies
+## Scale-Out the application
+
+Scale-Out is a technique where you can put as much servers in parallel as possible to handle high loads.
+I've set this requirement for this application. This section describe how this requirement is fulfilled.
+
+The application code is stateless. To scale that is very easy.
+Just put a
+[Load Balancer](https://en.wikipedia.org/wiki/Load_balancing_(computing))
+in front of the application servers.
+
+In the next step we have to scale the databases. We divide this into two parts
+1. First thing we've todo is scale the databases which are accessed for read purposes. Since there's no concurrency
+issue here, we can just add replications for the MySQL and Redis storages.
+2. The second thing is a little bit trickier. We've to scale the databases for write purposes.
+I will describe this using the Connect Four and the chat context. I've put much effort to allow scaling the Connect Four
+context properly. Because we use the CQRS pattern to decouple the queries that span multiple games,
+such as counting running games or listing open games, it's easy to scale the command side. We've just to throw in a
+technique called
+[sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture)).
+The shard key is, of course, the UUID of the game. It's used to determine which shard to use.
+I'll implement this later as an example. To anticipate it: Define two or more connections to the database and use
+this as a pool to determine which shard to use based on the UUID. Voilà, you'll find the game you want.
+To scale the command side at the Chat context, nothing needs to be done. There are no queries that span multiple chats.
+Just be sure you store the chat and the related messages to the same shard. But since we use the UUID of the chat
+in every query and command, this should be easy. The rest is as described above.
+
+__Note that the sharding technique described here is a manual technique. The application decides which shard to use.
+There are certainly other variants.__
+
+You may have seen that currently only one MySQL and one Redis instance is configured. This is done for simplicity.
+I don't want to wait hours until the development environment is starting.
+Of course, that's different in the production environment.
+You can for sure configure different databases for the contexts. Have look at the
+[configuration file](/container/environment.env). We can split this even further.
+For example, we can create a redis instance per query in the "Connect Four" context.
+Of course, the code must be adapted. Whether it's worth it is another question.
+
+__Note that the sharding technique described here is a manual technique. The application decides which shard to use.
+There are certainly other variants.__
+
+## Chosen technologies
 
 It's mainly written with PHP, but also JavaScript
-for the frontend. I choose
+for the frontend. I've chosen
 [Symfony](https://symfony.com)
-as the underlying framework, because I know it and it let me freely choose my application architecture,
+as the underlying framework, because I know it and I'm free to choose my application architecture,
 or in this context, the directory structure.
 
 Some other technologies:
@@ -275,8 +321,8 @@ Some other technologies:
 
 ## A note on testing
 
-There're currently no tests written. Maybe this comes later on the road. The game aggregate of the connect four context
+There're currently no written tests. Maybe this comes later on the road. The game aggregate of the connect four context
 is a port from another project of mine. You can find it
 [here](https://github.com/marein/php-connect-four).
-It's connect four for the command line. This project is tested, but not so complex like the game at the connect four
+It's connect four for the command line. This project is tested, but not as complex as the game at the connect four
 context.
