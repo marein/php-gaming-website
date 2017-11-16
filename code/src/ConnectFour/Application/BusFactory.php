@@ -69,6 +69,7 @@ final class BusFactory
     {
         $bus = new CallableBus();
 
+        // Wrap every command handler in a function for lazy loading.
         $bus->addHandler(AbortCommand::class, function (AbortCommand $command) {
             return (new AbortHandler($this->games))($command);
         });
@@ -97,6 +98,7 @@ final class BusFactory
     {
         $bus = new CallableBus();
 
+        // Wrap every query handler in a function for lazy loading.
         $bus->addHandler(GameQuery::class, function (GameQuery $query) {
             return (new GameHandler(
                 new PredisGameFinder($this->predis),

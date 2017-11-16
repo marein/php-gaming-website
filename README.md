@@ -96,7 +96,7 @@ Currently, it's only tested with Safari. And also don't look at the frontend des
 
 ## Context is king
 
-As stated above, the application is split into different contexts. Each with it's own responsibilities and techniques.
+As stated above, the application is split into different contexts. Each with its own responsibilities and techniques.
 They're defined below. Because I want a showcase with many different techniques,
 they're all rely on different patterns.
 
@@ -119,10 +119,10 @@ The published
 [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
 gets persisted to the event store. A
 [console task](/code/src/Chat/Console/PublishStoredEventsToRabbitMqCommand.php)
-pick up this events and publish them to rabbit mq so other contexts are informed about whats happened.
+pick up this events and publish them to the message broker so other contexts are informed about whats happened.
 
 __Short description of what's going on here__  
-A chat can be initiated, and it's messages can be shown. If a chat has explicitly authors assigned, only those authors
+A chat can be initiated, and its messages can be shown. If a chat has explicitly authors assigned, only those authors
 are allowed to access the chat. Messages are cut to 140 characters.
 
 ### Common
@@ -146,12 +146,12 @@ model. It's really just a store for events.
 
 The
 [Connect Four](/code/src/ConnectFour)
-is the "heart of the software". It's logic is definitely worth to build a proper
+is the "heart of the software". Its logic is definitely worth to build a proper
 [Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html).
 
 I also use MySQL as a document storage, and store the games as json.
 
-As the folder structure reveals, this context uses the "Ports And Adapters" architecture. The
+As the folder structure reveals, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
 uses a command and query bus. The opposite of this approach is the traditional application service I used in the
 [User](#user)
@@ -183,7 +183,7 @@ There's also a
 [Process Manager](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html)
 involved as a
 [console task](/code/src/ConnectFour/Port/Adapter/Console/RefereeCommand.php).
-It's name is referee and it picks up a player joined event and ensures, that a chat is initiated.
+Its name is referee and it picks up a player joined event and ensures, that a chat is initiated.
 When the chat is initiated it assigns the chat to the game. This is done, so the storage of games and chats
 can be on different MySQL instances. This allows, to scale the games and the chats independently, but ensures
 consistency with
@@ -193,7 +193,7 @@ The published
 [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
 gets persisted to the event store. A
 [console task](/code/src/ConnectFour/Port/Adapter/Console/PublishStoredEventsToRabbitMqCommand.php)
-pick up this events and publish them to rabbit mq so other contexts are informed about whats happened.
+pick up this events and publish them to the message broker so other contexts are informed about whats happened.
 
 Everything within the game aggregate, except the game itself, is a
 [Value Object](https://martinfowler.com/bliki/ValueObject.html).
@@ -213,7 +213,7 @@ The
 [User](/code/src/User)
 context is currently just bootstrapped. Nothing is interacting with this service.
 
-As the folder structure reveals, this context uses the "Ports And Adapters" architecture. It also uses
+As the folder structure reveals, this context uses the "Ports and Adapters" architecture. It also uses
 [Doctrine](http://www.doctrine-project.org)
 to throw an OR-Mapper in the mix. I also used to create a traditional
 [Application Service](https://martinfowler.com/eaaCatalog/serviceLayer.html).
@@ -233,7 +233,7 @@ The
 [Web Interface](/code/src/WebInterface)
 acts like an
 [Api Gateway](http://microservices.io/patterns/apigateway.html).
-All browser interactions go through this context, because it's main responsibility is the session management
+All browser interactions go through this context, because its main responsibility is the session management
 and the aggregation of the data from the other contexts. The
 [JavaScript](/code/src/WebInterface/Presentation/Http/JavaScript)
 and
