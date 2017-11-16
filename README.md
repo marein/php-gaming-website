@@ -238,6 +238,32 @@ If John clicks on his own game, the game will be aborted.
 
 ## Transition to Microservices
 
+This application matches all requirements to be a so called
+[Microservice Architecture](https://martinfowler.com/articles/microservices.html),
+except for deployment. This section describe the steps which needs to be done to fulfill the microservice requirement.
+The true microservice approach isn't done, because I don't need it. I'm a single developer and it isn't worthwhile
+here. The only requirement I've set myself is the high scalability which is described in the next section. However,
+I've assigned an abstraction layer to the Web Interface context for easier migration to the microservice architecture.
+
+To have single deployable units, the following steps needs to be done
+1. Copy the folders (at
+[config](/code/app/config)
+and
+[src](/code/src))
+in a separate application for each context or the context that's worthwhile to be a single deployable unit.
+Don't forget to define the routing for the controllers in the new application.
+2. The Web Interface is the only context which performs direct method invocations to the others.
+This needs to be rewritten. You've to write new implementations for the interfaces at
+[code/src/WebInterface/Application](/code/src/WebInterface/Application).
+The current implementations are at
+[code/src/WebInterface/Infrastructure/Integration](/code/src/WebInterface/Infrastructure/Integration).
+They're need to make real http calls.
+3. Be happy.
+
+__Note that's totally fine to invoke the application layer of the other contexts directly.
+It helps with type safety and adds other benefits that you get from a monolithic approach.
+I just added this abstraction layer to write this section.__
+
 ## Scale-Out the application
 
 ## Chosen technologies
