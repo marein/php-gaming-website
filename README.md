@@ -27,7 +27,7 @@ The application is built with a
 [Microservice Architecture](https://martinfowler.com/articles/microservices.html),
 concepts of
 [Domain Driven Design](http://domainlanguage.com/ddd/reference/)
-and Scale-Out Techniques in mind.
+and Scale-Out techniques in mind.
 The sections
 [Content is king](#context-is-king),
 [Transition to Microservices](#transition-to-microservices)
