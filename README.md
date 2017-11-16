@@ -208,14 +208,11 @@ and
 are also defined here.
 
 There're currently three pages.
-
-The first page is the game lobby. Users can come together here to open or join games.
+1. The first page is the game lobby. Users can come together here to open or join games.
 If John opens a game and Jane clicks on it, both have a game against each other.
 If John clicks on his own game, the game will be aborted.
-
-The second page is the game itself. The users play against each other and can write messages.
-
-The third page is the user profile. Users can see a history of past games here.
+2. The second page is the game itself. The users play against each other and can write messages.
+3. The third page is the user profile. Users can see a history of past games here.
 
 ## Transition to Microservices
 
