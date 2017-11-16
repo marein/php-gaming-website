@@ -96,11 +96,15 @@ The public interface is formed by a
 which can be called up via http, and a
 [command line task](/code/src/Chat/Console/RabbitMqCommandListenerCommand.php),
 which serves as an interface to a message broker.
-Other contexts 
 
 This context publishes
 [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
 through the message broker to inform other contexts what's happened here.
+First the domain events are stored to the event store.
+This happens in the same transaction in which the commands are executed.
+After that, a
+[command line task](/code/src/Chat/Console/PublishStoredEventsToRabbitMqCommand.php)
+publish these stored events to the message broker.
 
 ### Common
 
