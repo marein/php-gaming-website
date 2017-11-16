@@ -125,6 +125,70 @@ model. It's really just a store for events.
 
 ### Connect Four
 
+The
+[Connect Four](/code/src/ConnectFour)
+is the context where I put the most effort in. The business logic is definitely worth building a proper
+[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html). Players can open, join, abort and resign a game.
+Of course they can also perform moves. The game can be aborted until the second move.
+After the second move, players can only resign or finish the game. The referee, which sits near the game desks,
+ensure that the people can talk to each other. This process is described below.
+
+As the
+[folder structure](/code/src/ConnectFour)
+shows, this context uses the "Ports and Adapters" architecture. The
+[Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
+uses a command and query bus. The opposite of this approach is the traditional application service I use in the
+[User](#user)
+context. It boils down to one class with many methods vs. many classes with one method.
+
+The public interface is formed by a
+[controller](/code/src/ConnectFour/Port/Adapter/Http/GameController.php),
+which can be called up via http.
+
+This context publishes
+[Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
+through the message broker to inform other contexts what's happened here.
+First the domain events are stored to the event store.
+This happens in the same transaction in which the commands are executed.
+After that, a
+[command line task](/code/src/ConnectFour/Port/Adapter/Console/PublishStoredEventsToRabbitMqCommand.php)
+publish these stored events to the message broker.
+
+The Connect Four context applies the
+[CQRS](https://martinfowler.com/bliki/CQRS.html)
+pattern. Not only the domain model is divided into command and query side, but also the storage layer.
+The query model is stored in an
+[eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency)
+manner. A
+[command line task](/code/src/ConnectFour/Port/Adapter/Console/BuildQueryModelCommand.php)
+retrieves the stored events from the event store and then builds the query model.
+This is done for scalability reasons. Why exactly this was done is described in the section
+"[Scale-Out the application](#scale-out-the-application)".
+Before you use it in your application, you should check if you really need it.
+This model adds risky complexity to the codebase. Also note that nothing I've done here is required to
+apply the basics of the CQRS pattern. Look at
+"[Busting some CQRS myths](https://lostechies.com/jimmybogard/2012/08/22/busting-some-cqrs-myths/)"
+by Jimmy Bogard for further reading.
+
+There's also a
+[Process Manager](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html)
+involved.
+Its name is referee and it's a
+[command line task](/code/src/ConnectFour/Port/Adapter/Console/RefereeCommand.php).
+The referee picks up a player joined event and ensures, that a chat is initiated.
+When the chat is initiated, it assigns the chat to the game.
+This is done, so the storage of games and chats can be on different MySQL instances.
+This allows to scale the games and the chats independently, but ensures consistency with
+[eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency).
+
+I've chosen MySQL as the command side storage. Since the games are stored as json, MySQL is used as a document store.
+On the query side, I've chosen Redis as the storage, since there are no relational queries to perform.
+Of course, I could've used Redis for the command side, but I'm more familiar with MySQL.
+Note that you need to have a database that allows you to store the domain model as well as
+the events in a single transaction. Another possibility is to use
+[Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
+as the storage model. With this model, only the events are saved.
+
 ### User
 
 ### Web Interface
