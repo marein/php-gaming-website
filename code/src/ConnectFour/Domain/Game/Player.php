@@ -2,6 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game;
 
+use Gambling\ConnectFour\Domain\Game\Board\Stone;
 use Gambling\ConnectFour\Domain\Game\Exception\PlayerHasInvalidStoneException;
 
 final class Player

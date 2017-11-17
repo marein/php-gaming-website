@@ -2,7 +2,8 @@
 
 namespace Gambling\ConnectFour\Domain\Game\State;
 
-use Gambling\ConnectFour\Domain\Game\Board;
+use Gambling\ConnectFour\Domain\Game\Board\Board;
+use Gambling\ConnectFour\Domain\Game\Board\Stone;
 use Gambling\ConnectFour\Domain\Game\Configuration;
 use Gambling\ConnectFour\Domain\Game\Event\GameAborted;
 use Gambling\ConnectFour\Domain\Game\Event\PlayerJoined;
@@ -11,7 +12,6 @@ use Gambling\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gambling\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Gambling\ConnectFour\Domain\Game\Game;
 use Gambling\ConnectFour\Domain\Game\Player;
-use Gambling\ConnectFour\Domain\Game\Stone;
 
 final class Open implements State
 {

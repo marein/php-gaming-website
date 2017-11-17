@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gambling\ConnectFour\Domain\Game\Board;
 
 final class Field
 {

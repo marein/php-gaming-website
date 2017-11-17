@@ -3,9 +3,9 @@
 namespace Gambling\ConnectFour\Domain\Game\Event;
 
 use Gambling\Common\Domain\DomainEvent;
+use Gambling\ConnectFour\Domain\Game\Board\Size;
 use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Player;
-use Gambling\ConnectFour\Domain\Game\Size;
 
 final class GameOpened implements DomainEvent
 {

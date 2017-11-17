@@ -117,7 +117,7 @@ final class Game
             $board->size()->width(),
             $board->size()->height(),
             false,
-            array_map(function (\Gambling\ConnectFour\Domain\Game\Field $field) {
+            array_map(function (\Gambling\ConnectFour\Domain\Game\Board\Field $field) {
                 return new Field(
                     $field->point()->x(),
                     $field->point()->y(),

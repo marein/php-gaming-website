@@ -2,6 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game;
 
+use Gambling\ConnectFour\Domain\Game\Board\Size;
 use Gambling\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
 use Gambling\ConnectFour\Domain\Game\WinningRule\WinningRule;
 

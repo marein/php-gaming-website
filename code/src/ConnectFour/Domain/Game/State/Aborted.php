@@ -2,7 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game\State;
 
-use Gambling\ConnectFour\Domain\Game\Board;
+use Gambling\ConnectFour\Domain\Game\Board\Board;
 use Gambling\ConnectFour\Domain\Game\Exception\GameFinishedException;
 use Gambling\ConnectFour\Domain\Game\Game;
 

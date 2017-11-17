@@ -4,6 +4,8 @@ namespace Gambling\ConnectFour\Domain\Game;
 
 use Gambling\Common\Domain\AggregateRoot;
 use Gambling\Common\Domain\DomainEvent;
+use Gambling\ConnectFour\Domain\Game\Board\Board;
+use Gambling\ConnectFour\Domain\Game\Board\Stone;
 use Gambling\ConnectFour\Domain\Game\Event\ChatAssigned;
 use Gambling\ConnectFour\Domain\Game\Event\GameOpened;
 use Gambling\ConnectFour\Domain\Game\Exception\GameException;

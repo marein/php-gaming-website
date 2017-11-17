@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gambling\ConnectFour\Domain\Game\Board;
 
 use Gambling\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Gambling\ConnectFour\Domain\Game\Exception\OutOfSizeException;

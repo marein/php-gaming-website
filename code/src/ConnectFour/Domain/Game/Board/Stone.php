@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gambling\ConnectFour\Domain\Game\Board;
 
 /**
  * This class fakes the missing enumeration feature.

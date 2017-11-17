@@ -2,7 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game\WinningRule;
 
-use Gambling\ConnectFour\Domain\Game\Board;
+use Gambling\ConnectFour\Domain\Game\Board\Board;
 
 interface WinningRule
 {
