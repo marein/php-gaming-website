@@ -85,7 +85,7 @@ Gambling.Chat.Widget = class
      */
     isDuplicate(message)
     {
-        return this.messageHolder.querySelector(['[data-id="' + message.id + '"]']) !== null;
+        return this.messageHolder.querySelector(['[data-id="' + message.messageId + '"]']) !== null;
     }
 
     flushMessageBuffer()
@@ -109,7 +109,7 @@ Gambling.Chat.Widget = class
         let text = document.createTextNode(message.message);
 
         let li = document.createElement('li');
-        li.dataset.id = message.id;
+        li.dataset.id = message.messageId;
         li.classList.add('chat__messages__message');
         li.append(span);
         li.append(text);

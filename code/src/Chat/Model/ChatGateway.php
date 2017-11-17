@@ -124,11 +124,11 @@ final class ChatGateway
                 new GenericDomainEvent(
                     'chat.message-written',
                     [
-                        'id'       => $this->connection->lastInsertId(),
-                        'chatId'   => $messageData['chatId'],
-                        'ownerId'  => $chat['ownerId'],
-                        'authorId' => $messageData['authorId'],
-                        'message'  => $messageData['message']
+                        'messageId' => $this->connection->lastInsertId(),
+                        'chatId'    => $messageData['chatId'],
+                        'ownerId'   => $chat['ownerId'],
+                        'authorId'  => $messageData['authorId'],
+                        'message'   => $messageData['message']
                     ]
                 )
             );
@@ -147,7 +147,7 @@ final class ChatGateway
     public function messagesByChat(string $chatId, int $offset, int $limit): array
     {
         return $this->connection->createQueryBuilder()
-            ->select('id, authorId, message')
+            ->select('id as messageId, authorId, message')
             ->from(self::TABLE_MESSAGE, 'm')
             ->where('m.chatId = :chatId')
             ->setFirstResult($offset)
