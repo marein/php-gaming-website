@@ -4,6 +4,7 @@ namespace Gambling\User\Application;
 
 use Doctrine\DBAL\Driver\Connection;
 use Gambling\Common\Application\ApplicationLifeCycle;
+use Gambling\Common\Application\RetryApplicationLifeCycle;
 use Gambling\Common\Port\Adapter\Application\DoctrineTransactionalApplicationLifeCycle;
 
 final class ApplicationLifeCycleFactory
@@ -28,8 +29,11 @@ final class ApplicationLifeCycleFactory
      */
     public function create(): ApplicationLifeCycle
     {
-        return new DoctrineTransactionalApplicationLifeCycle(
-            $this->connection
+        return new RetryApplicationLifeCycle(
+            new DoctrineTransactionalApplicationLifeCycle(
+                $this->connection
+            ),
+            3
         );
     }
 }
