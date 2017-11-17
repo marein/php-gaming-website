@@ -7,7 +7,7 @@ services:
             - '@doctrine.dbal.user_connection'
 
     user.event-store:
-        class: Gambling\Common\EventStore\DoctrineEventStore
+        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
         arguments:
             - '@doctrine.dbal.user_connection'

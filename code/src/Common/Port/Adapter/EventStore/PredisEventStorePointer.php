@@ -1,7 +1,8 @@
 <?php
 
-namespace Gambling\Common\EventStore;
+namespace Gambling\Common\Port\Adapter\EventStore;
 
+use Gambling\Common\EventStore\EventStorePointer;
 use Gambling\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
 use Gambling\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
 use Predis\Client;

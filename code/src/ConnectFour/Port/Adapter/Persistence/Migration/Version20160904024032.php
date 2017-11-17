@@ -4,7 +4,7 @@ namespace Gambling\ConnectFour\Port\Adapter\Persistence\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Gambling\Common\EventStore\DoctrineEventStoreSchema;
+use Gambling\Common\Port\Adapter\EventStore\DoctrineEventStoreSchema;
 
 final class Version20160904024032 extends AbstractMigration
 {

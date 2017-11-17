@@ -15,7 +15,7 @@ services:
             - '%connect-four.rabbit-mq.dsn%'
 
     connect-four.event-store:
-        class: Gambling\Common\EventStore\DoctrineEventStore
+        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
         arguments:
             - '@doctrine.dbal.connect_four_connection'

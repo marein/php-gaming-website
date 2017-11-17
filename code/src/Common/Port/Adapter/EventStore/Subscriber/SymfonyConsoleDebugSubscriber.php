@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\Common\EventStore\Subscriber;
+namespace Gambling\Common\Port\Adapter\EventStore\Subscriber;
 
 use Gambling\Common\EventStore\StoredEvent;
 use Gambling\Common\EventStore\StoredEventSubscriber;
@@ -14,7 +14,7 @@ final class SymfonyConsoleDebugSubscriber implements StoredEventSubscriber
     private $output;
 
     /**
-     * Constructor.
+     * SymfonyConsoleDebugSubscriber constructor.
      *
      * @param OutputInterface $output
      */

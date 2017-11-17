@@ -1,9 +1,11 @@
 <?php
 
-namespace Gambling\Common\EventStore;
+namespace Gambling\Common\Port\Adapter\EventStore;
 
 use Doctrine\DBAL\Connection;
 use Gambling\Common\Domain\DomainEvent;
+use Gambling\Common\EventStore\EventStore;
+use Gambling\Common\EventStore\StoredEvent;
 
 final class DoctrineEventStore implements EventStore
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\Common\EventStore;
+namespace Gambling\Common\Port\Adapter\EventStore;
 
 use Doctrine\DBAL\Schema\Schema;
 

@@ -15,7 +15,7 @@ services:
             - '%chat.rabbit-mq.dsn%'
 
     chat.event-store:
-        class: Gambling\Common\EventStore\DoctrineEventStore
+        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
         arguments:
             - '@doctrine.dbal.chat_connection'
