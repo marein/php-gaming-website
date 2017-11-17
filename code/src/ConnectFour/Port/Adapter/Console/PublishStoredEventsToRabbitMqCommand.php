@@ -4,6 +4,7 @@ namespace Gambling\ConnectFour\Port\Adapter\Console;
 
 use Gambling\Common\EventStore\EventStore;
 use Gambling\Common\EventStore\FollowEventStoreDispatcher;
+use Gambling\Common\EventStore\InMemoryCacheEventStorePointer;
 use Gambling\Common\EventStore\PredisEventStorePointer;
 use Gambling\Common\EventStore\StoredEventPublisher;
 use Gambling\Common\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
@@ -67,9 +68,11 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
             $this->messageBroker
         );
 
-        $publishedStoredEventTracker = new PredisEventStorePointer(
-            $this->predis,
-            'rabbit-mq-pointer'
+        $publishedStoredEventTracker = new InMemoryCacheEventStorePointer(
+            new PredisEventStorePointer(
+                $this->predis,
+                'rabbit-mq-pointer'
+            )
         );
 
         $storedEventPublisher = new StoredEventPublisher();

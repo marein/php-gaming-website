@@ -4,6 +4,7 @@ namespace Gambling\ConnectFour\Port\Adapter\Console;
 
 use Gambling\Common\EventStore\EventStore;
 use Gambling\Common\EventStore\FollowEventStoreDispatcher;
+use Gambling\Common\EventStore\InMemoryCacheEventStorePointer;
 use Gambling\Common\EventStore\PredisEventStorePointer;
 use Gambling\Common\EventStore\StoredEventPublisher;
 use Gambling\Common\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
@@ -54,9 +55,11 @@ final class BuildQueryModelCommand extends Command
         $gameProjection = new PredisGameProjection($this->predis);
         $debugSubscriber = new SymfonyConsoleDebugSubscriber($output);
 
-        $publishedStoredEventTracker = new PredisEventStorePointer(
-            $this->predis,
-            'query-model-builder-pointer'
+        $publishedStoredEventTracker = new InMemoryCacheEventStorePointer(
+            new PredisEventStorePointer(
+                $this->predis,
+                'query-model-builder-pointer'
+            )
         );
 
         $storedEventPublisher = new StoredEventPublisher();
