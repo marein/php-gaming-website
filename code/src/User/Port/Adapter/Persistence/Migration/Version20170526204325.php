@@ -19,6 +19,7 @@ final class Version20170526204325 extends AbstractMigration
         $table->addColumn('credentials_password', 'string');
 
         $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['credentials_username']);
     }
 
     /**
