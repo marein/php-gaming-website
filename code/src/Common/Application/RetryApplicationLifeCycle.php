@@ -2,7 +2,7 @@
 
 namespace Gambling\Common\Application;
 
-class RetryApplicationLifeCycle implements ApplicationLifeCycle
+final class RetryApplicationLifeCycle implements ApplicationLifeCycle
 {
     /**
      * @var ApplicationLifeCycle
