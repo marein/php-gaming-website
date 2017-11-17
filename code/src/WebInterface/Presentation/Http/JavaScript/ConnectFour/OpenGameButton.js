@@ -33,6 +33,9 @@ Gambling.ConnectFour.OpenGameButton = class
             this.currentOpenGameId = game.gameId;
             this.button.disabled = false;
             this.button.classList.remove('loading-indicator');
+        }).catch(() => {
+            this.button.disabled = false;
+            this.button.classList.remove('loading-indicator');
         });
     }
 

@@ -29,7 +29,9 @@ Gambling.ConnectFour.Game = class
         this.gameService.move(
             this.game.dataset.gameId,
             cell.dataset.column
-        );
+        ).catch(() => {
+            // todo: Handle exception based on error
+        });
     }
 
     onPlayerMoved(event)

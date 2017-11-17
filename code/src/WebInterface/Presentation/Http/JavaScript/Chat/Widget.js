@@ -19,6 +19,7 @@ Gambling.Chat.Widget = class
         this.chatId = '';
         this.messageBuffer = [];
         this.isAlreadyInitialized = false;
+        this.secondsBeforeRetryAfterLoadMessageFailure = 3;
 
         this.element.classList.add('loading-indicator');
 
@@ -37,18 +38,31 @@ Gambling.Chat.Widget = class
         if (this.chatId === '') {
             this.chatId = chatId;
 
-            this.chatService.messages(chatId).then((messages) => {
-                messages.forEach((message) => {
-                    this.appendMessage(message);
-                });
-
-                this.isAlreadyInitialized = true;
-
-                this.flushMessageBuffer();
-
-                this.element.classList.remove('loading-indicator');
-            });
+            this.loadMessages(chatId);
         }
+    }
+
+    /**
+     * @param {String} chatId
+     */
+    loadMessages(chatId)
+    {
+        this.chatService.messages(chatId).then((messages) => {
+            messages.forEach((message) => {
+                this.appendMessage(message);
+            });
+
+            this.isAlreadyInitialized = true;
+
+            this.flushMessageBuffer();
+
+            this.element.classList.remove('loading-indicator');
+        }).catch(() => {
+            // Automatic retry after x seconds.
+            setTimeout(() => {
+                this.loadMessages(chatId);
+            }, this.secondsBeforeRetryAfterLoadMessageFailure * 1000);
+        });
     }
 
     /**

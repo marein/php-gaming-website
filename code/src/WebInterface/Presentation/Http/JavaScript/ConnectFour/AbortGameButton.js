@@ -28,6 +28,7 @@ Gambling.ConnectFour.AbortGameButton = class
             this.button.disabled = false;
             this.button.classList.remove('loading-indicator');
         }).catch(() => {
+            // todo: Handle exception based on error.
             this.button.disabled = false;
             this.button.classList.remove('loading-indicator');
         });
