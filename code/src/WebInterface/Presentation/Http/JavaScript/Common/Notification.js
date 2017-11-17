@@ -35,11 +35,15 @@ Gambling.Common.Notification = class
      */
     createMessageNode(message)
     {
+        let smiley = document.createTextNode('¯\\_(ツ)_/¯');
+        let br = document.createElement('br');
         let text = document.createTextNode(message);
 
         let li = document.createElement('li');
         li.classList.add('notification__message');
 
+        li.append(smiley);
+        li.append(br);
         li.append(text);
 
         return li;
