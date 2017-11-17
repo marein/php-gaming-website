@@ -3,9 +3,12 @@ Gambling.Chat = Gambling.Chat || {};
 
 Gambling.Chat.ChatService = class
 {
-    constructor()
+    /**
+     * @param {String} baseUrl
+     */
+    constructor(baseUrl)
     {
-
+        this.baseUrl = baseUrl || '';
     }
 
     /**
@@ -36,13 +39,14 @@ Gambling.Chat.ChatService = class
 
     /**
      * @param {String} method
-     * @param {String} url
+     * @param {String} path
      * @param {String} data
      * @returns {Promise}
      */
-    send(method, url, data)
+    send(method, path, data)
     {
         return new Promise((resolve, reject) => {
+            let url = this.baseUrl + path;
             let request = new XMLHttpRequest();
             request.open(method, url);
             if (data !== '') {
