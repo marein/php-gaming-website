@@ -1,11 +1,5 @@
 services:
 
-    user.application-life-cycle:
-        class: Gambling\User\Application\ApplicationLifeCycle
-        public: false
-        arguments:
-            - '@doctrine.dbal.user_connection'
-
     user.event-store:
         class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
@@ -13,31 +7,11 @@ services:
             - '@doctrine.dbal.user_connection'
             - 'event_store'
 
-    user.user-service:
-        class: Gambling\User\Application\User\UserService
-        public: false
-        arguments:
-            - '@user.application-life-cycle'
-            - '@user.user-repository'
-
-    user.user-controller:
-        class: Gambling\User\Port\Adapter\Http\UserController
-        public: false
-        arguments:
-            - '@user.user-service'
-
     user.domain-event-publisher:
         class: Gambling\Common\Domain\DomainEventPublisher
         public: false
         calls:
             - ['subscribe', ['@user.store-domain-events-subscriber']]
-
-    user.user-repository:
-        class: Gambling\User\Port\Adapter\Persistence\Repository\DoctrineUserRepository
-        public: false
-        arguments:
-            - '@doctrine.orm.user_entity_manager'
-            - '@user.domain-event-publisher'
 
     ###############################################
     #           Domain Event Subscriber           #
@@ -48,3 +22,38 @@ services:
         public: false
         arguments:
             - '@user.event-store'
+
+    ###############################################
+    #               User aggregate                #
+    ###############################################
+
+    user.user-controller:
+        class: Gambling\User\Port\Adapter\Http\UserController
+        public: false
+        arguments:
+            - '@user.user-service'
+
+    user.user-repository:
+        class: Gambling\User\Port\Adapter\Persistence\Repository\DoctrineUserRepository
+        public: false
+        arguments:
+            - '@doctrine.orm.user_entity_manager'
+            - '@user.domain-event-publisher'
+
+    user.application-life-cycle-factory:
+        class: Gambling\User\Application\ApplicationLifeCycleFactory
+        public: false
+        arguments:
+            - '@doctrine.dbal.user_connection'
+
+    user.application-life-cycle:
+        class: Gambling\Common\Application\ApplicationLifeCycle
+        public: false
+        factory: 'user.application-life-cycle-factory:create'
+
+    user.user-service:
+        class: Gambling\User\Application\User\UserService
+        public: false
+        arguments:
+            - '@user.application-life-cycle'
+            - '@user.user-repository'

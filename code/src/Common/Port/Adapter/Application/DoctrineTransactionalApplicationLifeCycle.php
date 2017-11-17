@@ -1,10 +1,11 @@
 <?php
 
-namespace Gambling\User\Application;
+namespace Gambling\Common\Port\Adapter\Application;
 
 use Doctrine\DBAL\Driver\Connection;
+use Gambling\Common\Application\ApplicationLifeCycle;
 
-final class ApplicationLifeCycle
+final class DoctrineTransactionalApplicationLifeCycle implements ApplicationLifeCycle
 {
     /**
      * @var Connection
@@ -17,7 +18,7 @@ final class ApplicationLifeCycle
     private $transactionAlreadyStarted;
 
     /**
-     * ApplicationLifeCycle constructor.
+     * DoctrineTransactionalApplicationLifeCycle constructor.
      *
      * @param Connection $connection
      */
@@ -27,6 +28,9 @@ final class ApplicationLifeCycle
         $this->transactionAlreadyStarted = false;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function run(callable $action)
     {
         if ($this->transactionAlreadyStarted) {
@@ -35,35 +39,20 @@ final class ApplicationLifeCycle
             $this->transactionAlreadyStarted = true;
 
             try {
-                $this->begin();
+                $this->connection->beginTransaction();
 
                 $return = $action();
 
-                $this->success();
+                $this->connection->commit();
 
                 return $return;
             } catch (\Exception $exception) {
-                $this->fail();
+                $this->connection->rollBack();
 
                 throw $exception;
             } finally {
                 $this->transactionAlreadyStarted = false;
             }
         }
-    }
-
-    private function begin(): void
-    {
-        $this->connection->beginTransaction();
-    }
-
-    private function fail(): void
-    {
-        $this->connection->rollBack();
-    }
-
-    private function success(): void
-    {
-        $this->connection->commit();
     }
 }

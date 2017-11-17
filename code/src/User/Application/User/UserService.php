@@ -2,7 +2,7 @@
 
 namespace Gambling\User\Application\User;
 
-use Gambling\User\Application\ApplicationLifeCycle;
+use Gambling\Common\Application\ApplicationLifeCycle;
 use Gambling\User\Application\User\Command\SignUpCommand;
 use Gambling\User\Domain\Model\User\Credentials;
 use Gambling\User\Domain\Model\User\User;
