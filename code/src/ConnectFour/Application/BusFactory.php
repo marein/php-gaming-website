@@ -5,7 +5,7 @@ namespace Gambling\ConnectFour\Application;
 use Doctrine\DBAL\Driver\Connection;
 use Gambling\Common\Bus\Bus;
 use Gambling\Common\Bus\CallableBus;
-use Gambling\Common\Bus\DoctrineTransactionalBus;
+use Gambling\Common\Port\Adapter\Bus\DoctrineTransactionalBus;
 use Gambling\ConnectFour\Application\Game\Command\AbortCommand;
 use Gambling\ConnectFour\Application\Game\Command\AbortHandler;
 use Gambling\ConnectFour\Application\Game\Command\AssignChatCommand;

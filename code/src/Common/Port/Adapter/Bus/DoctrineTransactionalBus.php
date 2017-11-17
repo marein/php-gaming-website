@@ -1,8 +1,9 @@
 <?php
 
-namespace Gambling\Common\Bus;
+namespace Gambling\Common\Port\Adapter\Bus;
 
 use Doctrine\DBAL\Driver\Connection;
+use Gambling\Common\Bus\Bus;
 
 final class DoctrineTransactionalBus implements Bus
 {
