@@ -63,6 +63,12 @@ services:
         working_dir: /project
         volumes:
             - ./code:/project
+    php-tests:
+        build:
+            context: ./container/php
+        working_dir: /project
+        volumes:
+            - ./code:/project
 
     ##############################
     #   Stored Event Subscriber  #

@@ -23,6 +23,9 @@ help() {
     echo removeGeneratedFiles
     echo Remove vendors, databases, frontend builds and symfony cache.
     echo
+    echo tests
+    echo Run tests.
+    echo
 }
 
 build() {
@@ -64,6 +67,10 @@ removeGeneratedFiles() {
     removeDatabaseFiles
     removeVendors
     removeFrontendBuilds
+}
+
+tests() {
+    docker-compose run php-tests vendor/bin/phpunit
 }
 
 removeSymfonyCache() {

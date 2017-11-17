@@ -247,9 +247,10 @@ I've assigned an abstraction layer to the Web Interface context for easier migra
 
 To have single deployable units, the following steps needs to be done
 1. Copy the folders (at
-[config](/code/app/config)
+[config](/code/app/config),
+[src](/code/src)
 and
-[src](/code/src))
+[tests](/code/tests))
 in a separate application for each context or the context that's worthwhile to be a single deployable unit.
 Don't forget to define the routing for the controllers in the new application.
 2. The Web Interface is the only context which performs direct method invocations to the others.
@@ -318,8 +319,10 @@ Some other technologies:
 
 ## A note on testing
 
-There're currently no written tests. Maybe this comes later on the road. The game aggregate of the connect four context
-is a port from another project of mine. You can find it
-[here](https://github.com/marein/php-connect-four).
-It's connect four for the command line. This project is tested, but not as complex as the game at the connect four
-context.
+Not many tests have been written, but if you meet the requirements in
+[Installation and requirements](#installation-and-requirements)
+you can run them with
+
+```
+./project tests
+```
