@@ -4,7 +4,7 @@ namespace Gambling\Common\ObjectMapper\Scalar;
 
 use PHPUnit\Framework\TestCase;
 
-class BoolMapperTest extends TestCase
+final class BoolMapperTest extends TestCase
 {
     /**
      * @test
