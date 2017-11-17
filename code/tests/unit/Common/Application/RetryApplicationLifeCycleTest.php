@@ -4,7 +4,7 @@ namespace Gambling\Common\Application;
 
 use PHPUnit\Framework\TestCase;
 
-class RetryApplicationLifeCycleTest extends TestCase
+final class RetryApplicationLifeCycleTest extends TestCase
 {
     /**
      * @test
@@ -27,18 +27,34 @@ class RetryApplicationLifeCycleTest extends TestCase
      */
     public function itShouldRetry(): void
     {
+        $actionToCall = function () {
+            // No op
+        };
+
         $applicationLifeCycle = $this->createMock(ApplicationLifeCycle::class);
 
         // The first two times when "run" is called, an exception is thrown.
-        $applicationLifeCycle->expects($this->at(0))->method('run')->willThrowException(
-            new \Exception()
-        );
-        $applicationLifeCycle->expects($this->at(1))->method('run')->willThrowException(
-            new \Exception()
-        );
+        $applicationLifeCycle
+            ->expects($this->at(0))
+            ->method('run')
+            ->willThrowException(
+                new \Exception()
+            );
+        $applicationLifeCycle
+            ->expects($this->at(1))
+            ->method('run')
+            ->willThrowException(
+                new \Exception()
+            );
+        $applicationLifeCycle
+            ->expects($this->at(2))
+            ->method('run')
+            ->with($actionToCall);
 
         // Expect that "run" is called three times.
-        $applicationLifeCycle->expects($this->exactly(3))->method('run');
+        $applicationLifeCycle
+            ->expects($this->exactly(3))
+            ->method('run');
 
         /** @var ApplicationLifeCycle $applicationLifeCycle */
         $retryApplicationLifeCycle = new RetryApplicationLifeCycle(
@@ -46,9 +62,7 @@ class RetryApplicationLifeCycleTest extends TestCase
             3
         );
 
-        $retryApplicationLifeCycle->run(function () {
-            // No op
-        });
+        $retryApplicationLifeCycle->run($actionToCall);
     }
 
     /**
@@ -62,12 +76,17 @@ class RetryApplicationLifeCycleTest extends TestCase
         $applicationLifeCycle = $this->createMock(ApplicationLifeCycle::class);
 
         // "run" always throws an exception.
-        $applicationLifeCycle->expects($this->any())->method('run')->willThrowException(
-            new \Exception('Custom exception')
-        );
+        $applicationLifeCycle
+            ->expects($this->any())
+            ->method('run')
+            ->willThrowException(
+                new \Exception('Custom exception')
+            );
 
         // Expect that "run" is called three times.
-        $applicationLifeCycle->expects($this->exactly(3))->method('run');
+        $applicationLifeCycle
+            ->expects($this->exactly(3))
+            ->method('run');
 
         /** @var ApplicationLifeCycle $applicationLifeCycle */
         $retryApplicationLifeCycle = new RetryApplicationLifeCycle(
