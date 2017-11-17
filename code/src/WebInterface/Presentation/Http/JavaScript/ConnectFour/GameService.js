@@ -26,7 +26,7 @@ Gambling.ConnectFour.GameService = class
         return this.send(
             'POST',
             '/api/connect-four/games/' + gameId + '/move',
-            'column=' + column
+            'column=' + encodeURIComponent(column)
         );
     }
 

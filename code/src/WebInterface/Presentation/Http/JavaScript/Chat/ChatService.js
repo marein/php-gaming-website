@@ -18,7 +18,7 @@ Gambling.Chat.ChatService = class
         return this.send(
             'POST',
             '/api/chat/chats/' + chatId + '/write-message',
-            'message=' + message
+            'message=' + encodeURIComponent(message)
         );
     }
 
