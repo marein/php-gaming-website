@@ -1,0 +1,5 @@
+doctrine:
+    dbal:
+        connections:
+            chat:
+                url: %chat.doctrine.dbal.url%

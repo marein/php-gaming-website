@@ -1,6 +1,7 @@
 // window.app acts like a container.
 window.app = {
     isDebug: false,
+    baseUrl: '',
     user: {
         id: ''
     }
@@ -15,12 +16,21 @@ app.log = function (message) {
 
 app.eventPublisher = new Gambling.Common.EventPublisher();
 
-app.gameService = new Gambling.ConnectFour.GameService();
-
-app.chatService = new Gambling.Chat.ChatService();
-
 app.notification = new Gambling.Common.Notification(
     document.getElementById('notification')
+);
+
+app.httpClient = new Gambling.Common.HttpClient(
+    app.baseUrl,
+    app.notification
+);
+
+app.gameService = new Gambling.ConnectFour.GameService(
+    app.httpClient
+);
+
+app.chatService = new Gambling.Chat.ChatService(
+    app.httpClient
 );
 
 // Log all events if debug mode is enabled.

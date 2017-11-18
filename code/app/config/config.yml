@@ -1,37 +1,16 @@
 imports:
+    - { resource: chat/config.yml }
     - { resource: chat/services.yml }
+    - { resource: connect-four/config.yml }
     - { resource: connect-four/services.yml }
+    - { resource: user/config.yml }
     - { resource: user/services.yml }
+    - { resource: web-interface/config.yml }
     - { resource: web-interface/services.yml }
 
 framework:
     secret: %kernel.secret%
     templating:
         engines: ['twig']
-    session:
-        handler_id: web-interface.session-handler
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
-
-doctrine:
-    dbal:
-        connections:
-            chat:
-                url: %chat.doctrine.dbal.url%
-            connect-four:
-                url: %connect-four.doctrine.dbal.url%
-            user:
-                url: %user.doctrine.dbal.url%
-    orm:
-        entity_managers:
-            user:
-                connection: user
-                mappings:
-                    user:
-                        type:     yml
-                        dir:      %kernel.root_dir%/../src/User/Port/Adapter/Persistence/Mapping/User
-                        prefix:   Gambling\User\Domain\Model\User
-
-twig:
-    paths:
-        "%kernel.root_dir%/../src/WebInterface/Presentation/Http/View": web-interface

@@ -96,6 +96,11 @@ final class Client
     private $sessionId;
 
     /**
+     * @var string $csrfToken
+     */
+    private $csrfToken;
+
+    /**
      * @var AvarageTimeCalculator $avarageTimeCalculator
      */
     private $avarageTimeCalculator;
@@ -116,7 +121,8 @@ final class Client
         foreach ($headers as $header) {
             if (preg_match('/PHPSESSID=([^;]+);/', $header, $matches)) {
                 $this->sessionId = $matches[1];
-                break;
+            } elseif (preg_match('/XSRF-TOKEN=([^;]+);/', $header, $matches)) {
+                $this->csrfToken = $matches[1];
             }
         }
     }
@@ -149,25 +155,31 @@ final class Client
 
     private function request($json, $method, $url, array $content = [])
     {
-        $opts = [
-            'http' =>
-                [
-                    'method'  => $method,
-                    'header'  => 'Content-type: application/x-www-form-urlencoded',
-                    'content' => http_build_query($content)
-                ]
+        $headers = [];
+        $options = [
+            'http' => [
+                'method' => $method
+            ]
         ];
 
-        if ($this->sessionId) {
-            $opts['http']['header'] .= "\r\nCookie: PHPSESSID=" . $this->sessionId;
+        if ($method === 'POST') {
+            $options['http']['content'] = http_build_query($content);
+            $headers[] = 'Content-type: application/x-www-form-urlencoded';
+            $headers[] = 'X-XSRF-TOKEN: ' . $this->csrfToken;
         }
+
+        if ($this->sessionId) {
+            $headers[] = 'Cookie: PHPSESSID=' . $this->sessionId;
+        }
+
+        $options['http']['header'] = implode("\r\n", $headers);
 
         $start = microtime(true);
 
         $response = @file_get_contents(
             $this->endpoint . $url,
             false,
-            stream_context_create($opts)
+            stream_context_create($options)
         );
 
         $this->avarageTimeCalculator->add(

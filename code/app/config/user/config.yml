@@ -1,0 +1,14 @@
+doctrine:
+    dbal:
+        connections:
+            user:
+                url: %user.doctrine.dbal.url%
+    orm:
+        entity_managers:
+            user:
+                connection: user
+                mappings:
+                    user:
+                        type:     yml
+                        dir:      %kernel.root_dir%/../src/User/Port/Adapter/Persistence/Mapping/User
+                        prefix:   Gambling\User\Domain\Model\User

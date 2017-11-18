@@ -1,0 +1,5 @@
+doctrine:
+    dbal:
+        connections:
+            connect-four:
+                url: %connect-four.doctrine.dbal.url%

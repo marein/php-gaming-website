@@ -4,11 +4,11 @@ Gambling.ConnectFour = Gambling.ConnectFour || {};
 Gambling.ConnectFour.GameService = class
 {
     /**
-     * @param {String} baseUrl
+     * @param {Gambling.Common.HttpClient} httpClient
      */
-    constructor(baseUrl)
+    constructor(httpClient)
     {
-        this.baseUrl = baseUrl || '';
+        this.httpClient = httpClient;
     }
 
     /**
@@ -16,7 +16,9 @@ Gambling.ConnectFour.GameService = class
      */
     redirectTo(gameId)
     {
-        top.location.href = '/game/' + gameId;
+        this.httpClient.redirectTo(
+            '/game/' + gameId
+        );
     }
 
     /**
@@ -26,10 +28,11 @@ Gambling.ConnectFour.GameService = class
      */
     move(gameId, column)
     {
-        return this.send(
-            'POST',
+        return this.httpClient.post(
             '/api/connect-four/games/' + gameId + '/move',
-            'column=' + encodeURIComponent(column)
+            {
+                column: column
+            }
         );
     }
 
@@ -38,10 +41,8 @@ Gambling.ConnectFour.GameService = class
      */
     open()
     {
-        return this.send(
-            'POST',
-            '/api/connect-four/games/open',
-            ''
+        return this.httpClient.post(
+            '/api/connect-four/games/open'
         );
     }
 
@@ -51,10 +52,8 @@ Gambling.ConnectFour.GameService = class
      */
     abort(gameId)
     {
-        return this.send(
-            'POST',
+        return this.httpClient.post(
             '/api/connect-four/games/' + gameId + '/abort',
-            ''
         );
     }
 
@@ -64,40 +63,8 @@ Gambling.ConnectFour.GameService = class
      */
     join(gameId)
     {
-        return this.send(
-            'POST',
+        return this.httpClient.post(
             '/api/connect-four/games/' + gameId + '/join',
-            ''
         );
-    }
-
-    /**
-     * @param {String} method
-     * @param {String} path
-     * @param {String} data
-     * @returns {Promise}
-     */
-    send(method, path, data)
-    {
-        return new Promise((resolve, reject) => {
-            let url = this.baseUrl + path;
-            let request = new XMLHttpRequest();
-            request.open(method, url);
-            if (data !== '') {
-                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            }
-            request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            request.addEventListener('load', () => {
-                let response = JSON.parse(request.responseText);
-
-                if (request.status >= 200 && request.status < 300) {
-                    resolve(response);
-                } else {
-                    app.notification.appendMessage(response.message);
-                    reject(response);
-                }
-            });
-            request.send(data);
-        });
     }
 };

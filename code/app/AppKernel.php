@@ -4,6 +4,7 @@ namespace Gambling;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
+use Dunglas\AngularCsrfBundle\DunglasAngularCsrfBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
@@ -38,6 +39,7 @@ class AppKernel extends BaseKernel
             new FrameworkBundle(),
             new DoctrineBundle(),
             new DoctrineMigrationsBundle(),
+            new DunglasAngularCsrfBundle(),
             new TwigBundle()
         ];
 
