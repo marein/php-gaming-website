@@ -1,6 +1,6 @@
 {
-  "name": "marein/php-connect-four-website",
-  "description": "Website which uses marein/php-connect-four.",
+  "name": "marein/php-gambling-website",
+  "description": "A gambling website where people can play against each other.",
   "authors": [
     {
       "name": "Markus Reinhold",

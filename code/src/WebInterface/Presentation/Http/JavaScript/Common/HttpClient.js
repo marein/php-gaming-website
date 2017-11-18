@@ -84,7 +84,7 @@ Gambling.Common.HttpClient = class
 
     /**
      * @param {Object} postParameters
-     * @returns {string}
+     * @returns {String}
      */
     preparePostParameters(postParameters)
     {
@@ -98,6 +98,9 @@ Gambling.Common.HttpClient = class
         return preparedPostParameters.join('&');
     }
 
+    /**
+     * @returns {String}
+     */
     readCsrfTokenFromCookie()
     {
         let matches = document.cookie.match(/XSRF-TOKEN=([^;]+);/);

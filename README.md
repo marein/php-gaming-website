@@ -75,6 +75,7 @@ and
 [Event Storming](https://en.wikipedia.org/wiki/Event_storming)
 to define them. Well, you only see the result and not the breakthroughs I went through.
 The following sections describe what techniques I use in the respective context.
+Note that I've intentionally chosen a different approach in each context.
 
 I presuppose you've read
 [Implementing Domain Driven Design](https://vaughnvernon.co/?page_id=168#iddd)
@@ -186,11 +187,12 @@ This allows to scale the games and the chats independently, but ensures consiste
 
 I've chosen MySQL as the command side storage. Since the games are stored as json, MySQL is used as a document store.
 On the query side, I've chosen Redis as the storage, since there are no relational queries to perform.
-Of course, I could've used Redis for the command side, but I'm more familiar with MySQL.
-Note that you need to have a database that allows you to store the domain model as well as
+Note that on the command side you'll need a database that allows you to store the domain model as well as
 the events in a single transaction. Another possibility is to use
 [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
 as the storage model. With this model, only the events are saved.
+The game aggregate is actually a good fit for the event sourcing approach.
+Maybe I'll implement this storage model in the next game.
 
 ### User
 
