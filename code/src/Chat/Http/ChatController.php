@@ -43,6 +43,7 @@ final class ChatController
         return new JsonResponse(
             $this->chatGateway->messagesByChat(
                 $request->query->get('chatId'),
+                $request->query->get('authorId'),
                 (int)$request->query->get('offset'),
                 (int)$request->query->get('limit')
             )

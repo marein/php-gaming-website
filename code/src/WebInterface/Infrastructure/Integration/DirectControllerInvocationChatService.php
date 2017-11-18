@@ -44,14 +44,15 @@ final class DirectControllerInvocationChatService implements ChatService
     /**
      * @inheritdoc
      */
-    public function messages(string $chatId, int $offset, int $limit): array
+    public function messages(string $chatId, string $authorId, int $offset, int $limit): array
     {
         return $this->sendRequest(
             'messages',
             [
-                'chatId' => $chatId,
-                'offset' => $offset,
-                'limit'  => $limit
+                'chatId'   => $chatId,
+                'authorId' => $authorId,
+                'offset'   => $offset,
+                'limit'    => $limit
             ]
         );
     }

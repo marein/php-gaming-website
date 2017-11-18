@@ -93,7 +93,7 @@ final class ChatGateway
         $chat = $this->chatById($chatId);
         $authors = json_decode($chat['authors'], true);
 
-        // Our only business rule. If authors assigned to the chat, only these authors can write a message.
+        // If authors are assigned to the chat, only those authors can write messages.
         if (!empty($authors) && !in_array($authorId, $authors)) {
             throw new AuthorNotAllowedException();
         }
@@ -139,20 +139,27 @@ final class ChatGateway
      * Get messages by chat.
      *
      * @param string $chatId
+     * @param string $authorId Id of the author who wants to display the messages.
      * @param int    $offset
      * @param int    $limit
      *
      * @return array
      */
-    public function messagesByChat(string $chatId, int $offset, int $limit): array
+    public function messagesByChat(string $chatId, string $authorId, int $offset, int $limit): array
     {
+        // If authors are assigned to the chat, only those authors can read messages.
         return $this->connection->createQueryBuilder()
-            ->select('id as messageId, authorId, message')
-            ->from(self::TABLE_MESSAGE, 'm')
+            ->select('m.id as messageId, m.authorId, m.message')
+            ->from(self::TABLE_CHAT, 'c')
+            ->leftJoin('c', self::TABLE_MESSAGE, 'm', 'c.id = m.chatId')
             ->where('m.chatId = :chatId')
+            ->andWhere(
+                'JSON_LENGTH(c.authors) = 0 OR JSON_CONTAINS(c.authors, :authorId) > 0'
+            )
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->setParameter('chatId', $chatId)
+            ->setParameter('authorId', $authorId, 'json')
             ->execute()
             ->fetchAll();
     }

@@ -19,10 +19,11 @@ interface ChatService
      * Get the messages in the chat.
      *
      * @param string $chatId
+     * @param string $authorId
      * @param int    $offset
      * @param int    $limit
      *
      * @return array
      */
-    public function messages(string $chatId, int $offset, int $limit): array;
+    public function messages(string $chatId, string $authorId, int $offset, int $limit): array;
 }
