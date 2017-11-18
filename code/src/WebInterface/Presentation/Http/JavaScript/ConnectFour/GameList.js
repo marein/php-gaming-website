@@ -6,16 +6,14 @@ Gambling.ConnectFour.GameList = class
     /**
      * @param {Gambling.Common.EventPublisher} eventPublisher
      * @param {Gambling.ConnectFour.GameService} gameService
-     * @param {Gambling.Common.Template} gameTemplate
      * @param {Node} games
      * @param {Array} gamesToAdd
      * @param {Number} maximumNumberOfGamesInList
      */
-    constructor(eventPublisher, gameService, gameTemplate, games, gamesToAdd, maximumNumberOfGamesInList)
+    constructor(eventPublisher, gameService, games, gamesToAdd, maximumNumberOfGamesInList)
     {
         this.eventPublisher = eventPublisher;
         this.gameService = gameService;
-        this.gameTemplate = gameTemplate;
         this.games = games;
         this.maximumNumberOfGamesInList = maximumNumberOfGamesInList;
         this.currentGamesInList = [];
@@ -34,19 +32,11 @@ Gambling.ConnectFour.GameList = class
     addGame(gameId, playerId)
     {
         if (this.currentGamesInList.indexOf(gameId) === -1) {
+            let isCurrentUserThePlayer = app.user.id === playerId;
+
             this.games.appendChild(
-                this.gameTemplate.render({
-                    id: gameId
-                })
+                this.createGameNode(gameId, isCurrentUserThePlayer)
             );
-
-            let lastAppendedGame = this.lastGame();
-
-            if (app.user.id === playerId) {
-                lastAppendedGame.classList.add('game-list__game--user-game');
-            }
-
-            this.addChildComponents(lastAppendedGame, app.user.id === playerId);
         }
     }
 
@@ -85,11 +75,11 @@ Gambling.ConnectFour.GameList = class
 
     /**
      * @param {Node} game
-     * @param {Boolean} isGameOfCurrentUser
+     * @param {Boolean} isCurrentUserThePlayer
      */
-    addChildComponents(game, isGameOfCurrentUser)
+    addChildComponents(game, isCurrentUserThePlayer)
     {
-        if (isGameOfCurrentUser) {
+        if (isCurrentUserThePlayer) {
             new Gambling.ConnectFour.AbortGameButton(
                 this.gameService,
                 game.querySelector('button')
@@ -150,6 +140,35 @@ Gambling.ConnectFour.GameList = class
             this.flushPendingGamesToAdd();
             this.games.classList.remove('loading-indicator');
         }, 250);
+    }
+
+    /**
+     * @param {String} gameId
+     * @param {Boolean} isCurrentUserThePlayer
+     * @returns {Node}
+     */
+    createGameNode(gameId, isCurrentUserThePlayer)
+    {
+        let span = document.createElement('span');
+        span.innerText = 'Anonymous';
+
+        let button = document.createElement('button');
+        button.dataset.gameId = gameId;
+
+        let li = document.createElement('li');
+        li.classList.add('game-list__game');
+        li.dataset.gameId = gameId;
+
+        if (isCurrentUserThePlayer) {
+            li.classList.add('game-list__game--user-game');
+        }
+
+        button.append(span);
+        li.append(button);
+
+        this.addChildComponents(li, isCurrentUserThePlayer);
+
+        return li;
     }
 
     onGameOpened(event)

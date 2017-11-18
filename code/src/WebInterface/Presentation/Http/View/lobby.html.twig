@@ -24,13 +24,6 @@
             </p>
         </div>
     </section>
-    <template id="game-template">
-        <li class="game-list__game" data-game-id="---id---">
-            <button data-game-id="---id---">
-                <span>Anonymous</span>
-            </button>
-        </li>
-    </template>
 {% endblock %}
 
 {% block javascript %}
@@ -43,10 +36,9 @@
             new Gambling.ConnectFour.GameList(
                 app.eventPublisher,
                 app.gameService,
-                Gambling.Common.Template.fromSelector('#game-template'),
                 document.getElementById('games'),
-                    {{ openGames|json_encode|raw }},
-                    {{ maximumNumberOfGamesInList }}
+                {{ openGames|json_encode|raw }},
+                {{ maximumNumberOfGamesInList }}
             );
             new Gambling.ConnectFour.OpenGameButton(
                 app.eventPublisher,
