@@ -55,7 +55,7 @@ final class BuildQueryModelCommand extends Command
         $gameProjection = new PredisGameProjection($this->predis);
         $debugSubscriber = new SymfonyConsoleDebugSubscriber($output);
 
-        $publishedStoredEventTracker = new InMemoryCacheEventStorePointer(
+        $eventStorePointer = new InMemoryCacheEventStorePointer(
             new PredisEventStorePointer(
                 $this->predis,
                 'query-model-builder-pointer'
@@ -70,7 +70,7 @@ final class BuildQueryModelCommand extends Command
         $storedEventPublisher->subscribe($debugSubscriber);
 
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
-            $publishedStoredEventTracker,
+            $eventStorePointer,
             $this->eventStore,
             $storedEventPublisher
         );

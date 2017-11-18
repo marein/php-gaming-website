@@ -10,7 +10,7 @@ final class FollowEventStoreDispatcher
     /**
      * @var EventStorePointer
      */
-    private $publishedStoredEventTracker;
+    private $eventStorePointer;
 
     /**
      * @var EventStore
@@ -25,16 +25,16 @@ final class FollowEventStoreDispatcher
     /**
      * FollowEventStoreDispatcher constructor.
      *
-     * @param EventStorePointer    $publishedStoredEventTracker
+     * @param EventStorePointer    $eventStorePointer
      * @param EventStore           $eventStore
      * @param StoredEventPublisher $storedEventPublisher
      */
     public function __construct(
-        EventStorePointer $publishedStoredEventTracker,
+        EventStorePointer $eventStorePointer,
         EventStore $eventStore,
         StoredEventPublisher $storedEventPublisher
     ) {
-        $this->publishedStoredEventTracker = $publishedStoredEventTracker;
+        $this->eventStorePointer = $eventStorePointer;
         $this->eventStore = $eventStore;
         $this->storedEventPublisher = $storedEventPublisher;
     }
@@ -55,7 +55,7 @@ final class FollowEventStoreDispatcher
             throw new \InvalidArgumentException('batchSize must be greater than 0');
         }
 
-        $lastStoredEventId = $this->publishedStoredEventTracker->retrieveMostRecentPublishedStoredEventId();
+        $lastStoredEventId = $this->eventStorePointer->retrieveMostRecentPublishedStoredEventId();
 
         $storedEvents = $this->eventStore->storedEventsSince(
             $lastStoredEventId,
@@ -66,7 +66,7 @@ final class FollowEventStoreDispatcher
             $this->storedEventPublisher->publish($storedEvents);
 
             $lastStoredEventId = end($storedEvents)->id();
-            $this->publishedStoredEventTracker->trackMostRecentPublishedStoredEventId($lastStoredEventId);
+            $this->eventStorePointer->trackMostRecentPublishedStoredEventId($lastStoredEventId);
         }
     }
 }

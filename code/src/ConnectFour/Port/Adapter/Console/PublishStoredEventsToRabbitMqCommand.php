@@ -68,7 +68,7 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
             $this->messageBroker
         );
 
-        $publishedStoredEventTracker = new InMemoryCacheEventStorePointer(
+        $eventStorePointer = new InMemoryCacheEventStorePointer(
             new PredisEventStorePointer(
                 $this->predis,
                 'rabbit-mq-pointer'
@@ -80,7 +80,7 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
         $storedEventPublisher->subscribe($debugSubscriber);
 
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
-            $publishedStoredEventTracker,
+            $eventStorePointer,
             $this->eventStore,
             $storedEventPublisher
         );
