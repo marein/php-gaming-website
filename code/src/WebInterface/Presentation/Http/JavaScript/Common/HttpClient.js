@@ -103,7 +103,7 @@ Gambling.Common.HttpClient = class
      */
     readCsrfTokenFromCookie()
     {
-        let matches = document.cookie.match(/XSRF-TOKEN=([^;]+);/);
+        let matches = document.cookie.match(/XSRF-TOKEN=([^;]+);?/);
         return matches[1];
     }
 };
