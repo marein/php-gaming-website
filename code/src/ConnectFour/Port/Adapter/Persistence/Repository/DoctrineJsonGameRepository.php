@@ -9,6 +9,8 @@ use Gambling\ConnectFour\Domain\Game\Game;
 use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Games;
 use Gambling\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapper;
+use Gambling\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapperFactory;
+use Gambling\ConnectFour\Port\Adapter\Persistence\Mapping\LazyGameMapper;
 
 final class DoctrineJsonGameRepository implements Games
 {
@@ -39,6 +41,8 @@ final class DoctrineJsonGameRepository implements Games
     /**
      * The game mapper to serialize the game to an array structure and back.
      *
+     * Use $this->gameMapper() instead of this property. The GameMapper gets lazy loaded.
+     *
      * @var GameMapper
      */
     private $gameMapper;
@@ -62,7 +66,6 @@ final class DoctrineJsonGameRepository implements Games
         $this->domainEventPublisher = $domainEventPublisher;
         $this->tableName = 'game';
         $this->identityMap = [];
-        $this->gameMapper = new GameMapper();
     }
 
     /**
@@ -137,7 +140,7 @@ final class DoctrineJsonGameRepository implements Games
 
         $this->registerAggregateId($row['id'], $row['version']);
 
-        return $this->gameMapper->deserialize(
+        return $this->gameMapper()->deserialize(
             json_decode($row['aggregate'], true)
         );
     }
@@ -155,7 +158,7 @@ final class DoctrineJsonGameRepository implements Games
         $version = $this->identityMap[$id]['version'];
 
         $result = $this->connection->update($this->tableName, [
-            'aggregate' => $this->gameMapper->serialize($game),
+            'aggregate' => $this->gameMapper()->serialize($game),
             'version'   => $version + 1
         ], ['id' => $id, 'version' => $version], [
             'aggregate' => 'json',
@@ -179,7 +182,7 @@ final class DoctrineJsonGameRepository implements Games
     {
         $this->connection->insert($this->tableName, [
             'id'        => $id,
-            'aggregate' => $this->gameMapper->serialize($game),
+            'aggregate' => $this->gameMapper()->serialize($game),
             'version'   => 1
         ], [
             'aggregate' => 'json',
@@ -200,5 +203,19 @@ final class DoctrineJsonGameRepository implements Games
         $this->identityMap[$id] = [
             'version' => $version
         ];
+    }
+
+    /**
+     * Lazy loads the GameMapper.
+     *
+     * @return GameMapper
+     */
+    private function gameMapper(): GameMapper
+    {
+        if (!$this->gameMapper) {
+            $this->gameMapper = (new GameMapperFactory())->create();
+        }
+
+        return $this->gameMapper;
     }
 }
