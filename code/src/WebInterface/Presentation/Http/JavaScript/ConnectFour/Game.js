@@ -6,14 +6,16 @@ Gambling.ConnectFour.Game = class
     /**
      * @param {Gambling.Common.EventPublisher} eventPublisher
      * @param {Gambling.ConnectFour.GameService} gameService
-     * @param {Node} game
+     * @param {Node} gameHolder
+     * @param {String} gameId
      */
-    constructor(eventPublisher, gameService, game)
+    constructor(eventPublisher, gameService, gameHolder, gameId)
     {
         this.eventPublisher = eventPublisher;
         this.gameService = gameService;
-        this.game = game;
-        this.fields = this.game.querySelectorAll('.game__field');
+        this.gameHolder = gameHolder;
+        this.gameId = gameId;
+        this.fields = this.gameHolder.querySelectorAll('.game__field');
         this.colorToClass = {
             1: 'game__field--red',
             2: 'game__field--yellow'
@@ -26,19 +28,24 @@ Gambling.ConnectFour.Game = class
     {
         let cell = event.target;
 
+        this.gameHolder.classList.add('loading-indicator');
+
         this.gameService.move(
-            this.game.dataset.gameId,
+            this.gameId,
             cell.dataset.column
-        ).catch(() => {
+        ).then(() => {
+            this.gameHolder.classList.remove('loading-indicator');
+        }).catch(() => {
             // todo: Handle exception based on error
+            this.gameHolder.classList.remove('loading-indicator');
         });
     }
 
     onPlayerMoved(event)
     {
         let payload = event.payload;
-        if (this.game.dataset.gameId === payload.gameId) {
-            let field = this.game.querySelector('.game__field[data-point="' + payload.x + ' ' + payload.y + '"]');
+        if (this.gameId === payload.gameId) {
+            let field = this.gameHolder.querySelector('.game__field[data-point="' + payload.x + ' ' + payload.y + '"]');
             let color = parseInt(payload.color);
             field.classList.add(
                 this.colorToClass[color]

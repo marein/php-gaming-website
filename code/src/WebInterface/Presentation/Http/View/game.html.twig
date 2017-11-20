@@ -9,10 +9,8 @@
         </div>
     </div>
     <section class="middle">
-        <div class="box">
-            <table id="current-game"
-                   data-game-id="{{ game.gameId }}"
-                   class="game">
+        <div class="box" id="current-game">
+            <table class="game">
                 <tbody>
                 <tr>
                     {% for field in game.fields %}
@@ -62,7 +60,8 @@
             new Gambling.ConnectFour.Game(
                 app.eventPublisher,
                 app.gameService,
-                document.getElementById('current-game')
+                document.getElementById('current-game'),
+                '{{ game.gameId }}'
             );
             new Gambling.ConnectFour.AbortGameButton(
                 app.gameService,
