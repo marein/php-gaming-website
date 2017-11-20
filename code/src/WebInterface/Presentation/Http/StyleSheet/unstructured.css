@@ -189,6 +189,9 @@ button:hover {
     content: "";
     display: block;
     background-color: rgba(255, 255, 255, .3);
+    background-image: url("loading-indicator.svg");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 @media screen and (min-width: 960px) {
