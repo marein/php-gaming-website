@@ -23,6 +23,11 @@ final class ConnectFourController
         $this->connectFourService = $connectFourService;
     }
 
+    /**
+     * @param string $gameId
+     *
+     * @return JsonResponse
+     */
     public function showAction(string $gameId): JsonResponse
     {
         return new JsonResponse(
@@ -30,6 +35,11 @@ final class ConnectFourController
         );
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function openAction(Request $request): JsonResponse
     {
         return new JsonResponse(
@@ -39,6 +49,12 @@ final class ConnectFourController
         );
     }
 
+    /**
+     * @param Request $request
+     * @param string  $gameId
+     *
+     * @return JsonResponse
+     */
     public function joinAction(Request $request, string $gameId): JsonResponse
     {
         return new JsonResponse(
@@ -49,6 +65,12 @@ final class ConnectFourController
         );
     }
 
+    /**
+     * @param Request $request
+     * @param string  $gameId
+     *
+     * @return JsonResponse
+     */
     public function abortAction(Request $request, string $gameId): JsonResponse
     {
         return new JsonResponse(
@@ -59,6 +81,12 @@ final class ConnectFourController
         );
     }
 
+    /**
+     * @param Request $request
+     * @param string  $gameId
+     *
+     * @return JsonResponse
+     */
     public function moveAction(Request $request, string $gameId): JsonResponse
     {
         return new JsonResponse(

@@ -71,6 +71,9 @@ final class PredisGameProjection implements StoredEventSubscriber
         );
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handleGameOpened(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
@@ -83,6 +86,9 @@ final class PredisGameProjection implements StoredEventSubscriber
         $this->storeGameStructure($gameId, $gameStructure);
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handlePlayerMoved(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
@@ -98,6 +104,9 @@ final class PredisGameProjection implements StoredEventSubscriber
         $this->storeGameStructure($gameId, $gameStructure);
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handleGameFinished(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
@@ -113,6 +122,9 @@ final class PredisGameProjection implements StoredEventSubscriber
         unset($this->gameStructureCache[$gameId]);
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handleChatAssigned(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);

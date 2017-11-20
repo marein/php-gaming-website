@@ -55,6 +55,9 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
         );
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handlePlayerJoined(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
@@ -63,6 +66,9 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
         $this->predis->sadd(self::STORAGE_KEY, $gameId);
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handleGameFinished(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);

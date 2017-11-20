@@ -16,7 +16,7 @@ final class PredisGamesByPlayerFinder implements GamesByPlayerFinder
     private $predis;
 
     /**
-     * PredisGameFinder constructor.
+     * PredisGamesByPlayerFinder constructor.
      *
      * @param Client $predis
      */

@@ -7,6 +7,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 final class AssignUserIdOnKernelRequest
 {
+    /**
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event): void
     {
         if (!$event->isMasterRequest()) {

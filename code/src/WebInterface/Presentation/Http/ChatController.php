@@ -23,6 +23,12 @@ final class ChatController
         $this->chatService = $chatService;
     }
 
+    /**
+     * @param Request $request
+     * @param string  $chatId
+     *
+     * @return JsonResponse
+     */
     public function writeMessageAction(Request $request, string $chatId): JsonResponse
     {
         return new JsonResponse(
@@ -34,6 +40,12 @@ final class ChatController
         );
     }
 
+    /**
+     * @param Request $request
+     * @param string  $chatId
+     *
+     * @return JsonResponse
+     */
     public function messagesAction(Request $request, string $chatId): JsonResponse
     {
         return new JsonResponse(

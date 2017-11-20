@@ -23,6 +23,11 @@ final class ChatController
         $this->chatGateway = $chatGateway;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function writeMessageAction(Request $request): JsonResponse
     {
         $chatId = $request->query->get('chatId');
@@ -38,6 +43,11 @@ final class ChatController
         ]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function messagesAction(Request $request): JsonResponse
     {
         return new JsonResponse(

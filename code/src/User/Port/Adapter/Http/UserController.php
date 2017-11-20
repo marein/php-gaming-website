@@ -24,6 +24,11 @@ final class UserController
         $this->userService = $userService;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function signUpAction(Request $request): JsonResponse
     {
         $userId = $this->userService->signUp(

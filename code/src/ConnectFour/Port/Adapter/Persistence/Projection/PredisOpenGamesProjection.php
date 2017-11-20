@@ -54,6 +54,9 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
         );
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handleGameOpened(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
@@ -70,6 +73,9 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
         );
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handleGameAborted(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
@@ -78,6 +84,9 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
         $this->predis->hdel(self::STORAGE_KEY, [$gameId]);
     }
 
+    /**
+     * @param StoredEvent $storedEvent
+     */
     private function handlePlayerJoined(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);

@@ -43,6 +43,11 @@ class GameController
         $this->queryBus = $queryBus;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function openGamesAction(Request $request): JsonResponse
     {
         /** @var OpenGames $openGames */
@@ -60,6 +65,11 @@ class GameController
         ]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function runningGamesAction(Request $request): JsonResponse
     {
         /** @var RunningGames $runningGames */
@@ -70,6 +80,11 @@ class GameController
         ]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function gamesByPlayerAction(Request $request): JsonResponse
     {
         /** @var GamesByPlayer $gamesByPlayer */
@@ -88,6 +103,11 @@ class GameController
         ]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function gameAction(Request $request): JsonResponse
     {
         try {
@@ -116,6 +136,11 @@ class GameController
         }
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function openAction(Request $request): JsonResponse
     {
         $gameId = $this->commandBus->handle(
@@ -129,6 +154,11 @@ class GameController
         ]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function joinAction(Request $request): JsonResponse
     {
         $gameId = $request->query->get('gameId');
@@ -145,6 +175,11 @@ class GameController
         ]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function abortAction(Request $request): JsonResponse
     {
         $gameId = $request->query->get('gameId');
@@ -161,6 +196,11 @@ class GameController
         ]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function moveAction(Request $request): JsonResponse
     {
         $gameId = $request->query->get('gameId');
