@@ -1,20 +1,20 @@
 <?php
 
-namespace Gambling\Chat\Model;
+namespace Gambling\Chat\Application\Event;
 
 use Gambling\Common\Domain\DomainEvent;
 
-final class GenericDomainEvent implements DomainEvent
+final class ChatInitiated implements DomainEvent
 {
     /**
      * @var string
      */
-    private $name;
+    private $chatId;
 
     /**
-     * @var array
+     * @var string
      */
-    private $payload;
+    private $ownerId;
 
     /**
      * @var \DateTimeImmutable
@@ -22,15 +22,15 @@ final class GenericDomainEvent implements DomainEvent
     private $occurredOn;
 
     /**
-     * GenericDomainEvent constructor.
+     * ChatInitiated constructor.
      *
-     * @param string $name
-     * @param array  $payload
+     * @param string $chatId
+     * @param string $ownerId
      */
-    public function __construct(string $name, array $payload)
+    public function __construct($chatId, $ownerId)
     {
-        $this->name = $name;
-        $this->payload = $payload;
+        $this->chatId = $chatId;
+        $this->ownerId = $ownerId;
         $this->occurredOn = new \DateTimeImmutable();
     }
 
@@ -39,7 +39,7 @@ final class GenericDomainEvent implements DomainEvent
      */
     public function name(): string
     {
-        return $this->name;
+        return 'chat.chat-initiated';
     }
 
     /**
@@ -55,6 +55,9 @@ final class GenericDomainEvent implements DomainEvent
      */
     public function payload(): array
     {
-        return $this->payload;
+        return [
+            'chatId'  => $this->chatId,
+            'ownerId' => $this->ownerId
+        ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\Chat\Messaging;
+namespace Gambling\Chat\Infrastructure\Messaging;
 
 use Gambling\Common\EventStore\StoredEvent;
 use Gambling\Common\EventStore\StoredEventSubscriber;

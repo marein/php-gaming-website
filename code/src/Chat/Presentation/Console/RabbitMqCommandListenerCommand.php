@@ -1,8 +1,8 @@
 <?php
 
-namespace Gambling\Chat\Console;
+namespace Gambling\Chat\Presentation\Console;
 
-use Gambling\Chat\Model\ChatGateway;
+use Gambling\Chat\Application\ChatService;
 use Gambling\Common\Port\Adapter\Messaging\MessageBroker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,22 +16,22 @@ final class RabbitMqCommandListenerCommand extends Command
     private $messageBroker;
 
     /**
-     * @var ChatGateway
+     * @var ChatService
      */
-    private $chatGateway;
+    private $chatService;
 
     /**
      * RabbitMqCommandListenerCommand constructor.
      *
      * @param MessageBroker $messageBroker
-     * @param ChatGateway   $chatGateway
+     * @param ChatService   $chatService
      */
-    public function __construct(MessageBroker $messageBroker, ChatGateway $chatGateway)
+    public function __construct(MessageBroker $messageBroker, ChatService $chatService)
     {
         parent::__construct();
 
         $this->messageBroker = $messageBroker;
-        $this->chatGateway = $chatGateway;
+        $this->chatService = $chatService;
     }
 
     /**
@@ -50,7 +50,7 @@ final class RabbitMqCommandListenerCommand extends Command
     {
         $commandToMethod = [
             'chat.initiate-chat' => function (array $payload) {
-                $this->chatGateway->initiateChat(
+                $this->chatService->initiateChat(
                     $payload['ownerId'],
                     $payload['authors']
                 );

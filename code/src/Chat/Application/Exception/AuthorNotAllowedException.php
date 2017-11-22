@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\Chat\Model\Exception;
+namespace Gambling\Chat\Application\Exception;
 
 final class AuthorNotAllowedException extends ChatException
 {

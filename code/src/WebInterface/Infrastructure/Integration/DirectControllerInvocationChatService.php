@@ -2,7 +2,7 @@
 
 namespace Gambling\WebInterface\Infrastructure\Integration;
 
-use Gambling\Chat\Http\ChatController;
+use Gambling\Chat\Presentation\Http\ChatController;
 use Gambling\WebInterface\Application\ChatService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\Chat\Migration;
+namespace Gambling\Chat\Infrastructure\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

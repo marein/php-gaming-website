@@ -1,13 +1,13 @@
 <?php
 
-namespace Gambling\Chat\Console;
+namespace Gambling\Chat\Presentation\Console;
 
-use Gambling\Chat\Messaging\PublishStoredEventsToRabbitMqSubscriber;
+use Gambling\Chat\Infrastructure\Messaging\PublishStoredEventsToRabbitMqSubscriber;
 use Gambling\Common\EventStore\EventStore;
 use Gambling\Common\EventStore\FollowEventStoreDispatcher;
 use Gambling\Common\EventStore\InMemoryCacheEventStorePointer;
-use Gambling\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gambling\Common\EventStore\StoredEventPublisher;
+use Gambling\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gambling\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
 use Gambling\Common\Port\Adapter\Messaging\MessageBroker;
 use Predis\Client;

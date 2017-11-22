@@ -1,6 +1,6 @@
 <?php
 
-namespace Gambling\Chat\Model\Exception;
+namespace Gambling\Chat\Application\Exception;
 
 class ChatException extends \Exception
 {
