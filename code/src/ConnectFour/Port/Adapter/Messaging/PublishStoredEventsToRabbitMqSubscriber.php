@@ -4,7 +4,7 @@ namespace Gambling\ConnectFour\Port\Adapter\Messaging;
 
 use Gambling\Common\EventStore\StoredEvent;
 use Gambling\Common\EventStore\StoredEventSubscriber;
-use Gambling\Common\Port\Adapter\Messaging\MessageBroker;
+use Gambling\Common\MessageBroker\MessageBroker;
 
 final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
 {

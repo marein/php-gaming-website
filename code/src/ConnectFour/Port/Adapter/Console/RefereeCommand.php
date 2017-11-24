@@ -3,8 +3,8 @@
 namespace Gambling\ConnectFour\Port\Adapter\Console;
 
 use Gambling\Common\Bus\Bus;
-use Gambling\Common\Port\Adapter\Messaging\MessageBroker;
-use Gambling\ConnectFour\Application\Game\Command\AssignChatCommand;
+use Gambling\Common\MessageBroker\MessageBroker;
+use Gambling\ConnectFour\Port\Adapter\Messaging\RefereeConsumer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -49,35 +49,11 @@ final class RefereeCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $commandOrEventToMethod = [
-            'chat.chat-initiated'        => function (array $payload) {
-                $this->commandBus->handle(
-                    new AssignChatCommand(
-                        $payload['ownerId'],
-                        $payload['chatId']
-                    )
-                );
-            },
-            'connect-four.player-joined' => function (array $payload) {
-                $this->messageBroker->publish(
-                    json_encode([
-                        'ownerId' => $payload['gameId'],
-                        'authors' => []
-                    ]),
-                    'chat.initiate-chat'
-                );
-            }
-        ];
-
         $this->messageBroker->consume(
-            'connect-four.referee',
-            array_keys($commandOrEventToMethod),
-            function (string $body, string $routingKey) use ($commandOrEventToMethod) {
-                $method = $commandOrEventToMethod[$routingKey] ?? null;
-                $payload = json_decode($body, true);
-
-                $method($payload);
-            }
+            new RefereeConsumer(
+                $this->commandBus,
+                $this->messageBroker
+            )
         );
     }
 }

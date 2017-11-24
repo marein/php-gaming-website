@@ -3,6 +3,8 @@
 namespace Gambling\Common\Port\Adapter\Messaging;
 
 use Enqueue\AmqpLib\AmqpConnectionFactory;
+use Gambling\Common\MessageBroker\Consumer;
+use Gambling\Common\MessageBroker\MessageBroker;
 use Interop\Amqp\AmqpContext;
 use Interop\Amqp\AmqpMessage;
 use Interop\Amqp\AmqpQueue;
@@ -120,25 +122,28 @@ final class GamblingMessageBroker implements MessageBroker
     /**
      * @inheritdoc
      */
-    public function consume(string $queueName, array $routingKeys, callable $callback): void
+    public function consume(Consumer $consumer): void
     {
         $this->initialize();
 
-        $queue = $this->createQueue($queueName, $routingKeys);
+        $queue = $this->createQueue(
+            $consumer->queueName(),
+            $consumer->routingKeys()
+        );
 
-        $consumer = $this->context->createConsumer(
+        $enqueueConsumer = $this->context->createConsumer(
             $queue
         );
 
         while (true) {
-            $message = $consumer->receive(0);
+            $message = $enqueueConsumer->receive(0);
 
-            $callback(
+            $consumer->handle(
                 $message->getBody(),
                 $message->getRoutingKey()
             );
 
-            $consumer->acknowledge($message);
+            $enqueueConsumer->acknowledge($message);
         }
     }
 }

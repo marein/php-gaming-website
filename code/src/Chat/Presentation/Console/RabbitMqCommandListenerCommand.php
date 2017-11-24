@@ -3,7 +3,8 @@
 namespace Gambling\Chat\Presentation\Console;
 
 use Gambling\Chat\Application\ChatService;
-use Gambling\Common\Port\Adapter\Messaging\MessageBroker;
+use Gambling\Chat\Infrastructure\Messaging\CommandConsumer;
+use Gambling\Common\MessageBroker\MessageBroker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,24 +49,10 @@ final class RabbitMqCommandListenerCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $commandToMethod = [
-            'chat.initiate-chat' => function (array $payload) {
-                $this->chatService->initiateChat(
-                    $payload['ownerId'],
-                    $payload['authors']
-                );
-            }
-        ];
-
         $this->messageBroker->consume(
-            'chat.command-listener',
-            array_keys($commandToMethod),
-            function (string $body, string $routingKey) use ($commandToMethod) {
-                $method = $commandToMethod[$routingKey] ?? null;
-                $payload = json_decode($body, true);
-
-                $method($payload);
-            }
+            new CommandConsumer(
+                $this->chatService
+            )
         );
     }
 }
