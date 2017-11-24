@@ -4,13 +4,16 @@ php:
     - 7.1
     - 7.2
 
+before_install:
+    - cd code
+
 install:
     - composer install
     - mkdir -p build/logs
 
 script:
-    - code/vendor/bin/phpunit --configuration code/phpunit.xml.dist --coverage-clover build/logs/clover.xml
-    - code/vendor/bin/phpcs code/tests code/src --standard=PSR2
+    - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+    - vendor/bin/phpcs tests src --standard=PSR2
 
 after_success:
-    - travis_retry code/vendor/bin/coveralls -v
+    - travis_retry vendor/bin/coveralls -v
