@@ -1,0 +1,77 @@
+services:
+
+    connect-four.command-bus:
+        class: Gambling\Common\Port\Adapter\Bus\DoctrineTransactionalBus
+        arguments:
+            - '@connect-four.callable-command-bus'
+            - '@doctrine.dbal.connect_four_connection'
+
+    connect-four.callable-command-bus:
+        class: Gambling\Common\Bus\CallableBus
+        public: false
+        calls:
+            - [
+                addHandler,
+                [
+                  'Gambling\ConnectFour\Application\Game\Command\AbortCommand',
+                  '@connect-four.command.abort-handler'
+                ]
+              ]
+            - [
+                addHandler,
+                [
+                  'Gambling\ConnectFour\Application\Game\Command\AssignChatCommand',
+                  '@connect-four.command.assign-chat-handler'
+                ]
+              ]
+            - [
+                addHandler,
+                [
+                  'Gambling\ConnectFour\Application\Game\Command\JoinCommand',
+                  '@connect-four.command.join-handler'
+                ]
+              ]
+            - [
+                addHandler,
+                [
+                  'Gambling\ConnectFour\Application\Game\Command\MoveCommand',
+                  '@connect-four.command.move-handler'
+                ]
+              ]
+            - [
+                addHandler,
+                [
+                  'Gambling\ConnectFour\Application\Game\Command\OpenCommand',
+                  '@connect-four.command.open-handler'
+                ]
+              ]
+
+    connect-four.command.abort-handler:
+        class: Gambling\ConnectFour\Application\Game\Command\AbortHandler
+        public: false
+        arguments:
+            - '@connect-four.game-repository'
+
+    connect-four.command.assign-chat-handler:
+        class: Gambling\ConnectFour\Application\Game\Command\AbortHandler
+        public: false
+        arguments:
+            - '@connect-four.game-repository'
+
+    connect-four.command.join-handler:
+        class: Gambling\ConnectFour\Application\Game\Command\JoinHandler
+        public: false
+        arguments:
+            - '@connect-four.game-repository'
+
+    connect-four.command.move-handler:
+        class: Gambling\ConnectFour\Application\Game\Command\MoveHandler
+        public: false
+        arguments:
+            - '@connect-four.game-repository'
+
+    connect-four.command.open-handler:
+        class: Gambling\ConnectFour\Application\Game\Command\OpenHandler
+        public: false
+        arguments:
+            - '@connect-four.game-repository'

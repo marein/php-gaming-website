@@ -87,20 +87,26 @@ services:
             - '@doctrine.dbal.connect_four_connection'
             - '@connect-four.domain-event-publisher'
 
-    connect-four.bus-factory:
-        class: Gambling\ConnectFour\Application\BusFactory
+    connect-four.game-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameFinder
         public: false
         arguments:
-            - '@doctrine.dbal.connect_four_connection'
-            - '@connect-four.game-repository'
             - '@connect-four.predis'
 
-    connect-four.command-bus:
-        class: Gambling\Common\Bus\Bus
+    connect-four.games-by-player-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerFinder
         public: false
-        factory: 'connect-four.bus-factory:createCommandBus'
+        arguments:
+            - '@connect-four.predis'
 
-    connect-four.query-bus:
-        class: Gambling\Common\Bus\Bus
+    connect-four.open-games-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisOpenGamesFinder
         public: false
-        factory: 'connect-four.bus-factory:createQueryBus'
+        arguments:
+            - '@connect-four.predis'
+
+    connect-four.running-games-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGamesFinder
+        public: false
+        arguments:
+            - '@connect-four.predis'
