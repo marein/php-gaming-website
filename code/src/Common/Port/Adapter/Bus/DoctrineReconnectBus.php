@@ -12,7 +12,7 @@ use Gambling\Common\Bus\Bus;
  *
  * IMPORTANT: This class should wrap any transactional behaviour, not the other way around.
  */
-final class DoctrineReconnectTransactionalBus implements Bus
+final class DoctrineReconnectBus implements Bus
 {
     /**
      * @var Bus
@@ -35,7 +35,7 @@ final class DoctrineReconnectTransactionalBus implements Bus
     private $timeOfLastHandle;
 
     /**
-     * DoctrineReconnectTransactionalBus constructor.
+     * DoctrineReconnectBus constructor.
      *
      * @param Bus        $bus
      * @param Connection $connection
@@ -80,7 +80,6 @@ final class DoctrineReconnectTransactionalBus implements Bus
     private function reconnectIfTimedOut(): void
     {
         if (time() - $this->timeOfLastHandle > $this->idleBetweenHandlesInSeconds) {
-            echo 'Reconnect...' . PHP_EOL;
             $this->connection->close();
             $this->connection->connect();
         }
