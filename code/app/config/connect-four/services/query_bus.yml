@@ -1,5 +1,6 @@
 services:
 
+    # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.query-bus:
         class: Gambling\Common\Bus\CallableBus
         public: false

@@ -2,10 +2,12 @@ services:
 
     connect-four.command-bus:
         class: Gambling\Common\Port\Adapter\Bus\DoctrineTransactionalBus
+        public: false
         arguments:
             - '@connect-four.callable-command-bus'
             - '@doctrine.dbal.connect_four_connection'
 
+    # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.callable-command-bus:
         class: Gambling\Common\Bus\CallableBus
         public: false

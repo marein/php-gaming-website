@@ -1,0 +1,13 @@
+services:
+
+    web-interface.assign-user-id-on-kernel-request:
+        class: Gambling\WebInterface\Infrastructure\EventListener\AssignUserIdOnKernelRequest
+        public: false
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    web-interface.exception-to-json-listener:
+        class: Gambling\WebInterface\Infrastructure\EventListener\ExceptionToJsonListener
+        public: false
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }

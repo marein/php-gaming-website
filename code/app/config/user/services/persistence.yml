@@ -1,0 +1,14 @@
+services:
+
+    user.doctrine-dbal:
+        alias: 'doctrine.dbal.user_connection'
+
+    user.doctrine-orm:
+        alias: 'doctrine.orm.user_entity_manager'
+
+    user.event-store:
+        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
+        public: false
+        arguments:
+            - '@user.doctrine-dbal'
+            - 'event_store'

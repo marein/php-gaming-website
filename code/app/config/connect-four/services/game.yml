@@ -1,0 +1,45 @@
+services:
+
+    connect-four.domain-event-publisher:
+        class: Gambling\Common\Domain\DomainEventPublisher
+        public: false
+        calls:
+            - ['subscribe', ['@connect-four.store-domain-events-subscriber']]
+
+    connect-four.game-controller:
+        class: Gambling\ConnectFour\Port\Adapter\Http\GameController
+        public: false
+        arguments:
+            - '@connect-four.command-bus'
+            - '@connect-four.query-bus'
+
+    connect-four.game-repository:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\DoctrineJsonGameRepository
+        public: false
+        arguments:
+            - '@connect-four.doctrine-dbal'
+            - '@connect-four.domain-event-publisher'
+
+    connect-four.game-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameFinder
+        public: false
+        arguments:
+            - '@connect-four.predis'
+
+    connect-four.games-by-player-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerFinder
+        public: false
+        arguments:
+            - '@connect-four.predis'
+
+    connect-four.open-games-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisOpenGamesFinder
+        public: false
+        arguments:
+            - '@connect-four.predis'
+
+    connect-four.running-games-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGamesFinder
+        public: false
+        arguments:
+            - '@connect-four.predis'

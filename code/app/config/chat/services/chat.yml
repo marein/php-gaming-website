@@ -1,0 +1,21 @@
+services:
+
+    chat.chat-controller:
+        class: Gambling\Chat\Presentation\Http\ChatController
+        public: false
+        arguments:
+            - '@chat.chat-service'
+
+    chat.chat-gateway:
+        class: Gambling\Chat\Infrastructure\DoctrineChatGateway
+        public: false
+        arguments:
+            - '@chat.doctrine-dbal'
+
+    chat.chat-service:
+        class: Gambling\Chat\Application\ChatService
+        public: false
+        arguments:
+            - '@chat.application-life-cycle'
+            - '@chat.chat-gateway'
+            - '@chat.event-store'

@@ -1,3 +1,9 @@
+imports:
+    - { resource: services/application_life_cycle.yml }
+    - { resource: services/chat.yml }
+    - { resource: services/console.yml }
+    - { resource: services/persistence.yml }
+
 doctrine:
     dbal:
         connections:
