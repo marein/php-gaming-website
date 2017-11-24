@@ -1,10 +1,11 @@
 services:
 
+    # The following definitions decorate the application life cycle. This could be done with a factory object.
     chat.application-life-cycle:
         class: Gambling\Common\Port\Adapter\Application\DoctrineReconnectApplicationLifeCycle
         public: false
         arguments:
-            - '@chat.doctrine-transactional-application-life-cycle'
+            - '@chat.retry-application-life-cycle-factory'
             - '@chat.doctrine-dbal'
             - 300
 

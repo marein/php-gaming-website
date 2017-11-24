@@ -1,10 +1,11 @@
 services:
 
+    # The following definitions decorate the application life cycle. This could be done with a factory object.
     user.application-life-cycle:
         class: Gambling\Common\Port\Adapter\Application\DoctrineReconnectApplicationLifeCycle
         public: false
         arguments:
-            - '@user.doctrine-transactional-application-life-cycle'
+            - '@user.retry-application-life-cycle-factory'
             - '@user.doctrine-dbal'
             - 300
 

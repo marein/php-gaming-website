@@ -1,11 +1,27 @@
 services:
 
+    # The following definitions decorate the callable command bus. This could be done with a factory object.
     connect-four.command-bus:
+        class: Gambling\Common\Port\Adapter\Bus\DoctrineReconnectBus
+        public: false
+        arguments:
+            - '@connect-four.retry-command-bus'
+            - '@connect-four.doctrine-dbal'
+            - 300
+
+    connect-four.retry-command-bus:
+        class: Gambling\Common\Bus\RetryBus
+        public: false
+        arguments:
+            - '@connect-four.doctrine-transactional-command-bus'
+            - 3
+
+    connect-four.doctrine-transactional-command-bus:
         class: Gambling\Common\Port\Adapter\Bus\DoctrineTransactionalBus
         public: false
         arguments:
             - '@connect-four.callable-command-bus'
-            - '@doctrine.dbal.connect_four_connection'
+            - '@connect-four.doctrine-dbal'
 
     # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.callable-command-bus:
@@ -55,7 +71,7 @@ services:
             - '@connect-four.game-repository'
 
     connect-four.command.assign-chat-handler:
-        class: Gambling\ConnectFour\Application\Game\Command\AbortHandler
+        class: Gambling\ConnectFour\Application\Game\Command\AssignChatHandler
         public: false
         arguments:
             - '@connect-four.game-repository'
