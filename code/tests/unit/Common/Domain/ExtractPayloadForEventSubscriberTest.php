@@ -67,7 +67,7 @@ final class ExtractPayloadForEventSubscriberTest extends TestCase
     }
 
     /**
-     * Returns data for itShouldNotExtractPayloadIfIsNotSubscribedToEvent
+     * Returns data for itShouldOnlyBeSubscribedToItsEvent
      *
      * @return array
      */
