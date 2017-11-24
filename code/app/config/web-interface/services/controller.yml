@@ -1,0 +1,22 @@
+services:
+
+    web-interface.page-controller:
+        class: Gambling\WebInterface\Presentation\Http\PageController
+        arguments:
+            - '@templating'
+            - '@web-interface.connect-four-service'
+
+    web-interface.chat-controller:
+        class: Gambling\WebInterface\Presentation\Http\ChatController
+        arguments:
+            - '@web-interface.chat-service'
+
+    web-interface.connect-four-controller:
+        class: Gambling\WebInterface\Presentation\Http\ConnectFourController
+        arguments:
+            - '@web-interface.connect-four-service'
+
+    web-interface.user-controller:
+        class: Gambling\WebInterface\Presentation\Http\UserController
+        arguments:
+            - '@web-interface.user-service'

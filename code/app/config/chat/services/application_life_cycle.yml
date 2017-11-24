@@ -1,0 +1,22 @@
+services:
+
+    chat.application-life-cycle:
+        class: Gambling\Common\Port\Adapter\Application\DoctrineReconnectApplicationLifeCycle
+        public: false
+        arguments:
+            - '@chat.doctrine-transactional-application-life-cycle'
+            - '@chat.doctrine-dbal'
+            - 300
+
+    chat.retry-application-life-cycle-factory:
+        class: Gambling\Common\Application\RetryApplicationLifeCycle
+        public: false
+        arguments:
+            - '@chat.doctrine-transactional-application-life-cycle'
+            - 3
+
+    chat.doctrine-transactional-application-life-cycle:
+        class: Gambling\Common\Port\Adapter\Application\DoctrineTransactionalApplicationLifeCycle
+        public: false
+        arguments:
+            - '@chat.doctrine-dbal'

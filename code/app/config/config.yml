@@ -1,12 +1,8 @@
 imports:
     - { resource: chat/config.yml }
-    - { resource: chat/services.yml }
     - { resource: connect-four/config.yml }
-    - { resource: connect-four/services.yml }
     - { resource: user/config.yml }
-    - { resource: user/services.yml }
     - { resource: web-interface/config.yml }
-    - { resource: web-interface/services.yml }
 
 framework:
     secret: %kernel.secret%

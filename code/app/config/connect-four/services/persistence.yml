@@ -1,0 +1,25 @@
+services:
+
+    connect-four.predis:
+        class: Predis\Client
+        public: false
+        arguments:
+            - '%connect-four.predis.client.url%'
+            -
+                prefix: 'connect-four.'
+
+    connect-four.doctrine-dbal:
+        alias: 'doctrine.dbal.connect_four_connection'
+
+    connect-four.message-broker:
+        class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
+        public: false
+        arguments:
+            - '%connect-four.rabbit-mq.dsn%'
+
+    connect-four.event-store:
+        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
+        public: false
+        arguments:
+            - '@connect-four.doctrine-dbal'
+            - 'event_store'

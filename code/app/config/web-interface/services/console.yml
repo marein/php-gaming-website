@@ -1,0 +1,19 @@
+services:
+
+    web-interface.publish-rabbit-mq-events-to-nchan:
+        class: Gambling\WebInterface\Presentation\Console\PublishRabbitMqEventsToNchanCommand
+        public: false
+        arguments:
+            - '@web-interface.message-broker'
+            - '@web-interface.browser-notifier'
+        tags:
+            -  { name: console.command }
+
+    web-interface.publish-running-games-count-to-nchan-command:
+        class: Gambling\WebInterface\Presentation\Console\PublishRunningGamesCountToNchanCommand
+        public: false
+        arguments:
+            - '@web-interface.connect-four-service'
+            - '@web-interface.browser-notifier'
+        tags:
+            -  { name: console.command }

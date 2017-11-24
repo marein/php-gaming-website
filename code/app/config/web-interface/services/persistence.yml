@@ -1,0 +1,23 @@
+services:
+
+    web-interface.message-broker:
+        class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
+        public: false
+        arguments:
+            - '%web-interface.rabbit-mq.dsn%'
+
+    web-interface.predis:
+        class: Predis\Client
+        public: false
+        arguments:
+            - '%web-interface.predis.client.url%'
+            -
+                prefix: 'web-interface.'
+
+    web-interface.session-handler:
+        class: Gambling\WebInterface\Infrastructure\Persistence\PredisSessionHandler
+        public: false
+        arguments:
+            - '@web-interface.predis'
+            - 'session_'
+            - 86400

@@ -1,0 +1,27 @@
+services:
+
+    web-interface.chat-service:
+        class: Gambling\WebInterface\Infrastructure\Integration\DirectControllerInvocationChatService
+        public: false
+        arguments:
+            - '@chat.chat-controller'
+
+    web-interface.connect-four-service:
+        class: Gambling\WebInterface\Infrastructure\Integration\DirectControllerInvocationConnectFourService
+        public: false
+        arguments:
+            - '@connect-four.game-controller'
+
+    web-interface.user-service:
+        class: Gambling\WebInterface\Infrastructure\Integration\DirectControllerInvocationUserService
+        public: false
+        arguments:
+            - '@user.user-controller'
+
+    web-interface.browser-notifier:
+        class: Gambling\WebInterface\Infrastructure\NchanBrowserNotifier
+        public: false
+        arguments:
+            - '%web-interface.nchan.base.url%'
+            - '%web-interface.nchan.username%'
+            - '%web-interface.nchan.password%'

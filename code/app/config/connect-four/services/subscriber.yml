@@ -1,0 +1,7 @@
+services:
+
+    connect-four.store-domain-events-subscriber:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\EventStore\StoreDomainEventsSubscriber
+        public: false
+        arguments:
+            - '@connect-four.event-store'
