@@ -40,10 +40,10 @@ final class RetryApplicationLifeCycle implements ApplicationLifeCycle
         $currentNumberOfRetries = 0;
         $lastException = null;
 
-        while($currentNumberOfRetries < $this->numberOfRetries) {
+        while ($currentNumberOfRetries < $this->numberOfRetries) {
             try {
                 return $this->applicationLifeCycle->run($action);
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 $currentNumberOfRetries++;
                 $lastException = $exception;
             }

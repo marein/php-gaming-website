@@ -24,7 +24,7 @@ Gambling.ConnectFour.JoinGameButton = class
         this.button.disabled = true;
 
         this.gameService.join(gameId).then(() => {
-        this.button.disabled = false;
+            this.button.disabled = false;
             this.gameService.redirectTo(gameId);
         }).catch(() => {
             // todo: Handle exception based on error
