@@ -18,7 +18,8 @@ final class RetryApplicationLifeCycleTest extends TestCase
 
         new RetryApplicationLifeCycle(
             $applicationLifeCycle,
-            0
+            0,
+            \RuntimeException::class
         );
     }
 
@@ -38,13 +39,13 @@ final class RetryApplicationLifeCycleTest extends TestCase
             ->expects($this->at(0))
             ->method('run')
             ->willThrowException(
-                new \Exception()
+                new \RuntimeException()
             );
         $applicationLifeCycle
             ->expects($this->at(1))
             ->method('run')
             ->willThrowException(
-                new \Exception()
+                new \RuntimeException()
             );
         $applicationLifeCycle
             ->expects($this->at(2))
@@ -59,7 +60,8 @@ final class RetryApplicationLifeCycleTest extends TestCase
         /** @var ApplicationLifeCycle $applicationLifeCycle */
         $retryApplicationLifeCycle = new RetryApplicationLifeCycle(
             $applicationLifeCycle,
-            3
+            3,
+            \RuntimeException::class
         );
 
         $retryApplicationLifeCycle->run($actionToCall);
@@ -70,7 +72,7 @@ final class RetryApplicationLifeCycleTest extends TestCase
      */
     public function itShouldThrowTheApplicationExceptionWhenNumberOfRetriesAreReached(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Custom exception');
 
         $applicationLifeCycle = $this->createMock(ApplicationLifeCycle::class);
@@ -80,7 +82,7 @@ final class RetryApplicationLifeCycleTest extends TestCase
             ->expects($this->any())
             ->method('run')
             ->willThrowException(
-                new \Exception('Custom exception')
+                new \RuntimeException('Custom exception')
             );
 
         // Expect that "run" is called three times.
@@ -91,7 +93,43 @@ final class RetryApplicationLifeCycleTest extends TestCase
         /** @var ApplicationLifeCycle $applicationLifeCycle */
         $retryApplicationLifeCycle = new RetryApplicationLifeCycle(
             $applicationLifeCycle,
-            3
+            3,
+            \RuntimeException::class
+        );
+
+        $retryApplicationLifeCycle->run(function () {
+            // No op
+        });
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowTheApplicationExceptionIfItsNotTheConfiguredException(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Custom exception');
+
+        $applicationLifeCycle = $this->createMock(ApplicationLifeCycle::class);
+
+        // "run" always throws an exception.
+        $applicationLifeCycle
+            ->expects($this->any())
+            ->method('run')
+            ->willThrowException(
+                new \RuntimeException('Custom exception')
+            );
+
+        // Expect that "run" is called one time.
+        $applicationLifeCycle
+            ->expects($this->exactly(1))
+            ->method('run');
+
+        /** @var ApplicationLifeCycle $applicationLifeCycle */
+        $retryApplicationLifeCycle = new RetryApplicationLifeCycle(
+            $applicationLifeCycle,
+            3,
+            \InvalidArgumentException::class
         );
 
         $retryApplicationLifeCycle->run(function () {

@@ -15,21 +15,31 @@ final class RetryApplicationLifeCycle implements ApplicationLifeCycle
     private $numberOfRetries;
 
     /**
+     * @var string
+     */
+    private $retryOnException;
+
+    /**
      * RetryApplicationLifeCycle constructor.
      *
      * @param ApplicationLifeCycle $applicationLifeCycle
      * @param int                  $numberOfRetries
+     * @param string               $retryOnException FQCN of the exception which trigger the retries.
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(ApplicationLifeCycle $applicationLifeCycle, int $numberOfRetries)
-    {
+    public function __construct(
+        ApplicationLifeCycle $applicationLifeCycle,
+        int $numberOfRetries,
+        string $retryOnException
+    ) {
         if ($numberOfRetries < 1) {
             throw new \InvalidArgumentException('Number of retries must be greater than 0.');
         }
 
-        $this->numberOfRetries = $numberOfRetries;
         $this->applicationLifeCycle = $applicationLifeCycle;
+        $this->numberOfRetries = $numberOfRetries;
+        $this->retryOnException = $retryOnException;
     }
 
     /**
@@ -37,18 +47,32 @@ final class RetryApplicationLifeCycle implements ApplicationLifeCycle
      */
     public function run(callable $action)
     {
-        $currentNumberOfRetries = 0;
-        $lastException = null;
+        return $this->runOrThrow($action);
+    }
 
-        while ($currentNumberOfRetries < $this->numberOfRetries) {
-            try {
-                return $this->applicationLifeCycle->run($action);
-            } catch (\Exception $exception) {
-                $currentNumberOfRetries++;
-                $lastException = $exception;
+    /**
+     * Run the given action.
+     * Retry if the configured exception occur and the number of retries isn't reached.
+     *
+     * @param callable $action
+     * @param int      $currentTry
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    private function runOrThrow(callable $action, int $currentTry = 1)
+    {
+        try {
+            return $this->applicationLifeCycle->run($action);
+        } catch (\Exception $exception) {
+            if (
+                $exception instanceof $this->retryOnException &&
+                $currentTry < $this->numberOfRetries
+            ) {
+                return $this->runOrThrow($action, $currentTry + 1);
             }
-        }
 
-        throw $lastException;
+            throw $exception;
+        }
     }
 }
