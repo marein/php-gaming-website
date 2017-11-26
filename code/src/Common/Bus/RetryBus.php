@@ -15,21 +15,31 @@ final class RetryBus implements Bus
     private $numberOfRetries;
 
     /**
+     * @var string
+     */
+    private $retryOnException;
+
+    /**
      * RetryBus constructor.
      *
-     * @param Bus $bus
-     * @param int $numberOfRetries
+     * @param Bus    $bus
+     * @param int    $numberOfRetries
+     * @param string $retryOnException FQCN of the exception which trigger the retries.
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct(Bus $bus, $numberOfRetries)
-    {
+    public function __construct(
+        Bus $bus,
+        int $numberOfRetries,
+        string $retryOnException
+    ) {
         if ($numberOfRetries < 1) {
             throw new \InvalidArgumentException('Number of retries must be greater than 0.');
         }
 
         $this->bus = $bus;
         $this->numberOfRetries = $numberOfRetries;
+        $this->retryOnException = $retryOnException;
     }
 
     /**
@@ -37,18 +47,32 @@ final class RetryBus implements Bus
      */
     public function handle($command)
     {
-        $currentNumberOfRetries = 0;
-        $lastException = null;
+        return $this->handleOrThrow($command);
+    }
 
-        while ($currentNumberOfRetries < $this->numberOfRetries) {
-            try {
-                return $this->bus->handle($command);
-            } catch (\Exception $exception) {
-                $currentNumberOfRetries++;
-                $lastException = $exception;
+    /**
+     * Handle the given command.
+     * Retry if the configured exception occur and the number of retries isn't reached.
+     *
+     * @param mixed $command
+     * @param int   $currentTry
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    private function handleOrThrow($command, int $currentTry = 1)
+    {
+        try {
+            return $this->bus->handle($command);
+        } catch (\Exception $exception) {
+            if (
+                $exception instanceof $this->retryOnException &&
+                $currentTry < $this->numberOfRetries
+            ) {
+                return $this->handleOrThrow($command, $currentTry + 1);
             }
-        }
 
-        throw $lastException;
+            throw $exception;
+        }
     }
 }

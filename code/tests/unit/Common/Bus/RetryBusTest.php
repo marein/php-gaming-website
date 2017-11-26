@@ -18,7 +18,8 @@ final class RetryBusTest extends TestCase
 
         new RetryBus(
             $bus,
-            0
+            0,
+            \RuntimeException::class
         );
     }
 
@@ -38,13 +39,13 @@ final class RetryBusTest extends TestCase
             ->expects($this->at(0))
             ->method('handle')
             ->willThrowException(
-                new \Exception()
+                new \RuntimeException()
             );
         $bus
             ->expects($this->at(1))
             ->method('handle')
             ->willThrowException(
-                new \Exception()
+                new \RuntimeException()
             );
         $bus
             ->expects($this->at(2))
@@ -59,7 +60,8 @@ final class RetryBusTest extends TestCase
         /** @var Bus $bus */
         $retryBus = new RetryBus(
             $bus,
-            3
+            3,
+            \RuntimeException::class
         );
 
         $retryBus->handle($actionToCall);
@@ -70,7 +72,7 @@ final class RetryBusTest extends TestCase
      */
     public function itShouldThrowTheApplicationExceptionWhenNumberOfRetriesAreReached(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Custom exception');
 
         $bus = $this->createMock(Bus::class);
@@ -80,7 +82,7 @@ final class RetryBusTest extends TestCase
             ->expects($this->any())
             ->method('handle')
             ->willThrowException(
-                new \Exception('Custom exception')
+                new \RuntimeException('Custom exception')
             );
 
         // Expect that "handle" is called three times.
@@ -91,7 +93,43 @@ final class RetryBusTest extends TestCase
         /** @var Bus $bus */
         $retryBus = new RetryBus(
             $bus,
-            3
+            3,
+            \RuntimeException::class
+        );
+
+        $retryBus->handle(function () {
+            // No op
+        });
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowTheApplicationExceptionIfItsNotTheConfiguredException(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Custom exception');
+
+        $bus = $this->createMock(Bus::class);
+
+        // "handle" always throws an exception.
+        $bus
+            ->expects($this->any())
+            ->method('handle')
+            ->willThrowException(
+                new \RuntimeException('Custom exception')
+            );
+
+        // Expect that "handle" is called one time.
+        $bus
+            ->expects($this->exactly(1))
+            ->method('handle');
+
+        /** @var Bus $bus */
+        $retryBus = new RetryBus(
+            $bus,
+            3,
+            \InvalidArgumentException::class
         );
 
         $retryBus->handle(function () {
