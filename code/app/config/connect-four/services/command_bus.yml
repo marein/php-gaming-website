@@ -15,6 +15,7 @@ services:
         arguments:
             - '@connect-four.doctrine-transactional-command-bus'
             - 3
+            - 'Gambling\Common\Domain\Exception\ConcurrencyException'
 
     connect-four.doctrine-transactional-command-bus:
         class: Gambling\Common\Port\Adapter\Bus\DoctrineTransactionalBus
