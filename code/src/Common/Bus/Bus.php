@@ -2,8 +2,6 @@
 
 namespace Gambling\Common\Bus;
 
-use Gambling\Common\Bus\Exception\BusException;
-
 interface Bus
 {
     /**
@@ -12,7 +10,7 @@ interface Bus
      * @param mixed $command
      *
      * @return mixed
-     * @throws BusException Must be thrown if something went wrong.
+     * @throws \Exception Any application based exception
      */
     public function handle($command);
 }
