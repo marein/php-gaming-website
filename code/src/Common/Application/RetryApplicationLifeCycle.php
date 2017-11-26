@@ -65,10 +65,7 @@ final class RetryApplicationLifeCycle implements ApplicationLifeCycle
         try {
             return $this->applicationLifeCycle->run($action);
         } catch (\Exception $exception) {
-            if (
-                $exception instanceof $this->retryOnException &&
-                $currentTry < $this->numberOfRetries
-            ) {
+            if ($exception instanceof $this->retryOnException && $currentTry < $this->numberOfRetries) {
                 return $this->runOrThrow($action, $currentTry + 1);
             }
 

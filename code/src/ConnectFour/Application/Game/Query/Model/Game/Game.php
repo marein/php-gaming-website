@@ -107,7 +107,7 @@ final class Game
      *
      * @return Game
      */
-    public static function fromGame(\Gambling\ConnectFour\Domain\Game\Game $game)
+    public static function fromGame(\Gambling\ConnectFour\Domain\Game\Game $game): Game
     {
         $board = $game->board();
 

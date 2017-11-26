@@ -9,7 +9,6 @@ final class GameMapperFactory
      */
     public function create(): GameMapper
     {
-        // If the game mapper is not created, create it.
         $sizeMapper = new SizeMapper();
         $stoneMapper = new StoneMapper();
         $winningRuleMapper = new WinningRuleMapper();

@@ -65,10 +65,7 @@ final class RetryBus implements Bus
         try {
             return $this->bus->handle($command);
         } catch (\Exception $exception) {
-            if (
-                $exception instanceof $this->retryOnException &&
-                $currentTry < $this->numberOfRetries
-            ) {
+            if ($exception instanceof $this->retryOnException && $currentTry < $this->numberOfRetries) {
                 return $this->handleOrThrow($command, $currentTry + 1);
             }
 
