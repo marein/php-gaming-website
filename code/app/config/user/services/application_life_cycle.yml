@@ -5,16 +5,9 @@ services:
         class: Gambling\Common\Port\Adapter\Application\DoctrineReconnectApplicationLifeCycle
         public: false
         arguments:
-            - '@user.retry-application-life-cycle-factory'
+            - '@user.doctrine-transactional-application-life-cycle'
             - '@user.doctrine-dbal'
             - 300
-
-    user.retry-application-life-cycle-factory:
-        class: Gambling\Common\Application\RetryApplicationLifeCycle
-        public: false
-        arguments:
-            - '@user.doctrine-transactional-application-life-cycle'
-            - 3
 
     user.doctrine-transactional-application-life-cycle:
         class: Gambling\Common\Port\Adapter\Application\DoctrineTransactionalApplicationLifeCycle
