@@ -44,10 +44,12 @@ final class GameHandler
         // This happens when a player joins and both players are redirected to the game page.
         // It can happen, that the game is not in the query database yet. So, query the command database and
         // transform the Game from the Domain Model to the Game from the Query Model.
-        if ($domainGame = $this->games->get(GameId::fromString($gameId))) {
-            return Game::fromGame($domainGame);
+        try {
+            return Game::fromGame(
+                $this->games->get(GameId::fromString($gameId))
+            );
+        } catch (\Gambling\ConnectFour\Domain\Game\Exception\GameNotFoundException $exception) {
+            throw new GameNotFoundException();
         }
-
-        throw new GameNotFoundException();
     }
 }

@@ -5,6 +5,7 @@ namespace Gambling\ConnectFour\Port\Adapter\Persistence\Repository;
 use Doctrine\DBAL\Connection;
 use Gambling\Common\Domain\DomainEventPublisher;
 use Gambling\Common\Domain\Exception\ConcurrencyException;
+use Gambling\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Gambling\ConnectFour\Domain\Game\Game;
 use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Games;
@@ -122,7 +123,7 @@ final class DoctrineJsonGameRepository implements Games
     /**
      * @inheritdoc
      */
-    public function get(GameId $id): ?Game
+    public function get(GameId $id): Game
     {
         $builder = $this->connection->createQueryBuilder();
 
@@ -135,7 +136,7 @@ final class DoctrineJsonGameRepository implements Games
             ->fetch();
 
         if ($row === false) {
-            return null;
+            throw new GameNotFoundException();
         }
 
         $this->registerAggregateId($row['id'], $row['version']);

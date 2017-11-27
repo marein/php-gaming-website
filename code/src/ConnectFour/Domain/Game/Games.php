@@ -3,6 +3,7 @@
 namespace Gambling\ConnectFour\Domain\Game;
 
 use Gambling\Common\Domain\Exception\ConcurrencyException;
+use Gambling\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 
 interface Games
 {
@@ -21,7 +22,8 @@ interface Games
      *
      * @param GameId $gameId
      *
-     * @return Game|null
+     * @return Game
+     * @throws GameNotFoundException
      */
-    public function get(GameId $gameId): ?Game;
+    public function get(GameId $gameId): Game;
 }
