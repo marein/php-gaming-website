@@ -95,6 +95,7 @@ button:hover {
     margin-bottom: 15px;
     height: 300px;
     overflow: scroll;
+    overflow-wrap: break-word;
 }
 
 .chat__messages__message {
