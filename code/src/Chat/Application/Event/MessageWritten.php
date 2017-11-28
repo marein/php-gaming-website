@@ -34,32 +34,39 @@ final class MessageWritten implements DomainEvent
     /**
      * @var \DateTimeImmutable
      */
+    private $writtenAt;
+
+    /**
+     * @var \DateTimeImmutable
+     */
     private $occurredOn;
 
     /**
      * MessageWritten constructor.
      *
-     * @param string $chatId
-     * @param int    $messageId
-     * @param string $ownerId
-     * @param string $authorId
-     * @param string $message
+     * @param string             $chatId
+     * @param int                $messageId
+     * @param string             $ownerId
+     * @param string             $authorId
+     * @param string             $message
+     * @param \DateTimeImmutable $writtenAt
      */
     public function __construct(
         string $chatId,
         int $messageId,
         string $ownerId,
         string $authorId,
-        string $message
+        string $message,
+        \DateTimeImmutable $writtenAt
     ) {
         $this->chatId = $chatId;
         $this->messageId = $messageId;
         $this->ownerId = $ownerId;
         $this->authorId = $authorId;
         $this->message = $message;
+        $this->writtenAt = $writtenAt;
         $this->occurredOn = new \DateTimeImmutable();
     }
-
 
     /**
      * @inheritdoc
@@ -87,7 +94,8 @@ final class MessageWritten implements DomainEvent
             'messageId' => $this->messageId,
             'ownerId'   => $this->ownerId,
             'authorId'  => $this->authorId,
-            'message'   => $this->message
+            'message'   => $this->message,
+            'writtenAt' => $this->writtenAt->format(\DateTime::ATOM)
         ];
     }
 }

@@ -95,12 +95,13 @@ final class ChatService
         }
 
         $ownerId = $chat['ownerId'];
+        $writtenAt = new \DateTimeImmutable();
 
-        $this->applicationLifeCycle->run(function () use ($chatId, $ownerId, $authorId, $message) {
-            $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message);
+        $this->applicationLifeCycle->run(function () use ($chatId, $ownerId, $authorId, $message, $writtenAt) {
+            $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
 
             $this->eventStore->append(
-                new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message)
+                new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message, $writtenAt)
             );
         });
     }

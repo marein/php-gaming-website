@@ -19,13 +19,19 @@ interface ChatGateway
     /**
      * Create a message.
      *
-     * @param string $chatId
-     * @param string $authorId
-     * @param string $message
+     * @param string             $chatId
+     * @param string             $authorId
+     * @param string             $message
+     * @param \DateTimeImmutable $writtenAt
      *
      * @return int
      */
-    public function createMessage(string $chatId, string $authorId, string $message): int;
+    public function createMessage(
+        string $chatId,
+        string $authorId,
+        string $message,
+        \DateTimeImmutable $writtenAt
+    ): int;
 
     /**
      * Get chat by id.

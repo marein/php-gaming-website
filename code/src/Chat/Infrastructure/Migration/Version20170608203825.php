@@ -18,6 +18,7 @@ final class Version20170608203825 extends AbstractMigration
         $table->addColumn('chatId', 'string');
         $table->addColumn('authorId', 'string');
         $table->addColumn('message', 'string', ['length' => 140]);
+        $table->addColumn('writtenAt', 'datetime_immutable');
 
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint(

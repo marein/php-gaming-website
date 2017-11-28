@@ -103,8 +103,14 @@ Gambling.Chat.Widget = class
      */
     createMessageNode(message)
     {
+        let writtenAt = new Date(message.writtenAt);
+        let hours = ('0' + writtenAt.getHours()).slice(-2);
+        let minutes = ('0' + writtenAt.getMinutes()).slice(-2);
+
+        let author = 'Anonymous';
+
         let span = document.createElement('span');
-        span.innerText = 'Anonymous';
+        span.innerText = hours + ':' + minutes + ' - ' + author;
 
         let text = document.createTextNode(message.message);
 
