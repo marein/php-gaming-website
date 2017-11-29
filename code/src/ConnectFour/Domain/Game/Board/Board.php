@@ -60,10 +60,7 @@ final class Board
             }
         }
 
-        return new self(
-            $size,
-            $fields
-        );
+        return new self($size, $fields);
     }
 
     /*************************************************************
@@ -89,11 +86,7 @@ final class Board
         $field = &$fields[$positionOfFirstEmptyField];
         $field = $field->placeStone($stone);
 
-        return new self(
-            $this->size,
-            $fields,
-            $field
-        );
+        return new self($this->size, $fields, $field);
     }
 
     /*************************************************************
