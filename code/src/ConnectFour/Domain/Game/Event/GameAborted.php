@@ -2,6 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game\Event;
 
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Player;
@@ -40,7 +41,7 @@ final class GameAborted implements DomainEvent
         $this->gameId = $gameId;
         $this->abortedPlayer = $abortedPlayer;
         $this->opponentPlayer = $opponentPlayer;
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->occurredOn = Clock::instance()->now();
     }
 
     /**

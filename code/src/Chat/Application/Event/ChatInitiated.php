@@ -2,6 +2,7 @@
 
 namespace Gambling\Chat\Application\Event;
 
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 
 final class ChatInitiated implements DomainEvent
@@ -31,7 +32,7 @@ final class ChatInitiated implements DomainEvent
     {
         $this->chatId = $chatId;
         $this->ownerId = $ownerId;
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->occurredOn = Clock::instance()->now();
     }
 
     /**

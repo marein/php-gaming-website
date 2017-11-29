@@ -2,6 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game\Event;
 
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 use Gambling\ConnectFour\Domain\Game\GameId;
 
@@ -32,7 +33,7 @@ final class ChatAssigned implements DomainEvent
     {
         $this->gameId = $gameId;
         $this->chatId = $chatId;
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->occurredOn = Clock::instance()->now();
     }
 
     /**

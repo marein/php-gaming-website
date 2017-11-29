@@ -2,6 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game\Event;
 
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 use Gambling\ConnectFour\Domain\Game\Board\Size;
 use Gambling\ConnectFour\Domain\Game\GameId;
@@ -41,7 +42,7 @@ final class GameOpened implements DomainEvent
         $this->gameId = $gameId;
         $this->size = $size;
         $this->player = $player;
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->occurredOn = Clock::instance()->now();
     }
 
     /**

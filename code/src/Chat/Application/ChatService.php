@@ -7,6 +7,7 @@ use Gambling\Chat\Application\Event\MessageWritten;
 use Gambling\Chat\Application\Exception\AuthorNotAllowedException;
 use Gambling\Chat\Application\Exception\EmptyMessageException;
 use Gambling\Common\Application\ApplicationLifeCycle;
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\EventStore\EventStore;
 
 /**
@@ -95,7 +96,7 @@ final class ChatService
         }
 
         $ownerId = $chat['ownerId'];
-        $writtenAt = new \DateTimeImmutable();
+        $writtenAt = Clock::instance()->now();
 
         $this->applicationLifeCycle->run(function () use ($chatId, $ownerId, $authorId, $message, $writtenAt) {
             $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);

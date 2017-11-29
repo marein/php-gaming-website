@@ -2,6 +2,7 @@
 
 namespace Gambling\Chat\Application\Event;
 
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 
 final class MessageWritten implements DomainEvent
@@ -65,7 +66,7 @@ final class MessageWritten implements DomainEvent
         $this->authorId = $authorId;
         $this->message = $message;
         $this->writtenAt = $writtenAt;
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->occurredOn = Clock::instance()->now();
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game\Event;
 
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 use Gambling\ConnectFour\Domain\Game\GameId;
 
@@ -25,7 +26,7 @@ final class GameDrawn implements DomainEvent
     public function __construct(GameId $gameId)
     {
         $this->gameId = $gameId;
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->occurredOn = Clock::instance()->now();
     }
 
     /**

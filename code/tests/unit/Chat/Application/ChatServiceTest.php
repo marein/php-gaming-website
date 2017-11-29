@@ -4,10 +4,12 @@ namespace Gambling\Common\Application;
 
 use Gambling\Chat\Application\ChatGateway;
 use Gambling\Chat\Application\ChatService;
+use Gambling\Chat\Application\Event\ChatInitiated;
+use Gambling\Chat\Application\Event\MessageWritten;
 use Gambling\Chat\Application\Exception\AuthorNotAllowedException;
 use Gambling\Chat\Application\Exception\EmptyMessageException;
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\EventStore\EventStore;
-use Gambling\Common\EventStore\InMemoryEventStore;
 use PHPUnit\Framework\TestCase;
 
 final class ChatServiceTest extends TestCase
@@ -17,13 +19,20 @@ final class ChatServiceTest extends TestCase
      */
     public function itShouldInitiateChat(): void
     {
+        Clock::instance()->freeze();
+
         $generatedChatId = 'chatId';
         $ownerId = 'ownerId';
         $authors = ['authorId1', 'authorId2'];
 
         $applicationLifeCycle = new InvokeApplicationLifeCycle();
         $chatGateway = $this->createMock(ChatGateway::class);
-        $eventStore = new InMemoryEventStore();
+        $eventStore = $this->createMock(EventStore::class);
+
+        $eventStore
+            ->expects($this->once())
+            ->method('append')
+            ->with(new ChatInitiated($generatedChatId, $ownerId));
 
         $chatGateway
             ->expects($this->once())
@@ -32,6 +41,7 @@ final class ChatServiceTest extends TestCase
             ->willReturn($generatedChatId);
 
         /** @var ChatGateway $chatGateway */
+        /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $applicationLifeCycle,
             $chatGateway,
@@ -39,18 +49,9 @@ final class ChatServiceTest extends TestCase
         );
 
         $chatId = $chatService->initiateChat($ownerId, $authors);
-        $storedEvent = $eventStore->storedEventsSince(0, 1)[0];
-
-        // Test directly against the stored event. Mocking isn't possible due the
-        // "new \DateTimeImmutable()" call inside events.
-        $this->assertSame('chat.chat-initiated', $storedEvent->name());
-        $this->assertSame(
-            json_encode(
-                ['chatId' => $generatedChatId, 'ownerId' => $ownerId]
-            ),
-            $storedEvent->payload()
-        );
         $this->assertSame($generatedChatId, $chatId);
+
+        Clock::instance()->resume();
     }
 
     /**
@@ -106,7 +107,6 @@ final class ChatServiceTest extends TestCase
             $eventStore
         );
 
-        // Test also if trim is performed.
         $chatService->writeMessage($chatId, 'authorId3', 'message');
     }
 
@@ -115,15 +115,23 @@ final class ChatServiceTest extends TestCase
      */
     public function itShouldWriteMessage(): void
     {
+        Clock::instance()->freeze();
+
         $chatId = 'chatId';
         $authorId = 'authorId';
         $ownerId = 'ownerId';
         $message = 'message';
+        $writtenAt = Clock::instance()->now();
         $messageId = 7;
 
         $applicationLifeCycle = new InvokeApplicationLifeCycle();
         $chatGateway = $this->createMock(ChatGateway::class);
-        $eventStore = new InMemoryEventStore();
+        $eventStore = $this->createMock(EventStore::class);
+
+        $eventStore
+            ->expects($this->once())
+            ->method('append')
+            ->with(new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message, $writtenAt));
 
         $chatGateway
             ->expects($this->once())
@@ -138,6 +146,7 @@ final class ChatServiceTest extends TestCase
             ->willReturn($messageId);
 
         /** @var ChatGateway $chatGateway */
+        /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $applicationLifeCycle,
             $chatGateway,
@@ -145,23 +154,8 @@ final class ChatServiceTest extends TestCase
         );
 
         $chatService->writeMessage($chatId, $authorId, $message);
-        $storedEvent = $eventStore->storedEventsSince(0, 1)[0];
 
-        // Test directly against the stored event. Mocking isn't possible due the
-        // "new \DateTimeImmutable()" call inside events.
-        $this->assertSame('chat.message-written', $storedEvent->name());
-        $this->assertSame(
-            json_encode(
-                [
-                    'chatId'    => $chatId,
-                    'messageId' => $messageId,
-                    'ownerId'   => $ownerId,
-                    'authorId'  => $authorId,
-                    'message'   => $message
-                ]
-            ),
-            $storedEvent->payload()
-        );
+        Clock::instance()->resume();
     }
 
     /**

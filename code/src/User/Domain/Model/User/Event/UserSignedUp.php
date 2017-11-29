@@ -2,6 +2,7 @@
 
 namespace Gambling\User\Domain\Model\User\Event;
 
+use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 use Gambling\User\Domain\Model\User\UserId;
 
@@ -27,7 +28,7 @@ final class UserSignedUp implements DomainEvent
     {
         $this->userId = $userId;
         $this->username = $username;
-        $this->occurredOn = new \DateTimeImmutable();
+        $this->occurredOn = Clock::instance()->now();
     }
 
     /**
