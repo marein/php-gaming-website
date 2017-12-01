@@ -40,30 +40,45 @@ final class PredisSessionHandler implements \SessionHandlerInterface
         $this->lifetime = $lifetime;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function close()
     {
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function destroy($sessionId)
     {
-        $result = $this->predis->del([
+        $this->predis->del([
             $this->generateKey($sessionId)
         ]);
 
-        return (bool)$result;
+        return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function gc($maxlifetime)
     {
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function open($savePath, $name)
     {
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function read($sessionId)
     {
         return (string)$this->predis->get(
@@ -71,16 +86,28 @@ final class PredisSessionHandler implements \SessionHandlerInterface
         );
     }
 
+    /**
+     * @inheritdoc
+     */
     public function write($sessionId, $sessionData)
     {
-        return $this->predis->setex(
+        $this->predis->setex(
             $this->generateKey($sessionId),
             $this->lifetime,
             $sessionData
         );
+
+        return true;
     }
 
-    private function generateKey(string $key)
+    /**
+     * Combine prefix with current key.
+     *
+     * @param string $key
+     *
+     * @return string
+     */
+    private function generateKey(string $key): string
     {
         return $this->keyPrefix . $key;
     }
