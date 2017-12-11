@@ -8,4 +8,4 @@ doctrine:
     dbal:
         connections:
             chat:
-                url: %chat.doctrine.dbal.url%
+                url: '%env(GAMBLING_CHAT_DOCTRINE_DBAL_URL)%'

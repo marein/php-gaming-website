@@ -22,6 +22,6 @@ services:
         class: Gambling\WebInterface\Infrastructure\NchanBrowserNotifier
         public: false
         arguments:
-            - '%web-interface.nchan.base.url%'
-            - '%web-interface.nchan.username%'
-            - '%web-interface.nchan.password%'
+            - '%env(GAMBLING_WEB_INTERFACE_NCHAN_BASE_URL)%'
+            - '%env(GAMBLING_WEB_INTERFACE_NCHAN_USERNAME)%'
+            - '%env(GAMBLING_WEB_INTERFACE_NCHAN_PASSWORD)%'

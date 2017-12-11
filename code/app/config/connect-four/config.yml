@@ -10,4 +10,4 @@ doctrine:
     dbal:
         connections:
             connect-four:
-                url: %connect-four.doctrine.dbal.url%
+                url: '%env(GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL)%'

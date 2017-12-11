@@ -4,7 +4,7 @@ services:
         class: Predis\Client
         public: false
         arguments:
-            - '%chat.predis.client.url%'
+            - '%env(GAMBLING_CHAT_PREDIS_CLIENT_URL)%'
             -
                 prefix: 'chat.'
 
@@ -15,7 +15,7 @@ services:
         class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
         public: false
         arguments:
-            - '%chat.rabbit-mq.dsn%'
+            - '%env(GAMBLING_CHAT_RABBIT_MQ_DSN)%'
 
     chat.event-store:
         class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore

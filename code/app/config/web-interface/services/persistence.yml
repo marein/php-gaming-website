@@ -4,13 +4,13 @@ services:
         class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
         public: false
         arguments:
-            - '%web-interface.rabbit-mq.dsn%'
+            - '%env(GAMBLING_WEB_INTERFACE_RABBIT_MQ_DSN)%'
 
     web-interface.predis:
         class: Predis\Client
         public: false
         arguments:
-            - '%web-interface.predis.client.url%'
+            - '%env(GAMBLING_WEB_INTERFACE_PREDIS_CLIENT_URL)%'
             -
                 prefix: 'web-interface.'
 

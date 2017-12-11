@@ -5,7 +5,7 @@ imports:
     - { resource: web-interface/config.yml }
 
 framework:
-    secret: %kernel.secret%
+    secret: '%env(GAMBLING_KERNEL_SECRET)%'
     templating:
         engines: ['twig']
     router:

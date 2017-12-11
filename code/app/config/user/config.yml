@@ -8,7 +8,7 @@ doctrine:
     dbal:
         connections:
             user:
-                url: %user.doctrine.dbal.url%
+                url: '%env(GAMBLING_USER_DOCTRINE_DBAL_URL)%'
     orm:
         entity_managers:
             user:
