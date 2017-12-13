@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 final class UserId
 {
     /**
-     * @var string
+     * @var UuidInterface
      */
     private $userId;
 
@@ -17,7 +17,7 @@ final class UserId
      */
     private function __construct(UuidInterface $uuid)
     {
-        $this->userId = $uuid->toString();
+        $this->userId = $uuid;
     }
 
     /**
@@ -25,17 +25,17 @@ final class UserId
      */
     public static function generate(): UserId
     {
-        return new self(Uuid::uuid4());
+        return new self(Uuid::uuid1());
     }
 
     /**
-     * @param string $taskId
+     * @param string $userId
      *
      * @return UserId
      */
-    public static function fromString(string $taskId): UserId
+    public static function fromString(string $userId): UserId
     {
-        return new self(Uuid::fromString($taskId));
+        return new self(Uuid::fromString($userId));
     }
 
     /**
@@ -43,7 +43,7 @@ final class UserId
      */
     public function toString(): string
     {
-        return $this->userId;
+        return $this->userId->toString();
     }
 
     /**

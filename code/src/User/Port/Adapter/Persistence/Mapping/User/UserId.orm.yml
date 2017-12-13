@@ -3,6 +3,4 @@ Gambling\User\Domain\Model\User\UserId:
     id:
         userId:
             column: id
-            type: string
-            length: 36
-            fixed: true
+            type: uuid_binary_ordered_time
