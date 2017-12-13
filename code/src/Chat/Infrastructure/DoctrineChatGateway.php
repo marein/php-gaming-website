@@ -32,7 +32,7 @@ final class DoctrineChatGateway implements ChatGateway
      */
     public function create(string $ownerId, array $authors): string
     {
-        $chatId = Uuid::uuid4();
+        $chatId = Uuid::uuid1();
 
         $this->connection->insert(
             self::TABLE_CHAT,
@@ -41,7 +41,7 @@ final class DoctrineChatGateway implements ChatGateway
                 'ownerId' => $ownerId,
                 'authors' => $authors
             ],
-            ['string', 'string', 'json']
+            ['uuid_binary_ordered_time', 'string', 'json']
         );
 
         return $chatId;
@@ -59,12 +59,12 @@ final class DoctrineChatGateway implements ChatGateway
         $this->connection->insert(
             self::TABLE_MESSAGE,
             [
-                'chatId'    => $chatId,
+                'chatId'    => Uuid::fromString($chatId),
                 'authorId'  => $authorId,
                 'message'   => $message,
                 'writtenAt' => $writtenAt
             ],
-            ['string', 'string', 'string', 'datetime_immutable']
+            ['uuid_binary_ordered_time', 'string', 'string', 'datetime_immutable']
         );
 
         return (int)$this->connection->lastInsertId();
@@ -92,7 +92,7 @@ final class DoctrineChatGateway implements ChatGateway
             )
             ->setFirstResult($offset)
             ->setMaxResults($limit)
-            ->setParameter('chatId', $chatId)
+            ->setParameter('chatId', $chatId, 'uuid_binary_ordered_time')
             ->setParameter('authorId', $authorId, 'json')
             ->execute()
             ->fetchAll();
@@ -104,10 +104,10 @@ final class DoctrineChatGateway implements ChatGateway
     public function byId(string $chatId): array
     {
         $chat = $this->connection->createQueryBuilder()
-            ->select('*')
+            ->select('BIN_TO_UUID(c.id, 1) as id, c.ownerId, c.authors')
             ->from(self::TABLE_CHAT, 'c')
             ->where('c.id = :id')
-            ->setParameter('id', $chatId)
+            ->setParameter('id', $chatId, 'uuid_binary_ordered_time')
             ->execute()
             ->fetch();
 

@@ -14,7 +14,7 @@ final class Version20170608203652 extends AbstractMigration
     {
         $table = $schema->createTable('chat');
 
-        $table->addColumn('id', 'string', ['length' => 36, 'fixed' => true]);
+        $table->addColumn('id', 'uuid_binary_ordered_time');
         $table->addColumn('ownerId', 'string', ['length' => 36, 'fixed' => true]);
         $table->addColumn('authors', 'json');
 

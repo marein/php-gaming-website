@@ -15,8 +15,8 @@ final class Version20170608203825 extends AbstractMigration
         $table = $schema->createTable('message');
 
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
-        $table->addColumn('chatId', 'string');
-        $table->addColumn('authorId', 'string');
+        $table->addColumn('chatId', 'uuid_binary_ordered_time');
+        $table->addColumn('authorId', 'string', ['length' => 36, 'fixed' => true]);
         $table->addColumn('message', 'string', ['length' => 140]);
         $table->addColumn('writtenAt', 'datetime_immutable');
 
