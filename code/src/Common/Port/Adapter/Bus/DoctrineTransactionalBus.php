@@ -42,39 +42,24 @@ final class DoctrineTransactionalBus implements Bus
     {
         if ($this->transactionAlreadyStarted) {
             return $this->bus->handle($command);
-        } else {
-            $this->transactionAlreadyStarted = true;
-
-            try {
-                $this->begin();
-
-                $return = $this->bus->handle($command);
-
-                $this->success();
-
-                return $return;
-            } catch (\Exception $exception) {
-                $this->fail();
-
-                throw $exception;
-            } finally {
-                $this->transactionAlreadyStarted = false;
-            }
         }
-    }
 
-    private function begin(): void
-    {
-        $this->connection->beginTransaction();
-    }
+        $this->transactionAlreadyStarted = true;
 
-    private function fail(): void
-    {
-        $this->connection->rollBack();
-    }
+        try {
+            $this->connection->beginTransaction();
 
-    private function success(): void
-    {
-        $this->connection->commit();
+            $return = $this->bus->handle($command);
+
+            $this->connection->commit();
+
+            return $return;
+        } catch (\Exception $exception) {
+            $this->connection->rollBack();
+
+            throw $exception;
+        } finally {
+            $this->transactionAlreadyStarted = false;
+        }
     }
 }

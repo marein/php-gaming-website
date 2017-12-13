@@ -35,24 +35,24 @@ final class DoctrineTransactionalApplicationLifeCycle implements ApplicationLife
     {
         if ($this->transactionAlreadyStarted) {
             return $action();
-        } else {
-            $this->transactionAlreadyStarted = true;
+        }
 
-            try {
-                $this->connection->beginTransaction();
+        $this->transactionAlreadyStarted = true;
 
-                $return = $action();
+        try {
+            $this->connection->beginTransaction();
 
-                $this->connection->commit();
+            $return = $action();
 
-                return $return;
-            } catch (\Exception $exception) {
-                $this->connection->rollBack();
+            $this->connection->commit();
 
-                throw $exception;
-            } finally {
-                $this->transactionAlreadyStarted = false;
-            }
+            return $return;
+        } catch (\Exception $exception) {
+            $this->connection->rollBack();
+
+            throw $exception;
+        } finally {
+            $this->transactionAlreadyStarted = false;
         }
     }
 }
