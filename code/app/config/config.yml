@@ -10,3 +10,10 @@ framework:
         engines: ['twig']
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
+
+doctrine:
+    dbal:
+        types:
+            uuid_binary_ordered_time: Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType
+        mapping_types:
+            uuid_binary_ordered_time: binary

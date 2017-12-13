@@ -131,7 +131,7 @@ final class DoctrineJsonGameRepository implements Games
             ->select('*')
             ->from($this->tableName, 't')
             ->where('t.id = :id')
-            ->setParameter('id', $id->toString())
+            ->setParameter('id', $id->toString(), 'uuid_binary_ordered_time')
             ->execute()
             ->fetch();
 
@@ -139,11 +139,11 @@ final class DoctrineJsonGameRepository implements Games
             throw new GameNotFoundException();
         }
 
-        $this->registerAggregateId($row['id'], $row['version']);
+        $gameAsArray = json_decode($row['aggregate'], true);
 
-        return $this->gameMapper()->deserialize(
-            json_decode($row['aggregate'], true)
-        );
+        $this->registerAggregateId($gameAsArray['gameId'], $row['version']);
+
+        return $this->gameMapper()->deserialize($gameAsArray);
     }
 
     /**
@@ -162,6 +162,7 @@ final class DoctrineJsonGameRepository implements Games
             'aggregate' => $this->gameMapper()->serialize($game),
             'version'   => $version + 1
         ], ['id' => $id, 'version' => $version], [
+            'id'        => 'uuid_binary_ordered_time',
             'aggregate' => 'json',
             'version'   => 'integer'
         ]);
@@ -186,6 +187,7 @@ final class DoctrineJsonGameRepository implements Games
             'aggregate' => $this->gameMapper()->serialize($game),
             'version'   => 1
         ], [
+            'id'        => 'uuid_binary_ordered_time',
             'aggregate' => 'json',
             'version'   => 'integer'
         ]);

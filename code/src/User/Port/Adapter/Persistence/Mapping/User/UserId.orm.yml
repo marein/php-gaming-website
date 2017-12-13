@@ -4,4 +4,5 @@ Gambling\User\Domain\Model\User\UserId:
         userId:
             column: id
             type: string
-            length: 64
+            length: 36
+            fixed: true

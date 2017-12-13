@@ -27,7 +27,7 @@ final class GameId
      */
     public static function generate()
     {
-        return new self(Uuid::uuid4());
+        return new self(Uuid::uuid1());
     }
 
     /**

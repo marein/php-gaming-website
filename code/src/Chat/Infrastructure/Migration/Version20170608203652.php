@@ -14,8 +14,8 @@ final class Version20170608203652 extends AbstractMigration
     {
         $table = $schema->createTable('chat');
 
-        $table->addColumn('id', 'string', ['length' => 64]);
-        $table->addColumn('ownerId', 'string', ['length' => 64]);
+        $table->addColumn('id', 'string', ['length' => 36, 'fixed' => true]);
+        $table->addColumn('ownerId', 'string', ['length' => 36, 'fixed' => true]);
         $table->addColumn('authors', 'json');
 
         $table->setPrimaryKey(['id']);
