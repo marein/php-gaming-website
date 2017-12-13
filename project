@@ -70,7 +70,7 @@ removeGeneratedFiles() {
 }
 
 tests() {
-    docker-compose run php-tests vendor/bin/phpunit
+    docker-compose run php-tests vendor/bin/phpunit --testdox
 }
 
 removeSymfonyCache() {
