@@ -15,4 +15,4 @@ script:
     - vendor/bin/phpcs tests src --standard=PSR2
 
 after_success:
-    - travis_retry vendor/bin/coveralls -v
+    - travis_retry vendor/bin/php-coveralls -v
