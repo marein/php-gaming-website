@@ -17,6 +17,9 @@ help() {
     echo stop
     echo Shorthand to stop a started project.
     echo
+    echo down
+    echo Shorthand to down a started project.
+    echo
     echo assets
     echo Build assets for the browser and watch for changes.
     echo
@@ -56,6 +59,10 @@ up() {
 
 stop() {
     docker-compose stop
+}
+
+down() {
+    docker-compose down
 }
 
 assets() {
