@@ -35,7 +35,7 @@ final class PredisGamesByPlayerFinder implements GamesByPlayerFinder
         return new GamesByPlayer(
             array_map(function ($value) {
                 return new GameByPlayer($value);
-            }, $this->predis->smembers($key))
+            }, $this->predis->lrange($key, 0, 100))
         );
     }
 }

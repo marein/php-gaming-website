@@ -64,10 +64,10 @@ final class PredisGamesByPlayerProjection implements StoredEventSubscriber
         $opponentPlayerId = $payload['opponentPlayerId'];
 
         $key = self::STORAGE_KEY_PREFIX . $joinedPlayerId;
-        $this->predis->sadd($key, $gameId);
+        $this->predis->lpush($key, [$gameId]);
 
         $key = self::STORAGE_KEY_PREFIX . $opponentPlayerId;
-        $this->predis->sadd($key, $gameId);
+        $this->predis->lpush($key, [$gameId]);
     }
 
     /**
@@ -81,11 +81,11 @@ final class PredisGamesByPlayerProjection implements StoredEventSubscriber
         $opponentPlayerId = $payload['opponentPlayerId'];
 
         $key = self::STORAGE_KEY_PREFIX . $abortedPlayerId;
-        $this->predis->srem($key, $gameId);
+        $this->predis->lrem($key, 0, $gameId);
 
         if ($opponentPlayerId !== '') {
             $key = self::STORAGE_KEY_PREFIX . $opponentPlayerId;
-            $this->predis->srem($key, $gameId);
+            $this->predis->lrem($key, 0, $gameId);
         }
     }
 }
