@@ -10,12 +10,6 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
 {
     const STORAGE_KEY = 'open-games';
 
-    private const EVENT_TO_METHOD = [
-        'GameOpened'   => 'handleGameOpened',
-        'GameAborted'  => 'handleGameAborted',
-        'PlayerJoined' => 'handlePlayerJoined'
-    ];
-
     /**
      * @var Client
      */
@@ -36,11 +30,7 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
      */
     public function handle(StoredEvent $storedEvent): void
     {
-        $method = self::EVENT_TO_METHOD[$storedEvent->name()] ?? null;
-
-        if ($method) {
-            $this->$method($storedEvent);
-        }
+        $this->{'handle' . $storedEvent->name()}($storedEvent);
     }
 
     /**
@@ -48,9 +38,13 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
      */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
-        return array_key_exists(
+        return in_array(
             $storedEvent->name(),
-            self::EVENT_TO_METHOD
+            [
+                'GameOpened',
+                'GameAborted',
+                'PlayerJoined'
+            ]
         );
     }
 

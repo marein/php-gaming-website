@@ -10,15 +10,6 @@ final class PredisGameProjection implements StoredEventSubscriber
 {
     const STORAGE_KEY_PREFIX = 'game.';
 
-    private const EVENT_TO_METHOD = [
-        'GameOpened'   => 'handleGameOpened',
-        'PlayerMoved'  => 'handlePlayerMoved',
-        'GameWon'      => 'handleGameFinished',
-        'GameDrawn'    => 'handleGameFinished',
-        'GameAborted'  => 'handleGameFinished',
-        'ChatAssigned' => 'handleChatAssigned'
-    ];
-
     /**
      * @var Client
      */
@@ -53,11 +44,7 @@ final class PredisGameProjection implements StoredEventSubscriber
      */
     public function handle(StoredEvent $storedEvent): void
     {
-        $method = self::EVENT_TO_METHOD[$storedEvent->name()] ?? null;
-
-        if ($method) {
-            $this->$method($storedEvent);
-        }
+        $this->{'handle' . $storedEvent->name()}($storedEvent);
     }
 
     /**
@@ -65,9 +52,16 @@ final class PredisGameProjection implements StoredEventSubscriber
      */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
-        return array_key_exists(
+        return in_array(
             $storedEvent->name(),
-            self::EVENT_TO_METHOD
+            [
+                'GameOpened',
+                'PlayerMoved',
+                'GameWon',
+                'GameDrawn',
+                'GameAborted',
+                'ChatAssigned',
+            ]
         );
     }
 
@@ -107,19 +101,25 @@ final class PredisGameProjection implements StoredEventSubscriber
     /**
      * @param StoredEvent $storedEvent
      */
-    private function handleGameFinished(StoredEvent $storedEvent): void
+    private function handleGameAborted(StoredEvent $storedEvent): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-        $gameId = $payload['gameId'];
+        $this->handleGameFinished($storedEvent);
+    }
 
-        $gameStructure = $this->retrieveGameStructure($gameId);
+    /**
+     * @param StoredEvent $storedEvent
+     */
+    private function handleGameWon(StoredEvent $storedEvent): void
+    {
+        $this->handleGameFinished($storedEvent);
+    }
 
-        $gameStructure['finished'] = true;
-
-        $this->storeGameStructure($gameId, $gameStructure);
-
-        // Unset from cache because no further processing on this game is going on.
-        unset($this->gameStructureCache[$gameId]);
+    /**
+     * @param StoredEvent $storedEvent
+     */
+    private function handleGameDrawn(StoredEvent $storedEvent): void
+    {
+        $this->handleGameFinished($storedEvent);
     }
 
     /**
@@ -136,6 +136,24 @@ final class PredisGameProjection implements StoredEventSubscriber
         $gameStructure['chatId'] = $chatId;
 
         $this->storeGameStructure($gameId, $gameStructure);
+    }
+
+    /**
+     * @param StoredEvent $storedEvent
+     */
+    private function handleGameFinished(StoredEvent $storedEvent): void
+    {
+        $payload = json_decode($storedEvent->payload(), true);
+        $gameId = $payload['gameId'];
+
+        $gameStructure = $this->retrieveGameStructure($gameId);
+
+        $gameStructure['finished'] = true;
+
+        $this->storeGameStructure($gameId, $gameStructure);
+
+        // Unset from cache because no further processing on this game is going on.
+        unset($this->gameStructureCache[$gameId]);
     }
 
     /**

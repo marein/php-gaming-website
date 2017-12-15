@@ -10,13 +10,6 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
 {
     const STORAGE_KEY = 'running-games';
 
-    private const EVENT_TO_METHOD = [
-        'PlayerJoined' => 'handlePlayerJoined',
-        'GameWon'      => 'handleGameFinished',
-        'GameDrawn'    => 'handleGameFinished',
-        'GameAborted'  => 'handleGameFinished'
-    ];
-
     /**
      * @var Client
      */
@@ -37,11 +30,7 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
      */
     public function handle(StoredEvent $storedEvent): void
     {
-        $method = self::EVENT_TO_METHOD[$storedEvent->name()] ?? null;
-
-        if ($method) {
-            $this->$method($storedEvent);
-        }
+        $this->{'handle' . $storedEvent->name()}($storedEvent);
     }
 
     /**
@@ -49,9 +38,14 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
      */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
-        return array_key_exists(
+        return in_array(
             $storedEvent->name(),
-            self::EVENT_TO_METHOD
+            [
+                'PlayerJoined',
+                'GameWon',
+                'GameDrawn',
+                'GameAborted'
+            ]
         );
     }
 
@@ -64,6 +58,30 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
         $gameId = $payload['gameId'];
 
         $this->predis->sadd(self::STORAGE_KEY, $gameId);
+    }
+
+    /**
+     * @param StoredEvent $storedEvent
+     */
+    private function handleGameAborted(StoredEvent $storedEvent): void
+    {
+        $this->handleGameFinished($storedEvent);
+    }
+
+    /**
+     * @param StoredEvent $storedEvent
+     */
+    private function handleGameWon(StoredEvent $storedEvent): void
+    {
+        $this->handleGameFinished($storedEvent);
+    }
+
+    /**
+     * @param StoredEvent $storedEvent
+     */
+    private function handleGameDrawn(StoredEvent $storedEvent): void
+    {
+        $this->handleGameFinished($storedEvent);
     }
 
     /**
