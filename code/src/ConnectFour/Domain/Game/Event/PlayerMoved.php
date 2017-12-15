@@ -71,6 +71,6 @@ final class PlayerMoved implements DomainEvent
      */
     public function name(): string
     {
-        return 'connect-four.player-moved';
+        return 'ConnectFour.PlayerMoved';
     }
 }

@@ -57,7 +57,7 @@ Gambling.ConnectFour.Game = class
     {
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
-                return event.name === 'connect-four.player-moved';
+                return event.name === 'ConnectFour.PlayerMoved';
             },
             handle: this.onPlayerMoved.bind(this)
         });

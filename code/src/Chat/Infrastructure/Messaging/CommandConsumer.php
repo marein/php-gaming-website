@@ -40,7 +40,7 @@ final class CommandConsumer implements Consumer
      */
     public function routingKeys(): array
     {
-        return ['chat.initiate-chat'];
+        return ['Chat.InitiateChat'];
     }
 
     /**
@@ -48,6 +48,6 @@ final class CommandConsumer implements Consumer
      */
     public function queueName(): string
     {
-        return 'chat.command-listener';
+        return 'Chat.CommandListener';
     }
 }

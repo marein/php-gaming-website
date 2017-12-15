@@ -40,7 +40,7 @@ final class ChatInitiated implements DomainEvent
      */
     public function name(): string
     {
-        return 'chat.chat-initiated';
+        return 'Chat.ChatInitiated';
     }
 
     /**

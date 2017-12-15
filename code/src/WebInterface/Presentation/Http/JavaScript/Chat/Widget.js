@@ -167,14 +167,14 @@ Gambling.Chat.Widget = class
 
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
-                return event.name === 'chat.message-written';
+                return event.name === 'Chat.MessageWritten';
             },
             handle: this.onMessageWritten.bind(this)
         });
 
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
-                return event.name === 'connect-four.chat-assigned';
+                return event.name === 'ConnectFour.ChatAssigned';
             },
             handle: this.onChatAssigned.bind(this)
         });

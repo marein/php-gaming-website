@@ -69,6 +69,6 @@ final class PlayerJoined implements DomainEvent
      */
     public function name(): string
     {
-        return 'connect-four.player-joined';
+        return 'ConnectFour.PlayerJoined';
     }
 }

@@ -60,6 +60,6 @@ final class ChatAssigned implements DomainEvent
      */
     public function name(): string
     {
-        return 'connect-four.chat-assigned';
+        return 'ConnectFour.ChatAssigned';
     }
 }

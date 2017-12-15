@@ -59,14 +59,14 @@ Gambling.ConnectFour.OpenGameButton = class
 
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
-                return event.name === 'connect-four.player-joined';
+                return event.name === 'ConnectFour.PlayerJoined';
             },
             handle: this.onPlayerJoined.bind(this)
         });
 
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
-                return event.name === 'connect-four.game-aborted';
+                return event.name === 'ConnectFour.GameAborted';
             },
             handle: this.onGameAborted.bind(this)
         });

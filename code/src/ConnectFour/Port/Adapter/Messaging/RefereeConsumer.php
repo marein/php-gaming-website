@@ -10,8 +10,8 @@ use Gambling\ConnectFour\Application\Game\Command\AssignChatCommand;
 final class RefereeConsumer implements Consumer
 {
     private const ROUTING_KEY_TO_METHOD = [
-        'chat.chat-initiated'        => 'handleChatInitiated',
-        'connect-four.player-joined' => 'handlePlayerJoined'
+        'Chat.ChatInitiated'       => 'handleChatInitiated',
+        'ConnectFour.PlayerJoined' => 'handlePlayerJoined'
     ];
 
     /**
@@ -60,7 +60,7 @@ final class RefereeConsumer implements Consumer
      */
     public function queueName(): string
     {
-        return 'connect-four.referee';
+        return 'ConnectFour.Referee';
     }
 
     /**
@@ -90,7 +90,7 @@ final class RefereeConsumer implements Consumer
                 'ownerId' => $payload['gameId'],
                 'authors' => []
             ]),
-            'chat.initiate-chat'
+            'Chat.InitiateChat'
         );
     }
 }

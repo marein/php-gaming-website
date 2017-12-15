@@ -58,7 +58,7 @@ final class PublishRunningGamesCountToNchanCommand extends Command
                 $this->browserNotifier->publish(
                     '/pub?id=lobby',
                     json_encode([
-                        'eventName' => 'connect-four.running-games-updated',
+                        'eventName' => 'ConnectFour.RunningGamesUpdated',
                         'count'     => $currentRunningGamesCount
                     ])
                 );

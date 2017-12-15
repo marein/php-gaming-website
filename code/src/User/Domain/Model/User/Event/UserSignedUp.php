@@ -52,6 +52,6 @@ final class UserSignedUp implements DomainEvent
 
     public function name(): string
     {
-        return 'user.user-signed-up';
+        return 'User.UserSignedUp';
     }
 }

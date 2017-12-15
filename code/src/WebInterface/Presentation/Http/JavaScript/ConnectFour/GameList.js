@@ -229,7 +229,7 @@ Gambling.ConnectFour.GameList = class
     {
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
-                return event.name === 'connect-four.game-opened';
+                return event.name === 'ConnectFour.GameOpened';
             },
             handle: this.onGameOpened.bind(this)
         });
@@ -237,8 +237,8 @@ Gambling.ConnectFour.GameList = class
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
                 return [
-                    'connect-four.player-joined',
-                    'connect-four.game-aborted'
+                    'ConnectFour.PlayerJoined',
+                    'ConnectFour.GameAborted'
                 ].indexOf(event.name) !== -1;
             },
             handle: this.onPlayerJoinedOrGameAborted.bind(this)

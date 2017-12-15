@@ -29,7 +29,7 @@ Gambling.ConnectFour.RunningGames = class
     {
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
-                return event.name === 'connect-four.running-games-updated';
+                return event.name === 'ConnectFour.RunningGamesUpdated';
             },
             handle: this.onRunningGamesUpdated.bind(this)
         });

@@ -8,14 +8,14 @@ use Gambling\WebInterface\Application\BrowserNotifier;
 final class PublishRabbitMqEventsToNchanConsumer implements Consumer
 {
     private const ROUTING_KEY_TO_METHOD = [
-        'connect-four.game-opened'   => 'handleGameOpened',
-        'connect-four.game-aborted'  => 'handleGameAborted',
-        'connect-four.game-won'      => 'handleGameWon',
-        'connect-four.game-drawn'    => 'handleGameDrawn',
-        'connect-four.player-moved'  => 'handlePlayerMoved',
-        'connect-four.player-joined' => 'handlePlayerJoined',
-        'connect-four.chat-assigned' => 'handleChatAssigned',
-        'chat.message-written'       => 'handleMessageWritten'
+        'ConnectFour.GameOpened'   => 'handleGameOpened',
+        'ConnectFour.GameAborted'  => 'handleGameAborted',
+        'ConnectFour.GameWon'      => 'handleGameWon',
+        'ConnectFour.GameDrawn'    => 'handleGameDrawn',
+        'ConnectFour.PlayerMoved'  => 'handlePlayerMoved',
+        'ConnectFour.PlayerJoined' => 'handlePlayerJoined',
+        'ConnectFour.ChatAssigned' => 'handleChatAssigned',
+        'Chat.MessageWritten'      => 'handleMessageWritten'
     ];
 
     /**
@@ -52,7 +52,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
      */
     public function routingKeys(): array
     {
-        return ['connect-four.#', 'chat.message-written'];
+        return ['ConnectFour.#', 'Chat.MessageWritten'];
     }
 
     /**
@@ -60,7 +60,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
      */
     public function queueName(): string
     {
-        return 'web-interface.browser-notification';
+        return 'WebInterface.BrowserNotification';
     }
 
     /**
