@@ -29,6 +29,9 @@ help() {
     echo tests
     echo Run tests.
     echo
+    echo showTests
+    echo Show tests.
+    echo
 }
 
 build() {
@@ -77,6 +80,10 @@ removeGeneratedFiles() {
 }
 
 tests() {
+    docker-compose run php-tests vendor/bin/phpunit
+}
+
+showTests() {
     docker-compose run php-tests vendor/bin/phpunit --testdox
 }
 
