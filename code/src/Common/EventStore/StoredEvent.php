@@ -17,6 +17,11 @@ final class StoredEvent
     /**
      * @var string
      */
+    private $aggregateId;
+
+    /**
+     * @var string
+     */
     private $payload;
 
     /**
@@ -29,13 +34,20 @@ final class StoredEvent
      *
      * @param int                $id
      * @param string             $name
+     * @param string             $aggregateId
      * @param string             $payload
      * @param \DateTimeImmutable $occurredOn
      */
-    public function __construct(int $id, string $name, string $payload, \DateTimeImmutable $occurredOn)
-    {
+    public function __construct(
+        int $id,
+        string $name,
+        string $aggregateId,
+        string $payload,
+        \DateTimeImmutable $occurredOn
+    ) {
         $this->id = $id;
         $this->name = $name;
+        $this->aggregateId = $aggregateId;
         $this->payload = $payload;
         $this->occurredOn = $occurredOn;
     }
@@ -54,6 +66,14 @@ final class StoredEvent
     public function name(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function aggregateId(): string
+    {
+        return $this->aggregateId;
     }
 
     /**

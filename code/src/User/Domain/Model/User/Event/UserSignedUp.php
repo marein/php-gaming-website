@@ -23,12 +23,25 @@ final class UserSignedUp implements DomainEvent
      */
     private $occurredOn;
 
-
+    /**
+     * UserSignedUp constructor.
+     *
+     * @param UserId $userId
+     * @param string $username
+     */
     public function __construct(UserId $userId, string $username)
     {
         $this->userId = $userId;
         $this->username = $username;
         $this->occurredOn = Clock::instance()->now();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function aggregateId(): string
+    {
+        return $this->userId->toString();
     }
 
     /**
@@ -50,6 +63,9 @@ final class UserSignedUp implements DomainEvent
         return $this->occurredOn;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function name(): string
     {
         return 'UserSignedUp';

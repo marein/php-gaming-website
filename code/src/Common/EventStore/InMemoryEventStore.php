@@ -26,11 +26,25 @@ final class InMemoryEventStore implements EventStore
     /**
      * @inheritdoc
      */
+    public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array
+    {
+        return array_filter(
+            $this->storedEvents,
+            function(StoredEvent $storedEvent) use ($aggregateId, $sinceId) {
+                return $storedEvent->aggregateId() == $aggregateId && $storedEvent->id() > $sinceId;
+            }
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function append(DomainEvent $domainEvent): void
     {
         $this->storedEvents[] = new StoredEvent(
             count($this->storedEvents) + 1,
             $domainEvent->name(),
+            $domainEvent->aggregateId(),
             json_encode($domainEvent->payload()),
             $domainEvent->occurredOn()
         );

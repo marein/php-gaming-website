@@ -88,6 +88,14 @@ final class MessageWritten implements DomainEvent
     /**
      * @inheritdoc
      */
+    public function aggregateId(): string
+    {
+        return $this->chatId;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function payload(): array
     {
         return [

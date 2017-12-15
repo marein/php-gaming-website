@@ -16,10 +16,12 @@ final class DoctrineEventStoreSchema
 
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('name', 'string');
+        $table->addColumn('aggregateId', 'uuid_binary');
         $table->addColumn('payload', 'json');
         $table->addColumn('occurredOn', 'datetime_immutable');
 
         $table->setPrimaryKey(['id']);
+        $table->addIndex(['aggregateId']);
     }
 
     /**

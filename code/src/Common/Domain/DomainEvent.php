@@ -19,6 +19,13 @@ interface DomainEvent
     public function occurredOn(): \DateTimeImmutable;
 
     /**
+     * Returns the aggregate id of the event.
+     *
+     * @return string
+     */
+    public function aggregateId(): string;
+
+    /**
      * Returns the payload. This array must only hold primitive types.
      *
      * @return array

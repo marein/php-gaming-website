@@ -9,6 +9,8 @@ use Gambling\Common\EventStore\StoredEvent;
 
 final class DoctrineEventStore implements EventStore
 {
+    private const SELECT = 'e.id, e.name, BIN_TO_UUID(e.aggregateId) as aggregateId, e.payload, e.occurredOn';
+
     /**
      * @var Connection
      */
@@ -37,7 +39,7 @@ final class DoctrineEventStore implements EventStore
     public function storedEventsSince(int $id, int $limit): array
     {
         $rows = $this->connection->createQueryBuilder()
-            ->select('*')
+            ->select(self::SELECT)
             ->from($this->table, 'e')
             ->where('e.id > :id')
             ->setParameter(':id', $id)
@@ -51,14 +53,34 @@ final class DoctrineEventStore implements EventStore
     /**
      * @inheritdoc
      */
+    public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array
+    {
+        $rows = $this->connection->createQueryBuilder()
+            ->select(self::SELECT)
+            ->from($this->table, 'e')
+            ->where('e.aggregateId = :aggregateId')
+            ->andWhere('e.id > :id')
+            ->setParameter(':aggregateId', $aggregateId, 'uuid_binary')
+            ->setParameter(':id', $sinceId)
+            ->execute()
+            ->fetchAll();
+
+        return $this->transformRowsToStoredEvents($rows);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function append(DomainEvent $domainEvent): void
     {
         $this->connection->insert($this->table, [
-            'name'       => $domainEvent->name(),
-            'payload'    => $domainEvent->payload(),
-            'occurredOn' => $domainEvent->occurredOn()
+            'name'        => $domainEvent->name(),
+            'aggregateId' => $domainEvent->aggregateId(),
+            'payload'     => $domainEvent->payload(),
+            'occurredOn'  => $domainEvent->occurredOn()
         ], [
             'string',
+            'uuid_binary',
             'json',
             'datetime_immutable'
         ]);
@@ -77,6 +99,7 @@ final class DoctrineEventStore implements EventStore
             return new StoredEvent(
                 $row['id'],
                 $row['name'],
+                $row['aggregateId'],
                 $row['payload'],
                 new \DateTimeImmutable($row['occurredOn'])
             );

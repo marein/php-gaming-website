@@ -47,6 +47,14 @@ final class PlayerJoined implements DomainEvent
     /**
      * @inheritdoc
      */
+    public function aggregateId(): string
+    {
+        return $this->gameId->toString();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function payload(): array
     {
         return [
