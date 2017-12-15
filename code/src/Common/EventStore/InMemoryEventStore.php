@@ -30,7 +30,7 @@ final class InMemoryEventStore implements EventStore
     {
         return array_filter(
             $this->storedEvents,
-            function(StoredEvent $storedEvent) use ($aggregateId, $sinceId) {
+            function (StoredEvent $storedEvent) use ($aggregateId, $sinceId) {
                 return $storedEvent->aggregateId() == $aggregateId && $storedEvent->id() > $sinceId;
             }
         );
