@@ -11,12 +11,12 @@ final class PredisGameProjection implements StoredEventSubscriber
     const STORAGE_KEY_PREFIX = 'game.';
 
     private const EVENT_TO_METHOD = [
-        'ConnectFour.GameOpened'   => 'handleGameOpened',
-        'ConnectFour.PlayerMoved'  => 'handlePlayerMoved',
-        'ConnectFour.GameWon'      => 'handleGameFinished',
-        'ConnectFour.GameDrawn'    => 'handleGameFinished',
-        'ConnectFour.GameAborted'  => 'handleGameFinished',
-        'ConnectFour.ChatAssigned' => 'handleChatAssigned'
+        'GameOpened'   => 'handleGameOpened',
+        'PlayerMoved'  => 'handlePlayerMoved',
+        'GameWon'      => 'handleGameFinished',
+        'GameDrawn'    => 'handleGameFinished',
+        'GameAborted'  => 'handleGameFinished',
+        'ChatAssigned' => 'handleChatAssigned'
     ];
 
     /**

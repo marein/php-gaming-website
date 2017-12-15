@@ -37,7 +37,7 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
         //     * translate when the properties for an event in the payload changed.
         $this->messageBroker->publish(
             $storedEvent->payload(),
-            $storedEvent->name()
+            'Chat.' . $storedEvent->name()
         );
     }
 

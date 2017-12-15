@@ -61,6 +61,6 @@ final class GameWon implements DomainEvent
      */
     public function name(): string
     {
-        return 'ConnectFour.GameWon';
+        return 'GameWon';
     }
 }

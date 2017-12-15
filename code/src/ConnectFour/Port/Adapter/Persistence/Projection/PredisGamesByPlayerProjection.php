@@ -11,8 +11,8 @@ final class PredisGamesByPlayerProjection implements StoredEventSubscriber
     const STORAGE_KEY_PREFIX = 'games-by-player.';
 
     private const EVENT_TO_METHOD = [
-        'ConnectFour.GameAborted'  => 'handleGameAborted',
-        'ConnectFour.PlayerJoined' => 'handlePlayerJoined'
+        'GameAborted'  => 'handleGameAborted',
+        'PlayerJoined' => 'handlePlayerJoined'
     ];
 
     /**

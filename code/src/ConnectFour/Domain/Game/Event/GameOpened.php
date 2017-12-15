@@ -71,6 +71,6 @@ final class GameOpened implements DomainEvent
      */
     public function name(): string
     {
-        return 'ConnectFour.GameOpened';
+        return 'GameOpened';
     }
 }

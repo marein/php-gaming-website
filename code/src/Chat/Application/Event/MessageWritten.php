@@ -74,7 +74,7 @@ final class MessageWritten implements DomainEvent
      */
     public function name(): string
     {
-        return 'Chat.MessageWritten';
+        return 'MessageWritten';
     }
 
     /**

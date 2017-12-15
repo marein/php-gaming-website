@@ -11,9 +11,9 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
     const STORAGE_KEY = 'open-games';
 
     private const EVENT_TO_METHOD = [
-        'ConnectFour.GameOpened'   => 'handleGameOpened',
-        'ConnectFour.GameAborted'  => 'handleGameAborted',
-        'ConnectFour.PlayerJoined' => 'handlePlayerJoined'
+        'GameOpened'   => 'handleGameOpened',
+        'GameAborted'  => 'handleGameAborted',
+        'PlayerJoined' => 'handlePlayerJoined'
     ];
 
     /**

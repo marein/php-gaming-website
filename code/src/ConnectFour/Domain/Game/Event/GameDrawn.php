@@ -52,6 +52,6 @@ final class GameDrawn implements DomainEvent
      */
     public function name(): string
     {
-        return 'ConnectFour.GameDrawn';
+        return 'GameDrawn';
     }
 }
