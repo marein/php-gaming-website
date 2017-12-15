@@ -2,7 +2,6 @@
 
 namespace Gambling\ConnectFour\Domain\Game\State;
 
-use Gambling\ConnectFour\Domain\Game\Board\Board;
 use Gambling\ConnectFour\Domain\Game\Exception\GameException;
 use Gambling\ConnectFour\Domain\Game\Game;
 
@@ -38,13 +37,4 @@ interface State
      * @throws GameException
      */
     public function move(Game $game, string $playerId, int $column): void;
-
-    /**
-     * Get the board.
-     *
-     * @return Board
-     *
-     * @throws GameException
-     */
-    public function board(): Board;
 }

@@ -5,7 +5,6 @@ namespace Gambling\ConnectFour\Application\Game\Query;
 use Gambling\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
 use Gambling\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gambling\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
-use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Games;
 
 final class GameHandler
@@ -32,24 +31,18 @@ final class GameHandler
         $this->games = $games;
     }
 
+    /**
+     * Query the game finder.
+     *
+     * @param GameQuery $query
+     *
+     * @return Game
+     * @throws GameNotFoundException
+     */
     public function __invoke(GameQuery $query): Game
     {
-        $gameId = $query->gameId();
-
-        if ($game = $this->gameFinder->find($gameId)) {
-            return $game;
-        }
-
-        // Query the command storage to fill the eventual consistency lag.
-        // This happens when a player joins and both players are redirected to the game page.
-        // It can happen, that the game is not in the query database yet. So, query the command database and
-        // transform the Game from the Domain Model to the Game from the Query Model.
-        try {
-            return Game::fromGame(
-                $this->games->get(GameId::fromString($gameId))
-            );
-        } catch (\Gambling\ConnectFour\Domain\Game\Exception\GameNotFoundException $exception) {
-            throw new GameNotFoundException();
-        }
+        return $this->gameFinder->find(
+            $query->gameId()
+        );
     }
 }

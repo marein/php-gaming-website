@@ -2,59 +2,63 @@
 
 namespace Gambling\ConnectFour\Application\Game\Query\Model\Game;
 
+use Gambling\Common\EventStore\StoredEvent;
+
+/**
+ * This class takes events from the event store and project these to itself.
+ * This allows to reuse this class in the projection and if the projection is not available,
+ * it can be used to project the game on demand. This can happen when a player joins
+ * a game and the game is not in the query store yet. Instead of returning a 404 response,
+ * we send the user the latest projection from the event store. This way, the domain model
+ * itself stays clean and gets not inflated by a bunch of getters.
+ */
 final class Game
 {
     /**
+     * The game id of the game.
+     *
      * @var string
      */
-    private $gameId;
+    private $gameId = '';
 
     /**
+     * The assigned chat id of the game.
+     *
      * @var string
      */
-    private $chatId;
+    private $chatId = '';
 
     /**
+     * The width of the game.
+     *
      * @var int
      */
-    private $width;
+    private $width = 0;
 
     /**
+     * The height of the game.
+     *
      * @var int
      */
-    private $height;
+    private $height = 0;
 
     /**
+     * Tell if the game is finished.
+     *
      * @var bool
      */
-    private $finished;
+    private $finished = false;
 
     /**
+     * The fields of the game.
+     *
      * @var Field[]
      */
-    private $fields;
+    private $fields = [];
 
     /**
-     * Game constructor.
+     * Returns the id.
      *
-     * @param string  $gameId
-     * @param string  $chatId
-     * @param int     $width
-     * @param int     $height
-     * @param bool    $finished
-     * @param Field[] $fields
-     */
-    public function __construct(string $gameId, string $chatId, int $width, int $height, bool $finished, array $fields)
-    {
-        $this->gameId = $gameId;
-        $this->chatId = $chatId;
-        $this->width = $width;
-        $this->height = $height;
-        $this->finished = $finished;
-        $this->fields = $fields;
-    }
-
-    /**
      * @return string
      */
     public function id(): string
@@ -63,6 +67,8 @@ final class Game
     }
 
     /**
+     * Returns the chat id.
+     *
      * @return string
      */
     public function chatId(): string
@@ -71,6 +77,8 @@ final class Game
     }
 
     /**
+     * Returns the width.
+     *
      * @return int
      */
     public function width(): int
@@ -79,6 +87,8 @@ final class Game
     }
 
     /**
+     * Returns the height.
+     *
      * @return int
      */
     public function height(): int
@@ -87,6 +97,8 @@ final class Game
     }
 
     /**
+     * Returns true if the game is finished.
+     *
      * @return bool
      */
     public function finished(): bool
@@ -95,35 +107,101 @@ final class Game
     }
 
     /**
+     * Return the fields of the game.
+     *
      * @return Field[]
      */
     public function fields(): array
     {
-        return $this->fields;
+        // Call array_values to lose the keys.
+        return array_values($this->fields);
     }
 
     /**
-     * @param \Gambling\ConnectFour\Domain\Game\Game $game
+     * Apply a stored event. The game can project this to its state.
+     * The order of events must be the same as the sequence added to the event store.
      *
-     * @return Game
+     * @param StoredEvent $storedEvent
      */
-    public static function fromGame(\Gambling\ConnectFour\Domain\Game\Game $game): Game
+    public function apply(StoredEvent $storedEvent): void
     {
-        $board = $game->board();
+        $method = 'when' . $storedEvent->name();
 
-        return new self(
-            $game->id(),
-            '',
-            $board->size()->width(),
-            $board->size()->height(),
-            false,
-            array_map(function (\Gambling\ConnectFour\Domain\Game\Board\Field $field) {
-                return new Field(
-                    $field->point()->x(),
-                    $field->point()->y(),
-                    0
-                );
-            }, $board->fields())
-        );
+        if (method_exists($this, $method)) {
+            $this->$method(
+                json_decode($storedEvent->payload(), true)
+            );
+        }
+    }
+
+    /**
+     * Open the game and create empty fields.
+     *
+     * @param array $payload
+     */
+    private function whenGameOpened(array $payload): void
+    {
+        $this->gameId = $payload['gameId'];
+        $this->width = $payload['width'];
+        $this->height = $payload['height'];
+
+        for ($y = 1; $y <= $this->height; $y++) {
+            for ($x = 1; $x <= $this->width; $x++) {
+                $this->fields[$x . '.' . $y] = new Field($x, $y, 0);
+            }
+        }
+    }
+
+    /**
+     * Project a player movement.
+     *
+     * @param array $payload
+     */
+    private function whenPlayerMoved(array $payload): void
+    {
+        $x = $payload['x'];
+        $y = $payload['y'];
+
+        $this->fields[$x . '.' . $y] = new Field($x, $y, $payload['color']);
+    }
+
+    /**
+     * Mark the game as finished.
+     *
+     * @param array $payload
+     */
+    private function whenGameAborted(array $payload): void
+    {
+        $this->finished = true;
+    }
+
+    /**
+     * Mark the game as finished.
+     *
+     * @param array $payload
+     */
+    private function whenGameWon(array $payload): void
+    {
+        $this->finished = true;
+    }
+
+    /**
+     * Mark the game as finished.
+     *
+     * @param array $payload
+     */
+    private function whenGameDrawn(array $payload): void
+    {
+        $this->finished = true;
+    }
+
+    /**
+     * Assign the chat id.
+     *
+     * @param array $payload
+     */
+    private function whenChatAssigned(array $payload): void
+    {
+        $this->chatId = $payload['chatId'];
     }
 }

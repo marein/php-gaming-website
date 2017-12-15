@@ -206,12 +206,4 @@ final class Running implements State
             }
         }
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function board(): Board
-    {
-        return $this->board;
-    }
 }

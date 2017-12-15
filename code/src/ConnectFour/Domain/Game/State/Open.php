@@ -86,12 +86,4 @@ final class Open implements State
     {
         throw new GameNotRunningException();
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function board(): Board
-    {
-        return Board::empty($this->configuration->size());
-    }
 }

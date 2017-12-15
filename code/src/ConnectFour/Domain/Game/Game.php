@@ -4,7 +4,6 @@ namespace Gambling\ConnectFour\Domain\Game;
 
 use Gambling\Common\Domain\AggregateRoot;
 use Gambling\Common\Domain\DomainEvent;
-use Gambling\ConnectFour\Domain\Game\Board\Board;
 use Gambling\ConnectFour\Domain\Game\Board\Stone;
 use Gambling\ConnectFour\Domain\Game\Event\ChatAssigned;
 use Gambling\ConnectFour\Domain\Game\Event\GameOpened;
@@ -153,17 +152,6 @@ final class Game implements AggregateRoot
                 $this->chatId
             );
         }
-    }
-
-    /**
-     * Returns the [Board].
-     *
-     * @return Board
-     * @throws GameException
-     */
-    public function board(): Board
-    {
-        return $this->state->board();
     }
 
     /**

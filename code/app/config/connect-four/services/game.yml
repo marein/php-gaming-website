@@ -20,11 +20,19 @@ services:
             - '@connect-four.doctrine-dbal'
             - '@connect-four.domain-event-publisher'
 
-    connect-four.game-finder:
+    connect-four.predis-game-finder:
         class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameFinder
         public: false
+        decorates: connect-four.game-finder
         arguments:
             - '@connect-four.predis'
+            - '@connect-four.predis-game-finder.inner'
+
+    connect-four.game-finder:
+        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\EventStoreGameFinder
+        public: false
+        arguments:
+            - '@connect-four.event-store'
 
     connect-four.games-by-player-finder:
         class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerFinder

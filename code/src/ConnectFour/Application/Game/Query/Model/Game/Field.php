@@ -5,16 +5,22 @@ namespace Gambling\ConnectFour\Application\Game\Query\Model\Game;
 final class Field
 {
     /**
+     * The x coordinate.
+     *
      * @var int
      */
     private $x;
 
     /**
+     * The y coordinate.
+     *
      * @var int
      */
     private $y;
 
     /**
+     * The color. Can be 0, 1 or 2. 0 means empty.
+     *
      * @var int
      */
     private $color;
@@ -34,6 +40,8 @@ final class Field
     }
 
     /**
+     * Returns the y coordinate.
+     *
      * @return int
      */
     public function x(): int
@@ -42,6 +50,8 @@ final class Field
     }
 
     /**
+     * Returns the y coordinate.
+     *
      * @return int
      */
     public function y(): int
@@ -50,6 +60,8 @@ final class Field
     }
 
     /**
+     * Returns the color. Can be 0, 1 or 2. 0 means empty.
+     *
      * @return int
      */
     public function color(): int
