@@ -50,11 +50,11 @@ final class Game
     private $finished = false;
 
     /**
-     * The fields of the game.
+     * The moves of the game.
      *
-     * @var Field[]
+     * @var Move[]
      */
-    private $fields = [];
+    private $moves = [];
 
     /**
      * Returns the id.
@@ -107,14 +107,13 @@ final class Game
     }
 
     /**
-     * Return the fields of the game.
+     * Return the moves of the game.
      *
-     * @return Field[]
+     * @return Move[]
      */
-    public function fields(): array
+    public function moves(): array
     {
-        // Call array_values to lose the keys.
-        return array_values($this->fields);
+        return $this->moves;
     }
 
     /**
@@ -135,7 +134,7 @@ final class Game
     }
 
     /**
-     * Open the game and create empty fields.
+     * Open the game.
      *
      * @param array $payload
      */
@@ -144,12 +143,6 @@ final class Game
         $this->gameId = $payload['gameId'];
         $this->width = $payload['width'];
         $this->height = $payload['height'];
-
-        for ($y = 1; $y <= $this->height; $y++) {
-            for ($x = 1; $x <= $this->width; $x++) {
-                $this->fields[$x . '.' . $y] = new Field($x, $y, 0);
-            }
-        }
     }
 
     /**
@@ -159,10 +152,11 @@ final class Game
      */
     private function whenPlayerMoved(array $payload): void
     {
-        $x = $payload['x'];
-        $y = $payload['y'];
-
-        $this->fields[$x . '.' . $y] = new Field($x, $y, $payload['color']);
+        $this->moves[] = new Move(
+            $payload['x'],
+            $payload['y'],
+            $payload['color']
+        );
     }
 
     /**

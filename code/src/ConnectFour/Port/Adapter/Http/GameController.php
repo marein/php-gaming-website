@@ -10,7 +10,7 @@ use Gambling\ConnectFour\Application\Game\Command\OpenCommand;
 use Gambling\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
 use Gambling\ConnectFour\Application\Game\Query\GameQuery;
 use Gambling\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\Field;
+use Gambling\ConnectFour\Application\Game\Query\Model\Game\Move;
 use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
 use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 use Gambling\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
@@ -123,13 +123,13 @@ class GameController
                 'finished' => $game->finished(),
                 'height'   => $game->height(),
                 'width'    => $game->width(),
-                'fields'   => array_map(function (Field $field) {
+                'moves'    => array_map(function (Move $move) {
                     return [
-                        'x'     => $field->x(),
-                        'y'     => $field->y(),
-                        'color' => $field->color()
+                        'x'     => $move->x(),
+                        'y'     => $move->y(),
+                        'color' => $move->color()
                     ];
-                }, $game->fields())
+                }, $game->moves())
             ]);
         } catch (GameNotFoundException $exception) {
             throw new NotFoundHttpException($exception->getMessage(), $exception);

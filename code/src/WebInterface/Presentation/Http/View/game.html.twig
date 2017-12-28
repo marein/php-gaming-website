@@ -12,24 +12,16 @@
         <div class="box" id="current-game">
             <table class="game">
                 <tbody>
-                <tr>
-                    {% for field in game.fields %}
-                    {% set colorClass = '' %}
-                    {% if field.color == 1 %}
-                        {% set colorClass = 'game__field--red' %}
-                    {% elseif field.color == 2 %}
-                        {% set colorClass = 'game__field--yellow' %}
-                    {% endif %}
-                    <td
-                            class="game__field {{ colorClass }}"
-                            data-column="{{ field.x }}"
-                            data-point="{{ field.x }} {{ field.y }}"></td>
-                    {% if loop.index % game.width == 0 %}
-                </tr>
-                <tr>
-                    {% endif %}
-                    {% endfor %}
-                </tr>
+                {% for y in range(1, game.height) %}
+                    <tr>
+                        {% for x in range(1, game.width) %}
+                            <td
+                                    class="game__field"
+                                    data-column="{{ x }}"
+                                    data-point="{{ x }} {{ y }}"></td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -61,7 +53,8 @@
                 app.eventPublisher,
                 app.gameService,
                 document.getElementById('current-game'),
-                '{{ game.gameId }}'
+                '{{ game.gameId }}',
+                {{ game.moves|json_encode|raw }}
             );
             new Gambling.ConnectFour.AbortGameButton(
                 app.gameService,

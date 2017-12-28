@@ -2,7 +2,7 @@
 
 namespace Gambling\ConnectFour\Application\Game\Query\Model\Game;
 
-final class Field
+final class Move
 {
     /**
      * The x coordinate.
@@ -26,7 +26,7 @@ final class Field
     private $color;
 
     /**
-     * Field constructor.
+     * Move constructor.
      *
      * @param int $x
      * @param int $y

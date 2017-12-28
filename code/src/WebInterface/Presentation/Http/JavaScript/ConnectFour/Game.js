@@ -8,20 +8,34 @@ Gambling.ConnectFour.Game = class
      * @param {Gambling.ConnectFour.GameService} gameService
      * @param {Node} gameHolder
      * @param {String} gameId
+     * @param {{x:Number, y:Number, color:Number}[]} moves
      */
-    constructor(eventPublisher, gameService, gameHolder, gameId)
+    constructor(eventPublisher, gameService, gameHolder, gameId, moves)
     {
         this.eventPublisher = eventPublisher;
         this.gameService = gameService;
         this.gameHolder = gameHolder;
         this.gameId = gameId;
+        this.moves = moves;
         this.fields = this.gameHolder.querySelectorAll('.game__field');
         this.colorToClass = {
             1: 'game__field--red',
             2: 'game__field--yellow'
         };
 
+        this.moves.forEach(this.addMove.bind(this));
         this.registerEventHandler();
+    }
+
+    /**
+     * @param {{x:Number, y:Number, color:Number}} move
+     */
+    addMove(move)
+    {
+        let field = this.gameHolder.querySelector('.game__field[data-point="' + move.x + ' ' + move.y + '"]');
+        field.classList.add(
+            this.colorToClass[move.color]
+        );
     }
 
     onFieldClick(event)
@@ -43,14 +57,7 @@ Gambling.ConnectFour.Game = class
 
     onPlayerMoved(event)
     {
-        let payload = event.payload;
-        if (this.gameId === payload.gameId) {
-            let field = this.gameHolder.querySelector('.game__field[data-point="' + payload.x + ' ' + payload.y + '"]');
-            let color = parseInt(payload.color);
-            field.classList.add(
-                this.colorToClass[color]
-            );
-        }
+        this.addMove(event.payload);
     }
 
     registerEventHandler()
