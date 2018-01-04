@@ -44,6 +44,15 @@ button:hover {
     cursor: hand;
 }
 
+.button--yellow {
+    background-color: rgb(171, 171, 105);
+    color: rgb(230, 230, 230);
+}
+
+.button--flash {
+    animation: flash 1s infinite;
+}
+
 .left, .middle, .right {
     float: none;
     width: 100%;

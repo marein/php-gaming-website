@@ -85,11 +85,14 @@ Gambling.ConnectFour.Game = class
     {
         this.moves.push(move);
 
-        // Only show if the the user follow the moves.
+        // Only show if the the user follow the moves. Otherwise notify user that a new move is available.
         if (this.followMovesButton.disabled === true) {
             this.showMove(move);
             this.numberOfCurrentMoveInView++;
             this.updateNavigationButtons();
+        } else {
+            this.followMovesButton.classList.add('button--yellow');
+            this.followMovesButton.classList.add('button--flash');
         }
     }
 
@@ -109,6 +112,12 @@ Gambling.ConnectFour.Game = class
         this.nextMoveButton.classList.toggle('disabled', isCurrentMoveTheLastMove);
         this.followMovesButton.classList.toggle('disabled', isCurrentMoveTheLastMove);
         this.previousMoveButton.classList.toggle('disabled', isCurrentMoveBeforeTheFirstMove);
+
+        // Remove flashing if the user follow the moves.
+        if (isCurrentMoveTheLastMove) {
+            this.followMovesButton.classList.remove('button--yellow');
+            this.followMovesButton.classList.remove('button--flash');
+        }
     }
 
     onFieldClick(event)
