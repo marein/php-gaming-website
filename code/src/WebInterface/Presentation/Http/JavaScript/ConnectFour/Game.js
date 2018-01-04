@@ -22,8 +22,7 @@ Gambling.ConnectFour.Game = class
         followMovesButton,
         gameId,
         moves
-    )
-    {
+    ) {
         this.eventPublisher = eventPublisher;
         this.gameService = gameService;
         this.gameHolder = gameHolder;
@@ -50,6 +49,7 @@ Gambling.ConnectFour.Game = class
     {
         // Clear fields
         this.fields.forEach((field) => {
+            field.classList.remove('game__field--flash');
             field.classList.remove('game__field--red');
             field.classList.remove('game__field--yellow');
         });
@@ -69,6 +69,11 @@ Gambling.ConnectFour.Game = class
         field.classList.add(
             this.colorToClass[move.color]
         );
+
+        this.fields.forEach((field) => {
+            field.classList.remove('game__field--flash');
+        });
+        field.classList.add('game__field--flash');
     }
 
     /**

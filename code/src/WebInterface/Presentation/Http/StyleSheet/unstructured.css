@@ -1,6 +1,15 @@
 /**
  * Don't look at this. CSS is not my domain ;).
  */
+@keyframes flash {
+    0%, 100% {
+        filter: brightness(0.9);
+    }
+    20% {
+        filter: brightness(1.1);
+    }
+}
+
 body, ul, p, a, button {
     margin: 0;
     padding: 0;
@@ -167,6 +176,14 @@ button:hover {
 
 .game__field--yellow {
     background-color: rgb(171, 171, 105);
+}
+
+.game__field--flash {
+    animation: flash 1s infinite;
+}
+
+.loading-indicator .game__field--flash {
+    animation: paused;
 }
 
 .game__field::before {
