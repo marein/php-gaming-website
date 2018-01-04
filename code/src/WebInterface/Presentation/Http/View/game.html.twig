@@ -34,6 +34,19 @@
                 </button>
             </p>
         </div>
+        <div class="box">
+            <p>
+                <button class="button" id="previous-move">
+                    &lt;
+                </button>
+                <button class="button" id="next-move">
+                    &gt;
+                </button>
+                <button class="button" id="follow-moves">
+                    Follow moves
+                </button>
+            </p>
+        </div>
         <div class="chat" id="chat">
             <ul class="chat__messages" data-message-holder>
 
@@ -53,6 +66,9 @@
                 app.eventPublisher,
                 app.gameService,
                 document.getElementById('current-game'),
+                document.getElementById('previous-move'),
+                document.getElementById('next-move'),
+                document.getElementById('follow-moves'),
                 '{{ game.gameId }}',
                 {{ game.moves|json_encode|raw }}
             );
