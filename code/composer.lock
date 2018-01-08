@@ -844,38 +844,40 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.5.13",
+            "version": "v2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "93103f44a3e36e7b48165b6e6b736833f33b18ef"
+                "reference": "374e7ace49d864dad8cddbc55346447c8a6a2083"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/93103f44a3e36e7b48165b6e6b736833f33b18ef",
-                "reference": "93103f44a3e36e7b48165b6e6b736833f33b18ef",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/374e7ace49d864dad8cddbc55346447c8a6a2083",
+                "reference": "374e7ace49d864dad8cddbc55346447c8a6a2083",
                 "shasum": ""
             },
             "require": {
-                "doctrine/cache": "~1.4",
-                "doctrine/collections": "~1.2",
-                "doctrine/common": ">=2.5-dev,<2.9-dev",
-                "doctrine/dbal": ">=2.5-dev,<2.7-dev",
-                "doctrine/instantiator": "^1.0.1",
+                "doctrine/annotations": "~1.5",
+                "doctrine/cache": "~1.6",
+                "doctrine/collections": "^1.4",
+                "doctrine/common": "^2.7.1",
+                "doctrine/dbal": "^2.6",
+                "doctrine/instantiator": "~1.1",
                 "ext-pdo": "*",
-                "php": ">=5.4",
-                "symfony/console": "~2.5|~3.0|~4.0"
+                "php": "^7.1",
+                "symfony/console": "~3.0|~4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "symfony/yaml": "~2.3|~3.0|~4.0"
+                "doctrine/coding-standard": "^1.0",
+                "phpunit/phpunit": "^6.5",
+                "squizlabs/php_codesniffer": "^3.2",
+                "symfony/yaml": "~3.4|~4.0"
             },
             "suggest": {
                 "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
             },
             "bin": [
-                "bin/doctrine",
-                "bin/doctrine.php"
+                "bin/doctrine"
             ],
             "type": "library",
             "extra": {
@@ -884,8 +886,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Doctrine\\ORM\\": "lib/"
+                "psr-4": {
+                    "Doctrine\\ORM\\": "lib/Doctrine/ORM"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -908,6 +910,10 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
                 }
             ],
             "description": "Object-Relational-Mapper for PHP",
@@ -916,7 +922,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2017-11-27T23:25:55+00:00"
+            "time": "2017-12-20T00:38:15+00:00"
         },
         {
             "name": "dunglas/angular-csrf-bundle",
@@ -980,16 +986,16 @@
         },
         {
             "name": "enqueue/amqp-lib",
-            "version": "0.8.10",
+            "version": "0.8.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-enqueue/amqp-lib.git",
-                "reference": "9180a89769e0713cce70065e5050d30d3dc59985"
+                "reference": "db759456632cda2d762c632a20660508bbe3976f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/amqp-lib/zipball/9180a89769e0713cce70065e5050d30d3dc59985",
-                "reference": "9180a89769e0713cce70065e5050d30d3dc59985",
+                "url": "https://api.github.com/repos/php-enqueue/amqp-lib/zipball/db759456632cda2d762c632a20660508bbe3976f",
+                "reference": "db759456632cda2d762c632a20660508bbe3976f",
                 "shasum": ""
             },
             "require": {
@@ -1030,26 +1036,26 @@
                 "MIT"
             ],
             "description": "Message Queue Amqp Transport",
-            "homepage": "https://github.com/php-enqueue/enqueue-dev",
+            "homepage": "https://enqueue.forma-pro.com/",
             "keywords": [
                 "AMQP",
                 "messaging",
                 "queue"
             ],
-            "time": "2017-11-28T20:58:31+00:00"
+            "time": "2018-01-04T09:46:31+00:00"
         },
         {
             "name": "enqueue/amqp-tools",
-            "version": "0.8.9",
+            "version": "0.8.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-enqueue/amqp-tools.git",
-                "reference": "4fd6c7ae8d2095bf0ac1b026ed8affa694a49c6a"
+                "reference": "e8b28a03d9740ba1cb2cf7e0d8a82e1bac33acc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/amqp-tools/zipball/4fd6c7ae8d2095bf0ac1b026ed8affa694a49c6a",
-                "reference": "4fd6c7ae8d2095bf0ac1b026ed8affa694a49c6a",
+                "url": "https://api.github.com/repos/php-enqueue/amqp-tools/zipball/e8b28a03d9740ba1cb2cf7e0d8a82e1bac33acc7",
+                "reference": "e8b28a03d9740ba1cb2cf7e0d8a82e1bac33acc7",
                 "shasum": ""
             },
             "require": {
@@ -1081,13 +1087,13 @@
                 "MIT"
             ],
             "description": "Message Queue Amqp Tools",
-            "homepage": "https://github.com/php-enqueue/enqueue-dev",
+            "homepage": "https://enqueue.forma-pro.com/",
             "keywords": [
                 "AMQP",
                 "messaging",
                 "queue"
             ],
-            "time": "2017-11-15T13:36:43+00:00"
+            "time": "2018-01-04T09:46:31+00:00"
         },
         {
             "name": "fig/link-util",
@@ -1802,16 +1808,16 @@
         },
         {
             "name": "queue-interop/amqp-interop",
-            "version": "0.7.1",
+            "version": "0.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/queue-interop/amqp-interop.git",
-                "reference": "54f7cd58cc02594265b1fd400d5d7bbcadbf3691"
+                "reference": "03cfac42483d07ab45d1896a6a2e1d873a216bba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/queue-interop/amqp-interop/zipball/54f7cd58cc02594265b1fd400d5d7bbcadbf3691",
-                "reference": "54f7cd58cc02594265b1fd400d5d7bbcadbf3691",
+                "url": "https://api.github.com/repos/queue-interop/amqp-interop/zipball/03cfac42483d07ab45d1896a6a2e1d873a216bba",
+                "reference": "03cfac42483d07ab45d1896a6a2e1d873a216bba",
                 "shasum": ""
             },
             "require": {
@@ -1836,7 +1842,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2017-11-14T14:32:21+00:00"
+            "time": "2018-01-04T09:52:06+00:00"
         },
         {
             "name": "queue-interop/queue-interop",
@@ -2361,16 +2367,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.4.1",
+            "version": "v3.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "46d4a9027c752ce425f67c94e89e3e3098f3a488"
+                "reference": "21abeae69baf64d689b04ca33663b4354be1a226"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/46d4a9027c752ce425f67c94e89e3e3098f3a488",
-                "reference": "46d4a9027c752ce425f67c94e89e3e3098f3a488",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/21abeae69baf64d689b04ca33663b4354be1a226",
+                "reference": "21abeae69baf64d689b04ca33663b4354be1a226",
                 "shasum": ""
             },
             "require": {
@@ -2512,7 +2518,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2017-12-04T23:05:15+00:00"
+            "time": "2018-01-05T08:33:31+00:00"
         },
         {
             "name": "twig/twig",
@@ -3566,16 +3572,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "6.5.4",
+            "version": "6.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1b2f933d5775f9237369deaa2d2bfbf9d652be4c"
+                "reference": "83d27937a310f2984fd575686138597147bdc7df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1b2f933d5775f9237369deaa2d2bfbf9d652be4c",
-                "reference": "1b2f933d5775f9237369deaa2d2bfbf9d652be4c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/83d27937a310f2984fd575686138597147bdc7df",
+                "reference": "83d27937a310f2984fd575686138597147bdc7df",
                 "shasum": ""
             },
             "require": {
@@ -3646,20 +3652,20 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-12-10T08:06:19+00:00"
+            "time": "2017-12-17T06:31:19+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "5.0.5",
+            "version": "5.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "283b9f4f670e3a6fd6c4ff95c51a952eb5c75933"
+                "reference": "33fd41a76e746b8fa96d00b49a23dadfa8334cdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/283b9f4f670e3a6fd6c4ff95c51a952eb5c75933",
-                "reference": "283b9f4f670e3a6fd6c4ff95c51a952eb5c75933",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/33fd41a76e746b8fa96d00b49a23dadfa8334cdf",
+                "reference": "33fd41a76e746b8fa96d00b49a23dadfa8334cdf",
                 "shasum": ""
             },
             "require": {
@@ -3705,7 +3711,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2017-12-10T08:01:53+00:00"
+            "time": "2018-01-06T05:45:45+00:00"
         },
         {
             "name": "psr/http-message",
@@ -3804,16 +3810,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "1174d9018191e93cb9d719edec01257fc05f8158"
+                "reference": "b11c729f95109b56a0fe9650c6a63a0fcd8c439f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/1174d9018191e93cb9d719edec01257fc05f8158",
-                "reference": "1174d9018191e93cb9d719edec01257fc05f8158",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/b11c729f95109b56a0fe9650c6a63a0fcd8c439f",
+                "reference": "b11c729f95109b56a0fe9650c6a63a0fcd8c439f",
                 "shasum": ""
             },
             "require": {
@@ -3864,7 +3870,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-11-03T07:16:52+00:00"
+            "time": "2017-12-22T14:50:35+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -4318,16 +4324,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.2.0",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "ba816f2e1bacc16278792c78b67c730dfff064a6"
+                "reference": "d7c00c3000ac0ce79c96fcbfef86b49a71158cd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ba816f2e1bacc16278792c78b67c730dfff064a6",
-                "reference": "ba816f2e1bacc16278792c78b67c730dfff064a6",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/d7c00c3000ac0ce79c96fcbfef86b49a71158cd1",
+                "reference": "d7c00c3000ac0ce79c96fcbfef86b49a71158cd1",
                 "shasum": ""
             },
             "require": {
@@ -4365,7 +4371,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-12-12T21:36:10+00:00"
+            "time": "2017-12-19T21:44:46+00:00"
         },
         {
             "name": "theseer/tokenizer",
