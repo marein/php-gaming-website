@@ -4,31 +4,23 @@ namespace Gambling\ConnectFour\Domain\Game;
 
 use Gambling\Common\Domain\AggregateRoot;
 use Gambling\Common\Domain\DomainEvent;
+use Gambling\Common\Domain\IsAggregateRoot;
 use Gambling\ConnectFour\Domain\Game\Board\Stone;
 use Gambling\ConnectFour\Domain\Game\Event\ChatAssigned;
 use Gambling\ConnectFour\Domain\Game\Event\GameOpened;
 use Gambling\ConnectFour\Domain\Game\Exception\GameException;
-use Gambling\ConnectFour\Domain\Game\State\Aborted;
-use Gambling\ConnectFour\Domain\Game\State\Drawn;
 use Gambling\ConnectFour\Domain\Game\State\Open;
-use Gambling\ConnectFour\Domain\Game\State\Running;
 use Gambling\ConnectFour\Domain\Game\State\State;
-use Gambling\ConnectFour\Domain\Game\State\Won;
-use Marein\FriendVisibility\HasFriendClasses;
+use Gambling\ConnectFour\Domain\Game\State\Transition;
 
 /**
  * The game uses the state pattern to get rid of the conditional mess for each state.
- * I use the marein/php-friend-visibility package, so the defined friend classes (in this case the states)
- * can access the private members of the game directly. The states are definitely part of the game,
- * so its plausible they know the internals of this class. Other techniques I thought of is return a
- * Transition object with the occurred domain events and the new state, but this ends up with more code.
- * I think this approach is easier to understand if you grasp the concept of friends.
  *
  * Everything within this aggregate, except the game itself is a value object.
  */
 final class Game implements AggregateRoot
 {
-    use HasFriendClasses;
+    use IsAggregateRoot;
 
     /**
      * @var GameId
@@ -46,11 +38,6 @@ final class Game implements AggregateRoot
     private $chatId;
 
     /**
-     * @var DomainEvent[]
-     */
-    private $domainEvents;
-
-    /**
      * Game constructor.
      *
      * @param GameId        $gameId
@@ -61,7 +48,7 @@ final class Game implements AggregateRoot
     {
         $this->gameId = $gameId;
         $this->state = $state;
-        $this->domainEvents = new \ArrayObject($domainEvents);
+        $this->domainEvents = $domainEvents;
         $this->chatId = '';
     }
 
@@ -84,20 +71,21 @@ final class Game implements AggregateRoot
         $gameId = GameId::generate();
         $size = $configuration->size();
         $player = new Player($playerId, Stone::red());
-        $state = new Open(
-            $configuration,
-            $player
-        );
-        $domainEvents = [
-            new GameOpened(
-                $gameId,
-                $size,
-                $player
-            )
-        ];
-        $game = new self($gameId, $state, $domainEvents);
 
-        return $game;
+        return new self(
+            $gameId,
+            new Open(
+                $configuration,
+                $player
+            ),
+            [
+                new GameOpened(
+                    $gameId,
+                    $size,
+                    $player
+                )
+            ]
+        );
     }
 
     /**
@@ -110,7 +98,9 @@ final class Game implements AggregateRoot
      */
     public function move(string $playerId, int $column): void
     {
-        $this->state->move($this, $playerId, $column);
+        $transition = $this->state->move($this->id(), $playerId, $column);
+
+        $this->applyTransition($transition);
     }
 
     /**
@@ -122,7 +112,9 @@ final class Game implements AggregateRoot
      */
     public function join(string $playerId): void
     {
-        $this->state->join($this, $playerId);
+        $transition = $this->state->join($this->id(), $playerId);
+
+        $this->applyTransition($transition);
     }
 
     /**
@@ -134,7 +126,9 @@ final class Game implements AggregateRoot
      */
     public function abort(string $playerId): void
     {
-        $this->state->abort($this, $playerId);
+        $transition = $this->state->abort($this->id(), $playerId);
+
+        $this->applyTransition($transition);
     }
 
     /**
@@ -155,28 +149,17 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * @inheritdoc
+     * Apply a state transition.
+     *
+     * @param Transition $transition
      */
-    public function flushDomainEvents(): array
+    private function applyTransition(Transition $transition): void
     {
-        $domainEvents = $this->domainEvents->getArrayCopy();
+        $this->state = $transition->state();
 
-        $this->domainEvents = new \ArrayObject();
-
-        return $domainEvents;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected static function friendClasses(): array
-    {
-        return [
-            Aborted::class,
-            Drawn::class,
-            Open::class,
-            Running::class,
-            Won::class
-        ];
+        $this->domainEvents = array_merge(
+            $this->domainEvents,
+            $transition->domainEvents()
+        );
     }
 }

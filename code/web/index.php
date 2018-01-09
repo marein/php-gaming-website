@@ -14,8 +14,6 @@ namespace {
 
     if ($isDevelopmentEnvironment) {
         Debug::enable();
-    } else {
-        FriendConfiguration::instance()->enableProductionMode();
     }
 
     $kernel = new AppKernel($environment, $isDevelopmentEnvironment);

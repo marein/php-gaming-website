@@ -10,7 +10,7 @@ use Gambling\ConnectFour\Domain\Game\Event\PlayerMoved;
 use Gambling\ConnectFour\Domain\Game\Exception\GameRunningException;
 use Gambling\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gambling\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
-use Gambling\ConnectFour\Domain\Game\Game;
+use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Player;
 use Gambling\ConnectFour\Domain\Game\WinningRule\WinningRule;
 
@@ -37,7 +37,7 @@ final class Running implements State
     private $players;
 
     /**
-     * Game constructor.
+     * Running constructor.
      *
      * @param WinningRule $winningRule
      * @param int         $numberOfMovesUntilDraw
@@ -63,44 +63,54 @@ final class Running implements State
     /**
      * @inheritdoc
      */
-    public function move(Game $game, string $playerId, int $column): void
+    public function move(GameId $gameId, string $playerId, int $column): Transition
     {
         $this->guardExpectedPlayer($playerId);
 
-        $gameId = $game->id();
-        $currentPlayer = $this->currentPlayer();
-        $board = $this->board->dropStone($currentPlayer->stone(), $column);
-        $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
-        $isWin = $this->winningRule->calculate($board);
-        $switchedPlayers = $this->switchPlayer();
-        $lastUsedField = $board->lastUsedField();
+        $board = $this->board->dropStone($this->currentPlayer()->stone(), $column);
 
-        $game->domainEvents[] = new PlayerMoved(
-            $game->id(),
-            $lastUsedField->point(),
-            $lastUsedField->stone()
-        );
+        $domainEvents = [
+            new PlayerMoved(
+                $gameId,
+                $board->lastUsedField()->point(),
+                $board->lastUsedField()->stone()
+            )
+        ];
+
+        $isWin = $this->winningRule->calculate($board);
+        $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
 
         if ($isWin) {
-            $game->state = new Won();
-            $game->domainEvents[] = new GameWon($gameId, $currentPlayer);
+            $domainEvents[] = new GameWon($gameId, $this->currentPlayer());
+
+            return new Transition(
+                new Won(),
+                $domainEvents
+            );
         } elseif ($numberOfMovesUntilDraw == 0) {
-            $game->state = new Drawn();
-            $game->domainEvents[] = new GameDrawn($gameId);
-        } else {
-            $game->state = new self(
+            $domainEvents[] = new GameDrawn($gameId);
+
+            return new Transition(
+                new Drawn(),
+                $domainEvents
+            );
+        }
+
+        return new Transition(
+            new self(
                 $this->winningRule,
                 $numberOfMovesUntilDraw,
                 $board,
-                $switchedPlayers
-            );
-        }
+                $this->switchPlayer()
+            ),
+            $domainEvents
+        );
     }
 
     /**
      * @inheritdoc
      */
-    public function join(Game $game, string $playerId): void
+    public function join(GameId $gameId, string $playerId): Transition
     {
         throw new GameRunningException();
     }
@@ -108,7 +118,7 @@ final class Running implements State
     /**
      * @inheritdoc
      */
-    public function abort(Game $game, string $playerId): void
+    public function abort(GameId $gameId, string $playerId): Transition
     {
         $abortedPlayer = $this->playerWithId($playerId);
 
@@ -117,21 +127,22 @@ final class Running implements State
             throw new PlayerNotOwnerException();
         }
 
-        $size = $this->board->size();
-        $height = $size->height();
-        $width = $size->width();
-        $totalNumberOfMoves = $height * $width;
+        $totalNumberOfMoves = $this->board->size()->height() * $this->board->size()->width();
 
         // The game is only abortable until the second move is done.
         if ($totalNumberOfMoves - $this->numberOfMovesUntilDraw > 1) {
             throw new GameRunningException();
         }
 
-        $game->state = new Aborted();
-        $game->domainEvents[] = new GameAborted(
-            $game->id(),
-            $abortedPlayer,
-            $this->opponentOf($playerId)
+        return new Transition(
+            new Aborted(),
+            [
+                new GameAborted(
+                    $gameId,
+                    $abortedPlayer,
+                    $this->opponentOf($playerId)
+                )
+            ]
         );
     }
 

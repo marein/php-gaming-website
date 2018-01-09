@@ -2,7 +2,6 @@
 
 namespace Gambling\ConnectFour\Port\Adapter\Persistence\Mapping;
 
-use Gambling\Common\ObjectMapper\Mapper;
 use Gambling\Common\ObjectMapper\ObjectMapper;
 use Gambling\Common\ObjectMapper\Scalar\StringMapper;
 use Gambling\ConnectFour\Domain\Game\Game;
@@ -26,21 +25,6 @@ final class GameMapper
         $objectMapper->addProperty('gameId', $gameIdMapper);
         $objectMapper->addProperty('state', $stateMapper);
         $objectMapper->addProperty('chatId', new StringMapper());
-        $objectMapper->addProperty(
-            'domainEvents',
-            new class implements Mapper
-            {
-                public function serialize($value)
-                {
-                    return null;
-                }
-
-                public function deserialize($value)
-                {
-                    return new \ArrayObject();
-                }
-            }
-        );
 
         $this->objectMapper = $objectMapper;
     }

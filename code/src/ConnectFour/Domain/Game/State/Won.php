@@ -3,14 +3,14 @@
 namespace Gambling\ConnectFour\Domain\Game\State;
 
 use Gambling\ConnectFour\Domain\Game\Exception\GameFinishedException;
-use Gambling\ConnectFour\Domain\Game\Game;
+use Gambling\ConnectFour\Domain\Game\GameId;
 
 final class Won implements State
 {
     /**
      * @inheritdoc
      */
-    public function join(Game $game, string $playerId): void
+    public function join(GameId $gameId, string $playerId): Transition
     {
         throw new GameFinishedException();
     }
@@ -18,7 +18,7 @@ final class Won implements State
     /**
      * @inheritdoc
      */
-    public function abort(Game $game, string $playerId): void
+    public function abort(GameId $gameId, string $playerId): Transition
     {
         throw new GameFinishedException();
     }
@@ -26,7 +26,7 @@ final class Won implements State
     /**
      * @inheritdoc
      */
-    public function move(Game $game, string $playerId, int $column): void
+    public function move(GameId $gameId, string $playerId, int $column): Transition
     {
         throw new GameFinishedException();
     }

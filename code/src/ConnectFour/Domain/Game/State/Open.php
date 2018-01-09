@@ -10,7 +10,7 @@ use Gambling\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gambling\ConnectFour\Domain\Game\Exception\GameNotRunningException;
 use Gambling\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gambling\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
-use Gambling\ConnectFour\Domain\Game\Game;
+use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Player;
 
 final class Open implements State
@@ -40,49 +40,54 @@ final class Open implements State
     /**
      * @inheritdoc
      */
-    public function join(Game $game, string $playerId): void
+    public function join(GameId $gameId, string $playerId): Transition
     {
         if ($this->player->id() === $playerId) {
             throw new PlayersNotUniqueException();
         }
 
         $joinedPlayer = new Player($playerId, Stone::yellow());
-        $gameId = $game->id();
         $size = $this->configuration->size();
         $width = $size->width();
         $height = $size->height();
 
-        $game->state = new Running(
-            $this->configuration->winningRule(),
-            $width * $height,
-            Board::empty($size),
-            [$this->player, $joinedPlayer]
+        return new Transition(
+            new Running(
+                $this->configuration->winningRule(),
+                $width * $height,
+                Board::empty($size),
+                [$this->player, $joinedPlayer]
+            ),
+            [
+                new PlayerJoined($gameId, $joinedPlayer, $this->player)
+            ]
         );
-        $game->domainEvents[] = new PlayerJoined($gameId, $joinedPlayer, $this->player);
     }
 
     /**
      * @inheritdoc
      */
-    public function abort(Game $game, string $playerId): void
+    public function abort(GameId $gameId, string $playerId): Transition
     {
         if ($this->player->id() !== $playerId) {
             throw new PlayerNotOwnerException();
         }
 
-        $gameId = $game->id();
-
-        $game->state = new Aborted();
-        $game->domainEvents[] = new GameAborted(
-            $gameId,
-            $this->player
+        return new Transition(
+            new Aborted(),
+            [
+                new GameAborted(
+                    $gameId,
+                    $this->player
+                )
+            ]
         );
     }
 
     /**
      * @inheritdoc
      */
-    public function move(Game $game, string $playerId, int $column): void
+    public function move(GameId $gameId, string $playerId, int $column): Transition
     {
         throw new GameNotRunningException();
     }

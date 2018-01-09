@@ -25,7 +25,6 @@
     "doctrine/doctrine-migrations-bundle": "1.2.1",
     "predis/predis": "^1.1",
     "marein/php-nchan-client": "^1.0",
-    "marein/php-friend-visibility": "^1.0",
     "enqueue/amqp-lib": "^0.8.4",
     "dunglas/angular-csrf-bundle": "^1.0"
   },
