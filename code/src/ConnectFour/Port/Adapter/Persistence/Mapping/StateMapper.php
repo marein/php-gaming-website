@@ -2,8 +2,8 @@
 
 namespace Gambling\ConnectFour\Port\Adapter\Persistence\Mapping;
 
-use Gambling\Common\ObjectMapper\Collection\ArrayMapper;
 use Gambling\Common\ObjectMapper\DiscriminatorMapper;
+use Gambling\Common\ObjectMapper\Exception\MapperException;
 use Gambling\Common\ObjectMapper\Mapper;
 use Gambling\Common\ObjectMapper\ObjectMapper;
 use Gambling\Common\ObjectMapper\Scalar\IntMapper;
@@ -26,19 +26,23 @@ final class StateMapper implements Mapper
      * @param WinningRuleMapper   $winningRuleMapper
      * @param BoardMapper         $boardMapper
      * @param PlayerMapper        $playerMapper
+     * @param PlayersMapper       $playersMapper
      * @param ConfigurationMapper $configurationMapper
+     *
+     * @throws MapperException
      */
     public function __construct(
         WinningRuleMapper $winningRuleMapper,
         BoardMapper $boardMapper,
         PlayerMapper $playerMapper,
+        PlayersMapper $playersMapper,
         ConfigurationMapper $configurationMapper
     ) {
         $runningMapper = new ObjectMapper(Running::class);
         $runningMapper->addProperty('winningRule', $winningRuleMapper);
         $runningMapper->addProperty('numberOfMovesUntilDraw', new IntMapper());
         $runningMapper->addProperty('board', $boardMapper);
-        $runningMapper->addProperty('players', new ArrayMapper($playerMapper));
+        $runningMapper->addProperty('players', $playersMapper);
 
         $openMapper = new ObjectMapper(Open::class);
         $openMapper->addProperty('player', $playerMapper);

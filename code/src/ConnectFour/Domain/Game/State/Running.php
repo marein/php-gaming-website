@@ -8,10 +8,9 @@ use Gambling\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gambling\ConnectFour\Domain\Game\Event\GameWon;
 use Gambling\ConnectFour\Domain\Game\Event\PlayerMoved;
 use Gambling\ConnectFour\Domain\Game\Exception\GameRunningException;
-use Gambling\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gambling\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Gambling\ConnectFour\Domain\Game\GameId;
-use Gambling\ConnectFour\Domain\Game\Player;
+use Gambling\ConnectFour\Domain\Game\Players;
 use Gambling\ConnectFour\Domain\Game\WinningRule\WinningRule;
 
 final class Running implements State
@@ -32,7 +31,7 @@ final class Running implements State
     private $board;
 
     /**
-     * @var Player[]
+     * @var Players
      */
     private $players;
 
@@ -42,13 +41,13 @@ final class Running implements State
      * @param WinningRule $winningRule
      * @param int         $numberOfMovesUntilDraw
      * @param Board       $board
-     * @param Player[]    $players
+     * @param Players     $players
      */
     public function __construct(
         WinningRule $winningRule,
         int $numberOfMovesUntilDraw,
         Board $board,
-        array $players
+        Players $players
     ) {
         $this->winningRule = $winningRule;
         $this->numberOfMovesUntilDraw = $numberOfMovesUntilDraw;
@@ -67,7 +66,7 @@ final class Running implements State
     {
         $this->guardExpectedPlayer($playerId);
 
-        $board = $this->board->dropStone($this->currentPlayer()->stone(), $column);
+        $board = $this->board->dropStone($this->players->current()->stone(), $column);
 
         $domainEvents = [
             new PlayerMoved(
@@ -81,7 +80,7 @@ final class Running implements State
         $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
 
         if ($isWin) {
-            $domainEvents[] = new GameWon($gameId, $this->currentPlayer());
+            $domainEvents[] = new GameWon($gameId, $this->players->current());
 
             return new Transition(
                 new Won(),
@@ -101,7 +100,7 @@ final class Running implements State
                 $this->winningRule,
                 $numberOfMovesUntilDraw,
                 $board,
-                $this->switchPlayer()
+                $this->players->switch()
             ),
             $domainEvents
         );
@@ -120,13 +119,6 @@ final class Running implements State
      */
     public function abort(GameId $gameId, string $playerId): Transition
     {
-        $abortedPlayer = $this->playerWithId($playerId);
-
-        // Only players of the game can abort the game.
-        if ($abortedPlayer === null) {
-            throw new PlayerNotOwnerException();
-        }
-
         $totalNumberOfMoves = $this->board->size()->height() * $this->board->size()->width();
 
         // The game is only abortable until the second move is done.
@@ -139,19 +131,11 @@ final class Running implements State
             [
                 new GameAborted(
                     $gameId,
-                    $abortedPlayer,
-                    $this->opponentOf($playerId)
+                    $this->players->get($playerId),
+                    $this->players->opponentOf($playerId)
                 )
             ]
         );
-    }
-
-    /**
-     * Return the [Player]s with switched position.
-     */
-    private function switchPlayer(): array
-    {
-        return array_reverse($this->players);
     }
 
     /*************************************************************
@@ -167,54 +151,8 @@ final class Running implements State
      */
     private function guardExpectedPlayer(string $playerId): void
     {
-        if ($this->currentPlayer()->id() !== $playerId) {
+        if ($this->players->current()->id() !== $playerId) {
             throw new UnexpectedPlayerException();
-        }
-    }
-
-    /*************************************************************
-     *                          Getter
-     *************************************************************/
-
-    /**
-     * Returns the [Player].
-     *
-     * @return Player
-     */
-    private function currentPlayer(): Player
-    {
-        return $this->players[0];
-    }
-
-    /**
-     * Returns the [Player] with the given id.
-     *
-     * @param string $playerId
-     *
-     * @return Player|null
-     */
-    private function playerWithId(string $playerId): ?Player
-    {
-        foreach ($this->players as $player) {
-            if ($player->id() === $playerId) {
-                return $player;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the opponent of the [Player] with the given id.
-     *
-     * @return Player
-     */
-    private function opponentOf(string $playerId): Player
-    {
-        foreach ($this->players as $player) {
-            if ($player->id() !== $playerId) {
-                return $player;
-            }
         }
     }
 }

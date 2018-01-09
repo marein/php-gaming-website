@@ -21,6 +21,9 @@ final class GameMapperFactory
         $playerMapper = new PlayerMapper(
             $stoneMapper
         );
+        $playersMapper = new PlayersMapper(
+            $playerMapper
+        );
         $configurationMapper = new ConfigurationMapper(
             $sizeMapper,
             $winningRuleMapper
@@ -29,6 +32,7 @@ final class GameMapperFactory
             $winningRuleMapper,
             $boardMapper,
             $playerMapper,
+            $playersMapper,
             $configurationMapper
         );
 

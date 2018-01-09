@@ -9,9 +9,9 @@ use Gambling\ConnectFour\Domain\Game\Event\GameAborted;
 use Gambling\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gambling\ConnectFour\Domain\Game\Exception\GameNotRunningException;
 use Gambling\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
-use Gambling\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Player;
+use Gambling\ConnectFour\Domain\Game\Players;
 
 final class Open implements State
 {
@@ -42,10 +42,6 @@ final class Open implements State
      */
     public function join(GameId $gameId, string $playerId): Transition
     {
-        if ($this->player->id() === $playerId) {
-            throw new PlayersNotUniqueException();
-        }
-
         $joinedPlayer = new Player($playerId, Stone::yellow());
         $size = $this->configuration->size();
         $width = $size->width();
@@ -56,7 +52,7 @@ final class Open implements State
                 $this->configuration->winningRule(),
                 $width * $height,
                 Board::empty($size),
-                [$this->player, $joinedPlayer]
+                new Players($this->player, $joinedPlayer)
             ),
             [
                 new PlayerJoined($gameId, $joinedPlayer, $this->player)
