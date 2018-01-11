@@ -12,7 +12,7 @@ use Gambling\Common\EventStore\StoredEvent;
  * we send the user the latest projection from the event store. This way, the domain model
  * itself stays clean and gets not inflated by a bunch of getters.
  */
-final class Game
+final class Game implements \JsonSerializable
 {
     /**
      * The game id of the game.
@@ -67,36 +67,6 @@ final class Game
     }
 
     /**
-     * Returns the chat id.
-     *
-     * @return string
-     */
-    public function chatId(): string
-    {
-        return $this->chatId;
-    }
-
-    /**
-     * Returns the width.
-     *
-     * @return int
-     */
-    public function width(): int
-    {
-        return $this->width;
-    }
-
-    /**
-     * Returns the height.
-     *
-     * @return int
-     */
-    public function height(): int
-    {
-        return $this->height;
-    }
-
-    /**
      * Returns true if the game is finished.
      *
      * @return bool
@@ -107,13 +77,18 @@ final class Game
     }
 
     /**
-     * Return the moves of the game.
-     *
-     * @return Move[]
+     * @return array
      */
-    public function moves(): array
+    public function jsonSerialize(): array
     {
-        return $this->moves;
+        return [
+            'gameId'   => $this->gameId,
+            'chatId'   => $this->chatId,
+            'finished' => $this->finished,
+            'height'   => $this->height,
+            'width'    => $this->width,
+            'moves'    => $this->moves
+        ];
     }
 
     /**

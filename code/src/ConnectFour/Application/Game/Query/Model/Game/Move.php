@@ -2,7 +2,7 @@
 
 namespace Gambling\ConnectFour\Application\Game\Query\Model\Game;
 
-final class Move
+final class Move implements \JsonSerializable
 {
     /**
      * The x coordinate.
@@ -40,32 +40,14 @@ final class Move
     }
 
     /**
-     * Returns the y coordinate.
-     *
-     * @return int
+     * @return array
      */
-    public function x(): int
+    public function jsonSerialize(): array
     {
-        return $this->x;
-    }
-
-    /**
-     * Returns the y coordinate.
-     *
-     * @return int
-     */
-    public function y(): int
-    {
-        return $this->y;
-    }
-
-    /**
-     * Returns the color. Can be 0, 1 or 2. 0 means empty.
-     *
-     * @return int
-     */
-    public function color(): int
-    {
-        return $this->color;
+        return [
+            'x'     => $this->x,
+            'y'     => $this->y,
+            'color' => $this->color
+        ];
     }
 }

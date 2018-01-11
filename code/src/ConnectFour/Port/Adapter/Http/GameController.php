@@ -10,7 +10,6 @@ use Gambling\ConnectFour\Application\Game\Command\OpenCommand;
 use Gambling\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
 use Gambling\ConnectFour\Application\Game\Query\GameQuery;
 use Gambling\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\Move;
 use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
 use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 use Gambling\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
@@ -18,7 +17,6 @@ use Gambling\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
 use Gambling\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGames;
 use Gambling\ConnectFour\Application\Game\Query\OpenGamesQuery;
 use Gambling\ConnectFour\Application\Game\Query\RunningGamesQuery;
-use Gambling\ConnectFour\Application\Game\Query\ShowQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -35,6 +33,12 @@ class GameController
      */
     private $queryBus;
 
+    /**
+     * GameController constructor.
+     *
+     * @param Bus $commandBus
+     * @param Bus $queryBus
+     */
     public function __construct(
         Bus $commandBus,
         Bus $queryBus
@@ -117,20 +121,7 @@ class GameController
                 )
             );
 
-            return new JsonResponse([
-                'gameId'   => $game->id(),
-                'chatId'   => $game->chatId(),
-                'finished' => $game->finished(),
-                'height'   => $game->height(),
-                'width'    => $game->width(),
-                'moves'    => array_map(function (Move $move) {
-                    return [
-                        'x'     => $move->x(),
-                        'y'     => $move->y(),
-                        'color' => $move->color()
-                    ];
-                }, $game->moves())
-            ]);
+            return new JsonResponse($game);
         } catch (GameNotFoundException $exception) {
             throw new NotFoundHttpException($exception->getMessage(), $exception);
         }
