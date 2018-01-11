@@ -5,9 +5,3 @@ services:
         public: false
         tags:
             - { name: kernel.event_listener, event: kernel.request }
-
-    web-interface.exception-to-json-listener:
-        class: Gambling\WebInterface\Infrastructure\EventListener\ExceptionToJsonListener
-        public: false
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }

@@ -114,17 +114,13 @@ class GameController
      */
     public function gameAction(Request $request): JsonResponse
     {
-        try {
-            $game = $this->queryBus->handle(
-                new GameQuery(
-                    $request->query->get('gameId')
-                )
-            );
+        $game = $this->queryBus->handle(
+            new GameQuery(
+                $request->query->get('gameId')
+            )
+        );
 
-            return new JsonResponse($game);
-        } catch (GameNotFoundException $exception) {
-            throw new NotFoundHttpException($exception->getMessage(), $exception);
-        }
+        return new JsonResponse($game);
     }
 
     /**
