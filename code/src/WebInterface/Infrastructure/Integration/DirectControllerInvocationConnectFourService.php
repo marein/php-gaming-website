@@ -115,6 +115,22 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
     /**
      * @inheritdoc
      */
+    public function resign(string $gameId, string $playerId): array
+    {
+        return $this->sendRequest(
+            'resign',
+            [
+                'gameId' => $gameId
+            ],
+            [
+                'playerId' => $playerId
+            ]
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function move(string $gameId, string $playerId, int $column): array
     {
         return $this->sendRequest(

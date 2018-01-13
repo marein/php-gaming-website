@@ -7,7 +7,7 @@ use Gambling\ConnectFour\Application\Game\Command\AbortCommand;
 use Gambling\ConnectFour\Application\Game\Command\JoinCommand;
 use Gambling\ConnectFour\Application\Game\Command\MoveCommand;
 use Gambling\ConnectFour\Application\Game\Command\OpenCommand;
-use Gambling\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
+use Gambling\ConnectFour\Application\Game\Command\ResignCommand;
 use Gambling\ConnectFour\Application\Game\Query\GameQuery;
 use Gambling\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
 use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
@@ -19,7 +19,6 @@ use Gambling\ConnectFour\Application\Game\Query\OpenGamesQuery;
 use Gambling\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GameController
 {
@@ -173,6 +172,27 @@ class GameController
 
         $this->commandBus->handle(
             new AbortCommand(
+                $gameId,
+                $request->request->get('playerId')
+            )
+        );
+
+        return new JsonResponse([
+            'gameId' => $gameId
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function resignAction(Request $request): JsonResponse
+    {
+        $gameId = $request->query->get('gameId');
+
+        $this->commandBus->handle(
+            new ResignCommand(
                 $gameId,
                 $request->request->get('playerId')
             )

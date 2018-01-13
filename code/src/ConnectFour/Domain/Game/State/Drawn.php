@@ -26,6 +26,14 @@ final class Drawn implements State
     /**
      * @inheritdoc
      */
+    public function resign(GameId $gameId, string $playerId): Transition
+    {
+        throw new GameFinishedException();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function move(GameId $gameId, string $playerId, int $column): Transition
     {
         throw new GameFinishedException();

@@ -5,7 +5,7 @@ namespace Gambling\ConnectFour\Domain\Game\State;
 use Gambling\ConnectFour\Domain\Game\Exception\GameFinishedException;
 use Gambling\ConnectFour\Domain\Game\GameId;
 
-final class Won implements State
+final class Resigned implements State
 {
     /**
      * @inheritdoc

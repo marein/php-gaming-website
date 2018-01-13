@@ -63,6 +63,14 @@ abort:
         _controller: web-interface.connect-four-controller:abortAction
         _format: json
 
+resign:
+    path: /api/connect-four/games/{gameId}/resign
+    methods:
+        - POST
+    defaults:
+        _controller: web-interface.connect-four-controller:resignAction
+        _format: json
+
 join:
     path: /api/connect-four/games/{gameId}/join
     methods:

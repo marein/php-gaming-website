@@ -39,6 +39,13 @@ services:
             - [
                 addHandler,
                 [
+                  'Gambling\ConnectFour\Application\Game\Command\ResignCommand',
+                  '@connect-four.command.resign-handler'
+                ]
+              ]
+            - [
+                addHandler,
+                [
                   'Gambling\ConnectFour\Application\Game\Command\AssignChatCommand',
                   '@connect-four.command.assign-chat-handler'
                 ]
@@ -67,6 +74,12 @@ services:
 
     connect-four.command.abort-handler:
         class: Gambling\ConnectFour\Application\Game\Command\AbortHandler
+        public: false
+        arguments:
+            - '@connect-four.game-repository'
+
+    connect-four.command.resign-handler:
+        class: Gambling\ConnectFour\Application\Game\Command\ResignHandler
         public: false
         arguments:
             - '@connect-four.game-repository'

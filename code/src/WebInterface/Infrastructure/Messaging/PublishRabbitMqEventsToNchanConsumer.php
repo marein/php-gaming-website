@@ -10,6 +10,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     private const ROUTING_KEY_TO_METHOD = [
         'ConnectFour.GameOpened'   => 'handleGameOpened',
         'ConnectFour.GameAborted'  => 'handleGameAborted',
+        'ConnectFour.GameResigned' => 'handleGameResigned',
         'ConnectFour.GameWon'      => 'handleGameWon',
         'ConnectFour.GameDrawn'    => 'handleGameDrawn',
         'ConnectFour.PlayerMoved'  => 'handlePlayerMoved',
@@ -85,6 +86,19 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=lobby',
+            json_encode($payload)
+        );
+    }
+
+    /**
+     * Publish game resigned.
+     *
+     * @param array $payload
+     */
+    private function handleGameResigned(array $payload): void
+    {
+        $this->browserNotifier->publish(
+            '/pub?id=game-' . $payload['gameId'],
             json_encode($payload)
         );
     }

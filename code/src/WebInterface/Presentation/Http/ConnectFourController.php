@@ -87,6 +87,22 @@ final class ConnectFourController
      *
      * @return JsonResponse
      */
+    public function resignAction(Request $request, string $gameId): JsonResponse
+    {
+        return new JsonResponse(
+            $this->connectFourService->resign(
+                $gameId,
+                $request->getSession()->get('user')
+            )
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $gameId
+     *
+     * @return JsonResponse
+     */
     public function moveAction(Request $request, string $gameId): JsonResponse
     {
         return new JsonResponse(

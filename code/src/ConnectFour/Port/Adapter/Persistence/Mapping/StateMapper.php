@@ -10,6 +10,7 @@ use Gambling\Common\ObjectMapper\Scalar\IntMapper;
 use Gambling\ConnectFour\Domain\Game\State\Aborted;
 use Gambling\ConnectFour\Domain\Game\State\Drawn;
 use Gambling\ConnectFour\Domain\Game\State\Open;
+use Gambling\ConnectFour\Domain\Game\State\Resigned;
 use Gambling\ConnectFour\Domain\Game\State\Running;
 use Gambling\ConnectFour\Domain\Game\State\Won;
 
@@ -50,6 +51,8 @@ final class StateMapper implements Mapper
 
         $abortedMapper = new ObjectMapper(Aborted::class);
 
+        $resignedMapper = new ObjectMapper(Resigned::class);
+
         $drawnMapper = new ObjectMapper(Drawn::class);
 
         $wonMapper = new ObjectMapper(Won::class);
@@ -69,6 +72,11 @@ final class StateMapper implements Mapper
             Aborted::class,
             $abortedMapper,
             'aborted'
+        );
+        $stateDiscriminatorMapper->addDiscriminator(
+            Resigned::class,
+            $resignedMapper,
+            'resigned'
         );
         $stateDiscriminatorMapper->addDiscriminator(
             Drawn::class,

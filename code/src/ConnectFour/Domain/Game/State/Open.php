@@ -83,6 +83,14 @@ final class Open implements State
     /**
      * @inheritdoc
      */
+    public function resign(GameId $gameId, string $playerId): Transition
+    {
+        throw new GameNotRunningException();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function move(GameId $gameId, string $playerId, int $column): Transition
     {
         throw new GameNotRunningException();

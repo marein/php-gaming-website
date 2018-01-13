@@ -61,6 +61,17 @@ Gambling.ConnectFour.GameService = class
      * @param {String} gameId
      * @returns {Promise}
      */
+    resign(gameId)
+    {
+        return this.httpClient.post(
+            '/api/connect-four/games/' + gameId + '/resign',
+        );
+    }
+
+    /**
+     * @param {String} gameId
+     * @returns {Promise}
+     */
     join(gameId)
     {
         return this.httpClient.post(

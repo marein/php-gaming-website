@@ -32,6 +32,9 @@
                 <button class="button" id="abort-game" data-game-id="{{ game.gameId }}">
                     x Abort game
                 </button>
+                <button class="button" id="resign-game" data-game-id="{{ game.gameId }}">
+                    x Resign game
+                </button>
             </p>
         </div>
         <div class="box">
@@ -75,6 +78,10 @@
             new Gambling.ConnectFour.AbortGameButton(
                 app.gameService,
                 document.getElementById('abort-game')
+            );
+            new Gambling.ConnectFour.ResignGameButton(
+                app.gameService,
+                document.getElementById('resign-game')
             );
             new Gambling.Chat.Widget(
                 app.eventPublisher,

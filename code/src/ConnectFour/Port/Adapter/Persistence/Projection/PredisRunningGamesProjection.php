@@ -44,7 +44,8 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
                 'PlayerJoined',
                 'GameWon',
                 'GameDrawn',
-                'GameAborted'
+                'GameAborted',
+                'GameResigned'
             ]
         );
     }
@@ -64,6 +65,14 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
      * @param StoredEvent $storedEvent
      */
     private function handleGameAborted(StoredEvent $storedEvent): void
+    {
+        $this->handleGameFinished($storedEvent);
+    }
+
+    /**
+     * @param StoredEvent $storedEvent
+     */
+    private function handleGameResigned(StoredEvent $storedEvent): void
     {
         $this->handleGameFinished($storedEvent);
     }

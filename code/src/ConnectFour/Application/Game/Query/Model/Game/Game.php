@@ -149,6 +149,16 @@ final class Game implements \JsonSerializable
      *
      * @param array $payload
      */
+    private function whenGameResigned(array $payload): void
+    {
+        $this->finished = true;
+    }
+
+    /**
+     * Mark the game as finished.
+     *
+     * @param array $payload
+     */
     private function whenGameWon(array $payload): void
     {
         $this->finished = true;

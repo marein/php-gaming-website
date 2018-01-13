@@ -66,6 +66,16 @@ interface ConnectFourService
     public function abort(string $gameId, string $playerId): array;
 
     /**
+     * Resign a game.
+     *
+     * @param string $gameId
+     * @param string $playerId
+     *
+     * @return array
+     */
+    public function resign(string $gameId, string $playerId): array;
+
+    /**
      * Perform a move.
      *
      * @param string $gameId

@@ -5,8 +5,10 @@ namespace Gambling\ConnectFour\Domain\Game\State;
 use Gambling\ConnectFour\Domain\Game\Board\Board;
 use Gambling\ConnectFour\Domain\Game\Event\GameAborted;
 use Gambling\ConnectFour\Domain\Game\Event\GameDrawn;
+use Gambling\ConnectFour\Domain\Game\Event\GameResigned;
 use Gambling\ConnectFour\Domain\Game\Event\GameWon;
 use Gambling\ConnectFour\Domain\Game\Event\PlayerMoved;
+use Gambling\ConnectFour\Domain\Game\Exception\GameNotRunningException;
 use Gambling\ConnectFour\Domain\Game\Exception\GameRunningException;
 use Gambling\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Gambling\ConnectFour\Domain\Game\GameId;
@@ -119,10 +121,7 @@ final class Running implements State
      */
     public function abort(GameId $gameId, string $playerId): Transition
     {
-        $totalNumberOfMoves = $this->board->size()->height() * $this->board->size()->width();
-
-        // The game is only abortable until the second move is done.
-        if ($totalNumberOfMoves - $this->numberOfMovesUntilDraw > 1) {
+        if (!$this->isAbortable()) {
             throw new GameRunningException();
         }
 
@@ -136,6 +135,39 @@ final class Running implements State
                 )
             ]
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function resign(GameId $gameId, string $playerId): Transition
+    {
+        if ($this->isAbortable()) {
+            throw new GameNotRunningException();
+        }
+
+        return new Transition(
+            new Resigned(),
+            [
+                new GameResigned(
+                    $gameId,
+                    $this->players->get($playerId),
+                    $this->players->opponentOf($playerId)
+                )
+            ]
+        );
+    }
+
+    /**
+     * The game is only abortable until the second move is done.
+     *
+     * @return bool
+     */
+    private function isAbortable(): bool
+    {
+        $totalNumberOfMoves = $this->board->size()->height() * $this->board->size()->width();
+
+        return $totalNumberOfMoves - $this->numberOfMovesUntilDraw < 2;
     }
 
     /*************************************************************

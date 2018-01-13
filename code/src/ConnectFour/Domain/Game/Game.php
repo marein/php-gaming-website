@@ -132,6 +132,20 @@ final class Game implements AggregateRoot
     }
 
     /**
+     * The given player resigns the game.
+     *
+     * @param string $playerId
+     *
+     * @throws GameException
+     */
+    public function resign(string $playerId): void
+    {
+        $transition = $this->state->resign($this->id(), $playerId);
+
+        $this->applyTransition($transition);
+    }
+
+    /**
      * Assign the chat to the game.
      *
      * @param string $chatId
