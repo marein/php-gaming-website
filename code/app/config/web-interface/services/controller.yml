@@ -5,18 +5,26 @@ services:
         arguments:
             - '@templating'
             - '@web-interface.connect-four-service'
+        tags:
+            - 'controller.service_arguments'
 
     web-interface.chat-controller:
         class: Gambling\WebInterface\Presentation\Http\ChatController
         arguments:
             - '@web-interface.chat-service'
+        tags:
+            - 'controller.service_arguments'
 
     web-interface.connect-four-controller:
         class: Gambling\WebInterface\Presentation\Http\ConnectFourController
         arguments:
             - '@web-interface.connect-four-service'
+        tags:
+            - 'controller.service_arguments'
 
     web-interface.user-controller:
         class: Gambling\WebInterface\Presentation\Http\UserController
         arguments:
             - '@web-interface.user-service'
+        tags:
+            - 'controller.service_arguments'

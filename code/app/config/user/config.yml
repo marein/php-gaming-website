@@ -16,5 +16,5 @@ doctrine:
                 mappings:
                     user:
                         type:     yml
-                        dir:      %kernel.root_dir%/../src/User/Port/Adapter/Persistence/Mapping/User
+                        dir:      '%kernel.root_dir%/../src/User/Port/Adapter/Persistence/Mapping/User'
                         prefix:   Gambling\User\Domain\Model\User
