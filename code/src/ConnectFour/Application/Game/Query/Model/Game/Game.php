@@ -127,11 +127,15 @@ final class Game implements \JsonSerializable
      */
     private function whenPlayerMoved(array $payload): void
     {
-        $this->moves[] = new Move(
+        $move = new Move(
             $payload['x'],
             $payload['y'],
             $payload['color']
         );
+
+        if (!in_array($move, $this->moves)) {
+            $this->moves[] = $move;
+        }
     }
 
     /**
