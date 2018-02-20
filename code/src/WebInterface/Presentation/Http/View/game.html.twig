@@ -65,6 +65,7 @@
 {% block javascript %}
     <script type="text/javascript">
         (function () {
+            let game = Gambling.ConnectFour.Model.Game.fromObject({{ game|json_encode|raw }});
             new Gambling.ConnectFour.Game(
                 app.eventPublisher,
                 app.gameService,
@@ -72,8 +73,7 @@
                 document.getElementById('previous-move'),
                 document.getElementById('next-move'),
                 document.getElementById('follow-moves'),
-                '{{ game.gameId }}',
-                {{ game.moves|json_encode|raw }}
+                game
             );
             new Gambling.ConnectFour.AbortGameButton(
                 app.gameService,

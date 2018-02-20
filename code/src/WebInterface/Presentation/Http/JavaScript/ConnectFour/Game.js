@@ -10,8 +10,7 @@ Gambling.ConnectFour.Game = class
      * @param {Node} previousMoveButton
      * @param {Node} nextMoveButton
      * @param {Node} followMovesButton
-     * @param {String} gameId
-     * @param {{x:Number, y:Number, color:Number}[]} moves
+     * @param {Gambling.ConnectFour.Model.Game} game
      */
     constructor(
         eventPublisher,
@@ -20,8 +19,7 @@ Gambling.ConnectFour.Game = class
         previousMoveButton,
         nextMoveButton,
         followMovesButton,
-        gameId,
-        moves
+        game
     ) {
         this.eventPublisher = eventPublisher;
         this.gameService = gameService;
@@ -29,9 +27,8 @@ Gambling.ConnectFour.Game = class
         this.previousMoveButton = previousMoveButton;
         this.nextMoveButton = nextMoveButton;
         this.followMovesButton = followMovesButton;
-        this.gameId = gameId;
-        this.moves = moves;
-        this.numberOfCurrentMoveInView = this.moves.length;
+        this.game = game;
+        this.numberOfCurrentMoveInView = game.numberOfMoves();
         this.fields = this.gameHolder.querySelectorAll('.game__field');
         this.colorToClass = {
             1: 'game__field--red',
@@ -54,7 +51,7 @@ Gambling.ConnectFour.Game = class
             field.classList.remove('game__field--yellow');
         });
 
-        this.moves.slice(0, index).forEach(this.showMove.bind(this));
+        this.game.moves.slice(0, index).forEach(this.showMove.bind(this));
         this.updateNavigationButtons();
     }
 
@@ -77,32 +74,12 @@ Gambling.ConnectFour.Game = class
     }
 
     /**
-     * Push the move in the list. Display the move only if the user looks at the last move.
-     *
-     * @param {{x:Number, y:Number, color:Number}} move
-     */
-    addMove(move)
-    {
-        this.moves.push(move);
-
-        // Only show if the the user follow the moves. Otherwise notify user that a new move is available.
-        if (this.followMovesButton.disabled === true) {
-            this.showMove(move);
-            this.numberOfCurrentMoveInView++;
-            this.updateNavigationButtons();
-        } else {
-            this.followMovesButton.classList.add('button--yellow');
-            this.followMovesButton.classList.add('button--flash');
-        }
-    }
-
-    /**
      * Updates the previous move, next move und follow moves button according to the state of
      * the number of the current move in view.
      */
     updateNavigationButtons()
     {
-        let isCurrentMoveTheLastMove = this.numberOfCurrentMoveInView === this.moves.length;
+        let isCurrentMoveTheLastMove = this.numberOfCurrentMoveInView === this.game.numberOfMoves();
         let isCurrentMoveBeforeTheFirstMove = this.numberOfCurrentMoveInView === 0;
 
         this.nextMoveButton.disabled = isCurrentMoveTheLastMove;
@@ -120,6 +97,24 @@ Gambling.ConnectFour.Game = class
         }
     }
 
+    /**
+     * Display the move only if the user looks at the last move.
+     *
+     * @param {{x:Number, y:Number, color:Number}} move
+     */
+    onMoveAppendedToGame(move)
+    {
+        // Only show if the the user follow the moves. Otherwise notify user that a new move is available.
+        if (this.followMovesButton.disabled === true) {
+            this.showMove(move);
+            this.numberOfCurrentMoveInView++;
+            this.updateNavigationButtons();
+        } else {
+            this.followMovesButton.classList.add('button--yellow');
+            this.followMovesButton.classList.add('button--flash');
+        }
+    }
+
     onFieldClick(event)
     {
         let cell = event.target;
@@ -127,7 +122,7 @@ Gambling.ConnectFour.Game = class
         this.gameHolder.classList.add('loading-indicator');
 
         this.gameService.move(
-            this.gameId,
+            this.game.gameId,
             cell.dataset.column
         ).then(() => {
             this.gameHolder.classList.remove('loading-indicator');
@@ -139,7 +134,11 @@ Gambling.ConnectFour.Game = class
 
     onPlayerMoved(event)
     {
-        this.addMove(event.payload);
+        this.game.appendMove({
+            x: event.payload.x,
+            y: event.payload.y,
+            color: event.payload.color,
+        });
     }
 
     onPreviousMoveClick(event)
@@ -162,12 +161,14 @@ Gambling.ConnectFour.Game = class
     {
         event.preventDefault();
 
-        this.numberOfCurrentMoveInView = this.moves.length;
+        this.numberOfCurrentMoveInView = this.game.numberOfMoves();
         this.showMovesUpTo(this.numberOfCurrentMoveInView);
     }
 
     registerEventHandler()
     {
+        this.game.onMoveAppended(this.onMoveAppendedToGame.bind(this));
+
         this.eventPublisher.subscribe({
             isSubscribedTo: (event) => {
                 return event.name === 'ConnectFour.PlayerMoved';
