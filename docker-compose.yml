@@ -2,7 +2,8 @@ version: '2'
 
 services:
     mysql:
-        image: mysql:8.0
+        build:
+            context: ./container/mysql
         command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
