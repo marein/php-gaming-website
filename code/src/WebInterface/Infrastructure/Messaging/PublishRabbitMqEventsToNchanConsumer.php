@@ -110,9 +110,16 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
      */
     private function handlePlayerJoined(array $payload): void
     {
+        $payloadAsJson = json_encode($payload);
+
         $this->browserNotifier->publish(
             '/pub?id=lobby',
-            json_encode($payload)
+            $payloadAsJson
+        );
+
+        $this->browserNotifier->publish(
+            '/pub?id=game-' . $payload['gameId'],
+            $payloadAsJson
         );
     }
 
