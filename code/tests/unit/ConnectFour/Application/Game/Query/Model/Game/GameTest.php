@@ -17,6 +17,9 @@ class GameTest extends TestCase
         $expectedSerializedGame = json_encode([
             'gameId'   => $expectedGameId,
             'chatId'   => 'chatId',
+            'players'   => [
+                'player1', 'player2'
+            ],
             'finished' => $expectedFinished,
             'height'   => 6,
             'width'    => 7,
@@ -147,6 +150,14 @@ class GameTest extends TestCase
                 '{"gameId": "gameId", "chatId": "chatId"}',
                 new \DateTimeImmutable()
             ),
+            new StoredEvent(
+                3,
+                'PlayerJoined',
+                'gameId',
+                '{"gameId": "gameId", "opponentPlayerId": "player1", "joinedPlayerId": "player2"}',
+                new \DateTimeImmutable()
+            ),
+            // Apply this event twice, so immutability gets tested.
             new StoredEvent(
                 3,
                 'PlayerJoined',
