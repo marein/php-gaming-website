@@ -29,6 +29,13 @@ final class Game implements \JsonSerializable
     private $chatId = '';
 
     /**
+     * The players of the game.
+     *
+     * @var array
+     */
+    private $players = [];
+
+    /**
      * The width of the game.
      *
      * @var int
@@ -84,6 +91,7 @@ final class Game implements \JsonSerializable
         return [
             'gameId'   => $this->gameId,
             'chatId'   => $this->chatId,
+            'players'  => $this->players,
             'finished' => $this->finished,
             'height'   => $this->height,
             'width'    => $this->width,
@@ -118,6 +126,17 @@ final class Game implements \JsonSerializable
         $this->gameId = $payload['gameId'];
         $this->width = $payload['width'];
         $this->height = $payload['height'];
+        $this->addPlayer($payload['playerId']);
+    }
+
+    /**
+     * Assign the joined player.
+     *
+     * @param array $payload
+     */
+    private function whenPlayerJoined(array $payload): void
+    {
+        $this->addPlayer($payload['joinedPlayerId']);
     }
 
     /**
@@ -186,5 +205,17 @@ final class Game implements \JsonSerializable
     private function whenChatAssigned(array $payload): void
     {
         $this->chatId = $payload['chatId'];
+    }
+
+    /**
+     * This is an idempotent operation. If an event occurs twice, it's ignored.
+     *
+     * @param string $playerId
+     */
+    private function addPlayer(string $playerId): void
+    {
+        if (!in_array($playerId, $this->players)) {
+            $this->players[] = $playerId;
+        }
     }
 }

@@ -69,6 +69,7 @@ final class PredisGameProjection implements StoredEventSubscriber
             $storedEvent->name(),
             [
                 'GameOpened',
+                'PlayerJoined',
                 'PlayerMoved',
                 'GameWon',
                 'GameDrawn',
