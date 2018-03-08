@@ -58,15 +58,17 @@ final class ChatService
      */
     public function initiateChat(string $ownerId, array $authors): string
     {
-        return $this->applicationLifeCycle->run(function () use ($ownerId, $authors) {
-            $chatId = $this->chatGateway->create($ownerId, $authors);
+        return $this->applicationLifeCycle->run(
+            function () use ($ownerId, $authors) {
+                $chatId = $this->chatGateway->create($ownerId, $authors);
 
-            $this->eventStore->append(
-                new ChatInitiated($chatId, $ownerId)
-            );
+                $this->eventStore->append(
+                    new ChatInitiated($chatId, $ownerId)
+                );
 
-            return $chatId;
-        });
+                return $chatId;
+            }
+        );
     }
 
     /**
@@ -98,13 +100,15 @@ final class ChatService
         $ownerId = $chat['ownerId'];
         $writtenAt = Clock::instance()->now();
 
-        $this->applicationLifeCycle->run(function () use ($chatId, $ownerId, $authorId, $message, $writtenAt) {
-            $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
+        $this->applicationLifeCycle->run(
+            function () use ($chatId, $ownerId, $authorId, $message, $writtenAt) {
+                $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
 
-            $this->eventStore->append(
-                new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message, $writtenAt)
-            );
-        });
+                $this->eventStore->append(
+                    new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message, $writtenAt)
+                );
+            }
+        );
     }
 
     /**
