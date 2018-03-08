@@ -32,6 +32,9 @@ help() {
     echo showTests
     echo Show tests.
     echo
+    echo phpcs
+    echo Run phpcs.
+    echo
 }
 
 build() {
@@ -72,19 +75,23 @@ assets() {
     docker-compose run frontend-building watch -n 1 make
 }
 
-removeGeneratedFiles() {
-    removeSymfonyCache
-    removeDatabaseFiles
-    removeVendors
-    removeFrontendBuilds
-}
-
 tests() {
     docker-compose run php-tests vendor/bin/phpunit
 }
 
 showTests() {
     docker-compose run php-tests vendor/bin/phpunit --testdox
+}
+
+phpcs() {
+    docker-compose run php-tests vendor/bin/phpcs tests src --standard=PSR2
+}
+
+removeGeneratedFiles() {
+    removeSymfonyCache
+    removeDatabaseFiles
+    removeVendors
+    removeFrontendBuilds
 }
 
 removeSymfonyCache() {
