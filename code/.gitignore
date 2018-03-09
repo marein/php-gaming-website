@@ -1,4 +1,5 @@
 /vendor
 /var
+/environment.env
 /web/main.css
 /web/main.js

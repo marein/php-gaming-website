@@ -3,13 +3,22 @@
 namespace {
 
     use Gambling\AppKernel;
-    use Marein\FriendVisibility\FriendConfiguration;
     use Symfony\Component\Debug\Debug;
+    use Symfony\Component\Dotenv\Dotenv;
     use Symfony\Component\HttpFoundation\Request;
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    $environment = getenv('ENVIRONMENT');
+    $additionalEnvironmentPaths = [];
+    $additionalEnvironmentPath = __DIR__ . '/../environment.env';
+
+    if (file_exists($additionalEnvironmentPath)) {
+        $additionalEnvironmentPaths[] = $additionalEnvironmentPath;
+    }
+
+    (new Dotenv())->load(__DIR__ . '/../environment.env.dist', ...$additionalEnvironmentPaths);
+
+    $environment = getenv('GAMBLING_ENVIRONMENT');
     $isDevelopmentEnvironment = $environment !== 'prod';
 
     if ($isDevelopmentEnvironment) {

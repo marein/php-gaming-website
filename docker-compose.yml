@@ -54,8 +54,6 @@ services:
     php-fpm:
         build:
             context: ./container/php-fpm
-        env_file:
-            - ./container/environment.env
         volumes:
             - ./code:/project
     frontend-building:
@@ -78,8 +76,6 @@ services:
         build:
             context: ./container/php
         command: /project/bin/console connect-four:build-query-model --env=prod
-        env_file:
-            - ./container/environment.env
         volumes:
             - ./code:/project
         links:
@@ -92,8 +88,6 @@ services:
         build:
             context: ./container/php
         command: /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
-        env_file:
-            - ./container/environment.env
         volumes:
             - ./code:/project
         links:
@@ -106,8 +100,6 @@ services:
         build:
             context: ./container/php
         command: /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
-        env_file:
-            - ./container/environment.env
         volumes:
             - ./code:/project
         links:
@@ -124,8 +116,6 @@ services:
         build:
             context: ./container/php
         command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
-        env_file:
-            - ./container/environment.env
         volumes:
             - ./code:/project
         links:
@@ -142,8 +132,6 @@ services:
         build:
             context: ./container/php
         command: /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
-        env_file:
-            - ./container/environment.env
         volumes:
             - ./code:/project
         links:
@@ -156,8 +144,6 @@ services:
         build:
             context: ./container/php
         command: /project/bin/console chat:command-listener --env=prod
-        env_file:
-            - ./container/environment.env
         volumes:
             - ./code:/project
         links:
@@ -170,8 +156,6 @@ services:
         build:
             context: ./container/php
         command: /project/bin/console connect-four:referee --env=prod
-        env_file:
-            - ./container/environment.env
         volumes:
             - ./code:/project
         links:
