@@ -32,6 +32,7 @@ final class IdentityController
     {
         return new JsonResponse(
             $this->identityService->signUp(
+                $request->getSession()->get('user'),
                 $request->request->get('username', uniqid()),
                 $request->request->get('password', 'password')
             )

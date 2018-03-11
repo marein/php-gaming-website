@@ -7,6 +7,11 @@ final class SignUpCommand
     /**
      * @var string
      */
+    private $userId;
+
+    /**
+     * @var string
+     */
     private $username;
 
     /**
@@ -17,13 +22,23 @@ final class SignUpCommand
     /**
      * SignUpCommand constructor.
      *
+     * @param string $userId
      * @param string $username
      * @param string $password
      */
-    public function __construct($username, $password)
+    public function __construct(string $userId, string $username, string $password)
     {
+        $this->userId = $userId;
         $this->username = $username;
         $this->password = $password;
+    }
+
+    /**
+     * @return string
+     */
+    public function userId(): string
+    {
+        return $this->userId;
     }
 
     /**

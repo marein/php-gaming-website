@@ -7,3 +7,7 @@ Gambling\Identity\Domain\Model\User\User:
             columnPrefix: false
         credentials:
             class: Gambling\Identity\Domain\Model\User\Credentials
+    fields:
+        isSignedUp:
+            column: is_signed_up
+            type: boolean

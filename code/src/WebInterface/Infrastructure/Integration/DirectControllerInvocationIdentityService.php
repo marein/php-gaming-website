@@ -27,11 +27,21 @@ final class DirectControllerInvocationIdentityService implements IdentityService
     /**
      * @inheritdoc
      */
-    public function signUp(string $username, string $password): array
+    public function arrive(): array
+    {
+        return $this->sendRequest('arrive');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function signUp(string $userId, string $username, string $password): array
     {
         return $this->sendRequest(
             'signUp',
-            [],
+            [
+                'userId' => $userId
+            ],
             [
                 'username' => $username,
                 'password' => $password

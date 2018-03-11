@@ -4,7 +4,9 @@ namespace Gambling\Identity\Domain\Model\User;
 
 use Gambling\Common\Domain\AggregateRoot;
 use Gambling\Common\Domain\IsAggregateRoot;
+use Gambling\Identity\Domain\Model\User\Event\UserArrived;
 use Gambling\Identity\Domain\Model\User\Event\UserSignedUp;
+use Gambling\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 
 class User implements AggregateRoot
 {
@@ -16,6 +18,11 @@ class User implements AggregateRoot
     private $userId;
 
     /**
+     * @var bool
+     */
+    private $isSignedUp;
+
+    /**
      * @var Credentials
      */
     private $credentials;
@@ -23,35 +30,52 @@ class User implements AggregateRoot
     /**
      * User constructor.
      *
-     * @param UserId      $userId
-     * @param Credentials $credentials
+     * @param UserId $userId
      */
-    private function __construct(UserId $userId, Credentials $credentials)
+    private function __construct(UserId $userId)
     {
         $this->userId = $userId;
-        $this->credentials = $credentials;
+        $this->isSignedUp = false;
     }
 
     /**
-     * Sign up the user.
-     *
-     * @param Credentials $credentials
+     * A new user arrives.
      *
      * @return User
      */
-    public static function signUp(Credentials $credentials): User
+    public static function arrive(): User
     {
         $user = new self(
-            UserId::generate(),
-            $credentials
+            UserId::generate()
         );
 
-        $user->domainEvents[] = new UserSignedUp(
-            $user->id(),
-            $user->credentials->username()
+        $user->domainEvents[] = new UserArrived(
+            $user->userId
         );
 
         return $user;
+    }
+
+    /**
+     * The user signs up.
+     *
+     * @param Credentials $credentials
+     *
+     * @throws UserAlreadySignedUpException
+     */
+    public function signUp(Credentials $credentials): void
+    {
+        if ($this->isSignedUp) {
+            throw new UserAlreadySignedUpException();
+        }
+
+        $this->isSignedUp = true;
+        $this->credentials = $credentials;
+
+        $this->domainEvents[] = new UserSignedUp(
+            $this->userId,
+            $this->credentials->username()
+        );
     }
 
     /**

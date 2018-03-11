@@ -15,8 +15,9 @@ final class Version20170526204325 extends AbstractMigration
         $table = $schema->createTable('user');
 
         $table->addColumn('id', 'uuid_binary_ordered_time');
-        $table->addColumn('credentials_username', 'string');
-        $table->addColumn('credentials_password', 'string');
+        $table->addColumn('is_signed_up', 'boolean');
+        $table->addColumn('credentials_username', 'string', ['notNull' => false]);
+        $table->addColumn('credentials_password', 'string', ['notNull' => false]);
 
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['credentials_username']);

@@ -102,7 +102,7 @@ game_json:
 sign_up:
     path: /api/identity/users/sign-up
     methods:
-        - GET
+        - POST
     defaults:
         _controller: web-interface.identity-controller:signUpAction
         _format: json

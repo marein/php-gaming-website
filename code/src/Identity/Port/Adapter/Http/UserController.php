@@ -2,6 +2,7 @@
 
 namespace Gambling\Identity\Port\Adapter\Http;
 
+use Gambling\Identity\Application\User\Command\ArriveCommand;
 use Gambling\Identity\Application\User\Command\SignUpCommand;
 use Gambling\Identity\Application\User\UserService;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,14 +26,31 @@ final class UserController
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function arriveAction(): JsonResponse
+    {
+        $userId = $this->userService->arrive(
+            new ArriveCommand()
+        );
+
+        return new JsonResponse([
+            'userId' => $userId
+        ]);
+    }
+
+    /**
      * @param Request $request
      *
      * @return JsonResponse
      */
     public function signUpAction(Request $request): JsonResponse
     {
-        $userId = $this->userService->signUp(
+        $userId = $request->query->get('userId');
+
+        $this->userService->signUp(
             new SignUpCommand(
+                $userId,
                 $request->request->get('username'),
                 $request->request->get('password')
             )
