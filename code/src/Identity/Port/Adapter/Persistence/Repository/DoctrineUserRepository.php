@@ -4,6 +4,7 @@ namespace Gambling\Identity\Port\Adapter\Persistence\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Gambling\Common\Domain\DomainEventPublisher;
+use Gambling\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use Gambling\Identity\Domain\Model\User\User;
 use Gambling\Identity\Domain\Model\User\UserId;
 use Gambling\Identity\Domain\Model\User\Users;
@@ -46,11 +47,16 @@ final class DoctrineUserRepository implements Users
     /**
      * @inheritdoc
      */
-    public function get(UserId $userId): ?User
+    public function get(UserId $userId): User
     {
         $repository = $this->manager->getRepository(User::class);
+
         /** @var User|null $user */
         $user = $repository->find($userId);
+
+        if ($user === null) {
+            throw new UserNotFoundException();
+        }
 
         return $user;
     }

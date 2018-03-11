@@ -8,6 +8,7 @@ use Gambling\Identity\Application\User\Command\SignUpCommand;
 use Gambling\Identity\Domain\HashAlgorithm;
 use Gambling\Identity\Domain\Model\User\Credentials;
 use Gambling\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
+use Gambling\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use Gambling\Identity\Domain\Model\User\User;
 use Gambling\Identity\Domain\Model\User\UserId;
 use Gambling\Identity\Domain\Model\User\Users;
@@ -69,6 +70,7 @@ final class UserService
      * @param SignUpCommand $command
      *
      * @throws UserAlreadySignedUpException
+     * @throws UserNotFoundException
      */
     public function signUp(SignUpCommand $command): void
     {
