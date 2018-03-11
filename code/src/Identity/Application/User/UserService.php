@@ -5,6 +5,7 @@ namespace Gambling\Identity\Application\User;
 use Gambling\Common\Application\ApplicationLifeCycle;
 use Gambling\Identity\Application\User\Command\ArriveCommand;
 use Gambling\Identity\Application\User\Command\SignUpCommand;
+use Gambling\Identity\Domain\HashAlgorithm;
 use Gambling\Identity\Domain\Model\User\Credentials;
 use Gambling\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 use Gambling\Identity\Domain\Model\User\User;
@@ -24,15 +25,22 @@ final class UserService
     private $users;
 
     /**
+     * @var HashAlgorithm
+     */
+    private $hashAlgorithm;
+
+    /**
      * UserService constructor.
      *
      * @param ApplicationLifeCycle $applicationLifeCycle
      * @param Users                $users
+     * @param HashAlgorithm        $hashAlgorithm
      */
-    public function __construct(ApplicationLifeCycle $applicationLifeCycle, Users $users)
+    public function __construct(ApplicationLifeCycle $applicationLifeCycle, Users $users, HashAlgorithm $hashAlgorithm)
     {
         $this->applicationLifeCycle = $applicationLifeCycle;
         $this->users = $users;
+        $this->hashAlgorithm = $hashAlgorithm;
     }
 
     /**
@@ -73,7 +81,8 @@ final class UserService
                 $user->signUp(
                     new Credentials(
                         $command->username(),
-                        $command->password()
+                        $command->password(),
+                        $this->hashAlgorithm
                     )
                 );
 

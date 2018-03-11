@@ -4,6 +4,7 @@ namespace Gambling\Identity\Domain\Model\User;
 
 use Gambling\Common\Domain\AggregateRoot;
 use Gambling\Common\Domain\IsAggregateRoot;
+use Gambling\Identity\Domain\HashAlgorithm;
 use Gambling\Identity\Domain\Model\User\Event\UserArrived;
 use Gambling\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gambling\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
@@ -79,18 +80,29 @@ class User implements AggregateRoot
     }
 
     /**
+     * Returns true, if the user can login with the given credentials.
+     *
+     * todo: We can raise an UserLogInAttempted event.
+     *
+     * @param string        $password
+     * @param HashAlgorithm $hashAlgorithm
+     *
+     * @return bool
+     */
+    public function canLogIn(string $password, HashAlgorithm $hashAlgorithm): bool
+    {
+        if (!$this->isSignedUp) {
+            return false;
+        }
+
+        return $this->credentials->matches($password, $hashAlgorithm);
+    }
+
+    /**
      * @return UserId
      */
     public function id(): UserId
     {
         return $this->userId;
-    }
-
-    /**
-     * @return Credentials
-     */
-    public function credentials(): Credentials
-    {
-        return $this->credentials;
     }
 }

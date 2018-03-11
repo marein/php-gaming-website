@@ -2,6 +2,8 @@
 
 namespace Gambling\Identity\Domain\Model\User;
 
+use Gambling\Identity\Domain\HashAlgorithm;
+
 final class Credentials
 {
     /**
@@ -17,13 +19,14 @@ final class Credentials
     /**
      * Credentials constructor.
      *
-     * @param string $username
-     * @param string $password
+     * @param string        $username
+     * @param string        $password
+     * @param HashAlgorithm $hashAlgorithm
      */
-    public function __construct(string $username, string $password)
+    public function __construct(string $username, string $password, HashAlgorithm $hashAlgorithm)
     {
         $this->username = $username;
-        $this->password = $password;
+        $this->password = $hashAlgorithm->hash($password);
     }
 
     /**
@@ -35,10 +38,15 @@ final class Credentials
     }
 
     /**
-     * @return string
+     * Returns true if the given credentials matches credentials.
+     *
+     * @param string        $password
+     * @param HashAlgorithm $hashAlgorithm
+     *
+     * @return bool
      */
-    public function password(): string
+    public function matches(string $password, HashAlgorithm $hashAlgorithm): bool
     {
-        return $this->password;
+        return $hashAlgorithm->verify($password, $this->password);
     }
 }

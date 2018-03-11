@@ -5,6 +5,7 @@ namespace Gambling\Identity\Domain\Model\User;
 use Gambling\Identity\Domain\Model\User\Event\UserArrived;
 use Gambling\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gambling\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
+use Gambling\Identity\Port\Adapter\HashAlgorithm\NotSecureHashAlgorithm;
 use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
@@ -27,24 +28,40 @@ final class UserTest extends TestCase
     /**
      * @test
      */
-    public function itShouldSignUp(): void
+    public function itShouldSignUpAndCanLogin(): void
     {
-        $expectedCredentials = new Credentials(
-            'marein',
-            'password'
-        );
+        $hashAlgorithm = new NotSecureHashAlgorithm();
 
         $user = User::arrive();
-        $user->signUp($expectedCredentials);
+        $user->signUp(
+            new Credentials(
+                'marein',
+                'correctPassword',
+                $hashAlgorithm
+            )
+        );
 
         $domainEvents = $user->flushDomainEvents();
         $userSignedUp = $domainEvents[1];
 
-        $this->assertEquals($expectedCredentials, $user->credentials());
         $this->assertCount(2, $domainEvents);
         $this->assertInstanceOf(UserSignedUp::class, $userSignedUp);
         $this->assertEquals($user->id()->toString(), $userSignedUp->aggregateId());
-        $this->assertEquals($expectedCredentials->username(), $userSignedUp->payload()['username']);
+        $this->assertEquals('marein', $userSignedUp->payload()['username']);
+
+        $this->assertTrue($user->canLogIn('correctPassword', $hashAlgorithm));
+        $this->assertFalse($user->canLogIn('wrongPassword', $hashAlgorithm));
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldNotLogInWhenNotSignedUp(): void
+    {
+        $user = User::arrive();
+        $canLogIn = $user->canLogIn('password', new NotSecureHashAlgorithm());
+
+        $this->assertFalse($canLogIn);
     }
 
     /**
@@ -54,7 +71,11 @@ final class UserTest extends TestCase
     {
         $this->expectException(UserAlreadySignedUpException::class);
 
-        $credentials = new Credentials('marein', 'password');
+        $credentials = new Credentials(
+            'marein',
+            'password',
+            new NotSecureHashAlgorithm()
+        );
 
         $user = User::arrive();
         $user->signUp($credentials);
