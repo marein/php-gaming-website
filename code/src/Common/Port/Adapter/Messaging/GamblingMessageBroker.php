@@ -113,6 +113,7 @@ final class GamblingMessageBroker implements MessageBroker
 
         $message = $this->context->createMessage($body);
         $message->addFlag(AmqpMessage::FLAG_MANDATORY);
+        $message->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
         $message->setRoutingKey($routingKey);
 
         $producer = $this->context->createProducer();
