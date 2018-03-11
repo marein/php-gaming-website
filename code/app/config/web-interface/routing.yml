@@ -96,13 +96,13 @@ game_json:
         _format: json
 
 ###############################################
-#                User Service                 #
+#               Identity Service              #
 ###############################################
 
 sign_up:
-    path: /api/users/sign-up
+    path: /api/identity/users/sign-up
     methods:
-        - POST
+        - GET
     defaults:
-        _controller: web-interface.user-controller:signUpAction
+        _controller: web-interface.identity-controller:signUpAction
         _format: json

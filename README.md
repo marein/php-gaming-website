@@ -8,7 +8,7 @@ __Table of contents__
   * [Chat](#chat)
   * [Common](#common)
   * [Connect Four](#connect-four)
-  * [User](#user)
+  * [Identity](#identity)
   * [Web Interface](#web-interface)
 * [Transition to Microservices](#transition-to-microservices)
 * [Scale-Out the application](#scale-out-the-application)
@@ -142,7 +142,7 @@ As the
 shows, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
 uses a command and query bus. The opposite of this approach is the traditional application service I use in the
-[User](#user)
+[Identity](#identity)
 context. It boils down to one class with many methods vs. many classes with one method.
 
 The public interface is formed by a
@@ -194,19 +194,19 @@ as the storage model. With this model, only the events are saved.
 The game aggregate is actually a good fit for the event sourcing approach.
 Maybe I'll implement this storage model in the next game.
 
-### User
+### Identity
 
 This context is currently only set up. Nothing interacts with it.
 
 Although the
-[User](/code/src/User)
+[Identity](/code/src/Identity)
 context is another simple context, like the chat context, I still use an ORM for it. In this case
 I've chosen Doctrine because it's a really matured ORM that applies the
 [Data Mapper](https://martinfowler.com/eaaCatalog/dataMapper.html)
 pattern. The main responsibilities are that users can sign up, change username and change password.
 
 As the
-[folder structure](/code/src/User)
+[folder structure](/code/src/Identity)
 shows, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
 uses a traditional application service. The opposite of this approach is the

@@ -1,0 +1,14 @@
+services:
+
+    identity.doctrine-dbal:
+        alias: 'doctrine.dbal.identity_connection'
+
+    identity.doctrine-orm:
+        alias: 'doctrine.orm.identity_entity_manager'
+
+    identity.event-store:
+        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
+        public: false
+        arguments:
+            - '@identity.doctrine-dbal'
+            - 'event_store'

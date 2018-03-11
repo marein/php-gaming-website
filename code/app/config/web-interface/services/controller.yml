@@ -22,9 +22,9 @@ services:
         tags:
             - 'controller.service_arguments'
 
-    web-interface.user-controller:
-        class: Gambling\WebInterface\Presentation\Http\UserController
+    web-interface.identity-controller:
+        class: Gambling\WebInterface\Presentation\Http\IdentityController
         arguments:
-            - '@web-interface.user-service'
+            - '@web-interface.identity-service'
         tags:
             - 'controller.service_arguments'

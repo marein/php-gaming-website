@@ -1,0 +1,27 @@
+services:
+
+    identity.domain-event-publisher:
+        class: Gambling\Common\Domain\DomainEventPublisher
+        public: false
+        calls:
+            - ['subscribe', ['@identity.store-domain-events-subscriber']]
+
+    identity.user-controller:
+        class: Gambling\Identity\Port\Adapter\Http\UserController
+        public: false
+        arguments:
+            - '@identity.user-service'
+
+    identity.user-repository:
+        class: Gambling\Identity\Port\Adapter\Persistence\Repository\DoctrineUserRepository
+        public: false
+        arguments:
+            - '@identity.doctrine-orm'
+            - '@identity.domain-event-publisher'
+
+    identity.user-service:
+        class: Gambling\Identity\Application\User\UserService
+        public: false
+        arguments:
+            - '@identity.application-life-cycle'
+            - '@identity.user-repository'

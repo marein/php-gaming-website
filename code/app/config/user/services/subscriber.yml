@@ -1,7 +1,0 @@
-services:
-
-    user.store-domain-events-subscriber:
-        class: Gambling\User\Port\Adapter\Persistence\EventStore\StoreDomainEventsSubscriber
-        public: false
-        arguments:
-            - '@user.event-store'

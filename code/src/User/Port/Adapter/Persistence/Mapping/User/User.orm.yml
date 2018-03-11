@@ -1,9 +1,0 @@
-Gambling\User\Domain\Model\User\User:
-    table: user
-    type: entity
-    embedded:
-        userId:
-            class: Gambling\User\Domain\Model\User\UserId
-            columnPrefix: false
-        credentials:
-            class: Gambling\User\Domain\Model\User\Credentials

@@ -1,7 +1,7 @@
 imports:
     - { resource: chat/config.yml }
     - { resource: connect-four/config.yml }
-    - { resource: user/config.yml }
+    - { resource: identity/config.yml }
     - { resource: web-interface/config.yml }
 
 framework:

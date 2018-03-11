@@ -1,0 +1,20 @@
+imports:
+    - { resource: services/application_life_cycle.yml }
+    - { resource: services/persistence.yml }
+    - { resource: services/subscriber.yml }
+    - { resource: services/user.yml }
+
+doctrine:
+    dbal:
+        connections:
+            identity:
+                url: '%env(GAMBLING_IDENTITY_DOCTRINE_DBAL_URL)%'
+    orm:
+        entity_managers:
+            identity:
+                connection: identity
+                mappings:
+                    user:
+                        type:     yml
+                        dir:      '%kernel.root_dir%/../src/Identity/Port/Adapter/Persistence/Mapping/User'
+                        prefix:   Gambling\Identity\Domain\Model\User

@@ -12,11 +12,11 @@ services:
         arguments:
             - '@connect-four.game-controller'
 
-    web-interface.user-service:
-        class: Gambling\WebInterface\Infrastructure\Integration\DirectControllerInvocationUserService
+    web-interface.identity-service:
+        class: Gambling\WebInterface\Infrastructure\Integration\DirectControllerInvocationIdentityService
         public: false
         arguments:
-            - '@user.user-controller'
+            - '@identity.user-controller'
 
     web-interface.browser-notifier:
         class: Gambling\WebInterface\Infrastructure\NchanBrowserNotifier

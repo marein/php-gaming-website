@@ -116,10 +116,10 @@ removeFrontendBuilds() {
 createDatabases() {
     docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=chat
     docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=connect_four
-    docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=user
+    docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=identity
     docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/chat/migrations.yml --db=chat -n
     docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/connect-four/migrations.yml --db=connect_four -n
-    docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/user/migrations.yml --db=user -n
+    docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/identity/migrations.yml --db=identity -n
 }
 
 startDatabaseServices() {
