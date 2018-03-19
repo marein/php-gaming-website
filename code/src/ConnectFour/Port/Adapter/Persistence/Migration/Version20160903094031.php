@@ -19,7 +19,6 @@ final class Version20160903094031 extends AbstractMigration
         $table->addColumn('aggregate', 'json');
 
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['id', 'version']);
     }
 
     /**
