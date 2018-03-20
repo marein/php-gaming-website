@@ -28,7 +28,7 @@ final class UserTest extends TestCase
     /**
      * @test
      */
-    public function itShouldSignUpAndCanLogin(): void
+    public function itShouldSignUpAndAuthenticate(): void
     {
         $hashAlgorithm = new NotSecureHashAlgorithm();
 
@@ -49,19 +49,19 @@ final class UserTest extends TestCase
         $this->assertEquals($user->id()->toString(), $userSignedUp->aggregateId());
         $this->assertEquals('marein', $userSignedUp->payload()['username']);
 
-        $this->assertTrue($user->canLogIn('correctPassword', $hashAlgorithm));
-        $this->assertFalse($user->canLogIn('wrongPassword', $hashAlgorithm));
+        $this->assertTrue($user->authenticate('correctPassword', $hashAlgorithm));
+        $this->assertFalse($user->authenticate('wrongPassword', $hashAlgorithm));
     }
 
     /**
      * @test
      */
-    public function itShouldNotLogInWhenNotSignedUp(): void
+    public function itShouldNotAuthenticateWhenNotSignedUp(): void
     {
         $user = User::arrive();
-        $canLogIn = $user->canLogIn('password', new NotSecureHashAlgorithm());
+        $authenticate = $user->authenticate('password', new NotSecureHashAlgorithm());
 
-        $this->assertFalse($canLogIn);
+        $this->assertFalse($authenticate);
     }
 
     /**

@@ -80,16 +80,16 @@ class User implements AggregateRoot
     }
 
     /**
-     * Returns true, if the user can login with the given credentials.
+     * Returns true if the user can authenticate.
      *
-     * todo: We can raise an UserLogInAttempted event.
+     * todo: We can raise an UserAuthenticationAttempted event.
      *
      * @param string        $password
      * @param HashAlgorithm $hashAlgorithm
      *
      * @return bool
      */
-    public function canLogIn(string $password, HashAlgorithm $hashAlgorithm): bool
+    public function authenticate(string $password, HashAlgorithm $hashAlgorithm): bool
     {
         if (!$this->isSignedUp) {
             return false;
