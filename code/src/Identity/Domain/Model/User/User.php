@@ -19,6 +19,13 @@ class User implements AggregateRoot
     private $userId;
 
     /**
+     * This version is for optimistic concurrency control.
+     *
+     * @var integer
+     */
+    private $version;
+
+    /**
      * @var bool
      */
     private $isSignedUp;

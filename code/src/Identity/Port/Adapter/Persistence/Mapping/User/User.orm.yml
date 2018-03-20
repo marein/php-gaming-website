@@ -8,6 +8,10 @@ Gambling\Identity\Domain\Model\User\User:
         credentials:
             class: Gambling\Identity\Domain\Model\User\Credentials
     fields:
+        version:
+            column: version
+            type: integer
+            version: true
         isSignedUp:
             column: is_signed_up
             type: boolean

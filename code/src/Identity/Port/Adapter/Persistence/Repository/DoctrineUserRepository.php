@@ -3,7 +3,9 @@
 namespace Gambling\Identity\Port\Adapter\Persistence\Repository;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
 use Gambling\Common\Domain\DomainEventPublisher;
+use Gambling\Common\Domain\Exception\ConcurrencyException;
 use Gambling\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use Gambling\Identity\Domain\Model\User\User;
 use Gambling\Identity\Domain\Model\User\UserId;
@@ -40,8 +42,12 @@ final class DoctrineUserRepository implements Users
     {
         $this->domainEventPublisher->publish($user->flushDomainEvents());
 
-        $this->manager->persist($user);
-        $this->manager->flush();
+        try {
+            $this->manager->persist($user);
+            $this->manager->flush();
+        } catch (OptimisticLockException $exception) {
+            throw new ConcurrencyException();
+        }
     }
 
     /**

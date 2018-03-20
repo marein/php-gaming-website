@@ -5,9 +5,17 @@ services:
         class: Gambling\Common\Port\Adapter\Application\DoctrineReconnectApplicationLifeCycle
         public: false
         arguments:
-            - '@identity.doctrine-transactional-application-life-cycle'
+            - '@identity.retry-application-life-cycle'
             - '@identity.doctrine-dbal'
             - 300
+
+    identity.retry-application-life-cycle:
+        class: Gambling\Common\Application\RetryApplicationLifeCycle
+        public: false
+        arguments:
+            - '@identity.doctrine-transactional-application-life-cycle'
+            - 3
+            - 'Gambling\Common\Domain\Exception\ConcurrencyException'
 
     identity.doctrine-transactional-application-life-cycle:
         class: Gambling\Common\Port\Adapter\Application\DoctrineTransactionalApplicationLifeCycle

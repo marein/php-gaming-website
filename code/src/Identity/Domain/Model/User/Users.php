@@ -2,6 +2,7 @@
 
 namespace Gambling\Identity\Domain\Model\User;
 
+use Gambling\Common\Domain\Exception\ConcurrencyException;
 use Gambling\Identity\Domain\Model\User\Exception\UserNotFoundException;
 
 interface Users
@@ -12,6 +13,7 @@ interface Users
      * @param User $user
      *
      * @return void
+     * @throws ConcurrencyException
      */
     public function save(User $user): void;
 
