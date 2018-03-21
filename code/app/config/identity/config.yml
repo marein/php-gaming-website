@@ -9,6 +9,10 @@ doctrine:
         connections:
             identity:
                 url: '%env(GAMBLING_IDENTITY_DOCTRINE_DBAL_URL)%'
+                charset: utf8mb4
+                default_table_options:
+                     charset: utf8mb4
+                     collate: utf8mb4_unicode_ci
     orm:
         entity_managers:
             identity:

@@ -11,3 +11,7 @@ doctrine:
         connections:
             connect-four:
                 url: '%env(GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL)%'
+                charset: utf8mb4
+                default_table_options:
+                     charset: utf8mb4
+                     collate: utf8mb4_unicode_ci
