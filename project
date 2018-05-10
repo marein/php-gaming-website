@@ -35,6 +35,9 @@ help() {
     echo phpcs
     echo Run phpcs.
     echo
+    echo phpstan
+    echo Run phpstan.
+    echo
 }
 
 build() {
@@ -85,6 +88,10 @@ showTests() {
 
 phpcs() {
     docker-compose run php-tests vendor/bin/phpcs tests src --standard=PSR2
+}
+
+phpstan() {
+    docker-compose run php-tests vendor/bin/phpstan analyse -l 2 src
 }
 
 removeGeneratedFiles() {
