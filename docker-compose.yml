@@ -64,7 +64,7 @@ services:
             - ./code:/project
     php-tests:
         build:
-            context: ./container/php
+            context: ./container/php-tests
         working_dir: /project
         volumes:
             - ./code:/project
