@@ -44,7 +44,7 @@ final class DoctrineChatGateway implements ChatGateway
             ['uuid_binary_ordered_time', 'string', 'json']
         );
 
-        return $chatId;
+        return $chatId->toString();
     }
 
     /**

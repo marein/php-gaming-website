@@ -31,11 +31,13 @@ final class GameId
     }
 
     /**
-     * @param $gameId
+     * Create a GameId from string.
+     *
+     * @param string $gameId
      *
      * @return GameId
      */
-    public static function fromString($gameId)
+    public static function fromString(string $gameId): GameId
     {
         return new self(Uuid::fromString($gameId));
     }

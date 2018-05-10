@@ -29,6 +29,8 @@ final class UserId
     }
 
     /**
+     * Create an UserId from string.
+     *
      * @param string $userId
      *
      * @return UserId

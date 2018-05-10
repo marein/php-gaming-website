@@ -54,7 +54,7 @@ final class UserService
     public function arrive(ArriveCommand $command): string
     {
         return $this->applicationLifeCycle->run(
-            function () use ($command) {
+            function () {
                 $user = User::arrive();
 
                 $this->users->save($user);

@@ -27,7 +27,7 @@ final class Clock
     private static $instance = null;
 
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|null
      */
     private $frozenAt;
 

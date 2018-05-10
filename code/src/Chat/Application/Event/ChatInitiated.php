@@ -28,7 +28,7 @@ final class ChatInitiated implements DomainEvent
      * @param string $chatId
      * @param string $ownerId
      */
-    public function __construct($chatId, $ownerId)
+    public function __construct(string $chatId, string $ownerId)
     {
         $this->chatId = $chatId;
         $this->ownerId = $ownerId;
