@@ -12,14 +12,14 @@ interface ChatGateway
      * @param string $ownerId
      * @param array  $authors
      *
-     * @return string
+     * @return ChatId
      */
-    public function create(string $ownerId, array $authors): string;
+    public function create(string $ownerId, array $authors): ChatId;
 
     /**
      * Create a message.
      *
-     * @param string             $chatId
+     * @param ChatId             $chatId
      * @param string             $authorId
      * @param string             $message
      * @param \DateTimeImmutable $writtenAt
@@ -27,7 +27,7 @@ interface ChatGateway
      * @return int
      */
     public function createMessage(
-        string $chatId,
+        ChatId $chatId,
         string $authorId,
         string $message,
         \DateTimeImmutable $writtenAt
@@ -36,22 +36,22 @@ interface ChatGateway
     /**
      * Get chat by id.
      *
-     * @param string $chatId
+     * @param ChatId $chatId
      *
      * @return array
      * @throws ChatNotFoundException
      */
-    public function byId(string $chatId): array;
+    public function byId(ChatId $chatId): array;
 
     /**
      * Get messages by chat.
      *
-     * @param string $chatId
+     * @param ChatId $chatId
      * @param string $authorId
      * @param int    $offset
      * @param int    $limit
      *
      * @return array
      */
-    public function messages(string $chatId, string $authorId, int $offset, int $limit): array;
+    public function messages(ChatId $chatId, string $authorId, int $offset, int $limit): array;
 }

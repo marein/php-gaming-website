@@ -5,6 +5,7 @@ namespace Gambling\Chat\Application;
 use Gambling\Chat\Application\Event\ChatInitiated;
 use Gambling\Chat\Application\Event\MessageWritten;
 use Gambling\Chat\Application\Exception\AuthorNotAllowedException;
+use Gambling\Chat\Application\Exception\ChatNotFoundException;
 use Gambling\Chat\Application\Exception\EmptyMessageException;
 use Gambling\Common\Application\ApplicationLifeCycle;
 use Gambling\Common\Clock\Clock;
@@ -66,7 +67,7 @@ final class ChatService
                     new ChatInitiated($chatId, $ownerId)
                 );
 
-                return $chatId;
+                return $chatId->toString();
             }
         );
     }
@@ -78,11 +79,13 @@ final class ChatService
      * @param string $authorId
      * @param string $message
      *
+     * @throws ChatNotFoundException
      * @throws AuthorNotAllowedException
      * @throws EmptyMessageException
      */
     public function writeMessage(string $chatId, string $authorId, string $message): void
     {
+        $chatId = ChatId::fromString($chatId);
         $message = trim(substr($message, 0, 140));
 
         if ($message === '') {
@@ -123,6 +126,11 @@ final class ChatService
      */
     public function messages(string $chatId, string $authorId, int $offset, int $limit): array
     {
-        return $this->chatGateway->messages($chatId, $authorId, $offset, $limit);
+        return $this->chatGateway->messages(
+            ChatId::fromString($chatId),
+            $authorId,
+            $offset,
+            $limit
+        );
     }
 }

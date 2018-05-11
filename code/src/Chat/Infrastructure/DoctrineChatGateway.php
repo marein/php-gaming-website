@@ -4,6 +4,7 @@ namespace Gambling\Chat\Infrastructure;
 
 use Doctrine\DBAL\Connection;
 use Gambling\Chat\Application\ChatGateway;
+use Gambling\Chat\Application\ChatId;
 use Gambling\Chat\Application\Exception\ChatNotFoundException;
 use Ramsey\Uuid\Uuid;
 
@@ -30,28 +31,28 @@ final class DoctrineChatGateway implements ChatGateway
     /**
      * @inheritdoc
      */
-    public function create(string $ownerId, array $authors): string
+    public function create(string $ownerId, array $authors): ChatId
     {
-        $chatId = Uuid::uuid1();
+        $chatId = ChatId::generate();
 
         $this->connection->insert(
             self::TABLE_CHAT,
             [
-                'id'      => $chatId,
+                'id'      => $chatId->toString(),
                 'ownerId' => $ownerId,
                 'authors' => $authors
             ],
             ['uuid_binary_ordered_time', 'string', 'json']
         );
 
-        return $chatId->toString();
+        return $chatId;
     }
 
     /**
      * @inheritdoc
      */
     public function createMessage(
-        string $chatId,
+        ChatId $chatId,
         string $authorId,
         string $message,
         \DateTimeImmutable $writtenAt
@@ -59,7 +60,7 @@ final class DoctrineChatGateway implements ChatGateway
         $this->connection->insert(
             self::TABLE_MESSAGE,
             [
-                'chatId'    => Uuid::fromString($chatId),
+                'chatId'    => $chatId->toString(),
                 'authorId'  => $authorId,
                 'message'   => $message,
                 'writtenAt' => $writtenAt
@@ -73,7 +74,7 @@ final class DoctrineChatGateway implements ChatGateway
     /**
      * @inheritdoc
      */
-    public function messages(string $chatId, string $authorId, int $offset, int $limit): array
+    public function messages(ChatId $chatId, string $authorId, int $offset, int $limit): array
     {
         // If authors are assigned to the chat, only those authors can read messages.
         // Directly format the date as \DateTime::ATOM, since we know that our server saves dates as UTC.
@@ -92,7 +93,7 @@ final class DoctrineChatGateway implements ChatGateway
             )
             ->setFirstResult($offset)
             ->setMaxResults($limit)
-            ->setParameter('chatId', $chatId, 'uuid_binary_ordered_time')
+            ->setParameter('chatId', $chatId->toString(), 'uuid_binary_ordered_time')
             ->setParameter('authorId', $authorId, 'json')
             ->execute()
             ->fetchAll();
@@ -101,13 +102,13 @@ final class DoctrineChatGateway implements ChatGateway
     /**
      * @inheritdoc
      */
-    public function byId(string $chatId): array
+    public function byId(ChatId $chatId): array
     {
         $chat = $this->connection->createQueryBuilder()
             ->select('BIN_TO_UUID(c.id, 1) as id, c.ownerId, c.authors')
             ->from(self::TABLE_CHAT, 'c')
             ->where('c.id = :id')
-            ->setParameter('id', $chatId, 'uuid_binary_ordered_time')
+            ->setParameter('id', $chatId->toString(), 'uuid_binary_ordered_time')
             ->execute()
             ->fetch();
 

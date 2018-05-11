@@ -2,13 +2,14 @@
 
 namespace Gambling\Chat\Application\Event;
 
+use Gambling\Chat\Application\ChatId;
 use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 
 final class MessageWritten implements DomainEvent
 {
     /**
-     * @var string
+     * @var ChatId
      */
     private $chatId;
 
@@ -45,7 +46,7 @@ final class MessageWritten implements DomainEvent
     /**
      * MessageWritten constructor.
      *
-     * @param string             $chatId
+     * @param ChatId             $chatId
      * @param int                $messageId
      * @param string             $ownerId
      * @param string             $authorId
@@ -53,7 +54,7 @@ final class MessageWritten implements DomainEvent
      * @param \DateTimeImmutable $writtenAt
      */
     public function __construct(
-        string $chatId,
+        ChatId $chatId,
         int $messageId,
         string $ownerId,
         string $authorId,
@@ -90,7 +91,7 @@ final class MessageWritten implements DomainEvent
      */
     public function aggregateId(): string
     {
-        return $this->chatId;
+        return $this->chatId->toString();
     }
 
     /**
@@ -99,7 +100,7 @@ final class MessageWritten implements DomainEvent
     public function payload(): array
     {
         return [
-            'chatId'    => $this->chatId,
+            'chatId'    => $this->chatId->toString(),
             'messageId' => $this->messageId,
             'ownerId'   => $this->ownerId,
             'authorId'  => $this->authorId,

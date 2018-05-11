@@ -3,6 +3,7 @@
 namespace Gambling\Common\Application;
 
 use Gambling\Chat\Application\ChatGateway;
+use Gambling\Chat\Application\ChatId;
 use Gambling\Chat\Application\ChatService;
 use Gambling\Chat\Application\Event\ChatInitiated;
 use Gambling\Chat\Application\Event\MessageWritten;
@@ -21,7 +22,7 @@ final class ChatServiceTest extends TestCase
     {
         Clock::instance()->freeze();
 
-        $generatedChatId = 'chatId';
+        $generatedChatId = ChatId::generate();
         $ownerId = 'ownerId';
         $authors = ['authorId1', 'authorId2'];
 
@@ -49,7 +50,7 @@ final class ChatServiceTest extends TestCase
         );
 
         $chatId = $chatService->initiateChat($ownerId, $authors);
-        $this->assertSame($generatedChatId, $chatId);
+        $this->assertSame($generatedChatId->toString(), $chatId);
 
         Clock::instance()->resume();
     }
@@ -75,7 +76,7 @@ final class ChatServiceTest extends TestCase
         );
 
         // Test also if trim is performed.
-        $chatService->writeMessage('chatId', 'authorId', '   ');
+        $chatService->writeMessage(ChatId::generate(), 'authorId', '   ');
     }
 
     /**
@@ -85,7 +86,7 @@ final class ChatServiceTest extends TestCase
     {
         $this->expectException(AuthorNotAllowedException::class);
 
-        $chatId = 'chatId';
+        $chatId = ChatId::generate();
         $assignedAuthors = json_encode(['authorId1', 'authorId2']);
 
         $applicationLifeCycle = $this->createMock(ApplicationLifeCycle::class);
@@ -117,7 +118,7 @@ final class ChatServiceTest extends TestCase
     {
         Clock::instance()->freeze();
 
-        $chatId = 'chatId';
+        $chatId = ChatId::generate();
         $authorId = 'authorId';
         $ownerId = 'ownerId';
         $message = 'message';
@@ -163,7 +164,7 @@ final class ChatServiceTest extends TestCase
      */
     public function itShouldReturnMessages(): void
     {
-        $chatId = 'chatId';
+        $chatId = ChatId::generate();
         $authorId = 'authorId';
         $offset = 0;
         $limit = 10;

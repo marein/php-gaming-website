@@ -2,13 +2,14 @@
 
 namespace Gambling\Chat\Application\Event;
 
+use Gambling\Chat\Application\ChatId;
 use Gambling\Common\Clock\Clock;
 use Gambling\Common\Domain\DomainEvent;
 
 final class ChatInitiated implements DomainEvent
 {
     /**
-     * @var string
+     * @var ChatId
      */
     private $chatId;
 
@@ -25,10 +26,10 @@ final class ChatInitiated implements DomainEvent
     /**
      * ChatInitiated constructor.
      *
-     * @param string $chatId
+     * @param ChatId $chatId
      * @param string $ownerId
      */
-    public function __construct(string $chatId, string $ownerId)
+    public function __construct(ChatId $chatId, string $ownerId)
     {
         $this->chatId = $chatId;
         $this->ownerId = $ownerId;
@@ -56,7 +57,7 @@ final class ChatInitiated implements DomainEvent
      */
     public function aggregateId(): string
     {
-        return $this->chatId;
+        return $this->chatId->toString();
     }
 
     /**
@@ -65,7 +66,7 @@ final class ChatInitiated implements DomainEvent
     public function payload(): array
     {
         return [
-            'chatId'  => $this->chatId,
+            'chatId'  => $this->chatId->toString(),
             'ownerId' => $this->ownerId
         ];
     }
