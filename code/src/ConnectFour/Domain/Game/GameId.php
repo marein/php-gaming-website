@@ -2,6 +2,7 @@
 
 namespace Gambling\ConnectFour\Domain\Game;
 
+use Gambling\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -16,10 +17,17 @@ final class GameId
      * GameId constructor.
      *
      * @param UuidInterface $uuid
+     *
+     * @throws GameNotFoundException
      */
     private function __construct(UuidInterface $uuid)
     {
         $this->gameId = $uuid->toString();
+
+        // Only Uuid version 1 is a valid GameId.
+        if ($uuid->getVersion() !== 1) {
+            throw new GameNotFoundException();
+        }
     }
 
     /**
@@ -36,10 +44,17 @@ final class GameId
      * @param string $gameId
      *
      * @return GameId
+     * @throws GameNotFoundException
      */
     public static function fromString(string $gameId): GameId
     {
-        return new self(Uuid::fromString($gameId));
+        try {
+            return new self(Uuid::fromString($gameId));
+        } catch (\Exception $exception) {
+            // This occurs if the given string is an invalid Uuid, hence an invalid GameId.
+            // Throw exception, that the game can't be found.
+            throw new GameNotFoundException();
+        }
     }
 
     /**
