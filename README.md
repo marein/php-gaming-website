@@ -300,7 +300,8 @@ You may have seen that currently only one MySQL and one Redis instance is config
 I don't want to wait hours until the development environment is starting.
 Of course, that's different in the production environment.
 You can for sure configure different databases for the contexts. Have a look at the
-[configuration file](/container/environment.env). We can split this even further.
+[configuration file](/code/environment.env.dist).
+We can split this even further.
 For example, we can create a Redis instance per query model in the "Connect Four" context.
 Of course, the code must be adapted. Whether it's worth it is another question.
 
