@@ -23,5 +23,3 @@ services:
         public: false
         arguments:
             - '%env(GAMBLING_WEB_INTERFACE_NCHAN_BASE_URL)%'
-            - '%env(GAMBLING_WEB_INTERFACE_NCHAN_USERNAME)%'
-            - '%env(GAMBLING_WEB_INTERFACE_NCHAN_PASSWORD)%'
