@@ -4,6 +4,15 @@ services:
     ##############################
     #  Database and application  #
     ##############################
+    traefik:
+        image: marein/php-gambling-website:traefik
+        command: --api --docker
+        ports:
+            - "80:80"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        labels:
+            - "traefik.enable=false"
     mysql:
         image: marein/php-gambling-website:mysql
         command: mysqld
@@ -12,33 +21,40 @@ services:
         volumes:
            - mysql:/var/lib/mysql
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     redis:
         image: marein/php-gambling-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis:/data
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     rabbit-mq:
         image: marein/php-gambling-website:rabbit-mq
         hostname: rabbit-mq
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     nchan:
         image: marein/php-gambling-website:nchan
-        ports:
-            - "8080:80"
         links:
             - redis
         restart: on-failure
+        labels:
+            - "traefik.priority=20"
+            - "traefik.frontend.rule=PathPrefix:/sse"
     nginx:
         image: marein/php-gambling-website:nginx
-        ports:
-            - "80:80"
-            - "443:433"
         links:
             - php-fpm
         restart: on-failure
+        labels:
+            - "traefik.priority=10"
+            - "traefik.frontend.rule=PathPrefix:/"
     php-fpm:
         image: marein/php-gambling-website:php-fpm
         environment:
@@ -50,6 +66,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
 
     ##############################
     #   Long running processes   #
@@ -65,6 +83,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-connect-four-publish-stored-events-to-rabbit-mq:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
@@ -76,6 +96,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-chat-publish-stored-events-to-rabbit-mq:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
@@ -87,6 +109,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-web-interface-publish-running-games-count-to-nchan:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
@@ -98,6 +122,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-web-interface-publish-rabbit-mq-events-to-nchan:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
@@ -109,6 +135,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-chat-command-listener:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console chat:command-listener --env=prod
@@ -120,6 +148,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-connect-four-referee:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console connect-four:referee --env=prod
@@ -131,6 +161,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
 
 volumes:
     mysql:

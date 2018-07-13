@@ -80,6 +80,11 @@ pushToDockerHub() {
         .
 
     docker build \
+        --file container/traefik/Dockerfile \
+        --tag marein/php-gambling-website:traefik \
+        .
+
+    docker build \
         --file container/nginx/Dockerfile \
         --tag marein/php-gambling-website:nginx \
         .
@@ -105,6 +110,7 @@ pushToDockerHub() {
         .
 
     docker push marein/php-gambling-website:php-fpm
+    docker push marein/php-gambling-website:traefik
     docker push marein/php-gambling-website:nginx
     docker push marein/php-gambling-website:nchan
     docker push marein/php-gambling-website:mysql

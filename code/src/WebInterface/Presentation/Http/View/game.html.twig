@@ -89,7 +89,7 @@
                 document.getElementById('chat'),
                 '{{ game.chatId }}'
             );
-            startEventSource(top.location.protocol + '//' + top.location.host + ':8080/sub?id=game-{{ game.gameId }}');
+            startEventSource(top.location.protocol + '//' + top.location.host + '/sse/sub?id=game-{{ game.gameId }}');
         })();
     </script>
 {% endblock %}

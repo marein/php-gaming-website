@@ -17,6 +17,8 @@ __Table of contents__
 
 ## Overview
 
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://github.com/marein/php-gambling-website/blob/master/docker-compose.production.yml&stack_name=php-gambling-website)
+
 This is my playground project to explore new ideas and concepts. It's a gambling website where people can play against
 each other. Currently, the only game is [Connect Four](#connect-four) but I plan other games to show more concepts.
 

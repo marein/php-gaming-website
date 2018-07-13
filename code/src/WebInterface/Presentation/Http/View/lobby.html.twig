@@ -45,7 +45,7 @@
                 app.gameService,
                 document.querySelector('[data-open-game-button]')
             );
-            startEventSource(top.location.protocol + '//' + top.location.host + ':8080/sub?id=lobby');
+            startEventSource(top.location.protocol + '//' + top.location.host + '/sse/sub?id=lobby');
         })();
     </script>
 {% endblock %}

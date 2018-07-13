@@ -4,6 +4,18 @@ services:
     ##############################
     #  Database and application  #
     ##############################
+    traefik:
+        build:
+            context: .
+            dockerfile: ./container/traefik/Dockerfile
+        command: --api --docker
+        ports:
+            - "80:80"
+            - "8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        labels:
+            - "traefik.enable=false"
     mysql:
         build:
             context: .
@@ -16,6 +28,8 @@ services:
         volumes:
            - mysql:/var/lib/mysql
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     redis:
         build:
             context: .
@@ -24,6 +38,8 @@ services:
         volumes:
             - redis:/data
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     rabbit-mq:
         build:
             context: .
@@ -34,27 +50,30 @@ services:
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     nchan:
         build:
             context: .
             dockerfile: ./container/nchan/Dockerfile
-        ports:
-            - "8080:80"
         links:
             - redis
         restart: on-failure
+        labels:
+            - "traefik.priority=20"
+            - "traefik.frontend.rule=PathPrefix:/sse"
     nginx:
         build:
             context: .
             dockerfile: ./container/nginx/Dockerfile
-        ports:
-            - "80:80"
-            - "443:433"
         links:
             - php-fpm
         volumes:
             - frontend:/project/web
         restart: on-failure
+        labels:
+            - "traefik.priority=10"
+            - "traefik.frontend.rule=PathPrefix:/"
     php-fpm:
         build:
             context: .
@@ -73,6 +92,8 @@ services:
             - ./code/var:/project/var
             - vendor:/project/vendor
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
 
     ##############################
     #   Long running processes   #
@@ -90,6 +111,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-connect-four-publish-stored-events-to-rabbit-mq:
         build:
             context: .
@@ -103,6 +126,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-chat-publish-stored-events-to-rabbit-mq:
         build:
             context: .
@@ -116,6 +141,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-web-interface-publish-running-games-count-to-nchan:
         build:
             context: .
@@ -129,6 +156,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-web-interface-publish-rabbit-mq-events-to-nchan:
         build:
             context: .
@@ -142,6 +171,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-chat-command-listener:
         build:
             context: .
@@ -155,6 +186,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
     php-connect-four-referee:
         build:
             context: .
@@ -168,6 +201,8 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+        labels:
+            - "traefik.enable=false"
 
     ##############################
     #     Development helper     #
@@ -181,6 +216,8 @@ services:
         volumes:
             - ./code/src:/project/src
             - frontend:/project/web
+        labels:
+            - "traefik.enable=false"
     php:
         build:
             context: .
@@ -190,6 +227,8 @@ services:
             - ./code/src:/project/src
             - ./code/tests:/project/tests
             - vendor:/project/vendor
+        labels:
+            - "traefik.enable=false"
     composer:
         build:
             context: .
@@ -200,6 +239,8 @@ services:
             - ./code/composer.json:/project/composer.json
             - ./code/composer.lock:/project/composer.lock
             - vendor:/project/vendor
+        labels:
+            - "traefik.enable=false"
 
 volumes:
     frontend:
