@@ -19,7 +19,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: password
         volumes:
-           - mysql-chat:/var/lib/mysql
+            - mysql-chat:/var/lib/mysql
         restart: on-failure
         labels:
             - "traefik.enable=false"
@@ -29,7 +29,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: password
         volumes:
-           - mysql-connect-four:/var/lib/mysql
+            - mysql-connect-four:/var/lib/mysql
         restart: on-failure
         labels:
             - "traefik.enable=false"
@@ -39,7 +39,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: password
         volumes:
-           - mysql-identity:/var/lib/mysql
+            - mysql-identity:/var/lib/mysql
         restart: on-failure
         labels:
             - "traefik.enable=false"

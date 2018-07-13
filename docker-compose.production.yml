@@ -19,7 +19,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: password
         volumes:
-           - mysql:/var/lib/mysql
+            - mysql:/var/lib/mysql
         restart: on-failure
         labels:
             - "traefik.enable=false"
