@@ -2,9 +2,9 @@
 
 .DEFAULT_GOAL := build
 
-CSS_DESTINATION := web/main.css
+CSS_DESTINATION := web/assets/main.css
 CSS_SOURCE := src/WebInterface/Presentation/Http/StyleSheet/unstructured.css
-JS_DESTINATION := web/main.js
+JS_DESTINATION := web/assets/main.js
 JS_SOURCE := $(shell find src/WebInterface/Presentation/Http/JavaScript -type f \( -name '*.js' ! -name '*bootstrap.js' \)) \
 	src/WebInterface/Presentation/Http/JavaScript/bootstrap.js
 

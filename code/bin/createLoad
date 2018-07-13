@@ -6,7 +6,7 @@
  * The script creates x games and play this games until it draws or a winner is chosen.
  * This creates good load on the server when it's called in parallel.
  *
- * Usage: ./stress [host] [numberOfGamesToPlay]
+ * Usage: ./createLoad [host] [numberOfGamesToPlay]
  */
 
 final class AvarageTimeCalculator
@@ -196,9 +196,9 @@ final class Client
 if (count($argv) !== 3) {
     die(
         PHP_EOL .
-        'Usage: ./stress [host] [numberOfGamesToPlay]' .
+        'Usage: ./createLoad [host] [numberOfGamesToPlay]' .
         PHP_EOL .
-        'For example: ./stress http://localhost 10' .
+        'For example: ./createLoad http://localhost 10' .
         PHP_EOL .
         PHP_EOL
     );

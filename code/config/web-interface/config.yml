@@ -14,7 +14,7 @@ framework:
 
 twig:
     paths:
-        "%kernel.root_dir%/../src/WebInterface/Presentation/Http/View": web-interface
+        "%kernel.project_dir%/src/WebInterface/Presentation/Http/View": web-interface
 
 dunglas_angular_csrf:
     cookie:

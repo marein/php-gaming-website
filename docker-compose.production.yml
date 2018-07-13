@@ -5,82 +5,57 @@ services:
     #  Database and application  #
     ##############################
     mysql:
-        build:
-            context: .
-            dockerfile: ./container/mysql/Dockerfile
+        image: marein/php-gambling-website:mysql
         command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
-        ports:
-            - "3306:3306"
         volumes:
            - mysql:/var/lib/mysql
         restart: on-failure
     redis:
-        build:
-            context: .
-            dockerfile: ./container/redis/Dockerfile
+        image: marein/php-gambling-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis:/data
         restart: on-failure
     rabbit-mq:
-        build:
-            context: .
-            dockerfile: ./container/rabbit-mq/Dockerfile
+        image: marein/php-gambling-website:rabbit-mq
         hostname: rabbit-mq
-        ports:
-            - "15672:15672"
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
         restart: on-failure
     nchan:
-        build:
-            context: .
-            dockerfile: ./container/nchan/Dockerfile
+        image: marein/php-gambling-website:nchan
         ports:
             - "8080:80"
         links:
             - redis
         restart: on-failure
     nginx:
-        build:
-            context: .
-            dockerfile: ./container/nginx/Dockerfile
+        image: marein/php-gambling-website:nginx
         ports:
             - "80:80"
             - "443:433"
         links:
             - php-fpm
-        volumes:
-            - frontend:/project/web
         restart: on-failure
     php-fpm:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+        image: marein/php-gambling-website:php-fpm
         environment:
+            GAMBLING_ENVIRONMENT: prod
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
             - mysql
             - redis
             - rabbit-mq
             - nchan
-        volumes:
-            - ./code/config:/project/config
-            - ./code/src:/project/src
-            - ./code/tests:/project/tests
-            - ./code/var:/project/var
-            - vendor:/project/vendor
         restart: on-failure
 
     ##############################
     #   Long running processes   #
     ##############################
     php-connect-four-build-query-model:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+        image: marein/php-gambling-website:php-fpm
         command: /project/bin/console connect-four:build-query-model --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -91,9 +66,7 @@ services:
             - nchan
         restart: on-failure
     php-connect-four-publish-stored-events-to-rabbit-mq:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+        image: marein/php-gambling-website:php-fpm
         command: /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -104,9 +77,7 @@ services:
             - nchan
         restart: on-failure
     php-chat-publish-stored-events-to-rabbit-mq:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+        image: marein/php-gambling-website:php-fpm
         command: /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -117,9 +88,7 @@ services:
             - nchan
         restart: on-failure
     php-web-interface-publish-running-games-count-to-nchan:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+        image: marein/php-gambling-website:php-fpm
         command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -130,9 +99,7 @@ services:
             - nchan
         restart: on-failure
     php-web-interface-publish-rabbit-mq-events-to-nchan:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+        image: marein/php-gambling-website:php-fpm
         command: /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -143,9 +110,7 @@ services:
             - nchan
         restart: on-failure
     php-chat-command-listener:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+        image: marein/php-gambling-website:php-fpm
         command: /project/bin/console chat:command-listener --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -156,9 +121,7 @@ services:
             - nchan
         restart: on-failure
     php-connect-four-referee:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+        image: marein/php-gambling-website:php-fpm
         command: /project/bin/console connect-four:referee --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -169,41 +132,7 @@ services:
             - nchan
         restart: on-failure
 
-    ##############################
-    #     Development helper     #
-    ##############################
-    frontend-builder:
-        build:
-            context: .
-            dockerfile: ./container/nginx/Dockerfile
-            target: builder
-        working_dir: /project
-        volumes:
-            - ./code/src:/project/src
-            - frontend:/project/web
-    php:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
-        entrypoint: docker-php-entrypoint
-        volumes:
-            - ./code/src:/project/src
-            - ./code/tests:/project/tests
-            - vendor:/project/vendor
-    composer:
-        build:
-            context: .
-            dockerfile: ./container/php-fpm/Dockerfile
-            target: builder
-        working_dir: /project
-        volumes:
-            - ./code/composer.json:/project/composer.json
-            - ./code/composer.lock:/project/composer.lock
-            - vendor:/project/vendor
-
 volumes:
-    frontend:
-    vendor:
     mysql:
     redis:
     rabbit-mq:

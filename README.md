@@ -39,11 +39,16 @@ To get a ready-to-start project, the code and the development environment are in
 
 ## Installation and requirements
 
-To install the project with the built in script you need
+I recommend to use
 [Docker](https://www.docker.com),
-[Docker Compose](https://docs.docker.com/compose/),
-and an unix-like shell, since the build script use the "rm -rf" command.
-Surely you can setup a server yourself.
+[Docker Compose](https://docs.docker.com/compose/).
+You can certainly set up a server yourself.
+
+Since I use the latest JavaScript techniques, like EcmaScript 6, it doesn't work in all browsers.
+Currently, it's only tested with Safari.
+Don't look at the front end design, this is by no means my domain.
+
+### Development
 
 ```
 git clone https://github.com/marein/php-gambling-website
@@ -51,19 +56,28 @@ cd php-gambling-website
 ./project build
 ```
 
-__Note__  
-If you update your local repository, you have to "./project build" again.
-This project is in development and I don't pollute the code with schema changes at this stage.
-
-There're several other commands in the project script. You see them with
+There're several other handy commands in the project script, like running tests or a static analyzer. You see them with
 
 ```
 ./project help
 ```
 
-Since I use the latest JavaScript techniques, like EcmaScript 6, it doesn't work in all browsers.
-Currently, it's only tested with Safari.
-Don't look at the front end design, this is by no means my domain.
+__Note__  
+If you update your local repository, you have to "./project build" again.
+This project is in development and I don't pollute the code with schema changes at this stage.
+
+### Production
+
+The
+[production images](https://hub.docker.com/r/marein/php-gambling-website/)
+are built when pushed to git master. They always reflect the latest stable version.
+
+```
+git clone https://github.com/marein/php-gambling-website
+cd php-gambling-website
+docker-compose -f docker-compose.production.yml pull
+docker-compose -f docker-compose.production.yml up
+```
 
 ## Context is king
 
@@ -249,7 +263,7 @@ I've assigned an abstraction layer to the Web Interface context for easier migra
 
 To have single deployable units, the following steps needs to be done
 1. Copy the folders (at
-[config](/code/app/config),
+[config](/code/config),
 [src](/code/src)
 and
 [tests](/code/tests))
@@ -301,6 +315,8 @@ I don't want to wait hours until the development environment is starting.
 Of course, that's different in the production environment.
 You can for sure configure different databases for the contexts. Have a look at the
 [configuration file](/code/environment.env.dist).
+There is an example. Have a look at the
+[advanced production compose file](/docker-compose.production-advanced.yml).
 We can split this even further.
 For example, we can create a Redis instance per query model in the "Connect Four" context.
 Of course, the code must be adapted. Whether it's worth it is another question.

@@ -3,7 +3,7 @@
 <head>
     <title>Gambling</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <link rel="stylesheet" href="{{ asset('main.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/main.css') }}"/>
 </head>
 <body>
 <ul class="notification" id="notification"></ul>
@@ -13,7 +13,7 @@
     <a href="{{ path('profile') }}">Profile</a>
 </nav>
 {% block content %}{% endblock %}
-<script type="text/javascript" src="{{ asset('main.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/main.js') }}"></script>
 <script type="text/javascript">
     {# Propagate environment to browser #}
     app.isDebug = '{{ app.environment == 'dev' }}';

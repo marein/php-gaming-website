@@ -10,10 +10,7 @@
   "autoload": {
     "psr-4": {
       "Gambling\\": "src/"
-    },
-    "classmap": [
-      "app/AppKernel.php"
-    ]
+    }
   },
   "require": {
     "php": ">=7.1",

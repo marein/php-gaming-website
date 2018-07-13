@@ -8,23 +8,14 @@ help() {
     echo build
     echo Build the environment for development.
     echo
-    echo speedup
-    echo Run this on the development environment to speed up the php autoloader.
-    echo
     echo up
     echo Shorthand to start an already built project.
-    echo
-    echo stop
-    echo Shorthand to stop a started project.
     echo
     echo down
     echo Shorthand to down a started project.
     echo
     echo assets
     echo Build assets for the browser and watch for changes.
-    echo
-    echo removeGeneratedFiles
-    echo Remove vendors, databases, frontend builds and symfony cache.
     echo
     echo tests
     echo Run tests.
@@ -38,36 +29,21 @@ help() {
     echo phpstan
     echo Run phpstan.
     echo
+    echo pushToDockerHub
+    echo Build te production images and push them to DockerHub.
+    echo
 }
 
 build() {
-    docker-compose stop
-    docker-compose rm -f
-    removeSymfonyCache
-    removeDatabaseFiles
+    docker-compose down --volumes
     docker-compose build --pull
-    startDatabaseServices
-    docker-compose run frontend-building make
-    docker-compose run composer composer install
-    createDatabases
+    docker-compose up -d composer
+    docker cp "$(docker-compose ps -q composer)":/project/vendor code/vendor
     docker-compose up --remove-orphan
 }
 
-speedup() {
-    removeSymfonyCache
-    docker-compose run composer composer install --optimize-autoloader --no-dev --classmap-authoritative
-    startDatabaseServices
-    docker-compose up -d
-}
-
 up() {
-    removeSymfonyCache
-    startDatabaseServices
     docker-compose up
-}
-
-stop() {
-    docker-compose stop
 }
 
 down() {
@@ -75,68 +51,65 @@ down() {
 }
 
 assets() {
-    docker-compose run frontend-building watch -n 1 make
+    docker-compose run frontend-builder watch -n 1 make
 }
 
 tests() {
-    docker-compose run php-tests vendor/bin/phpunit --coverage-text
+    docker-compose run php vendor/bin/phpunit --coverage-text
 }
 
 showTests() {
-    docker-compose run php-tests vendor/bin/phpunit --testdox
+    docker-compose run php vendor/bin/phpunit --testdox
 }
 
 phpcs() {
-    docker-compose run php-tests vendor/bin/phpcs tests src --standard=PSR2
+    docker-compose run php vendor/bin/phpcs tests src --standard=PSR2
 }
 
 phpstan() {
-    docker-compose run php-tests vendor/bin/phpstan analyse -l 2 src
+    docker-compose run php vendor/bin/phpstan analyse -l 2 src
 }
 
-removeGeneratedFiles() {
-    removeSymfonyCache
-    removeDatabaseFiles
-    removeVendors
-    removeFrontendBuilds
-}
+pushToDockerHub() {
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-removeSymfonyCache() {
-    rm -rf code/var/*
-}
+    docker build \
+        --build-arg environment=production \
+        --file container/php-fpm/Dockerfile \
+        --tag marein/php-gambling-website:php-fpm \
+        .
 
-removeDatabaseFiles() {
-    rm -rf container/mysql/data/*
-    rm -rf container/redis/data/*
-    rm -rf container/rabbit-mq/data/*
-}
+    docker build \
+        --file container/nginx/Dockerfile \
+        --tag marein/php-gambling-website:nginx \
+        .
 
-removeVendors() {
-    rm -rf code/vendor/*
-}
+    docker build \
+        --file container/nchan/Dockerfile \
+        --tag marein/php-gambling-website:nchan \
+        .
 
-removeFrontendBuilds() {
-    rm -f code/web/main.js
-    rm -f code/web/main.css
-}
+    docker build \
+        --file container/mysql/Dockerfile \
+        --tag marein/php-gambling-website:mysql \
+        .
 
-createDatabases() {
-    docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=chat
-    docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=connect_four
-    docker-compose run php-fpm /project/bin/console doctrine:database:create --connection=identity
-    docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/chat/migrations.yml --db=chat -n
-    docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/connect-four/migrations.yml --db=connect_four -n
-    docker-compose run php-fpm /project/bin/console doctrine:migrations:migrate --configuration=/project/app/config/identity/migrations.yml --db=identity -n
-}
+    docker build \
+        --file container/redis/Dockerfile \
+        --tag marein/php-gambling-website:redis \
+        .
 
-startDatabaseServices() {
-    docker-compose up -d mysql
-    docker-compose up -d redis
-    docker-compose up -d rabbit-mq
-    docker-compose up -d nchan
+    docker build \
+        --file container/rabbit-mq/Dockerfile \
+        --tag marein/php-gambling-website:rabbit-mq \
+        .
 
-    # Wait for the databases
-    sleep 15
+    docker push marein/php-gambling-website:php-fpm
+    docker push marein/php-gambling-website:nginx
+    docker push marein/php-gambling-website:nchan
+    docker push marein/php-gambling-website:mysql
+    docker push marein/php-gambling-website:redis
+    docker push marein/php-gambling-website:rabbit-mq
 }
 
 if [ "$*" = "" ]

@@ -9,6 +9,7 @@ doctrine:
         connections:
             identity:
                 url: '%env(GAMBLING_IDENTITY_DOCTRINE_DBAL_URL)%'
+                server_version: 8.0
                 charset: utf8mb4
                 default_table_options:
                      charset: utf8mb4
@@ -20,5 +21,5 @@ doctrine:
                 mappings:
                     user:
                         type:     yml
-                        dir:      '%kernel.root_dir%/../src/Identity/Port/Adapter/Persistence/Mapping/User'
+                        dir:      '%kernel.project_dir%/src/Identity/Port/Adapter/Persistence/Mapping/User'
                         prefix:   Gambling\Identity\Domain\Model\User

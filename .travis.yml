@@ -25,6 +25,8 @@ install:
 script:
     - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
     - vendor/bin/phpcs tests src --standard=PSR2
+    # todo: Build and start production containers here.
+    # todo: Run acceptance test suite after containers are started.
 
 after_success:
     - travis_retry vendor/bin/php-coveralls -v
@@ -32,6 +34,6 @@ after_success:
 
 deploy:
     provider: script
-    script: bash docker-push
+    script: bash project pushToDockerHub
     on:
        branch: master

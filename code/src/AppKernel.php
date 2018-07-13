@@ -19,7 +19,7 @@ class AppKernel extends BaseKernel
      */
     public function getCacheDir()
     {
-        return $this->rootDir . '/../var/cache/' . $this->environment;
+        return $this->getProjectDir() . '/var/cache/' . $this->environment;
     }
 
     /**
@@ -27,7 +27,7 @@ class AppKernel extends BaseKernel
      */
     public function getLogDir()
     {
-        return $this->rootDir . '/../var/logs';
+        return $this->getProjectDir() . '/var/logs';
     }
 
     /**
@@ -56,6 +56,6 @@ class AppKernel extends BaseKernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
+        $loader->load($this->getProjectDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 }
