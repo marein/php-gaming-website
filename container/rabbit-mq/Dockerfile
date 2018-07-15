@@ -1,1 +1,1 @@
-FROM rabbitmq:3.6-management
+FROM rabbitmq:3.6-management-alpine
