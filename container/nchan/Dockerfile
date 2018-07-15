@@ -1,4 +1,4 @@
-FROM meroje/alpine-nchan:standard
+FROM meroje/alpine-nchan:1.1.15
 
 COPY /container/nchan/default.conf /etc/nginx/conf.d/default.conf
 
