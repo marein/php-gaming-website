@@ -1,1 +1,1 @@
-FROM redis:3.0
+FROM redis:4.0-alpine
