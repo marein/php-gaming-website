@@ -6,13 +6,13 @@ services:
     ##############################
     traefik:
         image: marein/php-gambling-website:traefik
-        command: --api --docker
         ports:
             - "80:80"
+        links:
+            - nchan
+            - nginx
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-        labels:
-            - "traefik.enable=false"
     mysql-chat:
         image: marein/php-gambling-website:mysql
         command: mysqld
@@ -21,8 +21,6 @@ services:
         volumes:
             - mysql-chat:/var/lib/mysql
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     mysql-connect-four:
         image: marein/php-gambling-website:mysql
         command: mysqld
@@ -31,8 +29,6 @@ services:
         volumes:
             - mysql-connect-four:/var/lib/mysql
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     mysql-identity:
         image: marein/php-gambling-website:mysql
         command: mysqld
@@ -41,62 +37,49 @@ services:
         volumes:
             - mysql-identity:/var/lib/mysql
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     redis:
         image: marein/php-gambling-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis:/data
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     redis-chat:
         image: marein/php-gambling-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis-chat:/data
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     redis-connect-four:
         image: marein/php-gambling-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis-connect-four:/data
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     redis-identity:
         image: marein/php-gambling-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis-identity:/data
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     redis-web-interface:
         image: marein/php-gambling-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis-web-interface:/data
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     rabbit-mq:
         image: marein/php-gambling-website:rabbit-mq
         hostname: rabbit-mq
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     nchan:
         image: marein/php-gambling-website:nchan
         links:
             - redis
         restart: on-failure
         labels:
+            - "traefik.enable=true"
             - "traefik.priority=20"
             - "traefik.frontend.rule=PathPrefix:/sse"
     nginx:
@@ -105,6 +88,7 @@ services:
             - php-fpm
         restart: on-failure
         labels:
+            - "traefik.enable=true"
             - "traefik.priority=10"
             - "traefik.frontend.rule=PathPrefix:/"
     php-fpm:
@@ -123,8 +107,6 @@ services:
             - mysql-connect-four
             - mysql-identity
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
 
     ##############################
     #   Long running processes   #
@@ -145,8 +127,6 @@ services:
             - redis-connect-four
             - rabbit-mq
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     php-connect-four-publish-stored-events-to-rabbit-mq:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
@@ -163,8 +143,6 @@ services:
             - redis-connect-four
             - rabbit-mq
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     php-chat-publish-stored-events-to-rabbit-mq:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
@@ -181,8 +159,6 @@ services:
             - redis-chat
             - rabbit-mq
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     php-web-interface-publish-running-games-count-to-nchan:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
@@ -199,8 +175,6 @@ services:
             - nchan
             - rabbit-mq
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     php-web-interface-publish-rabbit-mq-events-to-nchan:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
@@ -217,8 +191,6 @@ services:
             - nchan
             - rabbit-mq
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     php-chat-command-listener:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console chat:command-listener --env=prod
@@ -234,8 +206,6 @@ services:
             - mysql-identity
             - rabbit-mq
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
     php-connect-four-referee:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console connect-four:referee --env=prod
@@ -251,8 +221,6 @@ services:
             - mysql-identity
             - rabbit-mq
         restart: on-failure
-        labels:
-            - "traefik.enable=false"
 
 volumes:
     mysql-chat:
