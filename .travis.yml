@@ -15,21 +15,25 @@ env:
         # DOCKER_PASSWORD
         - secure: xZOsnT0NAWqO+aPq1FFjEXwGSXZtlCSGI+AIMwAeNMqqtf1eElkEEMfPfpj8ck4cAZ/EcSuCjPWvmo3rBJwgTzfn+Nj4vnb2WO/sa5nk4rSNywQrz07I7NeSFEfZY1cD6rADOrRKNB2Bapx4h7gBCMxEL7RBEfr5tERo5kttOgMOPp9hmplj2eQTWlcFo/jNNMQ8B56muG8QQpqkmHn9B0wRck4sjRMLM1YGI1418TnZ5sTf9cQBviVqH+n+k123RSrRYgU8m3LG6QdULyPQxsV9smadii1mk+oGWi3Ula0JVfs7HCCpvJo/4zJow4CH/Q/XYrrgtRBL1gHJ2lCTKeuoY2RT3ov1KcuMxxh+n+4pO+MFKOyl2TInydCuyGmaN2phB3FzjXPv7q11WqCH8xzr/juHebOTvQ50sNZHZEwXZelynvwLcE+1ejVxkVodQQwuKoSqaK762X18+srn1tSKqKgHL5OCWBb39vhvdz5CGNfr+5R8axrMKL/BvxWyqYNrEJqseFDvF3eua/byaCHw7lJmfq7j/aT4os0fDp9/raeHHRjoht/ebbuzJCcE4WGv0/asrgKRx4wczhNuVEE3BZbXzLH3XuyLgg7x/nJ2utJe0asly3GfjL5KyztbPKK/LdGhsHKBezKGKxg5jUbWN6QGpgnPGOE1edWUOaA=
 
-before_install:
-    - cd code
-
 install:
-    - composer install
-    - mkdir -p build/logs
+    - mkdir -p code/build/logs code/build/bin
+    - docker build --file container/php-fpm/Dockerfile --tag marein/php-gambling-website:php-fpm-development .
 
 script:
-    - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-    - vendor/bin/phpcs tests src --standard=PSR2
+    - docker run --rm --volume $(pwd)/code/build:/project/build marein/php-gambling-website:php-fpm-development php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+    - docker run --rm marein/php-gambling-website:php-fpm-development php vendor/bin/phpcs tests src --standard=PSR2 -v
     # todo: Build and start production containers here.
     # todo: Run acceptance test suite after containers are started.
 
 after_success:
-    - travis_retry vendor/bin/php-coveralls -v
+    # We can't run php-coveralls inside our container because it needs information from the git repository.
+    # To get this to work we need to run sed over the clover.xml and replace the project root directory within the
+    # container with the travis build directory. php-coveralls can now find all the information it needs.
+    - cd code
+    - sed -i 's@/project/@'$(pwd)/'@g' build/logs/clover.xml
+    - travis_retry wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar -O build/bin/php-coveralls.phar
+    - travis_retry php build/bin/php-coveralls.phar -v
+    - rm -rf build
     - cd ..
 
 deploy:
