@@ -22,6 +22,7 @@ install:
 script:
     - docker run --rm --volume $(pwd)/code/build:/project/build marein/php-gambling-website:php-fpm-development php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
     - docker run --rm marein/php-gambling-website:php-fpm-development php vendor/bin/phpcs tests src --standard=PSR2 -v
+    - docker run --rm marein/php-gambling-website:php-fpm-development php vendor/bin/phpstan analyse -l 2 src
     # todo: Build and start production containers here.
     # todo: Run acceptance test suite after containers are started.
 
