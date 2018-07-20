@@ -6,6 +6,7 @@ use Gambling\Common\EventStore\EventStore;
 use Gambling\Common\EventStore\FollowEventStoreDispatcher;
 use Gambling\Common\EventStore\InMemoryCacheEventStorePointer;
 use Gambling\Common\EventStore\StoredEventPublisher;
+use Gambling\Common\EventStore\ThrottlingEventStore;
 use Gambling\Common\MessageBroker\MessageBroker;
 use Gambling\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gambling\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
@@ -81,14 +82,12 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
 
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
             $eventStorePointer,
-            $this->eventStore,
+            new ThrottlingEventStore($this->eventStore, 100),
             $storedEventPublisher
         );
 
         while (true) {
             $followEventStoreDispatcher->dispatch(1000);
-
-            usleep(100000);
         }
     }
 }

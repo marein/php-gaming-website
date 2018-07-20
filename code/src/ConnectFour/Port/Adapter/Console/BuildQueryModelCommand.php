@@ -6,6 +6,7 @@ use Gambling\Common\EventStore\EventStore;
 use Gambling\Common\EventStore\FollowEventStoreDispatcher;
 use Gambling\Common\EventStore\InMemoryCacheEventStorePointer;
 use Gambling\Common\EventStore\StoredEventPublisher;
+use Gambling\Common\EventStore\ThrottlingEventStore;
 use Gambling\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gambling\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
 use Gambling\ConnectFour\Port\Adapter\Persistence\Projection\PredisGameProjection;
@@ -71,14 +72,12 @@ final class BuildQueryModelCommand extends Command
 
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
             $eventStorePointer,
-            $this->eventStore,
+            new ThrottlingEventStore($this->eventStore, 2000),
             $storedEventPublisher
         );
 
         while (true) {
             $followEventStoreDispatcher->dispatch(1000);
-
-            sleep(2);
         }
     }
 }
