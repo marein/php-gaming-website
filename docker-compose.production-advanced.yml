@@ -37,12 +37,6 @@ services:
         volumes:
             - mysql-identity:/var/lib/mysql
         restart: on-failure
-    redis:
-        image: marein/php-gambling-website:redis
-        command: redis-server --appendonly yes
-        volumes:
-            - redis:/data
-        restart: on-failure
     redis-chat:
         image: marein/php-gambling-website:redis
         command: redis-server --appendonly yes
@@ -75,8 +69,6 @@ services:
         restart: on-failure
     nchan:
         image: marein/php-gambling-website:nchan
-        links:
-            - redis
         restart: on-failure
         labels:
             - "traefik.enable=true"
@@ -226,7 +218,6 @@ volumes:
     mysql-chat:
     mysql-connect-four:
     mysql-identity:
-    redis:
     redis-chat:
     redis-connect-four:
     redis-identity:

@@ -50,8 +50,6 @@ services:
         build:
             context: .
             dockerfile: ./container/nchan/Dockerfile
-        links:
-            - redis
         restart: on-failure
         labels:
             - "traefik.enable=true"

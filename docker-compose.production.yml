@@ -35,8 +35,6 @@ services:
         restart: on-failure
     nchan:
         image: marein/php-gambling-website:nchan
-        links:
-            - redis
         restart: on-failure
         labels:
             - "traefik.enable=true"
