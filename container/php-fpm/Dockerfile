@@ -7,11 +7,12 @@ ARG environment=development
 
 RUN docker-php-ext-install bcmath
 
+COPY /container/php-fpm/composer-install.sh /container/php-fpm/composer-install-after-code-copy.sh /
 COPY /code/composer.json /code/composer.lock /project/
-COPY /container/php-fpm/composer-install.sh /
 RUN cd /project && /composer-install.sh
 
 COPY /code /project
+RUN cd /project && /composer-install-after-code-copy.sh
 
 ##############################
 #       Build php-fpm        #
