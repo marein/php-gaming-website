@@ -10,6 +10,14 @@ final class StoredEventPublisher
     private $subscribers;
 
     /**
+     * StoredEventPublisher constructor.
+     */
+    public function __construct()
+    {
+        $this->subscribers = [];
+    }
+
+    /**
      * Add subscriber.
      *
      * @param StoredEventSubscriber $subscriber

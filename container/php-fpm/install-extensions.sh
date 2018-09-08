@@ -5,6 +5,7 @@ docker-php-ext-install bcmath
 
 if [ "$environment" = "development" ]
 then
+    apk add --no-cache $PHPIZE_DEPS
     pecl install xdebug
     docker-php-ext-enable xdebug
 else
