@@ -20,7 +20,17 @@
 
     <filter>
         <whitelist>
-            <directory>./src</directory>
+            <!--
+                We want a high test coverage for our business logic and some special classes.
+                Other parts would be covered by acceptance tests in the future.
+
+                Libraries in the ./src/Common folder have tests but are not counted in the coverage report.
+                Those libraries are meant to be split out in the future. They don't belong to this project.
+            -->
+            <directory>./src/Chat/Application</directory>
+            <directory>./src/ConnectFour/Application/Game/Query/Model/Game</directory>
+            <directory>./src/ConnectFour/Domain</directory>
+            <directory>./src/Identity/Domain</directory>
         </whitelist>
     </filter>
 </phpunit>
