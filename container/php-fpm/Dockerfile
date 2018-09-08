@@ -17,11 +17,13 @@ RUN cd /project && /composer-install-after-code-copy.sh
 ##############################
 #       Build php-fpm        #
 ##############################
-FROM php:7.2-fpm
+FROM php:7.2-fpm-alpine
 
 ARG environment=development
 
 WORKDIR /project
+
+RUN apk add --no-cache --update bash
 
 COPY /container/php-fpm/install-extensions.sh /container/php-fpm/entrypoint.sh /container/php-fpm/cache-warmup.sh /
 RUN /install-extensions.sh
