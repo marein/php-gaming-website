@@ -17,14 +17,15 @@ env:
 
 install:
     - mkdir -p code/build/logs code/build/bin
-    - docker build --file container/php-fpm/Dockerfile --tag marein/php-gambling-website:php-fpm-development .
+    - bash project buildProductionImages
 
 script:
-    - docker run --rm --volume $(pwd)/code/build:/project/build marein/php-gambling-website:php-fpm-development php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-    - docker run --rm marein/php-gambling-website:php-fpm-development php vendor/bin/phpcs tests src --standard=PSR2 -v
-    - docker run --rm marein/php-gambling-website:php-fpm-development php vendor/bin/phpstan analyse -l 2 src
-    # todo: Build and start production containers here.
-    # todo: Run acceptance test suite after containers are started.
+    - docker-compose -f docker-compose.ci.yml run -v $(pwd)/code/build:/project/build php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+    - docker-compose -f docker-compose.ci.yml run php vendor/bin/phpcs src tests/unit --standard=PSR2 -v
+    - docker-compose -f docker-compose.ci.yml run php vendor/bin/phpstan analyse -l 2 src
+    - docker-compose -f docker-compose.ci.yml up -d
+    - docker-compose -f docker-compose.ci.yml run php bin/waitForIt php-fpm:9000 --timeout=120 -- vendor/bin/codecept run
+    - docker-compose -f docker-compose.ci.yml down -v
 
 after_success:
     # We can't run php-coveralls inside our container because it needs information from the git repository.
@@ -39,6 +40,6 @@ after_success:
 
 deploy:
     provider: script
-    script: bash project pushToDockerHub
+    script: bash project pushProductionImages
     on:
        branch: master
