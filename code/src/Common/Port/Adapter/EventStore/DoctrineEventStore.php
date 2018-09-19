@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Gambling\Common\Port\Adapter\EventStore;
 
@@ -97,7 +98,7 @@ final class DoctrineEventStore implements EventStore
     {
         return array_map(function ($row) {
             return new StoredEvent(
-                $row['id'],
+                (int)$row['id'],
                 $row['name'],
                 $row['aggregateId'],
                 $row['payload'],
