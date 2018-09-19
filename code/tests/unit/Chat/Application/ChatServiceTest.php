@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Gambling\Common\Application;
 
@@ -76,7 +77,7 @@ final class ChatServiceTest extends TestCase
         );
 
         // Test also if trim is performed.
-        $chatService->writeMessage(ChatId::generate(), 'authorId', '   ');
+        $chatService->writeMessage(ChatId::generate()->toString(), 'authorId', '   ');
     }
 
     /**
@@ -108,7 +109,7 @@ final class ChatServiceTest extends TestCase
             $eventStore
         );
 
-        $chatService->writeMessage($chatId, 'authorId3', 'message');
+        $chatService->writeMessage($chatId->toString(), 'authorId3', 'message');
     }
 
     /**
@@ -154,7 +155,7 @@ final class ChatServiceTest extends TestCase
             $eventStore
         );
 
-        $chatService->writeMessage($chatId, $authorId, $message);
+        $chatService->writeMessage($chatId->toString(), $authorId, $message);
 
         Clock::instance()->resume();
     }
@@ -188,7 +189,7 @@ final class ChatServiceTest extends TestCase
             $eventStore
         );
 
-        $messages = $chatService->messages($chatId, $authorId, $offset, $limit);
+        $messages = $chatService->messages($chatId->toString(), $authorId, $offset, $limit);
 
         $this->assertSame(['a', 'a', 'a'], $messages);
     }

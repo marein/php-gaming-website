@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Gambling\Chat\Application;
 
@@ -33,7 +34,7 @@ final class ChatId
     /**
      * @return ChatId
      */
-    public static function generate()
+    public static function generate(): ChatId
     {
         return new self(Uuid::uuid1());
     }
@@ -60,7 +61,7 @@ final class ChatId
     /**
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return $this->chatId;
     }
@@ -68,7 +69,7 @@ final class ChatId
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }
