@@ -18,10 +18,10 @@ help() {
     echo Build assets for the browser and watch for changes.
     echo
     echo tests
-    echo Run tests.
+    echo Run phpunit, phpcs, phpstan and codeception.
     echo
-    echo showTests
-    echo Show tests.
+    echo phpunit
+    echo Run phpunit.
     echo
     echo phpcs
     echo Run phpcs.
@@ -29,8 +29,14 @@ help() {
     echo phpstan
     echo Run phpstan.
     echo
-    echo pushToDockerHub
-    echo Build te production images and push them to DockerHub.
+    echo codeception
+    echo Run codeception.
+    echo
+    echo buildProductionImages
+    echo Build the production images.
+    echo
+    echo pushProductionImages
+    echo Push the production images to DockerHub.
     echo
 }
 
@@ -55,59 +61,44 @@ assets() {
 }
 
 tests() {
+    phpunit
+    phpcs
+    phpstan
+    codeception
+}
+
+phpunit() {
     docker-compose run php vendor/bin/phpunit --coverage-text
 }
 
-showTests() {
-    docker-compose run php vendor/bin/phpunit --testdox
-}
-
 phpcs() {
-    docker-compose run php vendor/bin/phpcs tests src --standard=PSR2
+    docker-compose run php vendor/bin/phpcs src tests/unit --standard=PSR2 -v
 }
 
 phpstan() {
     docker-compose run php vendor/bin/phpstan analyse -l 2 src
 }
 
-pushToDockerHub() {
+codeception() {
+    buildProductionImages
+
+    docker-compose -f docker-compose.ci.yml -p php-gambling-website-ci up -d
+    docker-compose -f docker-compose.ci.yml -p php-gambling-website-ci run -v $(pwd)/code/tests:/project/tests php bin/waitForIt php-fpm:9000 --timeout=120 -- vendor/bin/codecept run
+    docker-compose -f docker-compose.ci.yml -p php-gambling-website-ci down -v
+}
+
+buildProductionImages() {
+    docker build --build-arg environment=production --file container/php-fpm/Dockerfile --tag marein/php-gambling-website:php-fpm .
+    docker build --file container/traefik/Dockerfile --tag marein/php-gambling-website:traefik .
+    docker build --file container/nginx/Dockerfile --tag marein/php-gambling-website:nginx .
+    docker build --file container/nchan/Dockerfile --tag marein/php-gambling-website:nchan .
+    docker build --file container/mysql/Dockerfile --tag marein/php-gambling-website:mysql .
+    docker build --file container/redis/Dockerfile --tag marein/php-gambling-website:redis .
+    docker build --file container/rabbit-mq/Dockerfile  --tag marein/php-gambling-website:rabbit-mq .
+}
+
+pushProductionImages() {
     echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
-    docker build \
-        --build-arg environment=production \
-        --file container/php-fpm/Dockerfile \
-        --tag marein/php-gambling-website:php-fpm \
-        .
-
-    docker build \
-        --file container/traefik/Dockerfile \
-        --tag marein/php-gambling-website:traefik \
-        .
-
-    docker build \
-        --file container/nginx/Dockerfile \
-        --tag marein/php-gambling-website:nginx \
-        .
-
-    docker build \
-        --file container/nchan/Dockerfile \
-        --tag marein/php-gambling-website:nchan \
-        .
-
-    docker build \
-        --file container/mysql/Dockerfile \
-        --tag marein/php-gambling-website:mysql \
-        .
-
-    docker build \
-        --file container/redis/Dockerfile \
-        --tag marein/php-gambling-website:redis \
-        .
-
-    docker build \
-        --file container/rabbit-mq/Dockerfile \
-        --tag marein/php-gambling-website:rabbit-mq \
-        .
 
     docker push marein/php-gambling-website:php-fpm
     docker push marein/php-gambling-website:traefik

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Gambling\ConnectFour\Domain\Game;
 
@@ -33,7 +34,7 @@ final class GameId
     /**
      * @return GameId
      */
-    public static function generate()
+    public static function generate(): GameId
     {
         return new self(Uuid::uuid1());
     }
@@ -60,7 +61,7 @@ final class GameId
     /**
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return $this->gameId;
     }
@@ -68,7 +69,7 @@ final class GameId
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }

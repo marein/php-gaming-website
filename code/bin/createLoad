@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+declare(strict_types=1);
 
 /**
  * I use this script to test the performance of the application.

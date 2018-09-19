@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Gambling\ConnectFour\Port\Adapter\Persistence\Repository;
 
@@ -11,7 +12,6 @@ use Gambling\ConnectFour\Domain\Game\GameId;
 use Gambling\ConnectFour\Domain\Game\Games;
 use Gambling\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapper;
 use Gambling\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapperFactory;
-use Gambling\ConnectFour\Port\Adapter\Persistence\Mapping\LazyGameMapper;
 
 final class DoctrineJsonGameRepository implements Games
 {
@@ -141,7 +141,7 @@ final class DoctrineJsonGameRepository implements Games
 
         $gameAsArray = json_decode($row['aggregate'], true);
 
-        $this->registerAggregateId($gameAsArray['gameId'], $row['version']);
+        $this->registerAggregateId($gameAsArray['gameId'], (int)$row['version']);
 
         return $this->gameMapper()->deserialize($gameAsArray);
     }

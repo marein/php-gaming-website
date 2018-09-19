@@ -1,0 +1,9 @@
+actor: AcceptanceTester
+
+modules:
+    enabled:
+        - WebDriver:
+             url: 'http://traefik'
+             host: selenium
+             browser: chrome
+        - \Helper\Acceptance
