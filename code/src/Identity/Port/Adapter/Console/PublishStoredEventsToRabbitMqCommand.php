@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Console;
+namespace Gambling\Identity\Port\Adapter\Console;
 
 use Gambling\Common\EventStore\ConsistentOrderEventStore;
 use Gambling\Common\EventStore\EventStore;
@@ -12,7 +12,7 @@ use Gambling\Common\EventStore\ThrottlingEventStore;
 use Gambling\Common\MessageBroker\MessageBroker;
 use Gambling\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gambling\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
-use Gambling\ConnectFour\Port\Adapter\Messaging\PublishStoredEventsToRabbitMqSubscriber;
+use Gambling\Identity\Port\Adapter\Messaging\PublishStoredEventsToRabbitMqSubscriber;
 use Predis\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -57,7 +57,7 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('connect-four:publish-stored-events-to-rabbit-mq');
+            ->setName('identity:publish-stored-events-to-rabbit-mq');
     }
 
     /**

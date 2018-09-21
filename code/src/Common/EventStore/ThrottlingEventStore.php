@@ -75,4 +75,12 @@ final class ThrottlingEventStore implements EventStore
     {
         $this->eventStore->append($domainEvent);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasUncommittedStoredEventId(int $id): bool
+    {
+        return $this->eventStore->hasUncommittedStoredEventId($id);
+    }
 }

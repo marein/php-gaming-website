@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Gambling\Common\EventStore;
 
 use Gambling\Common\Domain\DomainEvent;
+use Gambling\Common\EventStore\Exception\EventStoreException;
+use Gambling\Common\EventStore\Exception\UnrecoverableException;
 
 interface EventStore
 {
@@ -14,6 +16,8 @@ interface EventStore
      * @param int $limit
      *
      * @return StoredEvent[]
+     * @throws UnrecoverableException
+     * @throws EventStoreException
      */
     public function storedEventsSince(int $id, int $limit): array;
 
@@ -24,6 +28,7 @@ interface EventStore
      * @param int    $sinceId
      *
      * @return StoredEvent[]
+     * @throws EventStoreException
      */
     public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array;
 
@@ -33,6 +38,20 @@ interface EventStore
      * @param DomainEvent $domainEvent
      *
      * @return void
+     * @throws EventStoreException
      */
     public function append(DomainEvent $domainEvent): void;
+
+    /**
+     * Returns true if the Database has an uncommitted event with this id.
+     *
+     * todo: Move this method in its own interface?
+     *
+     * @param int $id
+     *
+     * @return bool
+     * @throws UnrecoverableException
+     * @throws EventStoreException
+     */
+    public function hasUncommittedStoredEventId(int $id): bool;
 }

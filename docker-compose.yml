@@ -129,6 +129,19 @@ services:
             - rabbit-mq
             - nchan
         restart: on-failure
+    php-identity-publish-stored-events-to-rabbit-mq:
+        build:
+            context: .
+            dockerfile: ./container/php-fpm/Dockerfile
+        command: /project/bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
+        environment:
+            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
+        links:
+            - mysql
+            - redis
+            - rabbit-mq
+            - nchan
+        restart: on-failure
     php-web-interface-publish-running-games-count-to-nchan:
         build:
             context: .

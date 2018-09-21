@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gambling\Chat\Presentation\Console;
 
 use Gambling\Chat\Infrastructure\Messaging\PublishStoredEventsToRabbitMqSubscriber;
+use Gambling\Common\EventStore\ConsistentOrderEventStore;
 use Gambling\Common\EventStore\EventStore;
 use Gambling\Common\EventStore\FollowEventStoreDispatcher;
 use Gambling\Common\EventStore\InMemoryCacheEventStorePointer;
@@ -83,7 +84,10 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
 
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
             $eventStorePointer,
-            new ThrottlingEventStore($this->eventStore, 100),
+            new ThrottlingEventStore(
+                new ConsistentOrderEventStore($this->eventStore),
+                100
+            ),
             $storedEventPublisher
         );
 
