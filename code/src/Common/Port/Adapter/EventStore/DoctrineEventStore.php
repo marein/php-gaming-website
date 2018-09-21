@@ -7,6 +7,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Gambling\Common\Domain\DomainEvent;
 use Gambling\Common\EventStore\EventStore;
+use Gambling\Common\EventStore\Exception\EventStoreException;
+use Gambling\Common\EventStore\Exception\UnrecoverableException;
 use Gambling\Common\EventStore\StoredEvent;
 
 final class DoctrineEventStore implements EventStore
@@ -40,16 +42,24 @@ final class DoctrineEventStore implements EventStore
      */
     public function storedEventsSince(int $id, int $limit): array
     {
-        $rows = $this->connection->createQueryBuilder()
-            ->select(self::SELECT)
-            ->from($this->table, 'e')
-            ->where('e.id > :id')
-            ->setParameter(':id', $id)
-            ->setMaxResults($limit)
-            ->execute()
-            ->fetchAll();
+        try {
+            $rows = $this->connection->createQueryBuilder()
+                ->select(self::SELECT)
+                ->from($this->table, 'e')
+                ->where('e.id > :id')
+                ->setParameter(':id', $id)
+                ->setMaxResults($limit)
+                ->execute()
+                ->fetchAll();
 
-        return $this->transformRowsToStoredEvents($rows);
+            return $this->transformRowsToStoredEvents($rows);
+        } catch (\Exception $e) {
+            throw new EventStoreException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
     }
 
     /**
@@ -57,17 +67,25 @@ final class DoctrineEventStore implements EventStore
      */
     public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array
     {
-        $rows = $this->connection->createQueryBuilder()
-            ->select(self::SELECT)
-            ->from($this->table, 'e')
-            ->where('e.aggregateId = :aggregateId')
-            ->andWhere('e.id > :id')
-            ->setParameter(':aggregateId', $aggregateId, 'uuid_binary')
-            ->setParameter(':id', $sinceId)
-            ->execute()
-            ->fetchAll();
+        try {
+            $rows = $this->connection->createQueryBuilder()
+                ->select(self::SELECT)
+                ->from($this->table, 'e')
+                ->where('e.aggregateId = :aggregateId')
+                ->andWhere('e.id > :id')
+                ->setParameter(':aggregateId', $aggregateId, 'uuid_binary')
+                ->setParameter(':id', $sinceId)
+                ->execute()
+                ->fetchAll();
 
-        return $this->transformRowsToStoredEvents($rows);
+            return $this->transformRowsToStoredEvents($rows);
+        } catch (\Exception $e) {
+            throw new EventStoreException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
     }
 
     /**
@@ -75,17 +93,25 @@ final class DoctrineEventStore implements EventStore
      */
     public function append(DomainEvent $domainEvent): void
     {
-        $this->connection->insert($this->table, [
-            'name'        => $domainEvent->name(),
-            'aggregateId' => $domainEvent->aggregateId(),
-            'payload'     => $domainEvent->payload(),
-            'occurredOn'  => $domainEvent->occurredOn()
-        ], [
-            'string',
-            'uuid_binary',
-            'json',
-            'datetime_immutable'
-        ]);
+        try {
+            $this->connection->insert($this->table, [
+                'name'        => $domainEvent->name(),
+                'aggregateId' => $domainEvent->aggregateId(),
+                'payload'     => $domainEvent->payload(),
+                'occurredOn'  => $domainEvent->occurredOn()
+            ], [
+                'string',
+                'uuid_binary',
+                'json',
+                'datetime_immutable'
+            ]);
+        } catch (\Exception $e) {
+            throw new EventStoreException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
     }
 
     /**
@@ -93,21 +119,29 @@ final class DoctrineEventStore implements EventStore
      */
     public function hasUncommittedStoredEventId(int $id): bool
     {
-        $currentIsolationLevel = $this->connection->getTransactionIsolation();
+        try {
+            $currentIsolationLevel = $this->connection->getTransactionIsolation();
 
-        $this->connection->setTransactionIsolation(TransactionIsolationLevel::READ_UNCOMMITTED);
+            $this->connection->setTransactionIsolation(TransactionIsolationLevel::READ_UNCOMMITTED);
 
-        $hasStoredEvent = $this->connection->createQueryBuilder()
-                ->select('COUNT(id)')
-                ->from($this->table, 'e')
-                ->andWhere('e.id = :id')
-                ->setParameter(':id', $id)
-                ->execute()
-                ->fetchColumn() > 0;
+            $hasStoredEvent = $this->connection->createQueryBuilder()
+                    ->select('COUNT(id)')
+                    ->from($this->table, 'e')
+                    ->andWhere('e.id = :id')
+                    ->setParameter(':id', $id)
+                    ->execute()
+                    ->fetchColumn() > 0;
 
-        $this->connection->setTransactionIsolation($currentIsolationLevel);
+            $this->connection->setTransactionIsolation($currentIsolationLevel);
 
-        return $hasStoredEvent;
+            return $hasStoredEvent;
+        } catch (\Exception $e) {
+            throw new UnrecoverableException(
+                'Something unexpected happened which can not rollback. Restart your process.',
+                $e->getCode(),
+                $e
+            );
+        }
     }
 
     /**
