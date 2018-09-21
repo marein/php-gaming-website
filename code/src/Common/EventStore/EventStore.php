@@ -35,4 +35,15 @@ interface EventStore
      * @return void
      */
     public function append(DomainEvent $domainEvent): void;
+
+    /**
+     * Returns true if the Database has an uncommitted event with this id.
+     *
+     * todo: Move this method in its own interface?
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function hasUncommittedStoredEventId(int $id): bool;
 }

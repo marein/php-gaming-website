@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gambling\Common\Port\Adapter\EventStore;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\TransactionIsolationLevel;
 use Gambling\Common\Domain\DomainEvent;
 use Gambling\Common\EventStore\EventStore;
 use Gambling\Common\EventStore\StoredEvent;
@@ -88,7 +89,29 @@ final class DoctrineEventStore implements EventStore
     }
 
     /**
-     * Transform the sql row to a stored event instance.
+     * @inheritdoc
+     */
+    public function hasUncommittedStoredEventId(int $id): bool
+    {
+        $currentIsolationLevel = $this->connection->getTransactionIsolation();
+
+        $this->connection->setTransactionIsolation(TransactionIsolationLevel::READ_UNCOMMITTED);
+
+        $hasStoredEvent = $this->connection->createQueryBuilder()
+                ->select('COUNT(id)')
+                ->from($this->table, 'e')
+                ->andWhere('e.id = :id')
+                ->setParameter(':id', $id)
+                ->execute()
+                ->fetchColumn() > 0;
+
+        $this->connection->setTransactionIsolation($currentIsolationLevel);
+
+        return $hasStoredEvent;
+    }
+
+    /**
+     * Transform the sql rows to stored event instances.
      *
      * @param array $rows
      *
