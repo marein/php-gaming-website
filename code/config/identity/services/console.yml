@@ -1,0 +1,11 @@
+services:
+
+    identity.publish-stored-events-to-rabbit-mq-command:
+        class: Gambling\Identity\Port\Adapter\Console\PublishStoredEventsToRabbitMqCommand
+        public: false
+        arguments:
+            - '@identity.event-store'
+            - '@identity.predis'
+            - '@identity.message-broker'
+        tags:
+            -  { name: console.command }

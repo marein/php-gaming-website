@@ -1,10 +1,24 @@
 services:
 
+    identity.predis:
+        class: Predis\Client
+        public: false
+        arguments:
+            - '%env(GAMBLING_IDENTITY_PREDIS_CLIENT_URL)%'
+            -
+                prefix: 'identity.'
+
     identity.doctrine-dbal:
         alias: 'doctrine.dbal.identity_connection'
 
     identity.doctrine-orm:
         alias: 'doctrine.orm.identity_entity_manager'
+
+    identity.message-broker:
+        class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
+        public: false
+        arguments:
+            - '%env(GAMBLING_IDENTITY_RABBIT_MQ_DSN)%'
 
     identity.event-store:
         class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore

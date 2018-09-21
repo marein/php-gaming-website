@@ -50,4 +50,12 @@ final class InMemoryEventStore implements EventStore
             $domainEvent->occurredOn()
         );
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasUncommittedStoredEventId(int $id): bool
+    {
+        return array_key_exists($id - 1, $this->storedEvents);
+    }
 }

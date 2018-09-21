@@ -89,9 +89,10 @@ services:
             GAMBLING_ENVIRONMENT: prod
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
-            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/chat
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
             GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
-            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/chat
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
             GAMBLING_WEB_INTERFACE_PREDIS_CLIENT_URL: redis://redis-web-interface:6379
             WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306
         links:
@@ -109,8 +110,10 @@ services:
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
-            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/chat
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
             GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
             WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306,redis-connect-four:6379
         links:
             - mysql-chat
@@ -125,8 +128,10 @@ services:
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
-            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/chat
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
             GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
             WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306,redis-connect-four:6379,rabbit-mq:5672
         links:
             - mysql-chat
@@ -141,8 +146,10 @@ services:
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
-            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/chat
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
             GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
             WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306,redis-chat:6379,rabbit-mq:5672
         links:
             - mysql-chat
@@ -151,14 +158,34 @@ services:
             - redis-chat
             - rabbit-mq
         restart: on-failure
+    php-identity-publish-stored-events-to-rabbit-mq:
+        image: marein/php-gambling-website:php-fpm
+        command: /project/bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
+        environment:
+            GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
+            GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
+            GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
+            WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306,redis-identity:6379,rabbit-mq:5672
+        links:
+            - mysql-chat
+            - mysql-connect-four
+            - mysql-identity
+            - redis-identity
+            - rabbit-mq
+        restart: on-failure
     php-web-interface-publish-running-games-count-to-nchan:
         image: marein/php-gambling-website:php-fpm
         command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
-            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/chat
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
             GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
             WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306,nchan:81,rabbit-mq:5672
         links:
             - mysql-chat
@@ -173,8 +200,10 @@ services:
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
-            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/chat
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
             GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
             WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306,nchan:81,rabbit-mq:5672
         links:
             - mysql-chat
@@ -189,8 +218,10 @@ services:
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
-            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/chat
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
             GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
             WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306,rabbit-mq:5672
         links:
             - mysql-chat
@@ -204,8 +235,10 @@ services:
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             GAMBLING_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
-            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/chat
+            GAMBLING_CONNECT_FOUR_DOCTRINE_DBAL_URL: mysql://root:password@mysql-connect-four:3306/connect-four
             GAMBLING_CONNECT_FOUR_PREDIS_CLIENT_URL: redis://redis-connect-four:6379
+            GAMBLING_IDENTITY_DOCTRINE_DBAL_URL: mysql://root:password@mysql-identity:3306/identity
+            GAMBLING_IDENTITY_PREDIS_CLIENT_URL: redis://redis-identity:6379
             WAIT_FOR: mysql-chat:3306,mysql-connect-four:3306,mysql-identity:3306,rabbit-mq:5672
         links:
             - mysql-chat

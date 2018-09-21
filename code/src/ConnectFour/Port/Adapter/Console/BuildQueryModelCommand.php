@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gambling\ConnectFour\Port\Adapter\Console;
 
+use Gambling\Common\EventStore\ConsistentOrderEventStore;
 use Gambling\Common\EventStore\EventStore;
 use Gambling\Common\EventStore\FollowEventStoreDispatcher;
 use Gambling\Common\EventStore\InMemoryCacheEventStorePointer;
@@ -73,7 +74,10 @@ final class BuildQueryModelCommand extends Command
 
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
             $eventStorePointer,
-            new ThrottlingEventStore($this->eventStore, 2000),
+            new ThrottlingEventStore(
+                new ConsistentOrderEventStore($this->eventStore),
+                2000
+            ),
             $storedEventPublisher
         );
 
