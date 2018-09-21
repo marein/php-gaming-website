@@ -11,6 +11,14 @@ final class DomainEventPublisher
     private $subscribers;
 
     /**
+     * DomainEventPublisher constructor.
+     */
+    public function __construct()
+    {
+        $this->subscribers = [];
+    }
+
+    /**
      * Add subscriber.
      *
      * @param DomainEventSubscriber $subscriber
