@@ -6,6 +6,7 @@ namespace Gambling\Memory\Domain\Model\Game;
 use Gambling\Common\Domain\AggregateRoot;
 use Gambling\Common\Domain\DomainEvent;
 use Gambling\Common\Domain\IsAggregateRoot;
+use Gambling\Memory\Domain\Model\Game\Dealer\Dealer;
 use Gambling\Memory\Domain\Model\Game\Event\GameOpened;
 
 /**
@@ -60,21 +61,16 @@ final class Game implements AggregateRoot
     /**
      * Open a new game.
      *
+     * @param Dealer $dealer
      * @param string $playerId
-     * @param int    $numberOfPairs
      *
      * @return Game
      */
-    public static function open(string $playerId, int $numberOfPairs): Game
+    public static function open(Dealer $dealer, string $playerId): Game
     {
         $gameId = GameId::generate();
-        $cards = array_merge(
-            range(1, $numberOfPairs),
-            range(1, $numberOfPairs)
-        );
+        $cards = $dealer->dealIn();
         $player = new Player($playerId);
-
-        shuffle($cards);
 
         return new self(
             $gameId,
