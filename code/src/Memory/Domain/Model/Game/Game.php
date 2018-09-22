@@ -8,6 +8,8 @@ use Gambling\Common\Domain\DomainEvent;
 use Gambling\Common\Domain\IsAggregateRoot;
 use Gambling\Memory\Domain\Model\Game\Dealer\Dealer;
 use Gambling\Memory\Domain\Model\Game\Event\GameOpened;
+use Gambling\Memory\Domain\Model\Game\Event\PlayerJoined;
+use Gambling\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
 
 /**
  * Unlike in the connect four context, this game does not use the state pattern.
@@ -84,5 +86,26 @@ final class Game implements AggregateRoot
                 )
             ]
         );
+    }
+
+    /**
+     * A player joins in the game.
+     *
+     * @param string $playerId
+     *
+     * @throws PlayerAlreadyJoinedException
+     */
+    public function join(string $playerId): void
+    {
+        $player = new Player($playerId);
+        $playerJoined = new PlayerJoined(
+            $this->gameId,
+            $player
+        );
+
+        $this->playerPool = $this->playerPool->join(
+            new Player($playerId)
+        );
+        $this->domainEvents[] = $playerJoined;
     }
 }

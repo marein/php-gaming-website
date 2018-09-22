@@ -5,6 +5,7 @@ namespace Gambling\Memory\Domain\Model\Game;
 
 use Gambling\Memory\Domain\Model\Game\Dealer\LazyDealer;
 use Gambling\Memory\Domain\Model\Game\Event\GameOpened;
+use Gambling\Memory\Domain\Model\Game\Event\PlayerJoined;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase
@@ -27,5 +28,40 @@ class GameTest extends TestCase
         $this->assertSame($game->id()->toString(), $gameOpened->aggregateId());
         $this->assertSame(10, $gameOpened->payload()['numberOfCards']);
         $this->assertSame('playerId1', $gameOpened->payload()['playerId']);
+    }
+
+    /**
+     * @test
+     */
+    public function aPlayerCanJoin(): void
+    {
+        $game = $this->createOpenGame();
+
+        $game->join('playerId2');
+
+        $domainEvents = $game->flushDomainEvents();
+        $playerJoined = $domainEvents[0];
+
+        $this->assertCount(1, $domainEvents);
+        $this->assertInstanceOf(PlayerJoined::class, $playerJoined);
+        $this->assertSame($game->id()->toString(), $playerJoined->aggregateId());
+        $this->assertSame('playerId2', $playerJoined->payload()['playerId']);
+    }
+
+    /**
+     * Returns an open game ready for testing.
+     *
+     * @return Game
+     */
+    private function createOpenGame(): Game
+    {
+        $game = Game::open(
+            new LazyDealer(5),
+            'playerId1'
+        );
+
+        $game->flushDomainEvents();
+
+        return $game;
     }
 }
