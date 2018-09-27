@@ -64,11 +64,11 @@ final class DoctrineReconnectBus implements Bus
     /**
      * @inheritdoc
      */
-    public function handle($command)
+    public function handle(object $message)
     {
         $this->reconnectIfTimedOut();
 
-        $return = $this->bus->handle($command);
+        $return = $this->bus->handle($message);
 
         $this->timeOfLastHandle = time();
 
