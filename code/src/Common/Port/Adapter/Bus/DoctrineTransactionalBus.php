@@ -39,10 +39,10 @@ final class DoctrineTransactionalBus implements Bus
     /**
      * @inheritdoc
      */
-    public function handle($command)
+    public function handle(object $message)
     {
         if ($this->transactionAlreadyStarted) {
-            return $this->bus->handle($command);
+            return $this->bus->handle($message);
         }
 
         $this->transactionAlreadyStarted = true;
@@ -50,7 +50,7 @@ final class DoctrineTransactionalBus implements Bus
         try {
             $this->connection->beginTransaction();
 
-            $return = $this->bus->handle($command);
+            $return = $this->bus->handle($message);
 
             $this->connection->commit();
 

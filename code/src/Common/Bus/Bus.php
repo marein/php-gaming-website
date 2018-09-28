@@ -6,12 +6,12 @@ namespace Gambling\Common\Bus;
 interface Bus
 {
     /**
-     * Handle the given command.
+     * Handle the given message.
      *
-     * @param mixed $command
+     * @param object $message
      *
      * @return mixed
      * @throws \Exception Any application based exception
      */
-    public function handle($command);
+    public function handle(object $message);
 }

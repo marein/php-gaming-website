@@ -34,14 +34,14 @@ final class CallableBus implements Bus
     /**
      * @inheritdoc
      */
-    public function handle($command)
+    public function handle(object $message)
     {
-        $class = get_class($command);
+        $class = get_class($message);
 
         if (!isset($this->handler[$class])) {
             throw new CommandHasNoHandlerException(sprintf('Given "%s"', $class));
         }
 
-        return $this->handler[$class]($command);
+        return $this->handler[$class]($message);
     }
 }

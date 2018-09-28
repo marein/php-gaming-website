@@ -183,8 +183,10 @@ final class Client
             stream_context_create($options)
         );
 
+        $time = (microtime(true) - $start) * 1000;
+
         $this->avarageTimeCalculator->add(
-            (microtime(true) - $start) * 1000
+            (int)$time
         );
 
         return [
