@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\State;
+namespace Gaming\ConnectFour\Domain\Game\State;
 
-use Gambling\ConnectFour\Domain\Game\Board\Board;
-use Gambling\ConnectFour\Domain\Game\Board\Stone;
-use Gambling\ConnectFour\Domain\Game\Configuration;
-use Gambling\ConnectFour\Domain\Game\Event\GameAborted;
-use Gambling\ConnectFour\Domain\Game\Event\PlayerJoined;
-use Gambling\ConnectFour\Domain\Game\Exception\GameNotRunningException;
-use Gambling\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
-use Gambling\ConnectFour\Domain\Game\GameId;
-use Gambling\ConnectFour\Domain\Game\Player;
-use Gambling\ConnectFour\Domain\Game\Players;
+use Gaming\ConnectFour\Domain\Game\Board\Board;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
+use Gaming\ConnectFour\Domain\Game\Configuration;
+use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
+use Gaming\ConnectFour\Domain\Game\GameId;
+use Gaming\ConnectFour\Domain\Game\Player;
+use Gaming\ConnectFour\Domain\Game\Players;
 
 final class Open implements State
 {

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Repository;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
-use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
-use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
-use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerFinder;
-use Gambling\ConnectFour\Port\Adapter\Persistence\Projection\PredisGamesByPlayerProjection;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerFinder;
+use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisGamesByPlayerProjection;
 use Predis\Client;
 
 final class PredisGamesByPlayerFinder implements GamesByPlayerFinder

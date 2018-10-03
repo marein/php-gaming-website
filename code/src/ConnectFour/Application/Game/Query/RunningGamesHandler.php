@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Query;
+namespace Gaming\ConnectFour\Application\Game\Query;
 
-use Gambling\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGames;
-use Gambling\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGamesFinder;
+use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGames;
+use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGamesFinder;
 
 final class RunningGamesHandler
 {

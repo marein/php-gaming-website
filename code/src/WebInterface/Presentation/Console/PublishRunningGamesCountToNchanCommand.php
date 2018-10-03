@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Presentation\Console;
+namespace Gaming\WebInterface\Presentation\Console;
 
-use Gambling\WebInterface\Application\BrowserNotifier;
-use Gambling\WebInterface\Application\ConnectFourService;
+use Gaming\WebInterface\Application\BrowserNotifier;
+use Gaming\WebInterface\Application\ConnectFourService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

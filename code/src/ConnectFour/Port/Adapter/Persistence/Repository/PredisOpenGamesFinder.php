@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Repository;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
-use Gambling\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
-use Gambling\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
-use Gambling\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGamesFinder;
-use Gambling\ConnectFour\Port\Adapter\Persistence\Projection\PredisOpenGamesProjection;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGamesFinder;
+use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisOpenGamesProjection;
 use Predis\Client;
 
 final class PredisOpenGamesFinder implements OpenGamesFinder

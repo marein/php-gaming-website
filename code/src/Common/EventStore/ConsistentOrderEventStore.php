@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\EventStore;
+namespace Gaming\Common\EventStore;
 
-use Gambling\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\DomainEvent;
 
 final class ConsistentOrderEventStore implements EventStore
 {

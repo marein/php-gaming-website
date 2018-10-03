@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Bus;
+namespace Gaming\Common\Bus;
 
-use Gambling\Common\Bus\Exception\CommandHasNoHandlerException;
+use Gaming\Common\Bus\Exception\CommandHasNoHandlerException;
 
 final class CallableBus implements Bus
 {

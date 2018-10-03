@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Chat\Application\Event;
+namespace Gaming\Chat\Application\Event;
 
-use Gambling\Chat\Application\ChatId;
-use Gambling\Common\Clock\Clock;
-use Gambling\Common\Domain\DomainEvent;
+use Gaming\Chat\Application\ChatId;
+use Gaming\Common\Clock\Clock;
+use Gaming\Common\Domain\DomainEvent;
 
 final class MessageWritten implements DomainEvent
 {

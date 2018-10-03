@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Infrastructure\Integration;
+namespace Gaming\WebInterface\Infrastructure\Integration;
 
-use Gambling\Identity\Port\Adapter\Http\UserController;
-use Gambling\WebInterface\Application\IdentityService;
+use Gaming\Identity\Port\Adapter\Http\UserController;
+use Gaming\WebInterface\Application\IdentityService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

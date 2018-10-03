@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\EventStore;
+namespace Gaming\Common\EventStore;
 
-use Gambling\Common\Domain\DomainEvent;
-use Gambling\Common\EventStore\Exception\EventStoreException;
-use Gambling\Common\EventStore\Exception\UnrecoverableException;
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\Exception\EventStoreException;
+use Gaming\Common\EventStore\Exception\UnrecoverableException;
 
 interface EventStore
 {

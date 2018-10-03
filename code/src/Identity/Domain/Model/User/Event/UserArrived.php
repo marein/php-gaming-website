@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Domain\Model\User\Event;
+namespace Gaming\Identity\Domain\Model\User\Event;
 
-use Gambling\Common\Clock\Clock;
-use Gambling\Common\Domain\DomainEvent;
-use Gambling\Identity\Domain\Model\User\UserId;
+use Gaming\Common\Clock\Clock;
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Identity\Domain\Model\User\UserId;
 
 final class UserArrived implements DomainEvent
 {

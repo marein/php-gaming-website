@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Chat\Presentation\Console;
+namespace Gaming\Chat\Presentation\Console;
 
-use Gambling\Chat\Infrastructure\Messaging\PublishStoredEventsToRabbitMqSubscriber;
-use Gambling\Common\EventStore\ConsistentOrderEventStore;
-use Gambling\Common\EventStore\EventStore;
-use Gambling\Common\EventStore\FollowEventStoreDispatcher;
-use Gambling\Common\EventStore\InMemoryCacheEventStorePointer;
-use Gambling\Common\EventStore\StoredEventPublisher;
-use Gambling\Common\EventStore\ThrottlingEventStore;
-use Gambling\Common\MessageBroker\MessageBroker;
-use Gambling\Common\Port\Adapter\EventStore\PredisEventStorePointer;
-use Gambling\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
+use Gaming\Chat\Infrastructure\Messaging\PublishStoredEventsToRabbitMqSubscriber;
+use Gaming\Common\EventStore\ConsistentOrderEventStore;
+use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\FollowEventStoreDispatcher;
+use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
+use Gaming\Common\EventStore\StoredEventPublisher;
+use Gaming\Common\EventStore\ThrottlingEventStore;
+use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\Common\Port\Adapter\EventStore\PredisEventStorePointer;
+use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
 use Predis\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

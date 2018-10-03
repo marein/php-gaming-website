@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Mapping;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Mapping;
 
-use Gambling\Common\ObjectMapper\Mapper;
-use Gambling\Common\ObjectMapper\ObjectMapper;
-use Gambling\Common\ObjectMapper\Scalar\IntMapper;
-use Gambling\ConnectFour\Domain\Game\Board\Size;
+use Gaming\Common\ObjectMapper\Mapper;
+use Gaming\Common\ObjectMapper\ObjectMapper;
+use Gaming\Common\ObjectMapper\Scalar\IntMapper;
+use Gaming\ConnectFour\Domain\Game\Board\Size;
 
 final class SizeMapper implements Mapper
 {

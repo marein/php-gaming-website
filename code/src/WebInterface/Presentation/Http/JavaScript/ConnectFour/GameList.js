@@ -1,11 +1,11 @@
-var Gambling = Gambling || {};
-Gambling.ConnectFour = Gambling.ConnectFour || {};
+var Gaming = Gaming || {};
+Gaming.ConnectFour = Gaming.ConnectFour || {};
 
-Gambling.ConnectFour.GameList = class
+Gaming.ConnectFour.GameList = class
 {
     /**
-     * @param {Gambling.Common.EventPublisher} eventPublisher
-     * @param {Gambling.ConnectFour.GameService} gameService
+     * @param {Gaming.Common.EventPublisher} eventPublisher
+     * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} games
      * @param {Array} gamesToAdd
      * @param {Number} maximumNumberOfGamesInList
@@ -80,12 +80,12 @@ Gambling.ConnectFour.GameList = class
     addChildComponents(game, isCurrentUserThePlayer)
     {
         if (isCurrentUserThePlayer) {
-            new Gambling.ConnectFour.AbortGameButton(
+            new Gaming.ConnectFour.AbortGameButton(
                 this.gameService,
                 game.querySelector('button')
             );
         } else {
-            new Gambling.ConnectFour.JoinGameButton(
+            new Gaming.ConnectFour.JoinGameButton(
                 this.gameService,
                 game.querySelector('button')
             );

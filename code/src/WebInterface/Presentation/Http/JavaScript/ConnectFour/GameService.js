@@ -1,10 +1,10 @@
-var Gambling = Gambling || {};
-Gambling.ConnectFour = Gambling.ConnectFour || {};
+var Gaming = Gaming || {};
+Gaming.ConnectFour = Gaming.ConnectFour || {};
 
-Gambling.ConnectFour.GameService = class
+Gaming.ConnectFour.GameService = class
 {
     /**
-     * @param {Gambling.Common.HttpClient} httpClient
+     * @param {Gaming.Common.HttpClient} httpClient
      */
     constructor(httpClient)
     {

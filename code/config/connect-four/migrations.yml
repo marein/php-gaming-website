@@ -1,4 +1,4 @@
 name: ConnectFour Migrations
-migrations_namespace: Gambling\ConnectFour\Port\Adapter\Persistence\Migration
+migrations_namespace: Gaming\ConnectFour\Port\Adapter\Persistence\Migration
 table_name: migration_versions
 migrations_directory: "../../src/ConnectFour/Port/Adapter/Persistence/Migration"

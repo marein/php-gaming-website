@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Command;
+namespace Gaming\ConnectFour\Application\Game\Command;
 
-use Gambling\ConnectFour\Domain\Game\GameId;
-use Gambling\ConnectFour\Domain\Game\Games;
+use Gaming\ConnectFour\Domain\Game\GameId;
+use Gaming\ConnectFour\Domain\Game\Games;
 
 final class AbortHandler
 {

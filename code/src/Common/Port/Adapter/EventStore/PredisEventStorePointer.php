@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Port\Adapter\EventStore;
+namespace Gaming\Common\Port\Adapter\EventStore;
 
-use Gambling\Common\EventStore\EventStorePointer;
-use Gambling\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
-use Gambling\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
+use Gaming\Common\EventStore\EventStorePointer;
+use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
+use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
 use Predis\Client;
 
 final class PredisEventStorePointer implements EventStorePointer

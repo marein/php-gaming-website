@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\Board;
+namespace Gaming\ConnectFour\Domain\Game\Board;
 
-use Gambling\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
-use Gambling\ConnectFour\Domain\Game\Exception\OutOfSizeException;
+use Gaming\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
+use Gaming\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 
 final class Board
 {

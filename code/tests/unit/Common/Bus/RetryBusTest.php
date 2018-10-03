@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Bus;
+namespace Gaming\Common\Bus;
 
 use PHPUnit\Framework\TestCase;
 

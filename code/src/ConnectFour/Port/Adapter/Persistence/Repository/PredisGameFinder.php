@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Repository;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\Game;
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
-use Gambling\ConnectFour\Port\Adapter\Persistence\Projection\PredisGameProjection;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
+use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisGameProjection;
 use Predis\Client;
 
 final class PredisGameFinder implements GameFinder

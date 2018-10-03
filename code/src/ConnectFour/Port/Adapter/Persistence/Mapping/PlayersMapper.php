@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Mapping;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Mapping;
 
-use Gambling\Common\ObjectMapper\Exception\MapperException;
-use Gambling\Common\ObjectMapper\Mapper;
-use Gambling\Common\ObjectMapper\ObjectMapper;
-use Gambling\ConnectFour\Domain\Game\Players;
+use Gaming\Common\ObjectMapper\Exception\MapperException;
+use Gaming\Common\ObjectMapper\Mapper;
+use Gaming\Common\ObjectMapper\ObjectMapper;
+use Gaming\ConnectFour\Domain\Game\Players;
 
 final class PlayersMapper implements Mapper
 {

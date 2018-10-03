@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Infrastructure;
+namespace Gaming\WebInterface\Infrastructure;
 
-use Gambling\WebInterface\Application\BrowserNotifier;
+use Gaming\WebInterface\Application\BrowserNotifier;
 use Marein\Nchan\Api\Model\JsonMessage;
 use Marein\Nchan\Nchan;
 

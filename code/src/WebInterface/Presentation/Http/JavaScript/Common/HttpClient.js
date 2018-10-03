@@ -1,16 +1,16 @@
-var Gambling = Gambling || {};
-Gambling.Common = Gambling.Common || {};
+var Gaming = Gaming || {};
+Gaming.Common = Gaming.Common || {};
 
 /**
  * This class handles the CSRF protection required by the web interface context.
  *
  * todo: Leverage the fetch api.
  */
-Gambling.Common.HttpClient = class
+Gaming.Common.HttpClient = class
 {
     /**
      * @param {String} baseUrl
-     * @param {Gambling.Common.Notification} notification
+     * @param {Gaming.Common.Notification} notification
      */
     constructor(baseUrl, notification)
     {

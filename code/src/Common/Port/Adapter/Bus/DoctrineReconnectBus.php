@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Port\Adapter\Bus;
+namespace Gaming\Common\Port\Adapter\Bus;
 
 use Doctrine\DBAL\Connection;
-use Gambling\Common\Bus\Bus;
+use Gaming\Common\Bus\Bus;
 
 /**
  * This class aims to get around the "Server has gone away" Exception.

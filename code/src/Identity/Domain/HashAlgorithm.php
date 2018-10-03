@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Domain;
+namespace Gaming\Identity\Domain;
 
 interface HashAlgorithm
 {

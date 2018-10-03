@@ -1,4 +1,4 @@
-# php-gambling-website
+# php-gaming-website
 
 __Table of contents__
 
@@ -17,7 +17,7 @@ __Table of contents__
 
 ## Overview
 
-This is my playground project to explore new ideas and concepts. It's a gambling website where people can play against
+This is my playground project to explore new ideas and concepts. It's a gaming website where people can play against
 each other. Currently, the only game is [Connect Four](#connect-four) but I plan other games to show more concepts.
 
 Before you start looking at the code, I recommend reading this documentation to understand what concepts I use
@@ -51,8 +51,8 @@ Don't look at the front end design, this is by no means my domain.
 ### Development
 
 ```
-git clone https://github.com/marein/php-gambling-website
-cd php-gambling-website
+git clone https://github.com/marein/php-gaming-website
+cd php-gaming-website
 ./project build
 ```
 
@@ -69,12 +69,12 @@ This project is in development and I don't pollute the code with schema changes 
 ### Production
 
 The
-[production images](https://hub.docker.com/r/marein/php-gambling-website/)
+[production images](https://hub.docker.com/r/marein/php-gaming-website/)
 are built when pushed to git master. They always reflect the latest stable version.
 
 ```
-git clone https://github.com/marein/php-gambling-website
-cd php-gambling-website
+git clone https://github.com/marein/php-gaming-website
+cd php-gaming-website
 docker-compose -f docker-compose.production.yml pull
 docker-compose -f docker-compose.production.yml up
 ```

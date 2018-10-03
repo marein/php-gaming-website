@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Command;
+namespace Gaming\ConnectFour\Application\Game\Command;
 
 final class JoinCommand
 {

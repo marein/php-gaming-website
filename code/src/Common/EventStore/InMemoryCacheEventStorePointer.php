@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\EventStore;
+namespace Gaming\Common\EventStore;
 
 final class InMemoryCacheEventStorePointer implements EventStorePointer
 {

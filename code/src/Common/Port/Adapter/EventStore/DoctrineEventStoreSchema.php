@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Port\Adapter\EventStore;
+namespace Gaming\Common\Port\Adapter\EventStore;
 
 use Doctrine\DBAL\Schema\Schema;
 

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Presentation\Console;
+namespace Gaming\WebInterface\Presentation\Console;
 
-use Gambling\Common\MessageBroker\MessageBroker;
-use Gambling\WebInterface\Application\BrowserNotifier;
-use Gambling\WebInterface\Infrastructure\Messaging\PublishRabbitMqEventsToNchanConsumer;
+use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\WebInterface\Application\BrowserNotifier;
+use Gaming\WebInterface\Infrastructure\Messaging\PublishRabbitMqEventsToNchanConsumer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

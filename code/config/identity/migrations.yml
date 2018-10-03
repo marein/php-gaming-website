@@ -1,4 +1,4 @@
 name: Identity Migrations
-migrations_namespace: Gambling\Identity\Port\Adapter\Persistence\Migration
+migrations_namespace: Gaming\Identity\Port\Adapter\Persistence\Migration
 table_name: migration_versions
 migrations_directory: "../../src/Identity/Port/Adapter/Persistence/Migration"

@@ -21,10 +21,10 @@ doctrine:
             uuid_binary: binary
 
 services:
-    # Custom exception listener for the gambling domain.
+    # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.
-    gambling.exception-to-json-listener:
-        class: Gambling\Common\Port\Adapter\Symfony\GamblingExceptionListener
+    gaming.exception-to-json-listener:
+        class: Gaming\Common\Port\Adapter\Symfony\GamingExceptionListener
         public: false
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: -100 }

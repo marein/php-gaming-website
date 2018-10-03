@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Port\Adapter\EventStore\Subscriber;
+namespace Gaming\Common\Port\Adapter\EventStore\Subscriber;
 
-use Gambling\Common\EventStore\StoredEvent;
-use Gambling\Common\EventStore\StoredEventSubscriber;
+use Gaming\Common\EventStore\StoredEvent;
+use Gaming\Common\EventStore\StoredEventSubscriber;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class SymfonyConsoleDebugSubscriber implements StoredEventSubscriber

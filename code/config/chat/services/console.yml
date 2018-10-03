@@ -1,7 +1,7 @@
 services:
 
     chat.publish-stored-events-to-rabbit-mq-command:
-        class: Gambling\Chat\Presentation\Console\PublishStoredEventsToRabbitMqCommand
+        class: Gaming\Chat\Presentation\Console\PublishStoredEventsToRabbitMqCommand
         public: false
         arguments:
             - '@chat.event-store'
@@ -11,7 +11,7 @@ services:
             -  { name: console.command }
 
     chat.rabbit-mq-command-listener-command:
-        class: Gambling\Chat\Presentation\Console\RabbitMqCommandListenerCommand
+        class: Gaming\Chat\Presentation\Console\RabbitMqCommandListenerCommand
         public: false
         arguments:
             - '@chat.message-broker'

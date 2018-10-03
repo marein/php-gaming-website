@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\State;
+namespace Gaming\ConnectFour\Domain\Game\State;
 
-use Gambling\ConnectFour\Domain\Game\Exception\GameFinishedException;
-use Gambling\ConnectFour\Domain\Game\GameId;
+use Gaming\ConnectFour\Domain\Game\Exception\GameFinishedException;
+use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class Won implements State
 {

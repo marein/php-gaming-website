@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Clock;
+namespace Gaming\Common\Clock;
 
 /**
  * Read this before you rant on this singleton.

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Domain\Model\User;
+namespace Gaming\Identity\Domain\Model\User;
 
-use Gambling\Common\Domain\Exception\ConcurrencyException;
-use Gambling\Identity\Domain\Model\User\Exception\UserNotFoundException;
+use Gaming\Common\Domain\Exception\ConcurrencyException;
+use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 
 interface Users
 {

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Chat\Presentation\Console;
+namespace Gaming\Chat\Presentation\Console;
 
-use Gambling\Chat\Application\ChatService;
-use Gambling\Chat\Infrastructure\Messaging\CommandConsumer;
-use Gambling\Common\MessageBroker\MessageBroker;
+use Gaming\Chat\Application\ChatService;
+use Gaming\Chat\Infrastructure\Messaging\CommandConsumer;
+use Gaming\Common\MessageBroker\MessageBroker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

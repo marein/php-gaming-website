@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Port\Adapter\Persistence\Migration;
+namespace Gaming\Identity\Port\Adapter\Persistence\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

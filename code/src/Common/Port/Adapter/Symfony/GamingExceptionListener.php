@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Port\Adapter\Symfony;
+namespace Gaming\Common\Port\Adapter\Symfony;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,12 +9,12 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Handles the exception for the whole gambling domain based on convention.
+ * Handles the exception for the whole gaming domain based on convention.
  * For example, if an exception has "NotFound" in its name, this class sets the status code to 404.
  *
  * todo: Return meaningful exception messages for the user.
  */
-final class GamblingExceptionListener
+final class GamingExceptionListener
 {
     /**
      * @param GetResponseForExceptionEvent $event

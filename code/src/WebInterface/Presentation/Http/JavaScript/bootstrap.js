@@ -14,22 +14,22 @@ app.log = function (message) {
     }
 };
 
-app.eventPublisher = new Gambling.Common.EventPublisher();
+app.eventPublisher = new Gaming.Common.EventPublisher();
 
-app.notification = new Gambling.Common.Notification(
+app.notification = new Gaming.Common.Notification(
     document.getElementById('notification')
 );
 
-app.httpClient = new Gambling.Common.HttpClient(
+app.httpClient = new Gaming.Common.HttpClient(
     app.baseUrl,
     app.notification
 );
 
-app.gameService = new Gambling.ConnectFour.GameService(
+app.gameService = new Gaming.ConnectFour.GameService(
     app.httpClient
 );
 
-app.chatService = new Gambling.Chat.ChatService(
+app.chatService = new Gaming.Chat.ChatService(
     app.httpClient
 );
 

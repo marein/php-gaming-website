@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\Board;
+namespace Gaming\ConnectFour\Domain\Game\Board;
 
 /**
  * This class fakes the missing enumeration feature.

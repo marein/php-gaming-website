@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Repository;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
-use Gambling\Common\EventStore\EventStore;
-use Gambling\Common\EventStore\StoredEvent;
-use Gambling\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\Game;
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
-use Gambling\ConnectFour\Domain\Game\GameId;
+use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\StoredEvent;
+use Gaming\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
+use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class EventStoreGameFinder implements GameFinder
 {

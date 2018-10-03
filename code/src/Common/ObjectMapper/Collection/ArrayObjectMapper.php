@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\ObjectMapper\Collection;
+namespace Gaming\Common\ObjectMapper\Collection;
 
-use Gambling\Common\ObjectMapper\Mapper;
+use Gaming\Common\ObjectMapper\Mapper;
 
 final class ArrayObjectMapper implements Mapper
 {

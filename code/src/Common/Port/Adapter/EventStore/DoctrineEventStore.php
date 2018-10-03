@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Port\Adapter\EventStore;
+namespace Gaming\Common\Port\Adapter\EventStore;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\TransactionIsolationLevel;
-use Gambling\Common\Domain\DomainEvent;
-use Gambling\Common\EventStore\EventStore;
-use Gambling\Common\EventStore\Exception\EventStoreException;
-use Gambling\Common\EventStore\Exception\UnrecoverableException;
-use Gambling\Common\EventStore\StoredEvent;
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\Exception\EventStoreException;
+use Gaming\Common\EventStore\Exception\UnrecoverableException;
+use Gaming\Common\EventStore\StoredEvent;
 
 final class DoctrineEventStore implements EventStore
 {

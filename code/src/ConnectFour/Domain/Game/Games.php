@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gaming\ConnectFour\Domain\Game;
 
-use Gambling\Common\Domain\Exception\ConcurrencyException;
-use Gambling\ConnectFour\Domain\Game\Exception\GameNotFoundException;
+use Gaming\Common\Domain\Exception\ConcurrencyException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 
 interface Games
 {

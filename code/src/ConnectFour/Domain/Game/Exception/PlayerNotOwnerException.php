@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\Exception;
+namespace Gaming\ConnectFour\Domain\Game\Exception;
 
 final class PlayerNotOwnerException extends GameException
 {

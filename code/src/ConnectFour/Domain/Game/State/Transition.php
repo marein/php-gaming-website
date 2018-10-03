@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\State;
+namespace Gaming\ConnectFour\Domain\Game\State;
 
-use Gambling\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\DomainEvent;
 
 final class Transition
 {

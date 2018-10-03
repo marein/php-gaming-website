@@ -1,10 +1,10 @@
-var Gambling = Gambling || {};
-Gambling.Chat = Gambling.Chat || {};
+var Gaming = Gaming || {};
+Gaming.Chat = Gaming.Chat || {};
 
-Gambling.Chat.ChatService = class
+Gaming.Chat.ChatService = class
 {
     /**
-     * @param {Gambling.Common.HttpClient} httpClient
+     * @param {Gaming.Common.HttpClient} httpClient
      */
     constructor(httpClient)
     {
