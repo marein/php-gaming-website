@@ -2,7 +2,7 @@ services:
 
     # The following definitions decorate the application life cycle. This could be done with a factory object.
     identity.application-life-cycle:
-        class: Gambling\Common\Port\Adapter\Application\DoctrineReconnectApplicationLifeCycle
+        class: Gaming\Common\Port\Adapter\Application\DoctrineReconnectApplicationLifeCycle
         public: false
         arguments:
             - '@identity.retry-application-life-cycle'
@@ -10,15 +10,15 @@ services:
             - 300
 
     identity.retry-application-life-cycle:
-        class: Gambling\Common\Application\RetryApplicationLifeCycle
+        class: Gaming\Common\Application\RetryApplicationLifeCycle
         public: false
         arguments:
             - '@identity.doctrine-transactional-application-life-cycle'
             - 3
-            - 'Gambling\Common\Domain\Exception\ConcurrencyException'
+            - 'Gaming\Common\Domain\Exception\ConcurrencyException'
 
     identity.doctrine-transactional-application-life-cycle:
-        class: Gambling\Common\Port\Adapter\Application\DoctrineTransactionalApplicationLifeCycle
+        class: Gaming\Common\Port\Adapter\Application\DoctrineTransactionalApplicationLifeCycle
         public: false
         arguments:
             - '@identity.doctrine-dbal'

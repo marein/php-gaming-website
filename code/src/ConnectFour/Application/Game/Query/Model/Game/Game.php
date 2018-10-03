@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Query\Model\Game;
+namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-use Gambling\Common\EventStore\StoredEvent;
+use Gaming\Common\EventStore\StoredEvent;
 
 /**
  * This class takes events from the event store and project these to itself.

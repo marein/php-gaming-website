@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Domain;
+namespace Gaming\Common\Domain;
 
 final class DomainEventPublisher
 {

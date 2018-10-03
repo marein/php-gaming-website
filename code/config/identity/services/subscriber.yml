@@ -1,7 +1,7 @@
 services:
 
     identity.store-domain-events-subscriber:
-        class: Gambling\Identity\Port\Adapter\Persistence\EventStore\StoreDomainEventsSubscriber
+        class: Gaming\Identity\Port\Adapter\Persistence\EventStore\StoreDomainEventsSubscriber
         public: false
         arguments:
             - '@identity.event-store'

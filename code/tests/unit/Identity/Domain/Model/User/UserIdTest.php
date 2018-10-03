@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Domain\Model\User;
+namespace Gaming\Identity\Domain\Model\User;
 
-use Gambling\Identity\Domain\Model\User\Exception\UserNotFoundException;
+use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 

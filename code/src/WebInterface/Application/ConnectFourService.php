@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Application;
+namespace Gaming\WebInterface\Application;
 
 interface ConnectFourService
 {

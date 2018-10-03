@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling;
+namespace Gaming;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;

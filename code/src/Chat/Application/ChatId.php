@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Chat\Application;
+namespace Gaming\Chat\Application;
 
-use Gambling\Chat\Application\Exception\ChatNotFoundException;
+use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 

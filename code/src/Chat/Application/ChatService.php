@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Chat\Application;
+namespace Gaming\Chat\Application;
 
-use Gambling\Chat\Application\Event\ChatInitiated;
-use Gambling\Chat\Application\Event\MessageWritten;
-use Gambling\Chat\Application\Exception\AuthorNotAllowedException;
-use Gambling\Chat\Application\Exception\ChatNotFoundException;
-use Gambling\Chat\Application\Exception\EmptyMessageException;
-use Gambling\Common\Application\ApplicationLifeCycle;
-use Gambling\Common\Clock\Clock;
-use Gambling\Common\EventStore\EventStore;
+use Gaming\Chat\Application\Event\ChatInitiated;
+use Gaming\Chat\Application\Event\MessageWritten;
+use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
+use Gaming\Chat\Application\Exception\ChatNotFoundException;
+use Gaming\Chat\Application\Exception\EmptyMessageException;
+use Gaming\Common\Application\ApplicationLifeCycle;
+use Gaming\Common\Clock\Clock;
+use Gaming\Common\EventStore\EventStore;
 
 /**
  * Although this class is an application service, it still contains business logic.

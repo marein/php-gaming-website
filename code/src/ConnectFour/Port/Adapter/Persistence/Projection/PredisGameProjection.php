@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Projection;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 
-use Gambling\Common\EventStore\StoredEvent;
-use Gambling\Common\EventStore\StoredEventSubscriber;
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\Game;
+use Gaming\Common\EventStore\StoredEvent;
+use Gaming\Common\EventStore\StoredEventSubscriber;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Predis\Client;
 
 /**

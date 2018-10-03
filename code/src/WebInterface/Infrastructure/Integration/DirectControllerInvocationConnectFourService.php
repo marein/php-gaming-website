@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Infrastructure\Integration;
+namespace Gaming\WebInterface\Infrastructure\Integration;
 
-use Gambling\ConnectFour\Port\Adapter\Http\GameController;
-use Gambling\WebInterface\Application\ConnectFourService;
+use Gaming\ConnectFour\Port\Adapter\Http\GameController;
+use Gaming\WebInterface\Application\ConnectFourService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

@@ -5,7 +5,7 @@ services:
     #  Database and application  #
     ##############################
     traefik:
-        image: marein/php-gambling-website:traefik
+        image: marein/php-gaming-website:traefik
         ports:
             - "80:80"
         links:
@@ -14,7 +14,7 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
     mysql-chat:
-        image: marein/php-gambling-website:mysql
+        image: marein/php-gaming-website:mysql
         command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
@@ -22,7 +22,7 @@ services:
             - mysql-chat:/var/lib/mysql
         restart: on-failure
     mysql-connect-four:
-        image: marein/php-gambling-website:mysql
+        image: marein/php-gaming-website:mysql
         command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
@@ -30,7 +30,7 @@ services:
             - mysql-connect-four:/var/lib/mysql
         restart: on-failure
     mysql-identity:
-        image: marein/php-gambling-website:mysql
+        image: marein/php-gaming-website:mysql
         command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
@@ -38,44 +38,44 @@ services:
             - mysql-identity:/var/lib/mysql
         restart: on-failure
     redis-chat:
-        image: marein/php-gambling-website:redis
+        image: marein/php-gaming-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis-chat:/data
         restart: on-failure
     redis-connect-four:
-        image: marein/php-gambling-website:redis
+        image: marein/php-gaming-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis-connect-four:/data
         restart: on-failure
     redis-identity:
-        image: marein/php-gambling-website:redis
+        image: marein/php-gaming-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis-identity:/data
         restart: on-failure
     redis-web-interface:
-        image: marein/php-gambling-website:redis
+        image: marein/php-gaming-website:redis
         command: redis-server --appendonly yes
         volumes:
             - redis-web-interface:/data
         restart: on-failure
     rabbit-mq:
-        image: marein/php-gambling-website:rabbit-mq
+        image: marein/php-gaming-website:rabbit-mq
         hostname: rabbit-mq
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
         restart: on-failure
     nchan:
-        image: marein/php-gambling-website:nchan
+        image: marein/php-gaming-website:nchan
         restart: on-failure
         labels:
             - "traefik.enable=true"
             - "traefik.priority=20"
             - "traefik.frontend.rule=PathPrefix:/sse"
     nginx:
-        image: marein/php-gambling-website:nginx
+        image: marein/php-gaming-website:nginx
         links:
             - php-fpm
         restart: on-failure
@@ -84,7 +84,7 @@ services:
             - "traefik.priority=10"
             - "traefik.frontend.rule=PathPrefix:/"
     php-fpm:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         environment:
             GAMBLING_ENVIRONMENT: prod
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
@@ -105,7 +105,7 @@ services:
     #   Long running processes   #
     ##############################
     php-connect-four-build-query-model:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         command: /project/bin/console connect-four:build-query-model --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
@@ -123,7 +123,7 @@ services:
             - rabbit-mq
         restart: on-failure
     php-connect-four-publish-stored-events-to-rabbit-mq:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         command: /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
@@ -141,7 +141,7 @@ services:
             - rabbit-mq
         restart: on-failure
     php-chat-publish-stored-events-to-rabbit-mq:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         command: /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
@@ -159,7 +159,7 @@ services:
             - rabbit-mq
         restart: on-failure
     php-identity-publish-stored-events-to-rabbit-mq:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         command: /project/bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
@@ -177,7 +177,7 @@ services:
             - rabbit-mq
         restart: on-failure
     php-web-interface-publish-running-games-count-to-nchan:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
@@ -195,7 +195,7 @@ services:
             - rabbit-mq
         restart: on-failure
     php-web-interface-publish-rabbit-mq-events-to-nchan:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         command: /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
@@ -213,7 +213,7 @@ services:
             - rabbit-mq
         restart: on-failure
     php-chat-command-listener:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         command: /project/bin/console chat:command-listener --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
@@ -230,7 +230,7 @@ services:
             - rabbit-mq
         restart: on-failure
     php-connect-four-referee:
-        image: marein/php-gambling-website:php-fpm
+        image: marein/php-gaming-website:php-fpm
         command: /project/bin/console connect-four:referee --env=prod
         environment:
             GAMBLING_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat

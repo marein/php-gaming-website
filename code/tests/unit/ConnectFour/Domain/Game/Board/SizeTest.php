@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\Board;
+namespace Gaming\ConnectFour\Domain\Game\Board;
 
-use Gambling\ConnectFour\Domain\Game\Exception\InvalidSizeException;
+use Gaming\ConnectFour\Domain\Game\Exception\InvalidSizeException;
 use PHPUnit\Framework\TestCase;
 
 class SizeTest extends TestCase

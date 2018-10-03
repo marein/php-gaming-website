@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Mapping;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Mapping;
 
-use Gambling\Common\ObjectMapper\DiscriminatorMapper;
-use Gambling\Common\ObjectMapper\Exception\MapperException;
-use Gambling\Common\ObjectMapper\Mapper;
-use Gambling\Common\ObjectMapper\ObjectMapper;
-use Gambling\Common\ObjectMapper\Scalar\IntMapper;
-use Gambling\ConnectFour\Domain\Game\State\Aborted;
-use Gambling\ConnectFour\Domain\Game\State\Drawn;
-use Gambling\ConnectFour\Domain\Game\State\Open;
-use Gambling\ConnectFour\Domain\Game\State\Resigned;
-use Gambling\ConnectFour\Domain\Game\State\Running;
-use Gambling\ConnectFour\Domain\Game\State\Won;
+use Gaming\Common\ObjectMapper\DiscriminatorMapper;
+use Gaming\Common\ObjectMapper\Exception\MapperException;
+use Gaming\Common\ObjectMapper\Mapper;
+use Gaming\Common\ObjectMapper\ObjectMapper;
+use Gaming\Common\ObjectMapper\Scalar\IntMapper;
+use Gaming\ConnectFour\Domain\Game\State\Aborted;
+use Gaming\ConnectFour\Domain\Game\State\Drawn;
+use Gaming\ConnectFour\Domain\Game\State\Open;
+use Gaming\ConnectFour\Domain\Game\State\Resigned;
+use Gaming\ConnectFour\Domain\Game\State\Running;
+use Gaming\ConnectFour\Domain\Game\State\Won;
 
 final class StateMapper implements Mapper
 {

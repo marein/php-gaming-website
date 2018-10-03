@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Port\Adapter\Http;
+namespace Gaming\Identity\Port\Adapter\Http;
 
-use Gambling\Identity\Application\User\Command\ArriveCommand;
-use Gambling\Identity\Application\User\Command\SignUpCommand;
-use Gambling\Identity\Application\User\UserService;
+use Gaming\Identity\Application\User\Command\ArriveCommand;
+use Gaming\Identity\Application\User\Command\SignUpCommand;
+use Gaming\Identity\Application\User\UserService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

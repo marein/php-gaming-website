@@ -1,6 +1,6 @@
 {
-  "name": "marein/php-gambling-website",
-  "description": "A gambling website where people can play against each other.",
+  "name": "marein/php-gaming-website",
+  "description": "A gaming website where people can play against each other.",
   "authors": [
     {
       "name": "Markus Reinhold",
@@ -9,7 +9,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Gambling\\": "src/"
+      "Gaming\\": "src/"
     }
   },
   "require": {

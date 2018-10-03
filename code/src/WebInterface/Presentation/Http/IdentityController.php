@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Presentation\Http;
+namespace Gaming\WebInterface\Presentation\Http;
 
-use Gambling\WebInterface\Application\IdentityService;
+use Gaming\WebInterface\Application\IdentityService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

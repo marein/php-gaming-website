@@ -1,4 +1,4 @@
-Gambling\Identity\Domain\Model\User\UserId:
+Gaming\Identity\Domain\Model\User\UserId:
     type: embeddable
     id:
         userId:

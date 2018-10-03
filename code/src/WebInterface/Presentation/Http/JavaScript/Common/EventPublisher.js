@@ -1,7 +1,7 @@
-var Gambling = Gambling || {};
-Gambling.Common = Gambling.Common || {};
+var Gaming = Gaming || {};
+Gaming.Common = Gaming.Common || {};
 
-Gambling.Common.EventPublisher = class
+Gaming.Common.EventPublisher = class
 {
     constructor()
     {

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Mapping;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Mapping;
 
-use Gambling\Common\ObjectMapper\Mapper;
-use Gambling\ConnectFour\Domain\Game\Board\Field;
-use Gambling\ConnectFour\Domain\Game\Board\Point;
-use Gambling\ConnectFour\Domain\Game\Board\Stone;
+use Gaming\Common\ObjectMapper\Mapper;
+use Gaming\ConnectFour\Domain\Game\Board\Field;
+use Gaming\ConnectFour\Domain\Game\Board\Point;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
 
 final class FieldMapper implements Mapper
 {

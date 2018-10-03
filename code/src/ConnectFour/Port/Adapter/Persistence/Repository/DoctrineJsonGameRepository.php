@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Repository;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
 use Doctrine\DBAL\Connection;
-use Gambling\Common\Domain\DomainEventPublisher;
-use Gambling\Common\Domain\Exception\ConcurrencyException;
-use Gambling\ConnectFour\Domain\Game\Exception\GameNotFoundException;
-use Gambling\ConnectFour\Domain\Game\Game;
-use Gambling\ConnectFour\Domain\Game\GameId;
-use Gambling\ConnectFour\Domain\Game\Games;
-use Gambling\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapper;
-use Gambling\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapperFactory;
+use Gaming\Common\Domain\DomainEventPublisher;
+use Gaming\Common\Domain\Exception\ConcurrencyException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Domain\Game\Game;
+use Gaming\ConnectFour\Domain\Game\GameId;
+use Gaming\ConnectFour\Domain\Game\Games;
+use Gaming\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapper;
+use Gaming\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapperFactory;
 
 final class DoctrineJsonGameRepository implements Games
 {

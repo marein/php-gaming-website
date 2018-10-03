@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Bus\Exception;
+namespace Gaming\Common\Bus\Exception;
 
 class BusException extends \Exception
 {

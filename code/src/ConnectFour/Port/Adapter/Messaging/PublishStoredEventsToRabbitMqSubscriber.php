@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Messaging;
+namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
-use Gambling\Common\EventStore\StoredEvent;
-use Gambling\Common\EventStore\StoredEventSubscriber;
-use Gambling\Common\MessageBroker\MessageBroker;
+use Gaming\Common\EventStore\StoredEvent;
+use Gaming\Common\EventStore\StoredEventSubscriber;
+use Gaming\Common\MessageBroker\MessageBroker;
 
 final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
 {

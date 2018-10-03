@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\EventStore;
+namespace Gaming\Common\EventStore;
 
-use Gambling\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
-use Gambling\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
+use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
+use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
 
 final class FollowEventStoreDispatcher
 {

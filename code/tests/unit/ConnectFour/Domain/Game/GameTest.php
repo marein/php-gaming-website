@@ -1,28 +1,28 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gaming\ConnectFour\Domain\Game;
 
-use Gambling\ConnectFour\Domain\Game\Board\Size;
-use Gambling\ConnectFour\Domain\Game\Board\Stone;
-use Gambling\ConnectFour\Domain\Game\Event\ChatAssigned;
-use Gambling\ConnectFour\Domain\Game\Event\GameAborted;
-use Gambling\ConnectFour\Domain\Game\Event\GameDrawn;
-use Gambling\ConnectFour\Domain\Game\Event\GameResigned;
-use Gambling\ConnectFour\Domain\Game\Event\GameWon;
-use Gambling\ConnectFour\Domain\Game\Event\PlayerJoined;
-use Gambling\ConnectFour\Domain\Game\Event\PlayerMoved;
-use Gambling\ConnectFour\Domain\Game\Exception\GameFinishedException;
-use Gambling\ConnectFour\Domain\Game\Exception\GameNotRunningException;
-use Gambling\ConnectFour\Domain\Game\Exception\GameRunningException;
-use Gambling\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
-use Gambling\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
-use Gambling\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
-use Gambling\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
+use Gaming\ConnectFour\Domain\Game\Board\Size;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
+use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
+use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
+use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameWon;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
+use Gaming\ConnectFour\Domain\Game\Exception\GameFinishedException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
+use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
+use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
+use Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
 use PHPUnit\Framework\TestCase;
 
 /**
- * This test covers the whole Gambling\ConnectFour\Domain\Game\State namespace
+ * This test covers the whole Gaming\ConnectFour\Domain\Game\State namespace
  * as the game itself and its states form a conceptual unit.
  */
 class GameTest extends TestCase

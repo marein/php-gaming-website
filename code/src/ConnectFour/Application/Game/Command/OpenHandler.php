@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Command;
+namespace Gaming\ConnectFour\Application\Game\Command;
 
-use Gambling\ConnectFour\Domain\Game\Configuration;
-use Gambling\ConnectFour\Domain\Game\Game;
-use Gambling\ConnectFour\Domain\Game\Games;
+use Gaming\ConnectFour\Domain\Game\Configuration;
+use Gaming\ConnectFour\Domain\Game\Game;
+use Gaming\ConnectFour\Domain\Game\Games;
 
 final class OpenHandler
 {

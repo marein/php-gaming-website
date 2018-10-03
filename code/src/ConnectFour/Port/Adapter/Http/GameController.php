@@ -1,23 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Http;
+namespace Gaming\ConnectFour\Port\Adapter\Http;
 
-use Gambling\Common\Bus\Bus;
-use Gambling\ConnectFour\Application\Game\Command\AbortCommand;
-use Gambling\ConnectFour\Application\Game\Command\JoinCommand;
-use Gambling\ConnectFour\Application\Game\Command\MoveCommand;
-use Gambling\ConnectFour\Application\Game\Command\OpenCommand;
-use Gambling\ConnectFour\Application\Game\Command\ResignCommand;
-use Gambling\ConnectFour\Application\Game\Query\GameQuery;
-use Gambling\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
-use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
-use Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
-use Gambling\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
-use Gambling\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
-use Gambling\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGames;
-use Gambling\ConnectFour\Application\Game\Query\OpenGamesQuery;
-use Gambling\ConnectFour\Application\Game\Query\RunningGamesQuery;
+use Gaming\Common\Bus\Bus;
+use Gaming\ConnectFour\Application\Game\Command\AbortCommand;
+use Gaming\ConnectFour\Application\Game\Command\JoinCommand;
+use Gaming\ConnectFour\Application\Game\Command\MoveCommand;
+use Gaming\ConnectFour\Application\Game\Command\OpenCommand;
+use Gaming\ConnectFour\Application\Game\Command\ResignCommand;
+use Gaming\ConnectFour\Application\Game\Query\GameQuery;
+use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
+use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGames;
+use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
+use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

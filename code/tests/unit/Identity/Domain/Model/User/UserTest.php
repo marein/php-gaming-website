@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Domain\Model\User;
+namespace Gaming\Identity\Domain\Model\User;
 
-use Gambling\Identity\Domain\Model\User\Event\UserArrived;
-use Gambling\Identity\Domain\Model\User\Event\UserSignedUp;
-use Gambling\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
-use Gambling\Identity\Port\Adapter\HashAlgorithm\NotSecureHashAlgorithm;
+use Gaming\Identity\Domain\Model\User\Event\UserArrived;
+use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
+use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
+use Gaming\Identity\Port\Adapter\HashAlgorithm\NotSecureHashAlgorithm;
 use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase

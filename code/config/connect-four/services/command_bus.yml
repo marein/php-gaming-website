@@ -2,7 +2,7 @@ services:
 
     # The following definitions decorate the callable command bus. This could be done with a factory object.
     connect-four.command-bus:
-        class: Gambling\Common\Port\Adapter\Bus\DoctrineReconnectBus
+        class: Gaming\Common\Port\Adapter\Bus\DoctrineReconnectBus
         public: false
         arguments:
             - '@connect-four.retry-command-bus'
@@ -10,15 +10,15 @@ services:
             - 300
 
     connect-four.retry-command-bus:
-        class: Gambling\Common\Bus\RetryBus
+        class: Gaming\Common\Bus\RetryBus
         public: false
         arguments:
             - '@connect-four.doctrine-transactional-command-bus'
             - 3
-            - 'Gambling\Common\Domain\Exception\ConcurrencyException'
+            - 'Gaming\Common\Domain\Exception\ConcurrencyException'
 
     connect-four.doctrine-transactional-command-bus:
-        class: Gambling\Common\Port\Adapter\Bus\DoctrineTransactionalBus
+        class: Gaming\Common\Port\Adapter\Bus\DoctrineTransactionalBus
         public: false
         arguments:
             - '@connect-four.callable-command-bus'
@@ -26,84 +26,84 @@ services:
 
     # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.callable-command-bus:
-        class: Gambling\Common\Bus\CallableBus
+        class: Gaming\Common\Bus\CallableBus
         public: false
         calls:
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Command\AbortCommand',
+                  'Gaming\ConnectFour\Application\Game\Command\AbortCommand',
                   '@connect-four.command.abort-handler'
                 ]
               ]
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Command\ResignCommand',
+                  'Gaming\ConnectFour\Application\Game\Command\ResignCommand',
                   '@connect-four.command.resign-handler'
                 ]
               ]
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Command\AssignChatCommand',
+                  'Gaming\ConnectFour\Application\Game\Command\AssignChatCommand',
                   '@connect-four.command.assign-chat-handler'
                 ]
               ]
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Command\JoinCommand',
+                  'Gaming\ConnectFour\Application\Game\Command\JoinCommand',
                   '@connect-four.command.join-handler'
                 ]
               ]
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Command\MoveCommand',
+                  'Gaming\ConnectFour\Application\Game\Command\MoveCommand',
                   '@connect-four.command.move-handler'
                 ]
               ]
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Command\OpenCommand',
+                  'Gaming\ConnectFour\Application\Game\Command\OpenCommand',
                   '@connect-four.command.open-handler'
                 ]
               ]
 
     connect-four.command.abort-handler:
-        class: Gambling\ConnectFour\Application\Game\Command\AbortHandler
+        class: Gaming\ConnectFour\Application\Game\Command\AbortHandler
         public: false
         arguments:
             - '@connect-four.game-repository'
 
     connect-four.command.resign-handler:
-        class: Gambling\ConnectFour\Application\Game\Command\ResignHandler
+        class: Gaming\ConnectFour\Application\Game\Command\ResignHandler
         public: false
         arguments:
             - '@connect-four.game-repository'
 
     connect-four.command.assign-chat-handler:
-        class: Gambling\ConnectFour\Application\Game\Command\AssignChatHandler
+        class: Gaming\ConnectFour\Application\Game\Command\AssignChatHandler
         public: false
         arguments:
             - '@connect-four.game-repository'
 
     connect-four.command.join-handler:
-        class: Gambling\ConnectFour\Application\Game\Command\JoinHandler
+        class: Gaming\ConnectFour\Application\Game\Command\JoinHandler
         public: false
         arguments:
             - '@connect-four.game-repository'
 
     connect-four.command.move-handler:
-        class: Gambling\ConnectFour\Application\Game\Command\MoveHandler
+        class: Gaming\ConnectFour\Application\Game\Command\MoveHandler
         public: false
         arguments:
             - '@connect-four.game-repository'
 
     connect-four.command.open-handler:
-        class: Gambling\ConnectFour\Application\Game\Command\OpenHandler
+        class: Gaming\ConnectFour\Application\Game\Command\OpenHandler
         public: false
         arguments:
             - '@connect-four.game-repository'

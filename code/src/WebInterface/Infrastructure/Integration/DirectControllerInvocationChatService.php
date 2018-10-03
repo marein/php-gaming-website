@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Infrastructure\Integration;
+namespace Gaming\WebInterface\Infrastructure\Integration;
 
-use Gambling\Chat\Presentation\Http\ChatController;
-use Gambling\WebInterface\Application\ChatService;
+use Gaming\Chat\Presentation\Http\ChatController;
+use Gaming\WebInterface\Application\ChatService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

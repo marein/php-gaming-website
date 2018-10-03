@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gaming\ConnectFour\Domain\Game;
 
-use Gambling\ConnectFour\Domain\Game\Board\Size;
-use Gambling\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
-use Gambling\ConnectFour\Domain\Game\WinningRule\WinningRule;
+use Gaming\ConnectFour\Domain\Game\Board\Size;
+use Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRule;
 
 final class Configuration
 {

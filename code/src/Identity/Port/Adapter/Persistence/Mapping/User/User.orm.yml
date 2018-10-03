@@ -1,12 +1,12 @@
-Gambling\Identity\Domain\Model\User\User:
+Gaming\Identity\Domain\Model\User\User:
     table: user
     type: entity
     embedded:
         userId:
-            class: Gambling\Identity\Domain\Model\User\UserId
+            class: Gaming\Identity\Domain\Model\User\UserId
             columnPrefix: false
         credentials:
-            class: Gambling\Identity\Domain\Model\User\Credentials
+            class: Gaming\Identity\Domain\Model\User\Credentials
     fields:
         version:
             column: version

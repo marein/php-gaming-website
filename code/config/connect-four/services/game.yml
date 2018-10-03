@@ -1,27 +1,27 @@
 services:
 
     connect-four.domain-event-publisher:
-        class: Gambling\Common\Domain\DomainEventPublisher
+        class: Gaming\Common\Domain\DomainEventPublisher
         public: false
         calls:
             - ['subscribe', ['@connect-four.store-domain-events-subscriber']]
 
     connect-four.game-controller:
-        class: Gambling\ConnectFour\Port\Adapter\Http\GameController
+        class: Gaming\ConnectFour\Port\Adapter\Http\GameController
         public: false
         arguments:
             - '@connect-four.command-bus'
             - '@connect-four.query-bus'
 
     connect-four.game-repository:
-        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\DoctrineJsonGameRepository
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\DoctrineJsonGameRepository
         public: false
         arguments:
             - '@connect-four.doctrine-dbal'
             - '@connect-four.domain-event-publisher'
 
     connect-four.predis-game-finder:
-        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameFinder
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameFinder
         public: false
         decorates: connect-four.game-finder
         arguments:
@@ -29,25 +29,25 @@ services:
             - '@connect-four.predis-game-finder.inner'
 
     connect-four.game-finder:
-        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\EventStoreGameFinder
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\EventStoreGameFinder
         public: false
         arguments:
             - '@connect-four.event-store'
 
     connect-four.games-by-player-finder:
-        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerFinder
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerFinder
         public: false
         arguments:
             - '@connect-four.predis'
 
     connect-four.open-games-finder:
-        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisOpenGamesFinder
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisOpenGamesFinder
         public: false
         arguments:
             - '@connect-four.predis'
 
     connect-four.running-games-finder:
-        class: Gambling\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGamesFinder
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGamesFinder
         public: false
         arguments:
             - '@connect-four.predis'

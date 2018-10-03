@@ -1,7 +1,7 @@
-var Gambling = Gambling || {};
-Gambling.Common = Gambling.Common || {};
+var Gaming = Gaming || {};
+Gaming.Common = Gaming.Common || {};
 
-Gambling.Common.Notification = class
+Gaming.Common.Notification = class
 {
     /**
      * @param {Node} element

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\EventStore;
+namespace Gaming\Common\EventStore;
 
-use Gambling\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\DomainEvent;
 
 /**
  * This event store implementation puts the thread to sleep when no events are retrieved.

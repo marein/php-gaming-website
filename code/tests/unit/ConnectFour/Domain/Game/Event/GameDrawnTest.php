@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\Event;
+namespace Gaming\ConnectFour\Domain\Game\Event;
 
-use Gambling\Common\Clock\Clock;
-use Gambling\ConnectFour\Domain\Game\GameId;
+use Gaming\Common\Clock\Clock;
+use Gaming\ConnectFour\Domain\Game\GameId;
 use PHPUnit\Framework\TestCase;
 
 final class GameDrawnTest extends TestCase

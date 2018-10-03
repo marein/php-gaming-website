@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Chat\Infrastructure;
+namespace Gaming\Chat\Infrastructure;
 
 use Doctrine\DBAL\Connection;
-use Gambling\Chat\Application\ChatGateway;
-use Gambling\Chat\Application\ChatId;
-use Gambling\Chat\Application\Exception\ChatNotFoundException;
+use Gaming\Chat\Application\ChatGateway;
+use Gaming\Chat\Application\ChatId;
+use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 final class DoctrineChatGateway implements ChatGateway
