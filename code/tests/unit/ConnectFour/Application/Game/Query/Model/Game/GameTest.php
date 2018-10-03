@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Query\Model\Game;
+namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-use Gambling\Common\EventStore\StoredEvent;
+use Gaming\Common\EventStore\StoredEvent;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase

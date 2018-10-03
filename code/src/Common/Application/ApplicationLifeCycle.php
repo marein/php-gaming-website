@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Application;
+namespace Gaming\Common\Application;
 
 interface ApplicationLifeCycle
 {

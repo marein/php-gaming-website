@@ -2,59 +2,59 @@ services:
 
     # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.query-bus:
-        class: Gambling\Common\Bus\CallableBus
+        class: Gaming\Common\Bus\CallableBus
         public: false
         calls:
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Query\GameQuery',
+                  'Gaming\ConnectFour\Application\Game\Query\GameQuery',
                   '@connect-four.query.game-handler'
                 ]
               ]
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Query\GamesByPlayerQuery',
+                  'Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery',
                   '@connect-four.query.games-by-player-handler'
                 ]
               ]
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Query\OpenGamesQuery',
+                  'Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery',
                   '@connect-four.query.open-games-handler'
                 ]
               ]
             - [
                 addHandler,
                 [
-                  'Gambling\ConnectFour\Application\Game\Query\RunningGamesQuery',
+                  'Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery',
                   '@connect-four.query.running-games-handler'
                 ]
               ]
 
     connect-four.query.game-handler:
-        class: Gambling\ConnectFour\Application\Game\Query\GameHandler
+        class: Gaming\ConnectFour\Application\Game\Query\GameHandler
         public: false
         arguments:
             - '@connect-four.game-finder'
             - '@connect-four.game-repository'
 
     connect-four.query.games-by-player-handler:
-        class: Gambling\ConnectFour\Application\Game\Query\GamesByPlayerHandler
+        class: Gaming\ConnectFour\Application\Game\Query\GamesByPlayerHandler
         public: false
         arguments:
             - '@connect-four.games-by-player-finder'
 
     connect-four.query.open-games-handler:
-        class: Gambling\ConnectFour\Application\Game\Query\OpenGamesHandler
+        class: Gaming\ConnectFour\Application\Game\Query\OpenGamesHandler
         public: false
         arguments:
             - '@connect-four.open-games-finder'
 
     connect-four.query.running-games-handler:
-        class: Gambling\ConnectFour\Application\Game\Query\RunningGamesHandler
+        class: Gaming\ConnectFour\Application\Game\Query\RunningGamesHandler
         public: false
         arguments:
             - '@connect-four.running-games-finder'

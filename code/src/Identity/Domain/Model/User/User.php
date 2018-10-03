@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Domain\Model\User;
+namespace Gaming\Identity\Domain\Model\User;
 
-use Gambling\Common\Domain\AggregateRoot;
-use Gambling\Common\Domain\IsAggregateRoot;
-use Gambling\Identity\Domain\HashAlgorithm;
-use Gambling\Identity\Domain\Model\User\Event\UserArrived;
-use Gambling\Identity\Domain\Model\User\Event\UserSignedUp;
-use Gambling\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
+use Gaming\Common\Domain\AggregateRoot;
+use Gaming\Common\Domain\IsAggregateRoot;
+use Gaming\Identity\Domain\HashAlgorithm;
+use Gaming\Identity\Domain\Model\User\Event\UserArrived;
+use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
+use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 
 class User implements AggregateRoot
 {

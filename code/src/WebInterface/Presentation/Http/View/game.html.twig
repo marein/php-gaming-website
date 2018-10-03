@@ -65,8 +65,8 @@
 {% block javascript %}
     <script type="text/javascript">
         (function () {
-            let game = Gambling.ConnectFour.Model.Game.fromObject({{ game|json_encode|raw }});
-            new Gambling.ConnectFour.Game(
+            let game = Gaming.ConnectFour.Model.Game.fromObject({{ game|json_encode|raw }});
+            new Gaming.ConnectFour.Game(
                 app.eventPublisher,
                 app.gameService,
                 document.getElementById('current-game'),
@@ -75,15 +75,15 @@
                 document.getElementById('follow-moves'),
                 game
             );
-            new Gambling.ConnectFour.AbortGameButton(
+            new Gaming.ConnectFour.AbortGameButton(
                 app.gameService,
                 document.getElementById('abort-game')
             );
-            new Gambling.ConnectFour.ResignGameButton(
+            new Gaming.ConnectFour.ResignGameButton(
                 app.gameService,
                 document.getElementById('resign-game')
             );
-            new Gambling.Chat.Widget(
+            new Gaming.Chat.Widget(
                 app.eventPublisher,
                 app.chatService,
                 document.getElementById('chat'),

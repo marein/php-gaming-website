@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Application;
+namespace Gaming\Common\Application;
 
-use Gambling\Chat\Application\ChatGateway;
-use Gambling\Chat\Application\ChatId;
-use Gambling\Chat\Application\ChatService;
-use Gambling\Chat\Application\Event\ChatInitiated;
-use Gambling\Chat\Application\Event\MessageWritten;
-use Gambling\Chat\Application\Exception\AuthorNotAllowedException;
-use Gambling\Chat\Application\Exception\EmptyMessageException;
-use Gambling\Common\Clock\Clock;
-use Gambling\Common\EventStore\EventStore;
+use Gaming\Chat\Application\ChatGateway;
+use Gaming\Chat\Application\ChatId;
+use Gaming\Chat\Application\ChatService;
+use Gaming\Chat\Application\Event\ChatInitiated;
+use Gaming\Chat\Application\Event\MessageWritten;
+use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
+use Gaming\Chat\Application\Exception\EmptyMessageException;
+use Gaming\Common\Clock\Clock;
+use Gaming\Common\EventStore\EventStore;
 use PHPUnit\Framework\TestCase;
 
 final class ChatServiceTest extends TestCase

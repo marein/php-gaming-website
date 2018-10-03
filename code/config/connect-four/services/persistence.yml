@@ -12,13 +12,13 @@ services:
         alias: 'doctrine.dbal.connect_four_connection'
 
     connect-four.message-broker:
-        class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
+        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageBroker
         public: false
         arguments:
             - '%env(GAMBLING_CONNECT_FOUR_RABBIT_MQ_DSN)%'
 
     connect-four.event-store:
-        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
+        class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
         arguments:
             - '@connect-four.doctrine-dbal'

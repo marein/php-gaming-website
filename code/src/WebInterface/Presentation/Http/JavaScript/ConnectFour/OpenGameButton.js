@@ -1,11 +1,11 @@
-var Gambling = Gambling || {};
-Gambling.ConnectFour = Gambling.ConnectFour || {};
+var Gaming = Gaming || {};
+Gaming.ConnectFour = Gaming.ConnectFour || {};
 
-Gambling.ConnectFour.OpenGameButton = class
+Gaming.ConnectFour.OpenGameButton = class
 {
     /**
-     * @param {Gambling.Common.EventPublisher} eventPublisher
-     * @param {Gambling.ConnectFour.GameService} gameService
+     * @param {Gaming.Common.EventPublisher} eventPublisher
+     * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} button
      */
     constructor(eventPublisher, gameService, button)

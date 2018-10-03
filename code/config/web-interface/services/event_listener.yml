@@ -1,7 +1,7 @@
 services:
 
     web-interface.assign-user-id-on-kernel-request:
-        class: Gambling\WebInterface\Infrastructure\EventListener\AssignUserIdOnKernelRequest
+        class: Gaming\WebInterface\Infrastructure\EventListener\AssignUserIdOnKernelRequest
         public: false
         arguments:
             - '@web-interface.identity-service'

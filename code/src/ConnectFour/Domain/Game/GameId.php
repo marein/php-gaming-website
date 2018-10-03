@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gaming\ConnectFour\Domain\Game;
 
-use Gambling\ConnectFour\Domain\Game\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 

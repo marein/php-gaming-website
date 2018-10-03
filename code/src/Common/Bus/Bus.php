@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Bus;
+namespace Gaming\Common\Bus;
 
 interface Bus
 {
     /**
-     * Handle the given command.
+     * Handle the given message.
      *
-     * @param mixed $command
+     * @param object $message
      *
      * @return mixed
      * @throws \Exception Any application based exception
      */
-    public function handle($command);
+    public function handle(object $message);
 }

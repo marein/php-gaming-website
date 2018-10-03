@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Query\Model\GamesByPlayer;
+namespace Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer;
 
 interface GamesByPlayerFinder
 {

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+while true; do
+  nohup $@ > /dev/stdout 2>&1 &
+  PID=$!
+  inotifywait -e modify,create,delete --exclude "__$" -r /project/src /project/config
+  kill $PID
+done

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Infrastructure\Messaging;
+namespace Gaming\WebInterface\Infrastructure\Messaging;
 
-use Gambling\Common\MessageBroker\Consumer;
-use Gambling\WebInterface\Application\BrowserNotifier;
+use Gaming\Common\MessageBroker\Consumer;
+use Gaming\WebInterface\Application\BrowserNotifier;
 
 final class PublishRabbitMqEventsToNchanConsumer implements Consumer
 {

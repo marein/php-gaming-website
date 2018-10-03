@@ -23,4 +23,4 @@ doctrine:
                     user:
                         type:     yml
                         dir:      '%kernel.project_dir%/src/Identity/Port/Adapter/Persistence/Mapping/User'
-                        prefix:   Gambling\Identity\Domain\Model\User
+                        prefix:   Gaming\Identity\Domain\Model\User

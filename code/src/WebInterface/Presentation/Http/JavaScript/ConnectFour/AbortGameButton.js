@@ -1,10 +1,10 @@
-var Gambling = Gambling || {};
-Gambling.ConnectFour = Gambling.ConnectFour || {};
+var Gaming = Gaming || {};
+Gaming.ConnectFour = Gaming.ConnectFour || {};
 
-Gambling.ConnectFour.AbortGameButton = class
+Gaming.ConnectFour.AbortGameButton = class
 {
     /**
-     * @param {Gambling.ConnectFour.GameService} gameService
+     * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} button
      */
     constructor(gameService, button)

@@ -1,7 +1,7 @@
 services:
 
     connect-four.build-query-model-command:
-        class: Gambling\ConnectFour\Port\Adapter\Console\BuildQueryModelCommand
+        class: Gaming\ConnectFour\Port\Adapter\Console\BuildQueryModelCommand
         public: false
         arguments:
             - '@connect-four.event-store'
@@ -10,7 +10,7 @@ services:
             -  { name: console.command }
 
     connect-four.publish-stored-events-to-rabbit-mq-command:
-        class: Gambling\ConnectFour\Port\Adapter\Console\PublishStoredEventsToRabbitMqCommand
+        class: Gaming\ConnectFour\Port\Adapter\Console\PublishStoredEventsToRabbitMqCommand
         public: false
         arguments:
             - '@connect-four.event-store'
@@ -20,7 +20,7 @@ services:
             -  { name: console.command }
 
     connect-four.referee-command:
-        class: Gambling\ConnectFour\Port\Adapter\Console\RefereeCommand
+        class: Gaming\ConnectFour\Port\Adapter\Console\RefereeCommand
         public: false
         arguments:
             - '@connect-four.message-broker'

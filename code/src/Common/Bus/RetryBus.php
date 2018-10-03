@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Bus;
+namespace Gaming\Common\Bus;
 
 final class RetryBus implements Bus
 {
@@ -46,28 +46,28 @@ final class RetryBus implements Bus
     /**
      * @inheritdoc
      */
-    public function handle($command)
+    public function handle(object $message)
     {
-        return $this->handleOrThrow($command);
+        return $this->handleOrThrow($message);
     }
 
     /**
      * Handle the given command.
      * Retry if the configured exception occur and the number of retries isn't reached.
      *
-     * @param mixed $command
+     * @param object $message
      * @param int   $currentTry
      *
      * @return mixed
      * @throws \Exception
      */
-    private function handleOrThrow($command, int $currentTry = 1)
+    private function handleOrThrow(object $message, int $currentTry = 1)
     {
         try {
-            return $this->bus->handle($command);
+            return $this->bus->handle($message);
         } catch (\Exception $exception) {
             if ($exception instanceof $this->retryOnException && $currentTry < $this->numberOfRetries) {
-                return $this->handleOrThrow($command, $currentTry + 1);
+                return $this->handleOrThrow($message, $currentTry + 1);
             }
 
             throw $exception;

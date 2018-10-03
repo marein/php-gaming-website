@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Port\Adapter\Persistence\Repository;
+namespace Gaming\Identity\Port\Adapter\Persistence\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
-use Gambling\Common\Domain\DomainEventPublisher;
-use Gambling\Common\Domain\Exception\ConcurrencyException;
-use Gambling\Identity\Domain\Model\User\Exception\UserNotFoundException;
-use Gambling\Identity\Domain\Model\User\User;
-use Gambling\Identity\Domain\Model\User\UserId;
-use Gambling\Identity\Domain\Model\User\Users;
+use Gaming\Common\Domain\DomainEventPublisher;
+use Gaming\Common\Domain\Exception\ConcurrencyException;
+use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
+use Gaming\Identity\Domain\Model\User\User;
+use Gaming\Identity\Domain\Model\User\UserId;
+use Gaming\Identity\Domain\Model\User\Users;
 
 final class DoctrineUserRepository implements Users
 {

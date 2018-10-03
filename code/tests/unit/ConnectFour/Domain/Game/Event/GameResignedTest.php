@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\Event;
+namespace Gaming\ConnectFour\Domain\Game\Event;
 
-use Gambling\Common\Clock\Clock;
-use Gambling\ConnectFour\Domain\Game\Board\Stone;
-use Gambling\ConnectFour\Domain\Game\GameId;
-use Gambling\ConnectFour\Domain\Game\Player;
+use Gaming\Common\Clock\Clock;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
+use Gaming\ConnectFour\Domain\Game\GameId;
+use Gaming\ConnectFour\Domain\Game\Player;
 use PHPUnit\Framework\TestCase;
 
 final class GameResignedTest extends TestCase

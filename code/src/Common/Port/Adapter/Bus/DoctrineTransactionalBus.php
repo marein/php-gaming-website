@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Port\Adapter\Bus;
+namespace Gaming\Common\Port\Adapter\Bus;
 
 use Doctrine\DBAL\Driver\Connection;
-use Gambling\Common\Bus\Bus;
+use Gaming\Common\Bus\Bus;
 
 final class DoctrineTransactionalBus implements Bus
 {
@@ -39,10 +39,10 @@ final class DoctrineTransactionalBus implements Bus
     /**
      * @inheritdoc
      */
-    public function handle($command)
+    public function handle(object $message)
     {
         if ($this->transactionAlreadyStarted) {
-            return $this->bus->handle($command);
+            return $this->bus->handle($message);
         }
 
         $this->transactionAlreadyStarted = true;
@@ -50,7 +50,7 @@ final class DoctrineTransactionalBus implements Bus
         try {
             $this->connection->beginTransaction();
 
-            $return = $this->bus->handle($command);
+            $return = $this->bus->handle($message);
 
             $this->connection->commit();
 

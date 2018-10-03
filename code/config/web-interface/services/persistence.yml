@@ -1,7 +1,7 @@
 services:
 
     web-interface.message-broker:
-        class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
+        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageBroker
         public: false
         arguments:
             - '%env(GAMBLING_WEB_INTERFACE_RABBIT_MQ_DSN)%'
@@ -15,7 +15,7 @@ services:
                 prefix: 'web-interface.'
 
     web-interface.session-handler:
-        class: Gambling\WebInterface\Infrastructure\Persistence\PredisSessionHandler
+        class: Gaming\WebInterface\Infrastructure\Persistence\PredisSessionHandler
         public: false
         arguments:
             - '@web-interface.predis'

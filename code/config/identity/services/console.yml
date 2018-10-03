@@ -1,7 +1,7 @@
 services:
 
     identity.publish-stored-events-to-rabbit-mq-command:
-        class: Gambling\Identity\Port\Adapter\Console\PublishStoredEventsToRabbitMqCommand
+        class: Gaming\Identity\Port\Adapter\Console\PublishStoredEventsToRabbitMqCommand
         public: false
         arguments:
             - '@identity.event-store'

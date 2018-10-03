@@ -1,8 +1,8 @@
-var Gambling = Gambling || {};
-Gambling.ConnectFour = Gambling.ConnectFour || {};
-Gambling.ConnectFour.Model = Gambling.ConnectFour.Model || {};
+var Gaming = Gaming || {};
+Gaming.ConnectFour = Gaming.ConnectFour || {};
+Gaming.ConnectFour.Model = Gaming.ConnectFour.Model || {};
 
-Gambling.ConnectFour.Model.Game = class
+Gaming.ConnectFour.Model.Game = class
 {
     /**
      * @param {String} gameId

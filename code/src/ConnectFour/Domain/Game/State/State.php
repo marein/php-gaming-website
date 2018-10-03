@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\State;
+namespace Gaming\ConnectFour\Domain\Game\State;
 
-use Gambling\ConnectFour\Domain\Game\Exception\GameException;
-use Gambling\ConnectFour\Domain\Game\GameId;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\GameId;
 
 interface State
 {

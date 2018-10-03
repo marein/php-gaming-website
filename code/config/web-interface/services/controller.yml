@@ -1,7 +1,7 @@
 services:
 
     web-interface.page-controller:
-        class: Gambling\WebInterface\Presentation\Http\PageController
+        class: Gaming\WebInterface\Presentation\Http\PageController
         arguments:
             - '@templating'
             - '@web-interface.connect-four-service'
@@ -9,21 +9,21 @@ services:
             - 'controller.service_arguments'
 
     web-interface.chat-controller:
-        class: Gambling\WebInterface\Presentation\Http\ChatController
+        class: Gaming\WebInterface\Presentation\Http\ChatController
         arguments:
             - '@web-interface.chat-service'
         tags:
             - 'controller.service_arguments'
 
     web-interface.connect-four-controller:
-        class: Gambling\WebInterface\Presentation\Http\ConnectFourController
+        class: Gaming\WebInterface\Presentation\Http\ConnectFourController
         arguments:
             - '@web-interface.connect-four-service'
         tags:
             - 'controller.service_arguments'
 
     web-interface.identity-controller:
-        class: Gambling\WebInterface\Presentation\Http\IdentityController
+        class: Gaming\WebInterface\Presentation\Http\IdentityController
         arguments:
             - '@web-interface.identity-service'
         tags:

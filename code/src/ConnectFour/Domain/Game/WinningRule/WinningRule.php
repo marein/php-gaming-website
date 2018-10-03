@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\WinningRule;
+namespace Gaming\ConnectFour\Domain\Game\WinningRule;
 
-use Gambling\ConnectFour\Domain\Game\Board\Board;
+use Gaming\ConnectFour\Domain\Game\Board\Board;
 
 interface WinningRule
 {

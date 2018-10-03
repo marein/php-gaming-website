@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\Bus;
+namespace Gaming\Common\Bus;
 
-use Gambling\Common\Bus\Exception\CommandHasNoHandlerException;
+use Gaming\Common\Bus\Exception\CommandHasNoHandlerException;
 
 final class CallableBus implements Bus
 {
@@ -34,14 +34,14 @@ final class CallableBus implements Bus
     /**
      * @inheritdoc
      */
-    public function handle($command)
+    public function handle(object $message)
     {
-        $class = get_class($command);
+        $class = get_class($message);
 
         if (!isset($this->handler[$class])) {
             throw new CommandHasNoHandlerException(sprintf('Given "%s"', $class));
         }
 
-        return $this->handler[$class]($command);
+        return $this->handler[$class]($message);
     }
 }

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Chat\Application\Event;
+namespace Gaming\Chat\Application\Event;
 
-use Gambling\Chat\Application\ChatId;
-use Gambling\Common\Clock\Clock;
+use Gaming\Chat\Application\ChatId;
+use Gaming\Common\Clock\Clock;
 use PHPUnit\Framework\TestCase;
 
 final class MessageWrittenTest extends TestCase

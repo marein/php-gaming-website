@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Persistence\Mapping;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Mapping;
 
-use Gambling\Common\ObjectMapper\Collection\ArrayMapper;
-use Gambling\Common\ObjectMapper\DiscriminatorMapper;
-use Gambling\Common\ObjectMapper\Mapper;
-use Gambling\Common\ObjectMapper\ObjectMapper;
-use Gambling\Common\ObjectMapper\Scalar\IntMapper;
-use Gambling\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
-use Gambling\ConnectFour\Domain\Game\WinningRule\DiagonalWinningRule;
-use Gambling\ConnectFour\Domain\Game\WinningRule\HorizontalWinningRule;
-use Gambling\ConnectFour\Domain\Game\WinningRule\MultipleWinningRule;
-use Gambling\ConnectFour\Domain\Game\WinningRule\VerticalWinningRule;
+use Gaming\Common\ObjectMapper\Collection\ArrayMapper;
+use Gaming\Common\ObjectMapper\DiscriminatorMapper;
+use Gaming\Common\ObjectMapper\Mapper;
+use Gaming\Common\ObjectMapper\ObjectMapper;
+use Gaming\Common\ObjectMapper\Scalar\IntMapper;
+use Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\DiagonalWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\HorizontalWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\MultipleWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\VerticalWinningRule;
 
 final class WinningRuleMapper implements Mapper
 {

@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Application\User;
+namespace Gaming\Identity\Application\User;
 
-use Gambling\Common\Application\ApplicationLifeCycle;
-use Gambling\Identity\Application\User\Command\ArriveCommand;
-use Gambling\Identity\Application\User\Command\SignUpCommand;
-use Gambling\Identity\Domain\HashAlgorithm;
-use Gambling\Identity\Domain\Model\User\Credentials;
-use Gambling\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
-use Gambling\Identity\Domain\Model\User\Exception\UserNotFoundException;
-use Gambling\Identity\Domain\Model\User\User;
-use Gambling\Identity\Domain\Model\User\UserId;
-use Gambling\Identity\Domain\Model\User\Users;
+use Gaming\Common\Application\ApplicationLifeCycle;
+use Gaming\Identity\Application\User\Command\ArriveCommand;
+use Gaming\Identity\Application\User\Command\SignUpCommand;
+use Gaming\Identity\Domain\HashAlgorithm;
+use Gaming\Identity\Domain\Model\User\Credentials;
+use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
+use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
+use Gaming\Identity\Domain\Model\User\User;
+use Gaming\Identity\Domain\Model\User\UserId;
+use Gaming\Identity\Domain\Model\User\Users;
 
 final class UserService
 {

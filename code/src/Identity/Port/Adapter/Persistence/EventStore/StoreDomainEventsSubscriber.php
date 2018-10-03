@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Port\Adapter\Persistence\EventStore;
+namespace Gaming\Identity\Port\Adapter\Persistence\EventStore;
 
-use Gambling\Common\Domain\DomainEvent;
-use Gambling\Common\Domain\DomainEventSubscriber;
-use Gambling\Common\EventStore\EventStore;
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\DomainEventSubscriber;
+use Gaming\Common\EventStore\EventStore;
 
 final class StoreDomainEventsSubscriber implements DomainEventSubscriber
 {

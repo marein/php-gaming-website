@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\ObjectMapper;
+namespace Gaming\Common\ObjectMapper;
 
-use Gambling\Common\ObjectMapper\Exception\MapperException;
+use Gaming\Common\ObjectMapper\Exception\MapperException;
 
 final class DiscriminatorMapper implements Mapper
 {

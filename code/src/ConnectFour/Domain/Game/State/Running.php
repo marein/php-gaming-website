@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game\State;
+namespace Gaming\ConnectFour\Domain\Game\State;
 
-use Gambling\ConnectFour\Domain\Game\Board\Board;
-use Gambling\ConnectFour\Domain\Game\Event\GameAborted;
-use Gambling\ConnectFour\Domain\Game\Event\GameDrawn;
-use Gambling\ConnectFour\Domain\Game\Event\GameResigned;
-use Gambling\ConnectFour\Domain\Game\Event\GameWon;
-use Gambling\ConnectFour\Domain\Game\Event\PlayerMoved;
-use Gambling\ConnectFour\Domain\Game\Exception\GameNotRunningException;
-use Gambling\ConnectFour\Domain\Game\Exception\GameRunningException;
-use Gambling\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
-use Gambling\ConnectFour\Domain\Game\GameId;
-use Gambling\ConnectFour\Domain\Game\Players;
-use Gambling\ConnectFour\Domain\Game\WinningRule\WinningRule;
+use Gaming\ConnectFour\Domain\Game\Board\Board;
+use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
+use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
+use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameWon;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
+use Gaming\ConnectFour\Domain\Game\GameId;
+use Gaming\ConnectFour\Domain\Game\Players;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRule;
 
 final class Running implements State
 {

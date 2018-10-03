@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\ObjectMapper;
+namespace Gaming\Common\ObjectMapper;
 
 /**
  * This class represents a property for the ObjectMapper.

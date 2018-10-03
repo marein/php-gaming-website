@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gaming\ConnectFour\Domain\Game;
 
-use Gambling\Common\Domain\AggregateRoot;
-use Gambling\Common\Domain\DomainEvent;
-use Gambling\Common\Domain\IsAggregateRoot;
-use Gambling\ConnectFour\Domain\Game\Board\Stone;
-use Gambling\ConnectFour\Domain\Game\Event\ChatAssigned;
-use Gambling\ConnectFour\Domain\Game\Event\GameOpened;
-use Gambling\ConnectFour\Domain\Game\Exception\GameException;
-use Gambling\ConnectFour\Domain\Game\State\Open;
-use Gambling\ConnectFour\Domain\Game\State\State;
-use Gambling\ConnectFour\Domain\Game\State\Transition;
+use Gaming\Common\Domain\AggregateRoot;
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\IsAggregateRoot;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
+use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\State\Open;
+use Gaming\ConnectFour\Domain\Game\State\State;
+use Gaming\ConnectFour\Domain\Game\State\Transition;
 
 /**
  * The game uses the state pattern to get rid of the conditional mess for each state.

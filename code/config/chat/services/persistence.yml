@@ -12,13 +12,13 @@ services:
         alias: 'doctrine.dbal.chat_connection'
 
     chat.message-broker:
-        class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
+        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageBroker
         public: false
         arguments:
             - '%env(GAMBLING_CHAT_RABBIT_MQ_DSN)%'
 
     chat.event-store:
-        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
+        class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
         arguments:
             - '@chat.doctrine-dbal'

@@ -1,11 +1,11 @@
-var Gambling = Gambling || {};
-Gambling.Chat = Gambling.Chat || {};
+var Gaming = Gaming || {};
+Gaming.Chat = Gaming.Chat || {};
 
-Gambling.Chat.Widget = class
+Gaming.Chat.Widget = class
 {
     /**
-     * @param {Gambling.Common.EventPublisher} eventPublisher
-     * @param {Gambling.Chat.ChatService} chatService
+     * @param {Gaming.Common.EventPublisher} eventPublisher
+     * @param {Gaming.Chat.ChatService} chatService
      * @param {Node} element
      * @param {String} chatId
      */

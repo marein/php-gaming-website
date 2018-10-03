@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Query\Model\Game;
+namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-use Gambling\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
 
 interface GameFinder
 {

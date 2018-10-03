@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Query;
+namespace Gaming\ConnectFour\Application\Game\Query;
 
-use Gambling\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\Game;
-use Gambling\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
-use Gambling\ConnectFour\Domain\Game\Games;
+use Gaming\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
+use Gaming\ConnectFour\Domain\Game\Games;
 
 final class GameHandler
 {

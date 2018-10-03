@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Infrastructure\EventListener;
+namespace Gaming\WebInterface\Infrastructure\EventListener;
 
-use Gambling\WebInterface\Application\IdentityService;
+use Gaming\WebInterface\Application\IdentityService;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 final class AssignUserIdOnKernelRequest

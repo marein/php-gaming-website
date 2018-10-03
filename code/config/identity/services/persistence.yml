@@ -15,13 +15,13 @@ services:
         alias: 'doctrine.orm.identity_entity_manager'
 
     identity.message-broker:
-        class: Gambling\Common\Port\Adapter\Messaging\GamblingMessageBroker
+        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageBroker
         public: false
         arguments:
             - '%env(GAMBLING_IDENTITY_RABBIT_MQ_DSN)%'
 
     identity.event-store:
-        class: Gambling\Common\Port\Adapter\EventStore\DoctrineEventStore
+        class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
         arguments:
             - '@identity.doctrine-dbal'

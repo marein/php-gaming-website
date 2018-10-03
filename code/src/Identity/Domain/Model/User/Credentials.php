@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Domain\Model\User;
+namespace Gaming\Identity\Domain\Model\User;
 
-use Gambling\Identity\Domain\HashAlgorithm;
+use Gaming\Identity\Domain\HashAlgorithm;
 
 final class Credentials
 {

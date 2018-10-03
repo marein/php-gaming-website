@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Domain\Game;
+namespace Gaming\ConnectFour\Domain\Game;
 
-use Gambling\ConnectFour\Domain\Game\Board\Stone;
-use Gambling\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
-use Gambling\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
+use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
+use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use PHPUnit\Framework\TestCase;
 
 class PlayersTest extends TestCase

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Common\ObjectMapper\Scalar;
+namespace Gaming\Common\ObjectMapper\Scalar;
 
-use Gambling\Common\ObjectMapper\Mapper;
+use Gaming\Common\ObjectMapper\Mapper;
 
 final class BoolMapper implements Mapper
 {

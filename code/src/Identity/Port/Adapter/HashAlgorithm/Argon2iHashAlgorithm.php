@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Port\Adapter\HashAlgorithm;
+namespace Gaming\Identity\Port\Adapter\HashAlgorithm;
 
-use Gambling\Identity\Domain\HashAlgorithm;
+use Gaming\Identity\Domain\HashAlgorithm;
 
 final class Argon2iHashAlgorithm implements HashAlgorithm
 {

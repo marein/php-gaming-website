@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Chat\Infrastructure\Messaging;
+namespace Gaming\Chat\Infrastructure\Messaging;
 
-use Gambling\Chat\Application\ChatService;
-use Gambling\Common\MessageBroker\Consumer;
+use Gaming\Chat\Application\ChatService;
+use Gaming\Common\MessageBroker\Consumer;
 
 final class CommandConsumer implements Consumer
 {

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Port\Adapter\Messaging;
+namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
-use Gambling\Common\Bus\Bus;
-use Gambling\Common\MessageBroker\Consumer;
-use Gambling\Common\MessageBroker\MessageBroker;
-use Gambling\ConnectFour\Application\Game\Command\AssignChatCommand;
+use Gaming\Common\Bus\Bus;
+use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
 
 final class RefereeConsumer implements Consumer
 {

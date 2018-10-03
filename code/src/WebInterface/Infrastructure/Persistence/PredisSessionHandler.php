@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\WebInterface\Infrastructure\Persistence;
+namespace Gaming\WebInterface\Infrastructure\Persistence;
 
 use Predis\Client;
 

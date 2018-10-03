@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\ConnectFour\Application\Game\Query\Model\Game;
+namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
 final class Move implements \JsonSerializable
 {

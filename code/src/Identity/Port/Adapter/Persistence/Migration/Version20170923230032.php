@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Identity\Port\Adapter\Persistence\Migration;
+namespace Gaming\Identity\Port\Adapter\Persistence\Migration;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Gambling\Common\Port\Adapter\EventStore\DoctrineEventStoreSchema;
+use Gaming\Common\Port\Adapter\EventStore\DoctrineEventStoreSchema;
 
 final class Version20170923230032 extends AbstractMigration
 {
