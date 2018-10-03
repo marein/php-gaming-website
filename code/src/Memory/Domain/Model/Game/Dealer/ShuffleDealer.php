@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Memory\Domain\Model\Game\Dealer;
+namespace Gaming\Memory\Domain\Model\Game\Dealer;
 
 final class ShuffleDealer implements Dealer
 {

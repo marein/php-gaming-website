@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Memory\Domain\Model\Game;
+namespace Gaming\Memory\Domain\Model\Game;
 
-use Gambling\Common\Domain\AggregateRoot;
-use Gambling\Common\Domain\DomainEvent;
-use Gambling\Common\Domain\IsAggregateRoot;
-use Gambling\Memory\Domain\Model\Game\Dealer\Dealer;
-use Gambling\Memory\Domain\Model\Game\Event\GameOpened;
-use Gambling\Memory\Domain\Model\Game\Event\PlayerJoined;
-use Gambling\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
+use Gaming\Common\Domain\AggregateRoot;
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\IsAggregateRoot;
+use Gaming\Memory\Domain\Model\Game\Dealer\Dealer;
+use Gaming\Memory\Domain\Model\Game\Event\GameOpened;
+use Gaming\Memory\Domain\Model\Game\Event\PlayerJoined;
+use Gaming\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
 
 /**
  * Unlike in the connect four context, this game does not use the state pattern.

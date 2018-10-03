@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Memory\Domain\Model\Game\Event;
+namespace Gaming\Memory\Domain\Model\Game\Event;
 
-use Gambling\Common\Clock\Clock;
-use Gambling\Memory\Domain\Model\Game\GameId;
-use Gambling\Memory\Domain\Model\Game\Player;
+use Gaming\Common\Clock\Clock;
+use Gaming\Memory\Domain\Model\Game\GameId;
+use Gaming\Memory\Domain\Model\Game\Player;
 use PHPUnit\Framework\TestCase;
 
 final class GameOpenedTest extends TestCase

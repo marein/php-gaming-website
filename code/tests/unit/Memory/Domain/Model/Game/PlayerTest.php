@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Memory\Domain\Model\Game;
+namespace Gaming\Memory\Domain\Model\Game;
 
 use PHPUnit\Framework\TestCase;
 

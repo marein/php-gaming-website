@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Memory\Domain\Model\Game\Event;
+namespace Gaming\Memory\Domain\Model\Game\Event;
 
-use Gambling\Common\Clock\Clock;
-use Gambling\Common\Domain\DomainEvent;
-use Gambling\Memory\Domain\Model\Game\GameId;
-use Gambling\Memory\Domain\Model\Game\Player;
+use Gaming\Common\Clock\Clock;
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Memory\Domain\Model\Game\GameId;
+use Gaming\Memory\Domain\Model\Game\Player;
 
 final class GameOpened implements DomainEvent
 {

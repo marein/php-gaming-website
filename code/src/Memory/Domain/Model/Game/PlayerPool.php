@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gambling\Memory\Domain\Model\Game;
+namespace Gaming\Memory\Domain\Model\Game;
 
-use Gambling\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
+use Gaming\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
 
 final class PlayerPool
 {
