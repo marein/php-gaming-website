@@ -80,7 +80,6 @@ final class Running implements State
         ];
 
         $isWin = $this->winningRule->calculate($board);
-        $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
 
         if ($isWin) {
             $domainEvents[] = new GameWon($gameId, $this->players->current());
@@ -89,7 +88,11 @@ final class Running implements State
                 new Won(),
                 $domainEvents
             );
-        } elseif ($numberOfMovesUntilDraw == 0) {
+        }
+
+        $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
+
+        if ($numberOfMovesUntilDraw === 0) {
             $domainEvents[] = new GameDrawn($gameId);
 
             return new Transition(
