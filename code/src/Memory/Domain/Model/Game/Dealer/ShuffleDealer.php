@@ -15,7 +15,7 @@ final class ShuffleDealer implements Dealer
      *
      * @param int $numberOfPairs
      */
-    public function __construct($numberOfPairs)
+    public function __construct(int $numberOfPairs)
     {
         $this->numberOfPairs = $numberOfPairs;
     }

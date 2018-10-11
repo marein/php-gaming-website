@@ -53,14 +53,6 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * @return GameId
-     */
-    public function id(): GameId
-    {
-        return $this->gameId;
-    }
-
-    /**
      * Open a new game.
      *
      * @param Dealer $dealer
@@ -104,8 +96,16 @@ final class Game implements AggregateRoot
         );
 
         $this->playerPool = $this->playerPool->join(
-            new Player($playerId)
+            $player
         );
         $this->domainEvents[] = $playerJoined;
+    }
+
+    /**
+     * @return GameId
+     */
+    public function id(): GameId
+    {
+        return $this->gameId;
     }
 }
