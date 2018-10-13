@@ -20,8 +20,8 @@ final class PlayerJoinedTest extends TestCase
         $gameId = GameId::generate();
         $playerId = 'playerId';
         $payload = [
-            'gameId'        => $gameId->toString(),
-            'playerId'      => $playerId
+            'gameId'   => $gameId->toString(),
+            'playerId' => $playerId
         ];
 
         $playerJoined = new PlayerJoined(
