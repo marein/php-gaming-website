@@ -8,13 +8,13 @@ use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\Domain\IsAggregateRoot;
 use Gaming\Memory\Domain\Model\Game\Dealer\Dealer;
 use Gaming\Memory\Domain\Model\Game\Event\GameOpened;
+use Gaming\Memory\Domain\Model\Game\Event\GameStarted;
 use Gaming\Memory\Domain\Model\Game\Event\PlayerJoined;
+use Gaming\Memory\Domain\Model\Game\Exception\GameNotOpenException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
+use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotAllowedToStartGameException;
 
 /**
- * Unlike in the connect four context, this game does not use the state pattern.
- * There is not much going on here.
- *
  * Everything within this aggregate, except the game itself is a value object.
  */
 final class Game implements AggregateRoot
@@ -37,6 +37,17 @@ final class Game implements AggregateRoot
     private $cards;
 
     /**
+     * This is used to determine the state of the game.
+     * It's not that complex like in the connect four context,
+     * so we leave out the polymorphism and additional mapping stuff.
+     *
+     * @var int
+     */
+    private $state;
+    private const STATE_OPEN = 1;
+    private const STATE_RUNNING = 2;
+
+    /**
      * Game constructor.
      *
      * @param GameId        $gameId
@@ -49,6 +60,7 @@ final class Game implements AggregateRoot
         $this->gameId = $gameId;
         $this->playerPool = $playerPool;
         $this->cards = $cards;
+        $this->state = self::STATE_OPEN;
         $this->domainEvents = $domainEvents;
     }
 
@@ -85,10 +97,15 @@ final class Game implements AggregateRoot
      *
      * @param string $playerId
      *
+     * @throws GameNotOpenException
      * @throws PlayerAlreadyJoinedException
      */
     public function join(string $playerId): void
     {
+        if ($this->state !== self::STATE_OPEN) {
+            throw new GameNotOpenException();
+        }
+
         $player = new Player($playerId);
         $playerJoined = new PlayerJoined(
             $this->gameId,
@@ -99,6 +116,30 @@ final class Game implements AggregateRoot
             $player
         );
         $this->domainEvents[] = $playerJoined;
+    }
+
+    /**
+     * The player wants to start the game.
+     *
+     * @param string $playerId
+     *
+     * @throws GameNotOpenException
+     * @throws PlayerNotAllowedToStartGameException
+     */
+    public function start(string $playerId): void
+    {
+        if ($this->state !== self::STATE_OPEN) {
+            throw new GameNotOpenException();
+        }
+
+        if ($playerId !== $this->playerPool->current()->id()) {
+            throw new PlayerNotAllowedToStartGameException();
+        }
+
+        $this->state = self::STATE_RUNNING;
+        $this->domainEvents[] = new GameStarted(
+            $this->gameId
+        );
     }
 
     /**
