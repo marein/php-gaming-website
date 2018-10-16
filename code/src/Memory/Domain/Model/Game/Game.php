@@ -7,9 +7,11 @@ use Gaming\Common\Domain\AggregateRoot;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\Domain\IsAggregateRoot;
 use Gaming\Memory\Domain\Model\Game\Dealer\Dealer;
+use Gaming\Memory\Domain\Model\Game\Event\GameClosed;
 use Gaming\Memory\Domain\Model\Game\Event\GameOpened;
 use Gaming\Memory\Domain\Model\Game\Event\GameStarted;
 use Gaming\Memory\Domain\Model\Game\Event\PlayerJoined;
+use Gaming\Memory\Domain\Model\Game\Event\PlayerLeaved;
 use Gaming\Memory\Domain\Model\Game\Exception\GameNotOpenException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotAllowedToStartGameException;
@@ -46,6 +48,7 @@ final class Game implements AggregateRoot
     private $state;
     private const STATE_OPEN = 1;
     private const STATE_RUNNING = 2;
+    private const STATE_CLOSED = 3;
 
     /**
      * Game constructor.
@@ -116,6 +119,38 @@ final class Game implements AggregateRoot
             $player
         );
         $this->domainEvents[] = $playerJoined;
+    }
+
+    /**
+     * A player leaves the game.
+     * If the player is the last player, the game gets closed.
+     *
+     * @param string $playerId
+     *
+     * @throws Exception\PlayerNotJoinedException
+     * @throws GameNotOpenException
+     */
+    public function leave(string $playerId): void
+    {
+        if ($this->state !== self::STATE_OPEN) {
+            throw new GameNotOpenException();
+        }
+
+        $player = new Player($playerId);
+
+        $this->playerPool = $this->playerPool->leave($player);
+
+        $this->domainEvents[] = new PlayerLeaved(
+            $this->gameId,
+            $player
+        );
+
+        if ($this->playerPool->isEmpty()) {
+            $this->state = self::STATE_CLOSED;
+            $this->domainEvents[] = new GameClosed(
+                $this->gameId
+            );
+        }
     }
 
     /**

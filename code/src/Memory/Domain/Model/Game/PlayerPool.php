@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Gaming\Memory\Domain\Model\Game;
 
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
+use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotJoinedException;
+use Gaming\Memory\Domain\Model\Game\Exception\PlayerPoolIsEmptyException;
 
 final class PlayerPool
 {
@@ -46,6 +48,7 @@ final class PlayerPool
 
     /**
      * A player joins the pool.
+     * This function resets the current player position.
      *
      * @param Player $player
      *
@@ -61,7 +64,35 @@ final class PlayerPool
 
         return new self(
             $players,
-            $this->currentPlayerPosition
+            0
+        );
+    }
+
+    /**
+     * A player leaves the pool.
+     * This function resets the current player position.
+     *
+     * @param Player $player
+     *
+     * @return PlayerPool
+     * @throws PlayerNotJoinedException
+     */
+    public function leave(Player $player): PlayerPool
+    {
+        $players = array_filter(
+            $this->players,
+            function (Player $current) use ($player) {
+                return $player->id() !== $current->id();
+            }
+        );
+
+        if (count($players) === count($this->players)) {
+            throw new PlayerNotJoinedException();
+        }
+
+        return new self(
+            array_values($players),
+            0
         );
     }
 
@@ -69,9 +100,12 @@ final class PlayerPool
      * Returns the players in switched position.
      *
      * @return PlayerPool
+     * @throws PlayerPoolIsEmptyException
      */
     public function switch(): PlayerPool
     {
+        $this->throwExceptionIfPoolIsEmpty();
+
         $nextPlayerPosition = $this->currentPlayerPosition + 1;
 
         return new self(
@@ -84,10 +118,35 @@ final class PlayerPool
      * Returns the current player.
      *
      * @return Player
+     * @throws PlayerPoolIsEmptyException
      */
     public function current(): Player
     {
+        $this->throwExceptionIfPoolIsEmpty();
+
         return $this->players[$this->currentPlayerPosition];
+    }
+
+    /**
+     * Returns true if the pool is empty.
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return count($this->players) === 0;
+    }
+
+    /**
+     * Throw an exception if the pool is empty.
+     *
+     * @throws PlayerPoolIsEmptyException
+     */
+    private function throwExceptionIfPoolIsEmpty(): void
+    {
+        if ($this->isEmpty()) {
+            throw new PlayerPoolIsEmptyException();
+        }
     }
 
     /**

@@ -23,7 +23,7 @@ final class StoredEventPublisher
      *
      * @param StoredEventSubscriber $subscriber
      */
-    public function subscribe(StoredEventSubscriber $subscriber)
+    public function subscribe(StoredEventSubscriber $subscriber): void
     {
         $this->subscribers[] = $subscriber;
     }
