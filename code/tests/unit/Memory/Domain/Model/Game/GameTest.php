@@ -136,6 +136,7 @@ class GameTest extends TestCase
         $this->assertInstanceOf(GameStarted::class, $gameStarted);
         $this->assertSame($game->id()->toString(), $gameStarted->aggregateId());
         $this->assertSame($game->id()->toString(), $gameStarted->payload()['gameId']);
+        $this->assertSame(['playerId1', 'playerId2', 'playerId3', 'playerId4'], $gameStarted->payload()['playerIds']);
     }
 
     /**

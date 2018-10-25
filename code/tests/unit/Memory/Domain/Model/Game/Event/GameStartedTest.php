@@ -5,6 +5,8 @@ namespace Gaming\Memory\Domain\Model\Game\Event;
 
 use Gaming\Common\Clock\Clock;
 use Gaming\Memory\Domain\Model\Game\GameId;
+use Gaming\Memory\Domain\Model\Game\Player;
+use Gaming\Memory\Domain\Model\Game\PlayerPool;
 use PHPUnit\Framework\TestCase;
 
 final class GameStartedTest extends TestCase
@@ -17,12 +19,20 @@ final class GameStartedTest extends TestCase
         Clock::instance()->freeze();
 
         $gameId = GameId::generate();
+        $playerPool = PlayerPool::beginWith(
+            new Player('playerId1')
+        );
+        $playerPool = $playerPool->join(
+            new Player('playerId2')
+        );
         $payload = [
-            'gameId' => $gameId->toString()
+            'gameId'    => $gameId->toString(),
+            'playerIds' => ['playerId1', 'playerId2']
         ];
 
         $gameStarted = new GameStarted(
-            $gameId
+            $gameId,
+            $playerPool
         );
 
         $this->assertSame('GameStarted', $gameStarted->name());

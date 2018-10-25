@@ -128,6 +128,16 @@ final class PlayerPool
     }
 
     /**
+     * Returns the players of the pool.
+     *
+     * @return Player[]
+     */
+    public function players(): array
+    {
+        return $this->players;
+    }
+
+    /**
      * Returns true if the pool is empty.
      *
      * @return bool
