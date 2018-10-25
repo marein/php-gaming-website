@@ -173,7 +173,8 @@ final class Game implements AggregateRoot
 
         $this->state = self::STATE_RUNNING;
         $this->domainEvents[] = new GameStarted(
-            $this->gameId
+            $this->gameId,
+            $this->playerPool
         );
     }
 

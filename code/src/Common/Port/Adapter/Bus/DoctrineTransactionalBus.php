@@ -19,11 +19,6 @@ final class DoctrineTransactionalBus implements Bus
     private $connection;
 
     /**
-     * @var bool
-     */
-    private $transactionAlreadyStarted;
-
-    /**
      * DoctrineTransactionalBus constructor.
      *
      * @param Bus        $bus        The bus who is being wrapped.
@@ -33,7 +28,6 @@ final class DoctrineTransactionalBus implements Bus
     {
         $this->bus = $bus;
         $this->connection = $connection;
-        $this->transactionAlreadyStarted = false;
     }
 
     /**
@@ -41,15 +35,9 @@ final class DoctrineTransactionalBus implements Bus
      */
     public function handle(object $message)
     {
-        if ($this->transactionAlreadyStarted) {
-            return $this->bus->handle($message);
-        }
-
-        $this->transactionAlreadyStarted = true;
+        $this->connection->beginTransaction();
 
         try {
-            $this->connection->beginTransaction();
-
             $return = $this->bus->handle($message);
 
             $this->connection->commit();
@@ -59,8 +47,6 @@ final class DoctrineTransactionalBus implements Bus
             $this->connection->rollBack();
 
             throw $exception;
-        } finally {
-            $this->transactionAlreadyStarted = false;
         }
     }
 }

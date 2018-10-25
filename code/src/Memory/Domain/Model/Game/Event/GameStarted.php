@@ -6,6 +6,8 @@ namespace Gaming\Memory\Domain\Model\Game\Event;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Memory\Domain\Model\Game\GameId;
+use Gaming\Memory\Domain\Model\Game\Player;
+use Gaming\Memory\Domain\Model\Game\PlayerPool;
 
 final class GameStarted implements DomainEvent
 {
@@ -13,6 +15,11 @@ final class GameStarted implements DomainEvent
      * @var GameId
      */
     private $gameId;
+
+    /**
+     * @var PlayerPool
+     */
+    private $playerPool;
 
     /**
      * @var \DateTimeImmutable
@@ -24,9 +31,10 @@ final class GameStarted implements DomainEvent
      *
      * @param GameId $gameId
      */
-    public function __construct(GameId $gameId)
+    public function __construct(GameId $gameId, PlayerPool $playerPool)
     {
         $this->gameId = $gameId;
+        $this->playerPool = $playerPool;
         $this->occurredOn = Clock::instance()->now();
     }
 
@@ -44,7 +52,13 @@ final class GameStarted implements DomainEvent
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
+            'gameId'    => $this->gameId->toString(),
+            'playerIds' => array_map(
+                function (Player $player) {
+                    return $player->id();
+                },
+                $this->playerPool->players()
+            )
         ];
     }
 

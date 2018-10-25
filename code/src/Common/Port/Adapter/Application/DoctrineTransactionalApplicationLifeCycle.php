@@ -14,11 +14,6 @@ final class DoctrineTransactionalApplicationLifeCycle implements ApplicationLife
     private $connection;
 
     /**
-     * @var bool
-     */
-    private $transactionAlreadyStarted;
-
-    /**
      * DoctrineTransactionalApplicationLifeCycle constructor.
      *
      * @param Connection $connection
@@ -26,7 +21,6 @@ final class DoctrineTransactionalApplicationLifeCycle implements ApplicationLife
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-        $this->transactionAlreadyStarted = false;
     }
 
     /**
@@ -34,15 +28,9 @@ final class DoctrineTransactionalApplicationLifeCycle implements ApplicationLife
      */
     public function run(callable $action)
     {
-        if ($this->transactionAlreadyStarted) {
-            return $action();
-        }
-
-        $this->transactionAlreadyStarted = true;
+        $this->connection->beginTransaction();
 
         try {
-            $this->connection->beginTransaction();
-
             $return = $action();
 
             $this->connection->commit();
@@ -52,8 +40,6 @@ final class DoctrineTransactionalApplicationLifeCycle implements ApplicationLife
             $this->connection->rollBack();
 
             throw $exception;
-        } finally {
-            $this->transactionAlreadyStarted = false;
         }
     }
 }
