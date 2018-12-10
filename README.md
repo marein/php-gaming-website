@@ -35,18 +35,15 @@ and
 [Scale-Out the application](#scale-out-the-application)
 describe whats done to apply these concepts.
 
-To get a ready-to-start project, the code and the development environment are in one git repository.
-
 ## Installation and requirements
 
 I recommend to use
 [Docker](https://www.docker.com),
 [Docker Compose](https://docs.docker.com/compose/).
-You can certainly set up a server yourself.
+You can also set up a stack yourself.
 
 Since I use the latest JavaScript techniques, like EcmaScript 6, it doesn't work in all browsers.
-Currently, it's only tested with Safari.
-Don't look at the front end design, this is by no means my domain.
+Please don't look at the front end design, this is by no means my domain.
 
 ### Development
 
@@ -72,12 +69,17 @@ The
 [production images](https://hub.docker.com/r/marein/php-gaming-website/)
 are built when pushed to git master. They always reflect the latest stable version.
 
+You can run them as follows.
+
 ```
 git clone https://github.com/marein/php-gaming-website
 cd php-gaming-website
 docker-compose -f docker-compose.production.yml pull
 docker-compose -f docker-compose.production.yml up
 ```
+
+Or you can try out
+[Play with Docker](http://play-with-docker.com?stack=https://raw.githubusercontent.com/marein/php-gaming-website/master/docker-compose.production.yml).
 
 ## Context is king
 
@@ -99,13 +101,12 @@ by Eric Evans.
 
 ### Chat
 
-This context is very simple. To organize the business logic, the
+To organize the business logic, the
 [Chat](/code/src/Chat)
 uses the 
 [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html)
-pattern. Its only job is to initiate chats, list messages by chat
-and to write messages in the chat. If authors are assigned to a chat, only those authors can write and read messages.
-The layering chosen in the other contexts isn't worthwhile here.
+pattern. The tasks are to initiate chats, list messages from a chat, and allow authors to write messages in a chat.
+If authors are assigned to a chat, only those authors can write and read messages.
 
 The public interface is formed by a
 [controller](/code/src/Chat/Presentation/Http/ChatController.php),
@@ -126,9 +127,9 @@ I've chosen MySQL as the storage.
 
 ### Common
 
-The
+This
 [Common](/code/src/Common)
-folder provide reusable components. If the project is more advanced, I'll outsource them as libraries.
+folder provides reusable components. If the project is more advanced, I'll outsource them as libraries.
 But there're already battle tested implementations out there (like a
 [Bus](https://tactician.thephpleague.com)
 by Tactician, or an
@@ -139,17 +140,18 @@ implementation inside
 [Common](/code/src/Common)
 isn't used to be a storage for an
 [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
-model. It's really just a store for events.
+model. It's really just a storage for events.
 
 ### Connect Four
 
 The
 [Connect Four](/code/src/ConnectFour)
 is the context where I put the most effort in. The business logic is definitely worth building a proper
-[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html). Players can open, join, abort and resign a game.
-Of course they can also perform moves. The game can be aborted until the second move.
-After the second move, players can only resign or finish the game. The referee, which sits near the game desks,
-ensure that the people can talk to each other. This process is described below.
+[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html).
+Players can open, join, abort and resign a game. Of course they can also perform moves.
+The game can be aborted until the second move. After the second move, players can only resign or finish the game.
+The referee, which sits near the game desks, ensure that the people can talk to each other.
+This process is described below.
 
 As the
 [folder structure](/code/src/ConnectFour)
@@ -157,7 +159,7 @@ shows, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
 uses a command and query bus. The opposite of this approach is the traditional application service I use in the
 [Identity](#identity)
-context. It boils down to one class with many methods vs. many classes with one method.
+context.
 
 The public interface is formed by a
 [controller](/code/src/ConnectFour/Port/Adapter/Http/GameController.php),
@@ -210,14 +212,13 @@ Maybe I'll implement this storage model in the next game.
 
 ### Identity
 
-This context is currently only set up. Nothing interacts with it.
-
-Although the
+The
 [Identity](/code/src/Identity)
-context is another simple context, like the chat context, I still use an ORM for it. In this case
-I've chosen Doctrine because it's a really matured ORM that applies the
+context is managing the user identities. To organize the business logic I've chosen the
+[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html)
+pattern backed up by an ORM. In this case I've chosen Doctrine because it's a really matured ORM that applies the
 [Data Mapper](https://martinfowler.com/eaaCatalog/dataMapper.html)
-pattern. The main responsibilities are that users can sign up, change username and change password.
+pattern. The main responsibilities are that users can sign up, authenticate, change username and change password.
 
 As the
 [folder structure](/code/src/Identity)
@@ -226,7 +227,7 @@ shows, this context uses the "Ports and Adapters" architecture. The
 uses a traditional application service. The opposite of this approach is the
 command and query bus I use in the
 [Connect Four](#connect-four)
-context. It boils down to one class with many methods vs. many classes with one method.
+context.
 
 The public interface is formed by a
 [controller](/code/src/User/Port/Adapter/Http/UserController.php),
@@ -237,8 +238,8 @@ which can be called up via http.
 The
 [Web Interface](/code/src/WebInterface)
 acts like an
-[Api Gateway](http://microservices.io/patterns/apigateway.html).
-All browser interactions go through this context, because its main responsibility is the session management
+[Backend For Frontend](https://samnewman.io/patterns/architectural/bff/).
+All browser interactions go through this context. The main responsibilities are the session management
 and the aggregation of the data from the other contexts. The
 [JavaScript](/code/src/WebInterface/Presentation/Http/JavaScript)
 and
@@ -268,58 +269,57 @@ To have single deployable units, the following steps needs to be done
 and
 [tests](/code/tests))
 in a separate application for each context or the context that's worthwhile to be a single deployable unit.
-Don't forget to define the routing for the controllers in the new application.
-2. The Web Interface is the only context which performs direct method invocations to the others.
-This needs to be rewritten. You've to write new implementations for the interfaces at
-[code/src/WebInterface/Application](/code/src/WebInterface/Application).
-The current implementations are at
+Because there are direct method invocations to the controllers (except WebInterface),
+the routing needs to be defined.
+2. The WebInterface is the only context which performs direct method invocations to the others.
+This needs to be rewritten. The interfaces in the folder
+[code/src/WebInterface/Application](/code/src/WebInterface/Application)
+need new implementations which are currently located in
 [code/src/WebInterface/Infrastructure/Integration](/code/src/WebInterface/Infrastructure/Integration).
-They're need to make real http calls.
-3. Be happy.
+They're need to make
+[rpc](https://en.wikipedia.org/wiki/Remote_procedure_call)
+calls.
 
-__Note that's totally fine to invoke the application layer of the other contexts directly.
+__It's totally fine to invoke the application layer of the other contexts directly.
 It helps with type safety and adds other benefits that you get from a monolithic approach.
-I just added this abstraction layer to write this section.__
+I've added this layer of abstraction to write this section.__
 
 ## Scale-Out the application
 
 Scale-Out is a technique where you can put as much servers in parallel as possible to handle high loads.
 I've set this requirement for this application. This section describe how this requirement is fulfilled.
 
-The application code is stateless. To scale that is very easy.
-Just put a
+The application itself is stateless. This means that the application store lives in a different location.
+We can scale the application when we put a
 [Load Balancer](https://en.wikipedia.org/wiki/Load_balancing_(computing))
-in front of the application servers.
+in front of it.
 
-In the next step we have to scale the databases. We divide this into two parts
-1. First thing we've todo is scale the databases which are accessed for read purposes. Since there's no concurrency
-issue here, we can just add replications for the MySQL and Redis storages.
-2. The second thing is a little bit trickier. We've to scale the databases for write purposes.
-I will describe this using the Connect Four and the Chat context. I've put much effort to allow scaling the Connect Four
-context properly. Because we use the CQRS pattern to decouple the queries that span multiple games,
-such as counting running games or listing open games, it's easy to scale the command side. We've just to throw in a
-technique called
-[sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture)).
-The shard key is, of course, the UUID of the game. It's used to determine which shard to use.
-I'll implement this later as an example. To anticipate it: Define two or more connections to the database and use
-this as a pool to determine which shard to use based on the UUID. Voilà, you'll find the game you want.
-To scale the command side at the Chat context, nothing needs to be done. There are no queries that span multiple chats.
-Just be sure you store the chat and the related messages to the same shard. But since we use the UUID of the chat
-in every query and command, this should be easy. The rest is as described above.
+In the next step we've to scale the databases. We've to divide this into two parts
+1. First we want to scale the databases for reading purposes.  
+Since there should not be a concurrency problem in this application, we can add replicas for the MySQL and Redis stores.
+2. Then we want to scale the databases for writing purposes.  
+__Example for connect four__: I've put much effort to allow scaling the Connect Four context properly.
+Because we use the CQRS pattern to decouple the queries that span multiple games,
+such as counting running games or listing open games, we can ignore this queries in this case.
+To fetch the command model we exclusively need a game id.
+With this in mind, we can leverage a technique called
+[sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture))
+for this. The shard key is in our case the game id.  
+__Example for chat__: Currently there shouldn't be queries that span multiple chats.
+To invoke a chat operation (either writing or reading) we exclusively need a chat id.
+As in connect four context, we can use
+[sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture))
+for the chat context.
 
-__Note that the sharding technique described here is a manual technique. The application decides which shard to use.
-There are certainly other variants.__
-
-You may have seen that currently only one MySQL and one Redis instance is configured. This is done for simplicity.
-I don't want to wait hours until the development environment is starting.
-Of course, that's different in the production environment.
-You can for sure configure different databases for the contexts. Have a look at the
+You may have seen that all contexts uses only one MySQL and one Redis instance.
+This could be different for the production environment depending on the scale.
+For this reason, different databases can be configured for the different contexts. Have a look at the
 [configuration file](/code/environment.env.dist).
 There is an example. Have a look at the
 [advanced production compose file](/docker-compose.production-advanced.yml).
 We can split this even further.
 For example, we can create a Redis instance per query model in the "Connect Four" context.
-Of course, the code must be adapted. Whether it's worth it is another question.
+Of course, the code must be adapted. Whether it's worth it depends also on the scale.
 
 ## Chosen technologies
 
@@ -334,6 +334,7 @@ Some other technologies:
 * [Redis](https://redis.io) for the query models or as a caching layer. Also the user sessions are stored here.
 * [Rabbit Mq](https://www.rabbitmq.com) as the message broker.
 * [Nchan](https://nchan.io) for real-time browser notifications.
+* Various [libraries](/code/composer.json) for php.
 * [Makefile](/code/Makefile) for concatenation of javascript and css.
 
 ## A note on testing
