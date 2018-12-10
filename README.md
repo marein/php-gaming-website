@@ -304,7 +304,7 @@ such as counting running games or listing open games, we can ignore this queries
 To fetch the command model we exclusively need a game id.
 With this in mind, we can leverage a technique called
 [sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture))
-for this. The shard key is in our case the game id.
+for this. The shard key is in our case the game id.  
 __Example for chat__: Currently there shouldn't be queries that span multiple chats.
 To invoke a chat operation (either writing or reading) we exclusively need a chat id.
 As in connect four context, we can use
