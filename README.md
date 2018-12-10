@@ -69,12 +69,17 @@ The
 [production images](https://hub.docker.com/r/marein/php-gaming-website/)
 are built when pushed to git master. They always reflect the latest stable version.
 
+You can run them as follows.
+
 ```
 git clone https://github.com/marein/php-gaming-website
 cd php-gaming-website
 docker-compose -f docker-compose.production.yml pull
 docker-compose -f docker-compose.production.yml up
 ```
+
+Or you can try out
+[Play with Docker](http://play-with-docker.com?stack=https://raw.githubusercontent.com/marein/php-gaming-website/master/docker-compose.production.yml).
 
 ## Context is king
 
