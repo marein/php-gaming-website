@@ -7,7 +7,8 @@ if [ "$environment" = "development" ]
 then
     apk add --no-cache inotify-tools
     apk add --no-cache $PHPIZE_DEPS
-    pecl install xdebug
+    # todo: Switch to xdebug if it's released for php 7.3
+    pecl install xdebug-beta
     docker-php-ext-enable xdebug
 else
     docker-php-ext-install opcache
