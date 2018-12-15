@@ -7,18 +7,16 @@ Gaming.ConnectFour.GameList = class
      * @param {Gaming.Common.EventPublisher} eventPublisher
      * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} games
-     * @param {Array} gamesToAdd
-     * @param {Number} maximumNumberOfGamesInList
      */
-    constructor(eventPublisher, gameService, games, gamesToAdd, maximumNumberOfGamesInList)
+    constructor(eventPublisher, gameService, games)
     {
         this.eventPublisher = eventPublisher;
         this.gameService = gameService;
         this.games = games;
-        this.maximumNumberOfGamesInList = maximumNumberOfGamesInList;
+        this.maximumNumberOfGamesInList = parseInt(this.games.dataset.maximumNumberOfGames);
         this.currentGamesInList = [];
         this.pendingGamesToRemove = [];
-        this.pendingGamesToAdd = gamesToAdd;
+        this.pendingGamesToAdd = JSON.parse(this.games.dataset.openGames);
         this.renderListTimeout = null;
 
         this.registerEventHandler();
@@ -61,16 +59,6 @@ Gaming.ConnectFour.GameList = class
             node.classList.add('game-list__game--remove-soon');
             node.classList.remove('game-list__game--user-game');
         }
-    }
-
-    /**
-     * @returns {Node}
-     */
-    lastGame()
-    {
-        let children = this.games.children;
-        let length = children.length;
-        return children[length - 1];
     }
 
     /**
