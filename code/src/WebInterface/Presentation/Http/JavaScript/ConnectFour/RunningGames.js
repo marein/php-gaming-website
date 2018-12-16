@@ -1,37 +1,20 @@
-var Gaming = Gaming || {};
-Gaming.ConnectFour = Gaming.ConnectFour || {};
-
-/**
- * @param {Gaming.Common.EventPublisher} eventPublisher
- * @param {Node} runningGames
- * @constructor
- */
-Gaming.ConnectFour.RunningGames = class
+customElements.define('running-games', class extends HTMLElement
 {
-    /**
-     * @param {Gaming.Common.EventPublisher} eventPublisher
-     * @param {Node} runningGames
-     */
-    constructor(eventPublisher, runningGames)
+    connectedCallback()
     {
-        this.eventPublisher = eventPublisher;
-        this.runningGames = runningGames;
-
-        this.registerEventHandler();
+        this._registerEventHandler();
     }
 
-    onRunningGamesUpdated(event)
+    _onRunningGamesUpdated(event)
     {
-        this.runningGames.innerText = event.payload.count;
+        this.innerText = event.detail.count;
     }
 
-    registerEventHandler()
+    _registerEventHandler()
     {
-        this.eventPublisher.subscribe({
-            isSubscribedTo: (event) => {
-                return event.name === 'ConnectFour.RunningGamesUpdated';
-            },
-            handle: this.onRunningGamesUpdated.bind(this)
-        });
+        window.addEventListener(
+            'ConnectFour.RunningGamesUpdated',
+            this._onRunningGamesUpdated.bind(this)
+        );
     }
-};
+});
