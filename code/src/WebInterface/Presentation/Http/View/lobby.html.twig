@@ -12,7 +12,10 @@
         </div>
     </section>
     <section class="middle">
-        <ul class="game-list" id="games">
+        <ul class="game-list"
+            id="games"
+            data-open-games="{{ openGames|json_encode|e('html_attr') }}"
+            data-maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
         </ul>
     </section>
     <section class="right">
@@ -36,9 +39,7 @@
             new Gaming.ConnectFour.GameList(
                 app.eventPublisher,
                 app.gameService,
-                document.getElementById('games'),
-                {{ openGames|json_encode|raw }},
-                {{ maximumNumberOfGamesInList }}
+                document.getElementById('games')
             );
             new Gaming.ConnectFour.OpenGameButton(
                 app.eventPublisher,

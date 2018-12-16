@@ -10,7 +10,6 @@ Gaming.ConnectFour.Game = class
      * @param {Node} previousMoveButton
      * @param {Node} nextMoveButton
      * @param {Node} followMovesButton
-     * @param {Gaming.ConnectFour.Model.Game} game
      */
     constructor(
         eventPublisher,
@@ -18,8 +17,7 @@ Gaming.ConnectFour.Game = class
         gameHolder,
         previousMoveButton,
         nextMoveButton,
-        followMovesButton,
-        game
+        followMovesButton
     ) {
         this.eventPublisher = eventPublisher;
         this.gameService = gameService;
@@ -27,8 +25,10 @@ Gaming.ConnectFour.Game = class
         this.previousMoveButton = previousMoveButton;
         this.nextMoveButton = nextMoveButton;
         this.followMovesButton = followMovesButton;
-        this.game = game;
-        this.numberOfCurrentMoveInView = game.numberOfMoves();
+        this.game = Gaming.ConnectFour.Model.Game.fromObject(
+            JSON.parse(this.gameHolder.dataset.game)
+        );
+        this.numberOfCurrentMoveInView = this.game.numberOfMoves();
         this.fields = this.gameHolder.querySelectorAll('.game__field');
         this.colorToClass = {
             1: 'game__field--red',

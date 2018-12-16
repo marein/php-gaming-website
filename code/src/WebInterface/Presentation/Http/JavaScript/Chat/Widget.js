@@ -7,9 +7,8 @@ Gaming.Chat.Widget = class
      * @param {Gaming.Common.EventPublisher} eventPublisher
      * @param {Gaming.Chat.ChatService} chatService
      * @param {Node} element
-     * @param {String} chatId
      */
-    constructor(eventPublisher, chatService, element, chatId)
+    constructor(eventPublisher, chatService, element)
     {
         this.eventPublisher = eventPublisher;
         this.chatService = chatService;
@@ -22,6 +21,8 @@ Gaming.Chat.Widget = class
         this.secondsBeforeRetryAfterLoadMessageFailure = 3;
 
         this.element.classList.add('loading-indicator');
+
+        let chatId = element.dataset.chatId;
 
         if (chatId) {
             this.initialize(chatId);
