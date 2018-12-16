@@ -62,7 +62,9 @@
                       class="chat__input"></textarea>
         </div>
     </div>
-    <event-source url="/sse/sub?id=game-{{ game.gameId }}"></event-source>
+    <event-source url="/sse/sub?id=game-{{ game.gameId }}"
+                  {% if app.environment == 'dev' %}verbose{% endif %}>
+    </event-source>
 {% endblock %}
 
 {% block javascript %}

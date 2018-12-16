@@ -1,12 +1,20 @@
 customElements.define('event-source', class extends HTMLElement
 {
+    constructor(props)
+    {
+        super(props);
+
+        this._verbose = false;
+    }
+
     connectedCallback()
     {
         let eventSource = new EventSource(
             this.getAttribute('url')
         );
-
         eventSource.onmessage = this._onMessage.bind(this);
+
+        this._verbose = this.hasAttribute('verbose');
     }
 
     _onMessage(message)
@@ -25,6 +33,8 @@ customElements.define('event-source', class extends HTMLElement
             )
         );
 
+        this._logOnVerbose(eventName, payload);
+
         // Dispatch again to satisfy the old js design.
         // todo: Remove this as soon as https://github.com/marein/php-gaming-website/issues/18 is done.
         this.dispatchEvent(
@@ -39,5 +49,12 @@ customElements.define('event-source', class extends HTMLElement
                 }
             )
         );
+    }
+
+    _logOnVerbose(eventName, payload)
+    {
+        if (this._verbose) {
+            console.log(eventName, payload);
+        }
     }
 });

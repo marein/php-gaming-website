@@ -1,16 +1,8 @@
 // window.app acts like a container.
 window.app = {
-    isDebug: false,
     baseUrl: '',
     user: {
         id: ''
-    }
-};
-
-// Wrapper around console.log. Log only if debug mode is enabled.
-app.log = function (message) {
-    if (app.isDebug) {
-        console.log(message);
     }
 };
 
@@ -32,16 +24,6 @@ app.gameService = new Gaming.ConnectFour.GameService(
 app.chatService = new Gaming.Chat.ChatService(
     app.httpClient
 );
-
-// Log all events if debug mode is enabled.
-app.eventPublisher.subscribe({
-    isSubscribedTo: () => {
-        return true;
-    },
-    handle: (event) => {
-        app.log(event);
-    }
-});
 
 // Forward events to app.eventPublisher which is used by the old js design.
 // todo: Remove this as soon as https://github.com/marein/php-gaming-website/issues/18 is done.

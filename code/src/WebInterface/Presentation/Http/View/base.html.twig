@@ -15,8 +15,6 @@
 {% block content %}{% endblock %}
 <script type="text/javascript" src="{{ asset('assets/main.js') }}"></script>
 <script type="text/javascript">
-    {# Propagate environment to browser #}
-    app.isDebug = '{{ app.environment == 'dev' }}';
     {# Propagate current user id to browser #}
     app.user.id = '{{ app.session.get('user') }}';
 </script>

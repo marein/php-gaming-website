@@ -27,7 +27,9 @@
             </p>
         </div>
     </section>
-    <event-source url="/sse/sub?id=lobby"></event-source>
+    <event-source url="/sse/sub?id=lobby"
+                  {% if app.environment == 'dev' %}verbose{% endif %}>
+    </event-source>
 {% endblock %}
 
 {% block javascript %}
