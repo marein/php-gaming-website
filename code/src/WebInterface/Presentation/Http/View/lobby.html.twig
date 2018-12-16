@@ -27,6 +27,7 @@
             </p>
         </div>
     </section>
+    <event-source url="/sse/sub?id=lobby"></event-source>
 {% endblock %}
 
 {% block javascript %}
@@ -46,7 +47,6 @@
                 app.gameService,
                 document.querySelector('[data-open-game-button]')
             );
-            startEventSource(top.location.protocol + '//' + top.location.host + '/sse/sub?id=lobby');
         })();
     </script>
 {% endblock %}

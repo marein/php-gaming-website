@@ -43,31 +43,11 @@ app.eventPublisher.subscribe({
     }
 });
 
-/**
- * Register startEventSource function to global namespace and ensure,
- * that only one is started. This EventSource publishes all messages to
- * the eventPublisher.
- */
-(function () {
-    let eventSource = null;
-
-    window.startEventSource = function (url) {
-        if (eventSource !== null) {
-            throw 'An EventSource is already started.';
-        }
-
-        eventSource = new EventSource(url);
-
-        // Redirect all messages to eventPublisher.
-        eventSource.onmessage = function (message) {
-            let payload = JSON.parse(message.data);
-            let eventName = payload.eventName;
-            delete payload.eventName;
-
-            app.eventPublisher.publish({
-                name: eventName,
-                payload: payload
-            });
-        };
-    };
-})();
+// Forward events to app.eventPublisher which is used by the old js design.
+// todo: Remove this as soon as https://github.com/marein/php-gaming-website/issues/18 is done.
+window.addEventListener(
+    'event-for-deprecated-publisher',
+    function (event) {
+        app.eventPublisher.publish(event.detail);
+    }
+);

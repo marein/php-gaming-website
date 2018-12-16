@@ -62,6 +62,7 @@
                       class="chat__input"></textarea>
         </div>
     </div>
+    <event-source url="/sse/sub?id=game-{{ game.gameId }}"></event-source>
 {% endblock %}
 
 {% block javascript %}
@@ -88,7 +89,6 @@
                 app.chatService,
                 document.getElementById('chat')
             );
-            startEventSource(top.location.protocol + '//' + top.location.host + '/sse/sub?id=game-{{ game.gameId }}');
         })();
     </script>
 {% endblock %}
