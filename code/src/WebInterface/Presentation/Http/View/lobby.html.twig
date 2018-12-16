@@ -4,9 +4,9 @@
     <section class="left">
         <div class="box">
             <p>
-                <span id="running-games">
+                <running-games>
                     {{ runningGames.count }}
-                </span>
+                </running-games>
                 running games
             </p>
         </div>
@@ -33,10 +33,6 @@
 {% block javascript %}
     <script type="text/javascript">
         (function () {
-            new Gaming.ConnectFour.RunningGames(
-                app.eventPublisher,
-                document.getElementById('running-games')
-            );
             new Gaming.ConnectFour.GameList(
                 app.eventPublisher,
                 app.gameService,
