@@ -1,3 +1,5 @@
+import { client } from '../js/Common/HttpClient.js';
+
 // window.app acts like a container.
 window.app = {
     baseUrl: '',
@@ -6,23 +8,22 @@ window.app = {
     }
 };
 
-app.eventPublisher = new Gaming.Common.EventPublisher();
+window.app.eventPublisher = new Gaming.Common.EventPublisher();
 
-app.notification = new Gaming.Common.Notification(
+window.app.notification = new Gaming.Common.Notification(
     document.getElementById('notification')
 );
 
-app.httpClient = new Gaming.Common.HttpClient(
-    app.baseUrl,
-    app.notification
+client.onError = (response) => {
+    window.app.notification.appendMessage(response.message);
+};
+
+window.app.gameService = new Gaming.ConnectFour.GameService(
+    client
 );
 
-app.gameService = new Gaming.ConnectFour.GameService(
-    app.httpClient
-);
-
-app.chatService = new Gaming.Chat.ChatService(
-    app.httpClient
+window.app.chatService = new Gaming.Chat.ChatService(
+    client
 );
 
 // Forward events to app.eventPublisher which is used by the old js design.
@@ -30,6 +31,6 @@ app.chatService = new Gaming.Chat.ChatService(
 window.addEventListener(
     'event-for-deprecated-publisher',
     function (event) {
-        app.eventPublisher.publish(event.detail);
+        window.app.eventPublisher.publish(event.detail);
     }
 );

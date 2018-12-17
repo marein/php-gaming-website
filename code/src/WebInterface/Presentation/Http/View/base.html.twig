@@ -21,7 +21,6 @@
 <script type="text/javascript" src="{{ asset('assets/js-legacy/Chat/ChatService.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js-legacy/Chat/Widget.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js-legacy/Common/EventPublisher.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js-legacy/Common/HttpClient.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js-legacy/Common/Notification.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js-legacy/ConnectFour/AbortGameButton.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js-legacy/ConnectFour/Game.js') }}"></script>
@@ -31,10 +30,12 @@
 <script type="text/javascript" src="{{ asset('assets/js-legacy/ConnectFour/Model/Game.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js-legacy/ConnectFour/OpenGameButton.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js-legacy/ConnectFour/ResignGameButton.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js-legacy/bootstrap.js') }}"></script>
+<script type="module" src="{{ asset('assets/js-legacy/bootstrap.js') }}"></script>
 <script type="text/javascript">
     {# Propagate current user id to browser #}
-    app.user.id = '{{ app.session.get('user') }}';
+    document.addEventListener('DOMContentLoaded', (event) => {
+        app.user.id = '{{ app.session.get('user') }}';
+    });
 </script>
 {% block javascript %}{% endblock %}
 </body>

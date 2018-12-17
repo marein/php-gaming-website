@@ -69,7 +69,7 @@
 
 {% block javascript %}
     <script type="text/javascript">
-        (function () {
+        document.addEventListener('DOMContentLoaded', (event) => {
             new Gaming.ConnectFour.Game(
                 app.eventPublisher,
                 app.gameService,
@@ -91,6 +91,6 @@
                 app.chatService,
                 document.getElementById('chat')
             );
-        })();
+        });
     </script>
 {% endblock %}

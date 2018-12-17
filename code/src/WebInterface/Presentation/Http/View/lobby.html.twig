@@ -34,7 +34,7 @@
 
 {% block javascript %}
     <script type="text/javascript">
-        (function () {
+        document.addEventListener('DOMContentLoaded', (event) => {
             new Gaming.ConnectFour.GameList(
                 app.eventPublisher,
                 app.gameService,
@@ -45,6 +45,6 @@
                 app.gameService,
                 document.querySelector('[data-open-game-button]')
             );
-        })();
+        });
     </script>
 {% endblock %}

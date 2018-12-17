@@ -1,22 +1,11 @@
-var Gaming = Gaming || {};
-Gaming.Common = Gaming.Common || {};
-
-/**
- * This class handles the CSRF protection required by the web interface context.
- *
- * todo: Leverage the fetch api.
- */
-Gaming.Common.HttpClient = class
+class HttpClient
 {
-    /**
-     * @param {String} baseUrl
-     * @param {Gaming.Common.Notification} notification
-     */
-    constructor(baseUrl, notification)
+    constructor()
     {
-        this.baseUrl = baseUrl;
-        this.csrfToken = this.readCsrfTokenFromCookie();
-        this.notification = notification;
+        this._csrfToken = this._readCsrfTokenFromCookie();
+        this.onError = (response) => {
+
+        };
     }
 
     /**
@@ -27,7 +16,7 @@ Gaming.Common.HttpClient = class
     {
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
-            request.open('GET', this.baseUrl + url);
+            request.open('GET', url);
             request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             request.addEventListener('load', () => {
                 let response = JSON.parse(request.responseText);
@@ -35,7 +24,7 @@ Gaming.Common.HttpClient = class
                 if (request.status >= 200 && request.status < 300) {
                     resolve(response);
                 } else {
-                    this.notification.appendMessage(response.message);
+                    this.onError(response);
                     reject(response);
                 }
             });
@@ -54,22 +43,22 @@ Gaming.Common.HttpClient = class
 
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
-            request.open('POST', this.baseUrl + url);
+            request.open('POST', url);
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            request.setRequestHeader('X-XSRF-TOKEN', this.csrfToken);
+            request.setRequestHeader('X-XSRF-TOKEN', this._csrfToken);
             request.addEventListener('load', () => {
                 let response = JSON.parse(request.responseText);
 
                 if (request.status >= 200 && request.status < 300) {
                     resolve(response);
                 } else {
-                    this.notification.appendMessage(response.message);
+                    this.onError(response);
                     reject(response);
                 }
             });
             request.send(
-                this.preparePostParameters(postParameters)
+                this._preparePostParameters(postParameters)
             );
         });
     }
@@ -79,14 +68,14 @@ Gaming.Common.HttpClient = class
      */
     redirectTo(url)
     {
-        top.location.href = this.baseUrl + url;
+        top.location.href = url;
     }
 
     /**
      * @param {Object} postParameters
      * @returns {String}
      */
-    preparePostParameters(postParameters)
+    _preparePostParameters(postParameters)
     {
         let preparedPostParameters = [];
 
@@ -101,9 +90,11 @@ Gaming.Common.HttpClient = class
     /**
      * @returns {String}
      */
-    readCsrfTokenFromCookie()
+    _readCsrfTokenFromCookie()
     {
         let matches = document.cookie.match(/XSRF-TOKEN=([^;]+);?/);
         return matches[1];
     }
-};
+}
+
+export const client = new HttpClient();

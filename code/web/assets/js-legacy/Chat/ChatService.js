@@ -4,7 +4,7 @@ Gaming.Chat = Gaming.Chat || {};
 Gaming.Chat.ChatService = class
 {
     /**
-     * @param {Gaming.Common.HttpClient} httpClient
+     * @param {HttpClient} httpClient
      */
     constructor(httpClient)
     {

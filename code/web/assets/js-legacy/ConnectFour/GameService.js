@@ -4,7 +4,7 @@ Gaming.ConnectFour = Gaming.ConnectFour || {};
 Gaming.ConnectFour.GameService = class
 {
     /**
-     * @param {Gaming.Common.HttpClient} httpClient
+     * @param {HttpClient} httpClient
      */
     constructor(httpClient)
     {
