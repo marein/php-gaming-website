@@ -62,7 +62,7 @@ services:
         links:
             - php-fpm
         volumes:
-            - frontend:/project/web
+            - ./code/web/assets:/project/web/assets
         restart: on-failure
         labels:
             - "traefik.enable=true"
@@ -222,15 +222,6 @@ services:
     ##############################
     #     Development helper     #
     ##############################
-    frontend-builder:
-        build:
-            context: .
-            dockerfile: ./container/nginx/Dockerfile
-            target: builder
-        working_dir: /project
-        volumes:
-            - ./code/src:/project/src
-            - frontend:/project/web
     php:
         build:
             context: .
@@ -252,7 +243,6 @@ services:
             - vendor:/project/vendor
 
 volumes:
-    frontend:
     vendor:
     mysql:
     redis:

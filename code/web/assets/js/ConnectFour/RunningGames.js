@@ -1,4 +1,4 @@
-customElements.define('running-games', class extends HTMLElement
+class RunningGamesElement extends HTMLElement
 {
     connectedCallback()
     {
@@ -17,4 +17,6 @@ customElements.define('running-games', class extends HTMLElement
             this._onRunningGamesUpdated.bind(this)
         );
     }
-});
+}
+
+customElements.define('running-games', RunningGamesElement);

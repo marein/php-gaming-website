@@ -1,5 +1,6 @@
 /**
- * Don't look at this. CSS is not my domain ;).
+ * Don't look at this. CSS is not my domain.
+ * Feel free to contribute and structure properly :).
  */
 @keyframes flash {
     0%, 100% {
@@ -216,7 +217,7 @@ button:hover {
     content: "";
     display: block;
     background-color: rgba(255, 255, 255, .3);
-    background-image: url("loading-indicator.svg");
+    background-image: url("../img/loading-indicator.svg");
     background-position: center;
     background-repeat: no-repeat;
 }
