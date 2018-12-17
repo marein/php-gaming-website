@@ -1,14 +1,11 @@
-var Gaming = Gaming || {};
-Gaming.Common = Gaming.Common || {};
-
-Gaming.Common.Notification = class
+class NotificationListElement extends HTMLElement
 {
-    /**
-     * @param {Node} element
-     */
-    constructor(element)
+    connectedCallback()
     {
-        this.element = element;
+        this._ul = document.createElement('ul');
+        this._ul.classList.add('notification');
+
+        this.append(this._ul);
     }
 
     /**
@@ -16,15 +13,15 @@ Gaming.Common.Notification = class
      */
     appendMessage(message)
     {
-        let messageNode = this.createMessageNode(message);
+        let messageNode = this._createMessageNode(message);
 
-        this.element.insertBefore(messageNode, this.element.childNodes[0]);
+        this._ul.insertBefore(messageNode, this._ul.childNodes[0]);
 
         // Show the message for 3 seconds, fade it out and remove the node.
         setTimeout(() => {
             messageNode.classList.add('notification__message--close');
             setTimeout(() => {
-                this.element.removeChild(messageNode);
+                this._ul.removeChild(messageNode);
             }, 1000);
         }, 3000);
     }
@@ -33,7 +30,7 @@ Gaming.Common.Notification = class
      * @param {String} message
      * @returns {Node}
      */
-    createMessageNode(message)
+    _createMessageNode(message)
     {
         let smiley = document.createTextNode('¯\\_(ツ)_/¯');
         let br = document.createElement('br');
@@ -48,4 +45,6 @@ Gaming.Common.Notification = class
 
         return li;
     }
-};
+}
+
+customElements.define('notification-list', NotificationListElement);

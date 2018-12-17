@@ -10,14 +10,6 @@ window.app = {
 
 window.app.eventPublisher = new Gaming.Common.EventPublisher();
 
-window.app.notification = new Gaming.Common.Notification(
-    document.getElementById('notification')
-);
-
-client.onError = (response) => {
-    window.app.notification.appendMessage(response.message);
-};
-
 window.app.gameService = new Gaming.ConnectFour.GameService(
     client
 );
