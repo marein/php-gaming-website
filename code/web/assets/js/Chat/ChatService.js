@@ -35,6 +35,6 @@ class ChatService
             '/api/chat/chats/' + chatId + '/messages'
         );
     }
-};
+}
 
 export const service = new ChatService(client);
