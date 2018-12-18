@@ -1,7 +1,6 @@
-var Gaming = Gaming || {};
-Gaming.Chat = Gaming.Chat || {};
+import { client } from '../Common/HttpClient.js'
 
-Gaming.Chat.ChatService = class
+class ChatService
 {
     /**
      * @param {HttpClient} httpClient
@@ -37,3 +36,5 @@ Gaming.Chat.ChatService = class
         );
     }
 };
+
+export const service = new ChatService(client);

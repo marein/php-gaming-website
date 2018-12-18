@@ -1,17 +1,17 @@
-var Gaming = Gaming || {};
-Gaming.Chat = Gaming.Chat || {};
+import { service } from '../../js/Chat/ChatService.js'
 
-Gaming.Chat.Widget = class
+window.Gaming = window.Gaming || {};
+window.Gaming.Chat = window.Gaming.Chat || {};
+
+window.Gaming.Chat.Widget = class
 {
     /**
      * @param {Gaming.Common.EventPublisher} eventPublisher
-     * @param {Gaming.Chat.ChatService} chatService
      * @param {Node} element
      */
-    constructor(eventPublisher, chatService, element)
+    constructor(eventPublisher, element)
     {
         this.eventPublisher = eventPublisher;
-        this.chatService = chatService;
         this.element = element;
         this.messageHolder = element.querySelector('[data-message-holder]');
         this.input = element.querySelector('[data-input]');
@@ -48,7 +48,7 @@ Gaming.Chat.Widget = class
      */
     loadMessages(chatId)
     {
-        this.chatService.messages(chatId).then((messages) => {
+        service.messages(chatId).then((messages) => {
             messages.forEach((message) => {
                 this.appendMessage(message);
             });
@@ -138,7 +138,7 @@ Gaming.Chat.Widget = class
             this.clearInput();
 
             if (message.trim() !== '') {
-                this.chatService.writeMessage(
+                service.writeMessage(
                     this.chatId,
                     message
                 );

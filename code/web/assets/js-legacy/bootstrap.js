@@ -14,10 +14,6 @@ window.app.gameService = new Gaming.ConnectFour.GameService(
     client
 );
 
-window.app.chatService = new Gaming.Chat.ChatService(
-    client
-);
-
 // Forward events to app.eventPublisher which is used by the old js design.
 // todo: Remove this as soon as https://github.com/marein/php-gaming-website/issues/18 is done.
 window.addEventListener(
