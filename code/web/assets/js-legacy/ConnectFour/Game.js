@@ -1,11 +1,12 @@
-var Gaming = Gaming || {};
-Gaming.ConnectFour = Gaming.ConnectFour || {};
+import { service } from '../../js/ConnectFour/GameService.js'
 
-Gaming.ConnectFour.Game = class
+window.Gaming = window.Gaming || {};
+window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
+
+window.Gaming.ConnectFour.Game = class
 {
     /**
      * @param {Gaming.Common.EventPublisher} eventPublisher
-     * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} gameHolder
      * @param {Node} previousMoveButton
      * @param {Node} nextMoveButton
@@ -13,14 +14,12 @@ Gaming.ConnectFour.Game = class
      */
     constructor(
         eventPublisher,
-        gameService,
         gameHolder,
         previousMoveButton,
         nextMoveButton,
         followMovesButton
     ) {
         this.eventPublisher = eventPublisher;
-        this.gameService = gameService;
         this.gameHolder = gameHolder;
         this.previousMoveButton = previousMoveButton;
         this.nextMoveButton = nextMoveButton;
@@ -121,7 +120,7 @@ Gaming.ConnectFour.Game = class
 
         this.gameHolder.classList.add('loading-indicator');
 
-        this.gameService.move(
+        service.move(
             this.game.gameId,
             cell.dataset.column
         ).then(() => {

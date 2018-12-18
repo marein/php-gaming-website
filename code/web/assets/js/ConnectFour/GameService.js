@@ -1,7 +1,6 @@
-var Gaming = Gaming || {};
-Gaming.ConnectFour = Gaming.ConnectFour || {};
+import { client } from '../Common/HttpClient.js'
 
-Gaming.ConnectFour.GameService = class
+class GameService
 {
     /**
      * @param {HttpClient} httpClient
@@ -78,4 +77,6 @@ Gaming.ConnectFour.GameService = class
             '/api/connect-four/games/' + gameId + '/join',
         );
     }
-};
+}
+
+export const service = new GameService(client);

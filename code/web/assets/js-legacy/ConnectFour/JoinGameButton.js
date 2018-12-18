@@ -1,15 +1,15 @@
-var Gaming = Gaming || {};
-Gaming.ConnectFour = Gaming.ConnectFour || {};
+import { service } from '../../js/ConnectFour/GameService.js'
 
-Gaming.ConnectFour.JoinGameButton = class
+window.Gaming = window.Gaming || {};
+window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
+
+window.Gaming.ConnectFour.JoinGameButton = class
 {
     /**
-     * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} button
      */
-    constructor(gameService, button)
+    constructor(button)
     {
-        this.gameService = gameService;
         this.button = button;
 
         this.registerEventHandler();
@@ -23,9 +23,9 @@ Gaming.ConnectFour.JoinGameButton = class
 
         this.button.disabled = true;
 
-        this.gameService.join(gameId).then(() => {
+        service.join(gameId).then(() => {
             this.button.disabled = false;
-            this.gameService.redirectTo(gameId);
+            service.redirectTo(gameId);
         }).catch(() => {
             // todo: Handle exception based on error
             this.button.disabled = false;

@@ -1,15 +1,15 @@
-var Gaming = Gaming || {};
-Gaming.ConnectFour = Gaming.ConnectFour || {};
+import { service } from '../../js/ConnectFour/GameService.js'
 
-Gaming.ConnectFour.AbortGameButton = class
+window.Gaming = window.Gaming || {};
+window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
+
+window.Gaming.ConnectFour.AbortGameButton = class
 {
     /**
-     * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} button
      */
-    constructor(gameService, button)
+    constructor(button)
     {
-        this.gameService = gameService;
         this.button = button;
 
         this.registerEventHandler();
@@ -24,7 +24,7 @@ Gaming.ConnectFour.AbortGameButton = class
         this.button.disabled = true;
         this.button.classList.add('loading-indicator');
 
-        this.gameService.abort(gameId).then(() => {
+        service.abort(gameId).then(() => {
             this.button.disabled = false;
             this.button.classList.remove('loading-indicator');
         }).catch(() => {
