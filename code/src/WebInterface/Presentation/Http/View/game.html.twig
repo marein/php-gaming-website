@@ -34,9 +34,9 @@
                 <button class="button" id="abort-game" data-game-id="{{ game.gameId }}">
                     x Abort game
                 </button>
-                <button class="button" id="resign-game" data-game-id="{{ game.gameId }}">
+                <resign-game-button game-id="{{ game.gameId }}">
                     x Resign game
-                </button>
+                </resign-game-button>
             </p>
         </div>
         <div class="box">
@@ -74,9 +74,6 @@
             );
             new Gaming.ConnectFour.AbortGameButton(
                 document.getElementById('abort-game')
-            );
-            new Gaming.ConnectFour.ResignGameButton(
-                document.getElementById('resign-game')
             );
         });
     </script>
