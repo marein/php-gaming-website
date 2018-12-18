@@ -1,4 +1,4 @@
-customElements.define('event-source', class extends HTMLElement
+class EventSourceElement extends HTMLElement
 {
     constructor(props)
     {
@@ -57,4 +57,6 @@ customElements.define('event-source', class extends HTMLElement
             console.log(eventName, payload);
         }
     }
-});
+}
+
+customElements.define('event-source', EventSourceElement);

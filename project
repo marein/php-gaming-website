@@ -56,10 +56,6 @@ down() {
     docker-compose down
 }
 
-assets() {
-    docker-compose run frontend-builder watch -n 1 make
-}
-
 tests() {
     phpunit
     phpcs

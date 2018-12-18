@@ -1,17 +1,17 @@
-var Gaming = Gaming || {};
-Gaming.ConnectFour = Gaming.ConnectFour || {};
+import { service } from '../../js/ConnectFour/GameService.js'
 
-Gaming.ConnectFour.GameList = class
+window.Gaming = window.Gaming || {};
+window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
+
+window.Gaming.ConnectFour.GameList = class
 {
     /**
      * @param {Gaming.Common.EventPublisher} eventPublisher
-     * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} games
      */
-    constructor(eventPublisher, gameService, games)
+    constructor(eventPublisher, games)
     {
         this.eventPublisher = eventPublisher;
-        this.gameService = gameService;
         this.games = games;
         this.maximumNumberOfGamesInList = parseInt(this.games.dataset.maximumNumberOfGames);
         this.currentGamesInList = [];
@@ -69,12 +69,10 @@ Gaming.ConnectFour.GameList = class
     {
         if (isCurrentUserThePlayer) {
             new Gaming.ConnectFour.AbortGameButton(
-                this.gameService,
                 game.querySelector('button')
             );
         } else {
             new Gaming.ConnectFour.JoinGameButton(
-                this.gameService,
                 game.querySelector('button')
             );
         }

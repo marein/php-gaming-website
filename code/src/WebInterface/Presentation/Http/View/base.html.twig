@@ -3,20 +3,33 @@
 <head>
     <title>Gaming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <link rel="stylesheet" href="{{ asset('assets/main.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}"/>
 </head>
 <body>
-<ul class="notification" id="notification"></ul>
+<notification-list></notification-list>
 <nav class="main-navigation">
     <a href="{{ path('lobby') }}">Lobby</a>
     |
     <a href="{{ path('profile') }}">Profile</a>
 </nav>
 {% block content %}{% endblock %}
-<script type="text/javascript" src="{{ asset('assets/main.js') }}"></script>
+<script type="module" src="{{ asset('assets/js/main.js') }}"></script>
+{#
+    Following we're including the legacy javascript files.
+    todo: Remove this as soon as https://github.com/marein/php-gaming-website/issues/18 is done.
+#}
+<script type="text/javascript" src="{{ asset('assets/js-legacy/Common/EventPublisher.js') }}"></script>
+<script type="module" src="{{ asset('assets/js-legacy/ConnectFour/AbortGameButton.js') }}"></script>
+<script type="module" src="{{ asset('assets/js-legacy/ConnectFour/Game.js') }}"></script>
+<script type="module" src="{{ asset('assets/js-legacy/ConnectFour/GameList.js') }}"></script>
+<script type="module" src="{{ asset('assets/js-legacy/ConnectFour/JoinGameButton.js') }}"></script>
+<script type="module" src="{{ asset('assets/js-legacy/ConnectFour/OpenGameButton.js') }}"></script>
+<script type="module" src="{{ asset('assets/js-legacy/bootstrap.js') }}"></script>
 <script type="text/javascript">
     {# Propagate current user id to browser #}
-    app.user.id = '{{ app.session.get('user') }}';
+    document.addEventListener('DOMContentLoaded', (event) => {
+        app.user.id = '{{ app.session.get('user') }}';
+    });
 </script>
 {% block javascript %}{% endblock %}
 </body>

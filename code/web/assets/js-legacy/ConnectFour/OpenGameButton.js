@@ -1,17 +1,17 @@
-var Gaming = Gaming || {};
-Gaming.ConnectFour = Gaming.ConnectFour || {};
+import { service } from '../../js/ConnectFour/GameService.js'
 
-Gaming.ConnectFour.OpenGameButton = class
+window.Gaming = window.Gaming || {};
+window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
+
+window.Gaming.ConnectFour.OpenGameButton = class
 {
     /**
      * @param {Gaming.Common.EventPublisher} eventPublisher
-     * @param {Gaming.ConnectFour.GameService} gameService
      * @param {Node} button
      */
-    constructor(eventPublisher, gameService, button)
+    constructor(eventPublisher, button)
     {
         this.eventPublisher = eventPublisher;
-        this.gameService = gameService;
         this.button = button;
         this.currentOpenGameId = '';
 
@@ -26,10 +26,10 @@ Gaming.ConnectFour.OpenGameButton = class
         this.button.classList.add('loading-indicator');
 
         if (this.currentOpenGameId) {
-            this.gameService.abort(this.currentOpenGameId);
+            service.abort(this.currentOpenGameId);
         }
 
-        this.gameService.open().then((game) => {
+        service.open().then((game) => {
             this.currentOpenGameId = game.gameId;
             this.button.disabled = false;
             this.button.classList.remove('loading-indicator');
@@ -42,7 +42,7 @@ Gaming.ConnectFour.OpenGameButton = class
     onPlayerJoined(event)
     {
         if (this.currentOpenGameId === event.payload.gameId) {
-            this.gameService.redirectTo(this.currentOpenGameId);
+            service.redirectTo(this.currentOpenGameId);
         }
     }
 
