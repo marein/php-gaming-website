@@ -1,82 +1,82 @@
-import { service } from '../../js/Chat/ChatService.js'
+import { service } from './ChatService.js'
 
-window.Gaming = window.Gaming || {};
-window.Gaming.Chat = window.Gaming.Chat || {};
-
-window.Gaming.Chat.Widget = class
+class WidgetElement extends HTMLElement
 {
-    /**
-     * @param {Gaming.Common.EventPublisher} eventPublisher
-     * @param {Node} element
-     */
-    constructor(eventPublisher, element)
+    connectedCallback()
     {
-        this.eventPublisher = eventPublisher;
-        this.element = element;
-        this.messageHolder = element.querySelector('[data-message-holder]');
-        this.input = element.querySelector('[data-input]');
-        this.chatId = '';
-        this.messageBuffer = [];
-        this.isAlreadyInitialized = false;
-        this.secondsBeforeRetryAfterLoadMessageFailure = 3;
+        this.classList.add('loading-indicator');
 
-        this.element.classList.add('loading-indicator');
+        this._messageHolder = document.createElement('ul');
+        this._messageHolder.classList.add('chat__messages');
 
-        let chatId = element.dataset.chatId;
+        this._input = document.createElement('textarea');
+        this._input.classList.add('chat__input');
+        this._input.setAttribute('type', 'text');
+        this._input.setAttribute('name', 'message');
+
+        this.append(this._messageHolder);
+        this.append(this._input);
+
+        this._chatId = '';
+        this._messageBuffer = [];
+        this._isAlreadyInitialized = false;
+        this._secondsBeforeRetryAfterLoadMessageFailure = parseInt(this.getAttribute('seconds-before-retry'));
+
+        let chatId = this.getAttribute('chat-id');
 
         if (chatId) {
-            this.initialize(chatId);
+            this._initialize(chatId);
         }
 
-        this.registerEventHandler();
+        this._registerEventHandler();
     }
 
     /**
      * @param {String} chatId
      */
-    initialize(chatId)
+    _initialize(chatId)
     {
-        if (this.chatId === '') {
-            this.chatId = chatId;
+        if (this._chatId === '') {
+            this._chatId = chatId;
 
-            this.loadMessages(chatId);
+            this._loadMessages(chatId);
         }
     }
 
     /**
      * @param {String} chatId
      */
-    loadMessages(chatId)
+    _loadMessages(chatId)
     {
         service.messages(chatId).then((messages) => {
             messages.forEach((message) => {
-                this.appendMessage(message);
+                this._appendMessage(message);
             });
 
-            this.isAlreadyInitialized = true;
+            this._isAlreadyInitialized = true;
 
-            this.flushMessageBuffer();
+            this._flushMessageBuffer();
 
-            this.element.classList.remove('loading-indicator');
+            this.classList.remove('loading-indicator');
         }).catch(() => {
             // Automatic retry after x seconds.
             setTimeout(() => {
-                this.loadMessages(chatId);
-            }, this.secondsBeforeRetryAfterLoadMessageFailure * 1000);
+                this._loadMessages(chatId);
+            }, this._secondsBeforeRetryAfterLoadMessageFailure * 1000);
         });
     }
 
     /**
      * @param {Object} message
      */
-    appendMessage(message)
+    _appendMessage(message)
     {
-        if (!this.isDuplicate(message)) {
-            this.messageHolder.append(
-                this.createMessageNode(message)
+        if (!this._isDuplicate(message)) {
+            this._messageHolder.append(
+                this._createMessageNode(message)
             );
 
-            this.messageHolder.scrollTop = this.messageHolder.scrollHeight;
+            this._messageHolder.scrollTop = this._messageHolder.scrollHeight;
         }
     }
 
@@ -84,25 +84,25 @@ window.Gaming.Chat.Widget = class
      * @param {Object} message
      * @returns {Boolean}
      */
-    isDuplicate(message)
+    _isDuplicate(message)
     {
-        return this.messageHolder.querySelector(['[data-id="' + message.messageId + '"]']) !== null;
+        return this._messageHolder.querySelector(['[data-id="' + message.messageId + '"]']) !== null;
     }
 
-    flushMessageBuffer()
+    _flushMessageBuffer()
     {
-        this.messageBuffer.forEach((message) => {
-            this.appendMessage(message);
+        this._messageBuffer.forEach((message) => {
+            this._appendMessage(message);
         });
 
-        this.messageBuffer = [];
+        this._messageBuffer = [];
     }
 
     /**
      * @param {String} message
      * @returns {Node}
      */
-    createMessageNode(message)
+    _createMessageNode(message)
     {
         let writtenAt = new Date(message.writtenAt);
         let hours = ('0' + writtenAt.getHours()).slice(-2);
@@ -124,60 +124,58 @@ window.Gaming.Chat.Widget = class
         return li;
     }
 
-    clearInput()
+    _clearInput()
     {
-        this.input.value = '';
+        this._input.value = '';
     }
 
-    onKeyPress(event)
+    _onKeyPress(event)
     {
         if (event.which === 13 && !event.shiftKey) {
             event.preventDefault();
-            let message = this.input.value;
+            let message = this._input.value;
 
-            this.clearInput();
+            this._clearInput();
 
             if (message.trim() !== '') {
                 service.writeMessage(
-                    this.chatId,
+                    this._chatId,
                     message
                 );
             }
         }
     }
 
-    onMessageWritten(event)
+    _onMessageWritten(event)
     {
-        let message = event.payload;
+        let message = event.detail;
 
-        if (!this.isAlreadyInitialized) {
-            this.messageBuffer.push(message);
+        if (!this._isAlreadyInitialized) {
+            this._messageBuffer.push(message);
         } else {
-            this.appendMessage(message);
+            this._appendMessage(message);
         }
     }
 
-    onChatAssigned(event)
+    _onChatAssigned(event)
     {
-        this.initialize(event.payload.chatId);
+        this._initialize(event.detail.chatId);
     }
 
-    registerEventHandler()
+    _registerEventHandler()
     {
-        this.input.addEventListener('keypress', this.onKeyPress.bind(this));
+        this._input.addEventListener('keypress', this._onKeyPress.bind(this));
 
-        this.eventPublisher.subscribe({
-            isSubscribedTo: (event) => {
-                return event.name === 'Chat.MessageWritten';
-            },
-            handle: this.onMessageWritten.bind(this)
-        });
+        window.addEventListener(
+            'Chat.MessageWritten',
+            this._onMessageWritten.bind(this)
+        );
 
-        this.eventPublisher.subscribe({
-            isSubscribedTo: (event) => {
-                return event.name === 'ConnectFour.ChatAssigned';
-            },
-            handle: this.onChatAssigned.bind(this)
-        });
+        window.addEventListener(
+            'ConnectFour.ChatAssigned',
+            this._onChatAssigned.bind(this)
+        );
     }
-};
+}
+
+customElements.define('chat-widget', WidgetElement);

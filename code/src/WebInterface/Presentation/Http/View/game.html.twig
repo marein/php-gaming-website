@@ -52,15 +52,10 @@
                 </button>
             </p>
         </div>
-        <div class="chat" id="chat" data-chat-id="{{ game.chatId }}">
-            <ul class="chat__messages" data-message-holder>
-
-            </ul>
-            <textarea type="text"
-                      name="message"
-                      data-input
-                      class="chat__input"></textarea>
-        </div>
+        <chat-widget id="chat"
+                     chat-id="{{ game.chatId }}"
+                     seconds-before-retry="3">
+        </chat-widget>
     </div>
     <event-source url="/sse/sub?id=game-{{ game.gameId }}"
                   {% if app.environment == 'dev' %}verbose{% endif %}>
@@ -82,10 +77,6 @@
             );
             new Gaming.ConnectFour.ResignGameButton(
                 document.getElementById('resign-game')
-            );
-            new Gaming.Chat.Widget(
-                app.eventPublisher,
-                document.getElementById('chat')
             );
         });
     </script>

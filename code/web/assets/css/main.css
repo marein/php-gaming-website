@@ -102,7 +102,8 @@ button:hover {
     opacity: 0;
 }
 
-.chat {
+chat-widget {
+    display: block;
     margin: 0 15px 15px 15px;
     padding: 10px;
     background-color: rgb(46, 48, 50);
