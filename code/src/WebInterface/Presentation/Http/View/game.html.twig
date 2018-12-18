@@ -34,9 +34,9 @@
                 <button class="button" id="abort-game" data-game-id="{{ game.gameId }}">
                     x Abort game
                 </button>
-                <button class="button" id="resign-game" data-game-id="{{ game.gameId }}">
+                <resign-game-button game-id="{{ game.gameId }}">
                     x Resign game
-                </button>
+                </resign-game-button>
             </p>
         </div>
         <div class="box">
@@ -52,43 +52,29 @@
                 </button>
             </p>
         </div>
-        <div class="chat" id="chat" data-chat-id="{{ game.chatId }}">
-            <ul class="chat__messages" data-message-holder>
-
-            </ul>
-            <textarea type="text"
-                      name="message"
-                      data-input
-                      class="chat__input"></textarea>
-        </div>
+        <chat-widget id="chat"
+                     chat-id="{{ game.chatId }}"
+                     seconds-before-retry="3">
+        </chat-widget>
     </div>
-    <event-source url="/sse/sub?id=game-{{ game.gameId }}"></event-source>
+    <event-source url="/sse/sub?id=game-{{ game.gameId }}"
+                  {% if app.environment == 'dev' %}verbose{% endif %}>
+    </event-source>
 {% endblock %}
 
 {% block javascript %}
     <script type="text/javascript">
-        (function () {
+        document.addEventListener('DOMContentLoaded', (event) => {
             new Gaming.ConnectFour.Game(
                 app.eventPublisher,
-                app.gameService,
                 document.getElementById('current-game'),
                 document.getElementById('previous-move'),
                 document.getElementById('next-move'),
                 document.getElementById('follow-moves')
             );
             new Gaming.ConnectFour.AbortGameButton(
-                app.gameService,
                 document.getElementById('abort-game')
             );
-            new Gaming.ConnectFour.ResignGameButton(
-                app.gameService,
-                document.getElementById('resign-game')
-            );
-            new Gaming.Chat.Widget(
-                app.eventPublisher,
-                app.chatService,
-                document.getElementById('chat')
-            );
-        })();
+        });
     </script>
 {% endblock %}

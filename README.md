@@ -42,7 +42,9 @@ I recommend to use
 [Docker Compose](https://docs.docker.com/compose/).
 You can also set up a stack yourself.
 
-Since I use the latest JavaScript techniques, like EcmaScript 6, it doesn't work in all browsers.
+Since I use the latest JavaScript techniques, like ECMAScript 6, it doesn't work in all browsers.
+You could see that I don't use a bundler. This is intentional because I use ECMAScript 6 modules
+and I want to keep the tooling small.
 Please don't look at the front end design, this is by no means my domain.
 
 ### Development
@@ -335,7 +337,6 @@ Some other technologies:
 * [Rabbit Mq](https://www.rabbitmq.com) as the message broker.
 * [Nchan](https://nchan.io) for real-time browser notifications.
 * Various [libraries](/code/composer.json) for php.
-* [Makefile](/code/Makefile) for concatenation of javascript and css.
 
 ## A note on testing
 

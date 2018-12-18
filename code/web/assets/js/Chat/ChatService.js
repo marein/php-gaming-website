@@ -1,10 +1,9 @@
-var Gaming = Gaming || {};
-Gaming.Chat = Gaming.Chat || {};
+import { client } from '../Common/HttpClient.js'
 
-Gaming.Chat.ChatService = class
+class ChatService
 {
     /**
-     * @param {Gaming.Common.HttpClient} httpClient
+     * @param {HttpClient} httpClient
      */
     constructor(httpClient)
     {
@@ -36,4 +35,6 @@ Gaming.Chat.ChatService = class
             '/api/chat/chats/' + chatId + '/messages'
         );
     }
-};
+}
+
+export const service = new ChatService(client);

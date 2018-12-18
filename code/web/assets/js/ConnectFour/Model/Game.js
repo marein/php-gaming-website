@@ -1,8 +1,4 @@
-var Gaming = Gaming || {};
-Gaming.ConnectFour = Gaming.ConnectFour || {};
-Gaming.ConnectFour.Model = Gaming.ConnectFour.Model || {};
-
-Gaming.ConnectFour.Model.Game = class
+export class Game
 {
     /**
      * @param {String} gameId
@@ -76,4 +72,4 @@ Gaming.ConnectFour.Model.Game = class
             object.moves
         );
     }
-};
+}
