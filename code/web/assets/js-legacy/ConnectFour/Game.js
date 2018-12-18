@@ -1,4 +1,5 @@
 import { service } from '../../js/ConnectFour/GameService.js'
+import { Game as GameModel } from '../../js/ConnectFour/Model/Game.js'
 
 window.Gaming = window.Gaming || {};
 window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
@@ -24,7 +25,7 @@ window.Gaming.ConnectFour.Game = class
         this.previousMoveButton = previousMoveButton;
         this.nextMoveButton = nextMoveButton;
         this.followMovesButton = followMovesButton;
-        this.game = Gaming.ConnectFour.Model.Game.fromObject(
+        this.game = GameModel.fromObject(
             JSON.parse(this.gameHolder.dataset.game)
         );
         this.numberOfCurrentMoveInView = this.game.numberOfMoves();
