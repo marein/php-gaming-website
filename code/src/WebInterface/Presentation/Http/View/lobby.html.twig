@@ -21,9 +21,9 @@
     <section class="right">
         <div class="box">
             <p>
-                <button class="button" data-open-game-button>
+                <open-game-button game-id="{{ game.gameId }}">
                     + Open a new game
-                </button>
+                </open-game-button>
             </p>
         </div>
     </section>
@@ -38,10 +38,6 @@
             new Gaming.ConnectFour.GameList(
                 app.eventPublisher,
                 document.getElementById('games')
-            );
-            new Gaming.ConnectFour.OpenGameButton(
-                app.eventPublisher,
-                document.querySelector('[data-open-game-button]')
             );
         });
     </script>
