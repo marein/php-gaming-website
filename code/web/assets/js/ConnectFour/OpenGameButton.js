@@ -1,74 +1,72 @@
-import { service } from '../../js/ConnectFour/GameService.js'
+import { service } from './GameService.js'
 
-window.Gaming = window.Gaming || {};
-window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
-
-window.Gaming.ConnectFour.OpenGameButton = class
+class OpenGameButtonElement extends HTMLElement
 {
-    /**
-     * @param {Gaming.Common.EventPublisher} eventPublisher
-     * @param {Node} button
-     */
-    constructor(eventPublisher, button)
+    connectedCallback()
     {
-        this.eventPublisher = eventPublisher;
-        this.button = button;
-        this.currentOpenGameId = '';
+        this._button = document.createElement('button');
+        this._button.classList.add('button');
+        this._button.setAttribute('data-open-game-button', '');
+        this._button.innerHTML = this.innerHTML;
 
-        this.registerEventHandler();
+        this.innerHTML = '';
+        this.append(this._button);
+
+        this._gameId = this.getAttribute('game-id');
+        this._currentOpenGameId = '';
+
+        this._registerEventHandler();
     }
 
-    onButtonClick(event)
+    _onButtonClick(event)
     {
         event.preventDefault();
 
-        this.button.disabled = true;
-        this.button.classList.add('loading-indicator');
+        this._button.disabled = true;
+        this._button.classList.add('loading-indicator');
 
-        if (this.currentOpenGameId) {
-            service.abort(this.currentOpenGameId);
+        if (this._currentOpenGameId) {
+            service.abort(this._currentOpenGameId);
         }
 
         service.open().then((game) => {
-            this.currentOpenGameId = game.gameId;
-            this.button.disabled = false;
-            this.button.classList.remove('loading-indicator');
+            this._currentOpenGameId = game.gameId;
+            this._button.disabled = false;
+            this._button.classList.remove('loading-indicator');
         }).catch(() => {
-            this.button.disabled = false;
-            this.button.classList.remove('loading-indicator');
+            this._button.disabled = false;
+            this._button.classList.remove('loading-indicator');
         });
     }
 
-    onPlayerJoined(event)
+    _onPlayerJoined(event)
     {
-        if (this.currentOpenGameId === event.payload.gameId) {
-            service.redirectTo(this.currentOpenGameId);
+        if (this._currentOpenGameId === event.detail.gameId) {
+            service.redirectTo(this._currentOpenGameId);
         }
     }
 
-    onGameAborted(event)
+    _onGameAborted(event)
     {
-        if (this.currentOpenGameId === event.payload.gameId) {
-            this.currentOpenGameId = '';
+        if (this._currentOpenGameId === event.detail.gameId) {
+            this._currentOpenGameId = '';
         }
     }
 
-    registerEventHandler()
+    _registerEventHandler()
     {
-        this.button.addEventListener('click', this.onButtonClick.bind(this));
+        this._button.addEventListener('click', this._onButtonClick.bind(this));
 
-        this.eventPublisher.subscribe({
-            isSubscribedTo: (event) => {
-                return event.name === 'ConnectFour.PlayerJoined';
-            },
-            handle: this.onPlayerJoined.bind(this)
-        });
+        window.addEventListener(
+            'ConnectFour.PlayerJoined',
+            this._onPlayerJoined.bind(this)
+        );
 
-        this.eventPublisher.subscribe({
-            isSubscribedTo: (event) => {
-                return event.name === 'ConnectFour.GameAborted';
-            },
-            handle: this.onGameAborted.bind(this)
-        });
+        window.addEventListener(
+            'ConnectFour.GameAborted',
+            this._onGameAborted.bind(this)
+        );
     }
-};
+}
+
+customElements.define('open-game-button', OpenGameButtonElement);
