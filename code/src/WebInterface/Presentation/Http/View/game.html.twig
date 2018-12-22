@@ -9,24 +9,11 @@
         </div>
     </div>
     <section class="middle">
-        <div class="box"
-             id="current-game"
-             data-game="{{ game|json_encode|e('html_attr') }}">
-            <table class="game">
-                <tbody>
-                {% for y in range(1, game.height) %}
-                    <tr>
-                        {% for x in range(1, game.width) %}
-                            <td
-                                    class="game__field"
-                                    data-column="{{ x }}"
-                                    data-point="{{ x }} {{ y }}"></td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
+                           previous-move-selector="#previous-move"
+                           next-move-selector="#next-move"
+                           follow-moves-selector="#follow-moves">
+        </connect-four-game>
     </section>
     <div class="right">
         <div class="box">
@@ -65,13 +52,6 @@
 {% block javascript %}
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', (event) => {
-            new Gaming.ConnectFour.Game(
-                app.eventPublisher,
-                document.getElementById('current-game'),
-                document.getElementById('previous-move'),
-                document.getElementById('next-move'),
-                document.getElementById('follow-moves')
-            );
             new Gaming.ConnectFour.AbortGameButton(
                 document.getElementById('abort-game')
             );
