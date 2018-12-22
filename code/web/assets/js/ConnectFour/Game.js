@@ -1,5 +1,5 @@
-import { service } from '../../js/ConnectFour/GameService.js'
-import { Game as GameModel } from '../../js/ConnectFour/Model/Game.js'
+import { service } from './GameService.js'
+import { Game as GameModel } from './Model/Game.js'
 
 /**
  * todo: Render the game within <canvas>, see https://github.com/marein/php-gaming-website/issues/19.
