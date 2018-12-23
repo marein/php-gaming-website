@@ -52,29 +52,33 @@ window.Gaming.ConnectFour.GameList = class
     /**
      * @param {String} gameId
      */
+    scheduleRemovingOfGame(gameId)
+    {
+        let indexOfGameInList = this.currentGamesInList.indexOf(gameId);
+
+        if (indexOfGameInList !== -1) {
+            this.pendingGamesToRemove.push(gameId);
+            this.markGameAsToBeRemovedSoon(gameId);
+        }
+
+        this.pendingGamesToAdd = this.pendingGamesToAdd.filter((pendingGameToAdd) => {
+            return pendingGameToAdd.gameId !== gameId;
+        });
+
+        if (this.renderListTimeout === null) {
+            this.renderListTimeout = setTimeout(this.renderList.bind(this), 3000);
+        }
+    }
+
+    /**
+     * @param {String} gameId
+     */
     markGameAsToBeRemovedSoon(gameId)
     {
         if (this.currentGamesInList.indexOf(gameId) !== -1) {
             let node = this.games.querySelector('[data-game-id="' + gameId + '"]');
             node.classList.add('game-list__game--remove-soon');
             node.classList.remove('game-list__game--user-game');
-        }
-    }
-
-    /**
-     * @param {Node} game
-     * @param {Boolean} isCurrentUserThePlayer
-     */
-    addChildComponents(game, isCurrentUserThePlayer)
-    {
-        if (isCurrentUserThePlayer) {
-            new Gaming.ConnectFour.AbortGameButton(
-                game.querySelector('button')
-            );
-        } else {
-            new Gaming.ConnectFour.JoinGameButton(
-                game.querySelector('button')
-            );
         }
     }
 
@@ -152,7 +156,30 @@ window.Gaming.ConnectFour.GameList = class
         button.append(span);
         li.append(button);
 
-        this.addChildComponents(li, isCurrentUserThePlayer);
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            button.disabled = true;
+            button.classList.add('loading-indicator');
+
+            if (isCurrentUserThePlayer) {
+                service.abort(gameId).then(() => {
+                    button.classList.remove('loading-indicator');
+                }).catch(() => {
+                    // Remove the game on any error.
+                    button.classList.remove('loading-indicator');
+                    this.scheduleRemovingOfGame(gameId);
+                });
+            } else {
+                service.join(gameId).then(() => {
+                    service.redirectTo(gameId);
+                }).catch(() => {
+                    // Remove the game on any error.
+                    button.classList.remove('loading-indicator');
+                    this.scheduleRemovingOfGame(gameId);
+                });
+            }
+        });
 
         return li;
     }
@@ -194,21 +221,7 @@ window.Gaming.ConnectFour.GameList = class
 
     onPlayerJoinedOrGameAborted(event)
     {
-        let gameId = event.payload.gameId;
-        let indexOfGameInList = this.currentGamesInList.indexOf(gameId);
-
-        if (indexOfGameInList !== -1) {
-            this.pendingGamesToRemove.push(gameId);
-            this.markGameAsToBeRemovedSoon(gameId);
-        }
-
-        this.pendingGamesToAdd = this.pendingGamesToAdd.filter((pendingGameToAdd) => {
-            return pendingGameToAdd.gameId !== gameId;
-        });
-
-        if (this.renderListTimeout === null) {
-            this.renderListTimeout = setTimeout(this.renderList.bind(this), 3000);
-        }
+        this.scheduleRemovingOfGame(event.payload.gameId);
     }
 
     registerEventHandler()
