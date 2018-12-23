@@ -64,7 +64,7 @@ tests() {
 }
 
 unit() {
-    docker-compose run php vendor/bin/phpunit --coverage-text
+    docker-compose run php vendor/bin/codecept run unit --coverage-html
 }
 
 sniffer() {
