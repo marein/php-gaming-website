@@ -14,12 +14,5 @@
 </nav>
 {% block content %}{% endblock %}
 <script type="module" src="{{ asset('assets/js/main.js') }}"></script>
-{#
-    Following we're including the legacy javascript files.
-    todo: Remove this as soon as https://github.com/marein/php-gaming-website/issues/18 is done.
-#}
-<script type="text/javascript" src="{{ asset('assets/js-legacy/Common/EventPublisher.js') }}"></script>
-<script type="module" src="{{ asset('assets/js-legacy/bootstrap.js') }}"></script>
-{% block javascript %}{% endblock %}
 </body>
 </html>
