@@ -24,7 +24,7 @@ class AbortGameButtonElement extends HTMLElement
         this._button.disabled = true;
         this._button.classList.add('loading-indicator');
 
-        service.resign(this._gameId).then(() => {
+        service.abort(this._gameId).then(() => {
             this._button.disabled = false;
             this._button.classList.remove('loading-indicator');
         }).catch(() => {
