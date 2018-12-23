@@ -1,4 +1,4 @@
-import { service } from '../../js/ConnectFour/GameService.js'
+import { service } from './GameService.js'
 
 window.Gaming = window.Gaming || {};
 window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
