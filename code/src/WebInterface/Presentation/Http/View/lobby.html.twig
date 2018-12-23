@@ -12,11 +12,10 @@
         </div>
     </section>
     <section class="middle">
-        <ul class="game-list"
-            id="games"
-            data-open-games="{{ openGames|json_encode|e('html_attr') }}"
-            data-maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
-        </ul>
+        <connect-four-game-list open-games="{{ openGames|json_encode|e('html_attr') }}"
+                                player-id="{{ app.session.get('user')|e('html_attr') }}"
+                                maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
+        </connect-four-game-list>
     </section>
     <section class="right">
         <div class="box">
@@ -30,15 +29,4 @@
     <event-source url="/sse/sub?id=lobby"
                   {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>
-{% endblock %}
-
-{% block javascript %}
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', (event) => {
-            new Gaming.ConnectFour.GameList(
-                app.eventPublisher,
-                document.getElementById('games')
-            );
-        });
-    </script>
 {% endblock %}

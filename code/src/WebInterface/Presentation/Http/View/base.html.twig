@@ -22,12 +22,6 @@
 <script type="module" src="{{ asset('assets/js-legacy/ConnectFour/AbortGameButton.js') }}"></script>
 <script type="module" src="{{ asset('assets/js-legacy/ConnectFour/JoinGameButton.js') }}"></script>
 <script type="module" src="{{ asset('assets/js-legacy/bootstrap.js') }}"></script>
-<script type="text/javascript">
-    {# Propagate current user id to browser #}
-    document.addEventListener('DOMContentLoaded', (event) => {
-        app.user.id = '{{ app.session.get('user') }}';
-    });
-</script>
 {% block javascript %}{% endblock %}
 </body>
 </html>
