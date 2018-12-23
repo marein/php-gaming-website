@@ -18,9 +18,9 @@
     <div class="right">
         <div class="box">
             <p>
-                <button class="button" id="abort-game" data-game-id="{{ game.gameId }}">
+                <abort-game-button game-id="{{ game.gameId }}">
                     x Abort game
-                </button>
+                </abort-game-button>
                 <resign-game-button game-id="{{ game.gameId }}">
                     x Resign game
                 </resign-game-button>
@@ -47,14 +47,4 @@
     <event-source url="/sse/sub?id=game-{{ game.gameId }}"
                   {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>
-{% endblock %}
-
-{% block javascript %}
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', (event) => {
-            new Gaming.ConnectFour.AbortGameButton(
-                document.getElementById('abort-game')
-            );
-        });
-    </script>
 {% endblock %}

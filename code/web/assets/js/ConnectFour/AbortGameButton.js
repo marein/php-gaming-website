@@ -1,41 +1,43 @@
 import { service } from './GameService.js'
 
-window.Gaming = window.Gaming || {};
-window.Gaming.ConnectFour = window.Gaming.ConnectFour || {};
-
-window.Gaming.ConnectFour.AbortGameButton = class
+class AbortGameButtonElement extends HTMLElement
 {
-    /**
-     * @param {Node} button
-     */
-    constructor(button)
+    connectedCallback()
     {
-        this.button = button;
+        this._button = document.createElement('button');
+        this._button.setAttribute('id', 'abort-game');
+        this._button.classList.add('button');
+        this._button.innerHTML = this.innerHTML;
 
-        this.registerEventHandler();
+        this.innerHTML = '';
+        this.append(this._button);
+
+        this._gameId = this.getAttribute('game-id');
+
+        this._registerEventHandler();
     }
 
-    onButtonClick(event)
+    _onButtonClick(event)
     {
         event.preventDefault();
 
-        let gameId = this.button.dataset.gameId;
+        this._button.disabled = true;
+        this._button.classList.add('loading-indicator');
 
-        this.button.disabled = true;
-        this.button.classList.add('loading-indicator');
-
-        service.abort(gameId).then(() => {
-            this.button.disabled = false;
-            this.button.classList.remove('loading-indicator');
+        service.resign(this._gameId).then(() => {
+            this._button.disabled = false;
+            this._button.classList.remove('loading-indicator');
         }).catch(() => {
             // todo: Handle exception based on error.
-            this.button.disabled = false;
-            this.button.classList.remove('loading-indicator');
+            this._button.disabled = false;
+            this._button.classList.remove('loading-indicator');
         });
     }
 
-    registerEventHandler()
+    _registerEventHandler()
     {
-        this.button.addEventListener('click', this.onButtonClick.bind(this));
+        this._button.addEventListener('click', this._onButtonClick.bind(this));
     }
-};
+}
+
+customElements.define('abort-game-button', AbortGameButtonElement);
