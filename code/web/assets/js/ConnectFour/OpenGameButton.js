@@ -12,7 +12,6 @@ class OpenGameButtonElement extends HTMLElement
         this.innerHTML = '';
         this.append(this._button);
 
-        this._gameId = this.getAttribute('game-id');
         this._currentOpenGameId = '';
 
         this._registerEventHandler();

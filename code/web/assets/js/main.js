@@ -5,9 +5,10 @@
 import './Chat/Widget.js'
 
 import './Common/EventSource.js'
-import { client } from '../js/Common/HttpClient.js';
+import { client } from './Common/HttpClient.js';
 import './Common/NotificationList.js'
 
+import './ConnectFour/Game.js'
 import './ConnectFour/OpenGameButton.js'
 import './ConnectFour/ResignGameButton.js'
 import './ConnectFour/RunningGames.js'
