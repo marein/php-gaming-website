@@ -10,6 +10,7 @@ import './Common/NotificationList.js'
 
 import './ConnectFour/Game.js'
 import './ConnectFour/GameList.js'
+import './ConnectFour/AbortGameButton.js'
 import './ConnectFour/OpenGameButton.js'
 import './ConnectFour/ResignGameButton.js'
 import './ConnectFour/RunningGames.js'
