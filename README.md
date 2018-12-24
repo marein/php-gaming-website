@@ -344,7 +344,7 @@ The unit tests written in this application focuses on the business logic.
 You can run them as follows.
 
 ```
-./project phpunit
+./project unit
 ```
 
 There are also acceptance tests (not many yet) that check if all is working and wired together as expected.
@@ -352,5 +352,5 @@ Acceptance tests work directly on the production images which gets pushed to doc
 You can run them as follows.
 
 ```
-./project codeception
+./project acceptance
 ```

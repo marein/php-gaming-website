@@ -18,19 +18,19 @@ help() {
     echo Build assets for the browser and watch for changes.
     echo
     echo tests
-    echo Run phpunit, phpcs, phpstan and codeception.
+    echo Run unit tests, code sniffer, static analyzer and acceptance tests.
     echo
-    echo phpunit
-    echo Run phpunit.
+    echo unit
+    echo Run unit tests.
     echo
-    echo phpcs
-    echo Run phpcs.
+    echo sniffer
+    echo Run a code sniffer.
     echo
-    echo phpstan
-    echo Run phpstan.
+    echo analyzer
+    echo Run a static analyzer.
     echo
-    echo codeception
-    echo Run codeception.
+    echo acceptance
+    echo Run acceptance tests.
     echo
     echo buildProductionImages
     echo Build the production images.
@@ -57,29 +57,29 @@ down() {
 }
 
 tests() {
-    phpunit
-    phpcs
-    phpstan
-    codeception
+    unit
+    sniffer
+    analyzer
+    acceptance
 }
 
-phpunit() {
-    docker-compose run php vendor/bin/phpunit --coverage-text
+unit() {
+    docker-compose run php vendor/bin/codecept run unit --coverage-html
 }
 
-phpcs() {
+sniffer() {
     docker-compose run php vendor/bin/phpcs src tests/unit --standard=PSR2 -v
 }
 
-phpstan() {
+analyzer() {
     docker-compose run php vendor/bin/phpstan analyse -l 2 src
 }
 
-codeception() {
+acceptance() {
     buildProductionImages
 
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci up -d
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run -v $(pwd)/code/tests:/project/tests php bin/waitForIt php-fpm:9000 --timeout=120 -- vendor/bin/codecept run
+    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run -v $(pwd)/code/tests:/project/tests php bin/waitForIt php-fpm:9000 --timeout=120 -- vendor/bin/codecept run acceptance
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci down -v
 }
 

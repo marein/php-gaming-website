@@ -10,3 +10,13 @@ actor_suffix: Tester
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
+
+coverage:
+    enabled: true
+    include:
+        - src/Chat/Application/*
+        - src/ConnectFour/Application/Game/Query/Model/Game/*
+        - src/ConnectFour/Domain/*
+        - src/Identity/Domain/*
+        - src/Memory/Domain/*
+        - src/Chat/Application/*
