@@ -40,7 +40,7 @@ services:
             dockerfile: ./container/rabbit-mq/Dockerfile
         hostname: rabbit-mq
         ports:
-            - "15672:15672"
+            - "8083:15672"
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
         restart: on-failure
