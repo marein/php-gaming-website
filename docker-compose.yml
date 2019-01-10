@@ -23,8 +23,6 @@ services:
         command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
-        ports:
-            - "3306:3306"
         volumes:
             - mysql:/var/lib/mysql
         restart: on-failure
@@ -241,6 +239,16 @@ services:
             - ./code/composer.json:/project/composer.json
             - ./code/composer.lock:/project/composer.lock
             - vendor:/project/vendor
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: root
+            PMA_PASSWORD: password
+        ports:
+            - "8081:80"
+        links:
+            - mysql
 
 volumes:
     vendor:

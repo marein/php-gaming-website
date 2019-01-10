@@ -65,6 +65,13 @@ __Note__
 If you update your local repository, you have to "./project build" again.
 This project is in development and I don't pollute the code with schema changes at this stage.
 
+Following urls are accessible after the project is successfully started.
+
+| URL                                              | Information                    |
+|--------------------------------------------------|--------------------------------|
+| [http://localhost/](http://localhost/)           | The application.               |
+| [http://localhost:8081/](http://localhost:8081/) | MySQL management interface.    |
+
 ### Production
 
 The
