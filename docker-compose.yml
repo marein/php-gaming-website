@@ -249,6 +249,14 @@ services:
             - "8081:80"
         links:
             - mysql
+    phpredisadmin:
+        image: erikdubbelboer/phpredisadmin
+        environment:
+            REDIS_1_HOST: redis
+        ports:
+            - "8082:80"
+        links:
+            - redis
 
 volumes:
     vendor:
