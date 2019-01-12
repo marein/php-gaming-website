@@ -1,11 +1,11 @@
+ARG environment=development
+
 ##############################
 #     Build dependencies     #
 ##############################
-FROM composer as builder
+FROM gamingplatform/php-fpm:7.3-development as builder
 
 ARG environment=development
-
-RUN docker-php-ext-install bcmath
 
 COPY /container/php-fpm/composer-install.sh /container/php-fpm/composer-install-after-code-copy.sh /
 COPY /code/composer.json /code/composer.lock /project/
@@ -17,16 +17,13 @@ RUN cd /project && /composer-install-after-code-copy.sh
 ##############################
 #       Build php-fpm        #
 ##############################
-FROM php:7.3-fpm-alpine
+FROM gamingplatform/php-fpm:7.3-$environment
 
 ARG environment=development
 
 WORKDIR /project
 
-RUN apk add --no-cache --update bash
-
-COPY /container/php-fpm/install-extensions.sh /container/php-fpm/entrypoint.sh /container/php-fpm/cache-warmup.sh /
-RUN /install-extensions.sh
+COPY /container/php-fpm/entrypoint.sh /container/php-fpm/cache-warmup.sh /
 
 COPY --from=builder /project /project
 
