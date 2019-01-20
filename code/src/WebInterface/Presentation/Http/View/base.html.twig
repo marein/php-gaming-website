@@ -4,6 +4,10 @@
     <title>Gaming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}"/>
+    <script type="text/javascript">
+        {# Load polyfills if necessary. #}
+        !function(){function n(n,e,t){var o=document.createElement("script");o.type=e,o.src=n,o.onload=t||function(){},document.head.appendChild(o)}function e(){n("{{ asset('assets/js/main.js') }}","module")}window.EventSource&&window.customElements?e():n("/polyfill/polyfill.min.js?packages=CustomElements,EventSource","text/javascript",e)}();
+    </script>
 </head>
 <body>
 <notification-list></notification-list>
@@ -13,6 +17,5 @@
     <a href="{{ path('profile') }}">Profile</a>
 </nav>
 {% block content %}{% endblock %}
-<script type="module" src="{{ asset('assets/js/main.js') }}"></script>
 </body>
 </html>

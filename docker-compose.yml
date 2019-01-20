@@ -13,6 +13,7 @@ services:
             - "8084:8080"
         links:
             - nchan
+            - service-js-polyfill
             - nginx
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -53,6 +54,13 @@ services:
             - "traefik.enable=true"
             - "traefik.priority=20"
             - "traefik.frontend.rule=PathPrefix:/sse"
+    service-js-polyfill:
+        image: gamingplatform/service-js-polyfill
+        restart: on-failure
+        labels:
+            - "traefik.enable=true"
+            - "traefik.priority=20"
+            - "traefik.frontend.rule=PathPrefixStrip:/polyfill"
     nginx:
         build:
             context: .
