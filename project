@@ -44,7 +44,7 @@ build() {
     docker-compose down --volumes
     docker-compose build --pull
     docker-compose up -d composer
-    docker cp "$(docker-compose ps -q composer)":/project/vendor code/vendor/
+    docker cp "$(docker-compose ps -q composer)":/project/vendor code/
     docker-compose up --remove-orphan
 }
 
