@@ -3,20 +3,22 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker;
 
+use Gaming\Common\MessageBroker\Message\Message;
+use Gaming\Common\MessageBroker\Message\Name;
+
 interface Consumer
 {
     /**
-     * Handle the message with the body and the routing key.
+     * Handle the message.
      *
-     * @param string $body
-     * @param string $routingKey
+     * @param Message $message
      */
-    public function handle(string $body, string $routingKey): void;
+    public function handle(Message $message): void;
 
     /**
      * Routing keys to listen to.
      *
-     * @return array
+     * @return string[]
      */
     public function routingKeys(): array;
 

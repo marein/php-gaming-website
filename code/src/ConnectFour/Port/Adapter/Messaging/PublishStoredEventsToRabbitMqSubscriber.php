@@ -5,6 +5,8 @@ namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
+use Gaming\Common\MessageBroker\Message\Message;
+use Gaming\Common\MessageBroker\Message\Name;
 use Gaming\Common\MessageBroker\MessageBroker;
 
 final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
@@ -37,8 +39,10 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
         //     * filter out specific properties in the payload.
         //     * translate when the properties for an event in the payload changed.
         $this->messageBroker->publish(
-            $storedEvent->payload(),
-            'ConnectFour.' . $storedEvent->name()
+            new Message(
+                new Name('ConnectFour', $storedEvent->name()),
+                $storedEvent->payload()
+            )
         );
     }
 

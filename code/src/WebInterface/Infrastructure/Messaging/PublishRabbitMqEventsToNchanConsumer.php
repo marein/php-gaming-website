@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Infrastructure\Messaging;
 
 use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\Message\Message;
 use Gaming\WebInterface\Application\BrowserNotifier;
 
 final class PublishRabbitMqEventsToNchanConsumer implements Consumer
@@ -38,12 +39,14 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * @inheritdoc
      */
-    public function handle(string $body, string $routingKey): void
+    public function handle(Message $message): void
     {
-        $method = self::ROUTING_KEY_TO_METHOD[$routingKey];
+        $name = (string)$message->name();
+
+        $method = self::ROUTING_KEY_TO_METHOD[$name];
         $payload = array_merge(
-            json_decode($body, true),
-            ['eventName' => $routingKey]
+            json_decode($message->body(), true),
+            ['eventName' => $name]
         );
 
         $this->$method($payload);

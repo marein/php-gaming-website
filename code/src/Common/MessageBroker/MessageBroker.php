@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker;
 
+use Gaming\Common\MessageBroker\Message\Message;
+
 interface MessageBroker
 {
     /**
      * Publish the message body with routing key to the configured exchange.
      *
-     * @param string $body
-     * @param string $routingKey
+     * @param Message $message
      */
-    public function publish(string $body, string $routingKey): void;
+    public function publish(Message $message): void;
 
     /**
      * Consume with the given consumer.

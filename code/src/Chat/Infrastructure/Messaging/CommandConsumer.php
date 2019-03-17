@@ -5,6 +5,7 @@ namespace Gaming\Chat\Infrastructure\Messaging;
 
 use Gaming\Chat\Application\ChatService;
 use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\Message\Message;
 
 final class CommandConsumer implements Consumer
 {
@@ -26,9 +27,9 @@ final class CommandConsumer implements Consumer
     /**
      * @inheritdoc
      */
-    public function handle(string $body, string $routingKey): void
+    public function handle(Message $message): void
     {
-        $payload = json_decode($body, true);
+        $payload = json_decode($message->body(), true);
 
         $this->chatService->initiateChat(
             $payload['ownerId'],

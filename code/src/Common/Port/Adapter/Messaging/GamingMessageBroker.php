@@ -5,6 +5,8 @@ namespace Gaming\Common\Port\Adapter\Messaging;
 
 use Enqueue\AmqpLib\AmqpConnectionFactory;
 use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\Message\Message;
+use Gaming\Common\MessageBroker\Message\Name;
 use Gaming\Common\MessageBroker\MessageBroker;
 use Interop\Amqp\AmqpContext;
 use Interop\Amqp\AmqpMessage;
@@ -108,17 +110,17 @@ final class GamingMessageBroker implements MessageBroker
     /**
      * @inheritdoc
      */
-    public function publish(string $body, string $routingKey): void
+    public function publish(Message $message): void
     {
         $this->initialize();
 
-        $message = $this->context->createMessage($body);
-        $message->addFlag(AmqpMessage::FLAG_MANDATORY);
-        $message->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
-        $message->setRoutingKey($routingKey);
+        $amqpMessage = $this->context->createMessage($message->body());
+        $amqpMessage->addFlag(AmqpMessage::FLAG_MANDATORY);
+        $amqpMessage->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
+        $amqpMessage->setRoutingKey((string)$message->name());
 
         $producer = $this->context->createProducer();
-        $producer->send($this->gamingTopic, $message);
+        $producer->send($this->gamingTopic, $amqpMessage);
     }
 
     /**
@@ -141,8 +143,10 @@ final class GamingMessageBroker implements MessageBroker
             $message = $enqueueConsumer->receive(0);
 
             $consumer->handle(
-                $message->getBody(),
-                $message->getRoutingKey()
+                new Message(
+                    Name::fromString($message->getRoutingKey()),
+                    $message->getBody()
+                )
             );
 
             $enqueueConsumer->acknowledge($message);

@@ -5,6 +5,8 @@ namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\Message\Message;
+use Gaming\Common\MessageBroker\Message\Name;
 use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
 
@@ -40,10 +42,10 @@ final class RefereeConsumer implements Consumer
     /**
      * @inheritdoc
      */
-    public function handle(string $body, string $routingKey): void
+    public function handle(Message $message): void
     {
-        $method = self::ROUTING_KEY_TO_METHOD[$routingKey];
-        $payload = json_decode($body, true);
+        $method = self::ROUTING_KEY_TO_METHOD[(string)$message->name()];
+        $payload = json_decode($message->body(), true);
 
         $this->$method($payload);
     }
@@ -87,11 +89,13 @@ final class RefereeConsumer implements Consumer
     private function handlePlayerJoined(array $payload): void
     {
         $this->messageBroker->publish(
-            json_encode([
-                'ownerId' => $payload['gameId'],
-                'authors' => []
-            ]),
-            'Chat.InitiateChat'
+            new Message(
+                new Name('Chat', 'InitiateChat'),
+                json_encode([
+                    'ownerId' => $payload['gameId'],
+                    'authors' => []
+                ])
+            )
         );
     }
 }
