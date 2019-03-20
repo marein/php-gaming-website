@@ -31,13 +31,8 @@ final class Name
      */
     public function __construct(string $domain, string $name)
     {
-        if (!NamingConvention::isPascalCase($domain)) {
-            throw InvalidDomainException::fromValue($domain);
-        }
-
-        if (!NamingConvention::isPascalCase($name)) {
-            throw InvalidNameException::fromValue($name);
-        }
+        NamingConvention::verifyDomainName($domain);
+        NamingConvention::verifyMessageName($name);
 
         $this->domain = $domain;
         $this->name = $name;

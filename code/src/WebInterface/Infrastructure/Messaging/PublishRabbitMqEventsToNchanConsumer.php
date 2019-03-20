@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Messaging;
 
-use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
+use Gaming\Common\MessageBroker\Model\Consumer\Name;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
 use Gaming\Common\MessageBroker\Model\Subscription\WholeDomain;
@@ -68,9 +69,9 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * @inheritdoc
      */
-    public function queueName(): string
+    public function name(): Name
     {
-        return 'WebInterface.BrowserNotification';
+        return new Name('WebInterface', 'BrowserNotification');
     }
 
     /**

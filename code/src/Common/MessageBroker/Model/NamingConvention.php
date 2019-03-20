@@ -3,31 +3,78 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Model;
 
+use Gaming\Common\MessageBroker\Exception\InvalidDomainException;
+use Gaming\Common\MessageBroker\Exception\InvalidNameException;
+
 /**
  * This class is used as an implementation detail
  * in other classes within the MessageBroker namespace.
  */
 final class NamingConvention
 {
+    private const PASCAL_CASE_PATTERN = '
+        /^
+            (?:         # Start of non capturing parenthesis.
+                [A-Z]   # Must have uppercase letter.
+                [a-z]+  # Followed by at least one lowercase letter.
+            )+          # This pattern at least once.
+        $/x
+    ';
+
     /**
-     * Returns true if the specified string is in pascal case notation, false otherwise.
+     * Throws if the specified string is not a valid consumer name.
      *
-     * @param string $value
+     * @param string $name
      *
-     * @return bool
+     * @throws InvalidNameException
      */
-    public static function isPascalCase(string $value): bool
+    public static function verifyConsumerName(string $name): void
     {
-        return (bool)preg_match(
-            '
-                /^
-                    (?:         # Start of non capturing parenthesis.
-                        [A-Z]   # Must have uppercase letter.
-                        [a-z]+  # Followed by at least one lowercase letter.
-                    )+          # This pattern at least once.
-                $/x
-            ',
-            $value
-        );
+        if (!preg_match(self::PASCAL_CASE_PATTERN, $name)) {
+            throw new InvalidNameException(
+                sprintf(
+                    'Consumer name should be PascalCase. "%s" given.',
+                    $name
+                )
+            );
+        }
+    }
+
+    /**
+     * Throws if the specified string is not a valid domain name.
+     *
+     * @param string $domain
+     *
+     * @throws InvalidDomainException
+     */
+    public static function verifyDomainName(string $domain): void
+    {
+        if (!preg_match(self::PASCAL_CASE_PATTERN, $domain)) {
+            throw new InvalidDomainException(
+                sprintf(
+                    'Domain name should be PascalCase. "%s" given.',
+                    $domain
+                )
+            );
+        }
+    }
+
+    /**
+     * Throws if the specified string is not a valid message name.
+     *
+     * @param string $name
+     *
+     * @throws InvalidNameException
+     */
+    public static function verifyMessageName(string $name): void
+    {
+        if (!preg_match(self::PASCAL_CASE_PATTERN, $name)) {
+            throw new InvalidNameException(
+                sprintf(
+                    'Message name should be PascalCase. "%s" given.',
+                    $name
+                )
+            );
+        }
     }
 }

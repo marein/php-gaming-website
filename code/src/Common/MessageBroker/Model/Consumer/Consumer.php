@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker;
+namespace Gaming\Common\MessageBroker\Model\Consumer;
 
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Subscription\Subscription;
@@ -23,9 +23,9 @@ interface Consumer
     public function subscriptions(): array;
 
     /**
-     * The queue name for this consumer.
+     * The name for this consumer.
      *
-     * @return string
+     * @return Name
      */
-    public function queueName(): string;
+    public function name(): Name;
 }

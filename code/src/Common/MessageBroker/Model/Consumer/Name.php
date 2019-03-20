@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Model\Subscription;
+namespace Gaming\Common\MessageBroker\Model\Consumer;
 
 use Gaming\Common\MessageBroker\Exception\InvalidDomainException;
 use Gaming\Common\MessageBroker\Exception\InvalidNameException;
 use Gaming\Common\MessageBroker\Model\NamingConvention;
 
-final class SpecificMessage implements Subscription
+final class Name
 {
     /**
      * @var string
@@ -20,7 +20,7 @@ final class SpecificMessage implements Subscription
     private $name;
 
     /**
-     * SpecificMessage constructor.
+     * Name constructor.
      *
      * @param string $domain
      * @param string $name
@@ -31,7 +31,7 @@ final class SpecificMessage implements Subscription
     public function __construct(string $domain, string $name)
     {
         NamingConvention::verifyDomainName($domain);
-        NamingConvention::verifyMessageName($name);
+        NamingConvention::verifyConsumerName($name);
 
         $this->domain = $domain;
         $this->name = $name;
@@ -48,20 +48,12 @@ final class SpecificMessage implements Subscription
     }
 
     /**
-     * Returns the message name.
+     * Returns the queue name.
      *
      * @return string
      */
     public function name(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function accept(SubscriptionTranslator $subscriptionTranslator): void
-    {
-        $subscriptionTranslator->handleSpecificMessage($this);
     }
 }

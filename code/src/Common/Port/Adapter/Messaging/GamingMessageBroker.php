@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Gaming\Common\Port\Adapter\Messaging;
 
 use Enqueue\AmqpLib\AmqpConnectionFactory;
-use Gaming\Common\MessageBroker\Consumer;
 use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Message\Name;
 use Interop\Amqp\AmqpContext;
@@ -131,7 +131,11 @@ final class GamingMessageBroker implements MessageBroker
         $this->initialize();
 
         $queue = $this->createQueue(
-            $consumer->queueName(),
+            sprintf(
+                '%s.%s',
+                $consumer->name()->domain(),
+                $consumer->name()->name()
+            ),
             (new SubscriptionsToRoutingKeysTranslator($consumer->subscriptions()))->routingKeys()
         );
 

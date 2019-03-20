@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
 use Gaming\Common\Bus\Bus;
-use Gaming\Common\MessageBroker\Consumer;
 use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
+use Gaming\Common\MessageBroker\Model\Consumer\Name;
 use Gaming\Common\MessageBroker\Model\Message\Message;
-use Gaming\Common\MessageBroker\Model\Message\Name;
+use Gaming\Common\MessageBroker\Model\Message\Name as MessageName;
 use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
 use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
 
@@ -65,9 +66,9 @@ final class RefereeConsumer implements Consumer
     /**
      * @inheritdoc
      */
-    public function queueName(): string
+    public function name(): Name
     {
-        return 'ConnectFour.Referee';
+        return new Name('ConnectFour', 'Referee');
     }
 
     /**
@@ -94,7 +95,7 @@ final class RefereeConsumer implements Consumer
     {
         $this->messageBroker->publish(
             new Message(
-                new Name('Chat', 'InitiateChat'),
+                new MessageName('Chat', 'InitiateChat'),
                 json_encode([
                     'ownerId' => $payload['gameId'],
                     'authors' => []

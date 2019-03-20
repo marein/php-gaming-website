@@ -22,9 +22,7 @@ final class WholeDomain implements Subscription
      */
     public function __construct(string $domain)
     {
-        if (!NamingConvention::isPascalCase($domain)) {
-            throw InvalidDomainException::fromValue($domain);
-        }
+        NamingConvention::verifyDomainName($domain);
 
         $this->domain = $domain;
     }
