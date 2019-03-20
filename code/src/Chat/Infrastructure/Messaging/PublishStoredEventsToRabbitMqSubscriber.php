@@ -5,9 +5,9 @@ namespace Gaming\Chat\Infrastructure\Messaging;
 
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\MessageBroker\Message\Message;
-use Gaming\Common\MessageBroker\Message\Name;
 use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\Common\MessageBroker\Model\Message\Message;
+use Gaming\Common\MessageBroker\Model\Message\Name;
 
 final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
 {

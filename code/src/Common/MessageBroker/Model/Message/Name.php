@@ -1,27 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Message;
+namespace Gaming\Common\MessageBroker\Model\Message;
 
 use Gaming\Common\MessageBroker\Exception\InvalidDomainException;
 use Gaming\Common\MessageBroker\Exception\InvalidFormatException;
 use Gaming\Common\MessageBroker\Exception\InvalidNameException;
-use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
+use Gaming\Common\MessageBroker\Model\NamingConvention;
 
-/**
- * This class defines a standard of what a message name should look like.
- */
 final class Name
 {
-    private const PART_PATTERN = '
-        /^
-            (?:                 # Start of non capturing parenthesis.
-                [A-Z]           # Must have uppercase letter.
-                [a-z]+          # Followed by at least one lowercase letter.
-            )+                  # This pattern at least once.
-        $/x
-    ';
-
     /**
      * @var string
      */
@@ -43,22 +31,12 @@ final class Name
      */
     public function __construct(string $domain, string $name)
     {
-        if (!preg_match(self::PART_PATTERN, $domain)) {
-            throw new InvalidDomainException(
-                sprintf(
-                    'Domain should be PascalCase. "%s" given.',
-                    $domain
-                )
-            );
+        if (!NamingConvention::isPascalCase($domain)) {
+            throw InvalidDomainException::fromValue($domain);
         }
 
-        if (!preg_match(self::PART_PATTERN, $name)) {
-            throw new InvalidNameException(
-                sprintf(
-                    'Name should be PascalCase. "%s" given.',
-                    $name
-                )
-            );
+        if (!NamingConvention::isPascalCase($name)) {
+            throw InvalidNameException::fromValue($name);
         }
 
         $this->domain = $domain;
@@ -72,8 +50,8 @@ final class Name
      *
      * @return Name
      * @throws InvalidDomainException
+     * @throws InvalidFormatException
      * @throws InvalidNameException
-     * @throws MessageBrokerException
      */
     public static function fromString(string $messageName): Name
     {
@@ -89,6 +67,8 @@ final class Name
     }
 
     /**
+     * Returns the domain name.
+     *
      * @return string
      */
     public function domain(): string
@@ -97,6 +77,8 @@ final class Name
     }
 
     /**
+     * Returns the message name.
+     *
      * @return string
      */
     public function name(): string

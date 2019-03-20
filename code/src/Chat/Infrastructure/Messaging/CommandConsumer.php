@@ -5,7 +5,8 @@ namespace Gaming\Chat\Infrastructure\Messaging;
 
 use Gaming\Chat\Application\ChatService;
 use Gaming\Common\MessageBroker\Consumer;
-use Gaming\Common\MessageBroker\Message\Message;
+use Gaming\Common\MessageBroker\Model\Message\Message;
+use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
 
 final class CommandConsumer implements Consumer
 {
@@ -40,9 +41,11 @@ final class CommandConsumer implements Consumer
     /**
      * @inheritdoc
      */
-    public function routingKeys(): array
+    public function subscriptions(): array
     {
-        return ['Chat.InitiateChat'];
+        return [
+            new SpecificMessage('Chat', 'InitiateChat')
+        ];
     }
 
     /**

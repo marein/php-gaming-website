@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Message;
+namespace Gaming\Common\MessageBroker\Model\Message;
 
 final class Message
 {
@@ -28,6 +28,8 @@ final class Message
     }
 
     /**
+     * Returns the name of the message.
+     *
      * @return Name
      */
     public function name(): Name
@@ -36,6 +38,8 @@ final class Message
     }
 
     /**
+     * Returns the body of the message.
+     *
      * @return string
      */
     public function body(): string

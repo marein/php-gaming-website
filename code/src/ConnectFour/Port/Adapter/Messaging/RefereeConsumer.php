@@ -5,9 +5,10 @@ namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\MessageBroker\Consumer;
-use Gaming\Common\MessageBroker\Message\Message;
-use Gaming\Common\MessageBroker\Message\Name;
 use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\Common\MessageBroker\Model\Message\Message;
+use Gaming\Common\MessageBroker\Model\Message\Name;
+use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
 use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
 
 final class RefereeConsumer implements Consumer
@@ -53,9 +54,12 @@ final class RefereeConsumer implements Consumer
     /**
      * @inheritdoc
      */
-    public function routingKeys(): array
+    public function subscriptions(): array
     {
-        return array_keys(self::ROUTING_KEY_TO_METHOD);
+        return [
+            new SpecificMessage('Chat', 'ChatInitiated'),
+            new SpecificMessage('ConnectFour', 'PlayerJoined')
+        ];
     }
 
     /**

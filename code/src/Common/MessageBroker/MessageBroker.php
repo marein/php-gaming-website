@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker;
 
-use Gaming\Common\MessageBroker\Message\Message;
+use Gaming\Common\MessageBroker\Model\Message\Message;
 
 interface MessageBroker
 {
     /**
-     * Publish the message body with routing key to the configured exchange.
+     * Publish the message.
      *
      * @param Message $message
      */

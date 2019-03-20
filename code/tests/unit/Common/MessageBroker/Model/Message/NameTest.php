@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Message;
+namespace Gaming\Common\MessageBroker\Model\Message;
 
 use Gaming\Common\MessageBroker\Exception\InvalidDomainException;
 use Gaming\Common\MessageBroker\Exception\InvalidFormatException;

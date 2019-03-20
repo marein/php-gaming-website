@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Infrastructure\Messaging;
 
 use Gaming\Common\MessageBroker\Consumer;
-use Gaming\Common\MessageBroker\Message\Message;
+use Gaming\Common\MessageBroker\Model\Message\Message;
+use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
+use Gaming\Common\MessageBroker\Model\Subscription\WholeDomain;
 use Gaming\WebInterface\Application\BrowserNotifier;
 
 final class PublishRabbitMqEventsToNchanConsumer implements Consumer
@@ -55,9 +57,12 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * @inheritdoc
      */
-    public function routingKeys(): array
+    public function subscriptions(): array
     {
-        return ['ConnectFour.#', 'Chat.MessageWritten'];
+        return [
+            new WholeDomain('ConnectFour'),
+            new SpecificMessage('Chat', 'MessageWritten')
+        ];
     }
 
     /**
