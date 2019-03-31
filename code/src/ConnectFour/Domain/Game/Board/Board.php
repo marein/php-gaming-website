@@ -19,7 +19,7 @@ final class Board
     private $fields;
 
     /**
-     * @var Field
+     * @var Field|null
      */
     private $lastUsedField;
 
