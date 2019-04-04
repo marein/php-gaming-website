@@ -111,6 +111,7 @@ services:
         volumes:
             - ./code/config:/project/config
             - ./code/src:/project/src
+            - vendor:/project/vendor
         restart: on-failure
     php-connect-four-publish-stored-events-to-rabbit-mq:
         build:
@@ -127,6 +128,7 @@ services:
         volumes:
             - ./code/config:/project/config
             - ./code/src:/project/src
+            - vendor:/project/vendor
         restart: on-failure
     php-chat-publish-stored-events-to-rabbit-mq:
         build:
@@ -143,6 +145,7 @@ services:
         volumes:
             - ./code/config:/project/config
             - ./code/src:/project/src
+            - vendor:/project/vendor
         restart: on-failure
     php-identity-publish-stored-events-to-rabbit-mq:
         build:
@@ -159,6 +162,7 @@ services:
         volumes:
             - ./code/config:/project/config
             - ./code/src:/project/src
+            - vendor:/project/vendor
         restart: on-failure
     php-web-interface-publish-running-games-count-to-nchan:
         build:
@@ -175,6 +179,7 @@ services:
         volumes:
             - ./code/config:/project/config
             - ./code/src:/project/src
+            - vendor:/project/vendor
         restart: on-failure
     php-web-interface-publish-rabbit-mq-events-to-nchan:
         build:
@@ -191,6 +196,7 @@ services:
         volumes:
             - ./code/config:/project/config
             - ./code/src:/project/src
+            - vendor:/project/vendor
         restart: on-failure
     php-chat-command-listener:
         build:
@@ -207,6 +213,7 @@ services:
         volumes:
             - ./code/config:/project/config
             - ./code/src:/project/src
+            - vendor:/project/vendor
         restart: on-failure
     php-connect-four-referee:
         build:
@@ -223,6 +230,7 @@ services:
         volumes:
             - ./code/config:/project/config
             - ./code/src:/project/src
+            - vendor:/project/vendor
         restart: on-failure
 
     ##############################
