@@ -6,6 +6,7 @@ namespace Gaming\Chat\Presentation\Console;
 use Gaming\Chat\Application\ChatService;
 use Gaming\Chat\Infrastructure\Messaging\CommandConsumer;
 use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\Common\Port\Adapter\Messaging\SymfonyConsoleConsumer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,8 +52,11 @@ final class RabbitMqCommandListenerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->messageBroker->consume(
-            new CommandConsumer(
-                $this->chatService
+            new SymfonyConsoleConsumer(
+                new CommandConsumer(
+                    $this->chatService
+                ),
+                $output
             )
         );
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Presentation\Console;
 
 use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\Common\Port\Adapter\Messaging\SymfonyConsoleConsumer;
 use Gaming\WebInterface\Application\BrowserNotifier;
 use Gaming\WebInterface\Infrastructure\Messaging\PublishRabbitMqEventsToNchanConsumer;
 use Symfony\Component\Console\Command\Command;
@@ -51,8 +52,11 @@ final class PublishRabbitMqEventsToNchanCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->messageBroker->consume(
-            new PublishRabbitMqEventsToNchanConsumer(
-                $this->browserNotifier
+            new SymfonyConsoleConsumer(
+                new PublishRabbitMqEventsToNchanConsumer(
+                    $this->browserNotifier
+                ),
+                $output
             )
         );
     }

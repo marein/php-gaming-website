@@ -5,6 +5,7 @@ namespace Gaming\ConnectFour\Port\Adapter\Console;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\MessageBroker\MessageBroker;
+use Gaming\Common\Port\Adapter\Messaging\SymfonyConsoleConsumer;
 use Gaming\ConnectFour\Port\Adapter\Messaging\RefereeConsumer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,9 +52,12 @@ final class RefereeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->messageBroker->consume(
-            new RefereeConsumer(
-                $this->commandBus,
-                $this->messageBroker
+            new SymfonyConsoleConsumer(
+                new RefereeConsumer(
+                    $this->commandBus,
+                    $this->messageBroker
+                ),
+                $output
             )
         );
     }
