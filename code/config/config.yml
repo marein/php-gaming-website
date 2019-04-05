@@ -20,6 +20,13 @@ doctrine:
             uuid_binary_ordered_time: binary
             uuid_binary: binary
 
+monolog:
+    handlers:
+        application_error:
+            type: stream
+            path: "php://stderr"
+            level: error
+
 services:
     # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.

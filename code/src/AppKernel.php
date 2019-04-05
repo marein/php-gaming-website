@@ -8,6 +8,7 @@ use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Dunglas\AngularCsrfBundle\DunglasAngularCsrfBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -41,7 +42,8 @@ class AppKernel extends BaseKernel
             new DoctrineBundle(),
             new DoctrineMigrationsBundle(),
             new DunglasAngularCsrfBundle(),
-            new TwigBundle()
+            new TwigBundle(),
+            new MonologBundle()
         ];
 
         if (in_array($this->getEnvironment(), ['dev'], true)) {
