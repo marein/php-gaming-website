@@ -50,7 +50,7 @@ services:
     php-fpm:
         image: marein/php-gaming-website:php-fpm
         environment:
-            GAMBLING_ENVIRONMENT: prod
+            APPLICATION_ENVIRONMENT: prod
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
             - mysql

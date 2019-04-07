@@ -4,7 +4,7 @@ services:
         class: Predis\Client
         public: false
         arguments:
-            - '%env(GAMBLING_IDENTITY_PREDIS_CLIENT_URL)%'
+            - '%env(APPLICATION_IDENTITY_PREDIS_CLIENT_URL)%'
             -
                 prefix: 'identity.'
 
@@ -18,7 +18,7 @@ services:
         class: Gaming\Common\Port\Adapter\Messaging\GamingMessageBroker
         public: false
         arguments:
-            - '%env(GAMBLING_IDENTITY_RABBIT_MQ_DSN)%'
+            - '%env(APPLICATION_IDENTITY_RABBIT_MQ_DSN)%'
 
     identity.event-store:
         class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore

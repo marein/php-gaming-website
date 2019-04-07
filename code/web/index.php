@@ -19,7 +19,7 @@ namespace {
 
     (new Dotenv())->load(__DIR__ . '/../environment.env.dist', ...$additionalEnvironmentPaths);
 
-    $environment = getenv('GAMBLING_ENVIRONMENT');
+    $environment = getenv('APPLICATION_ENVIRONMENT');
     $isDevelopmentEnvironment = $environment !== 'prod';
 
     if ($isDevelopmentEnvironment) {

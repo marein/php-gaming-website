@@ -26,7 +26,7 @@ namespace {
     (new Dotenv())->load(__DIR__ . '/../environment.env.dist', ...$additionalEnvironmentPaths);
 
     $input = new ArgvInput();
-    $environment = $input->getParameterOption(['--env', '-e'], getenv('GAMBLING_ENVIRONMENT'));
+    $environment = $input->getParameterOption(['--env', '-e'], getenv('APPLICATION_ENVIRONMENT'));
     $isDevelopmentEnvironment = $environment !== 'prod';
 
     if ($isDevelopmentEnvironment) {

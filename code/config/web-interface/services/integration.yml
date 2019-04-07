@@ -22,4 +22,4 @@ services:
         class: Gaming\WebInterface\Infrastructure\NchanBrowserNotifier
         public: false
         arguments:
-            - '%env(GAMBLING_WEB_INTERFACE_NCHAN_BASE_URL)%'
+            - '%env(APPLICATION_WEB_INTERFACE_NCHAN_BASE_URL)%'
