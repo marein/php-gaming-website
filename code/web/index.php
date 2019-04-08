@@ -11,13 +11,13 @@ namespace {
     require_once __DIR__ . '/../vendor/autoload.php';
 
     $additionalEnvironmentPaths = [];
-    $additionalEnvironmentPath = __DIR__ . '/../environment.env';
+    $additionalEnvironmentPath = __DIR__ . '/../config/environment.env';
 
     if (file_exists($additionalEnvironmentPath)) {
         $additionalEnvironmentPaths[] = $additionalEnvironmentPath;
     }
 
-    (new Dotenv())->load(__DIR__ . '/../environment.env.dist', ...$additionalEnvironmentPaths);
+    (new Dotenv())->load(__DIR__ . '/../config/environment.env.dist', ...$additionalEnvironmentPaths);
 
     $environment = getenv('APPLICATION_ENVIRONMENT');
     $isDevelopmentEnvironment = $environment !== 'prod';
