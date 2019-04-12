@@ -34,7 +34,7 @@ final class EventStoreGameFinder implements GameFinder
     {
         $this->throwExceptionOnInvalidGameId($gameId);
 
-        $storedEvents = $this->eventStore->storedEventsByAggregateId(
+        $storedEvents = $this->eventStore->byAggregateId(
             $gameId
         );
 

@@ -58,7 +58,7 @@ final class FollowEventStoreDispatcher
 
         $lastStoredEventId = $this->eventStorePointer->retrieveMostRecentPublishedStoredEventId();
 
-        $storedEvents = $this->eventStore->storedEventsSince(
+        $storedEvents = $this->eventStore->since(
             $lastStoredEventId,
             $batchSize
         );

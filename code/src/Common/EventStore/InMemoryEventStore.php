@@ -15,7 +15,7 @@ final class InMemoryEventStore implements EventStore
     /**
      * @inheritdoc
      */
-    public function storedEventsSince(int $id, int $limit): array
+    public function since(int $id, int $limit): array
     {
         return array_slice(
             $this->storedEvents,
@@ -27,7 +27,7 @@ final class InMemoryEventStore implements EventStore
     /**
      * @inheritdoc
      */
-    public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array
+    public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
         return array_filter(
             $this->storedEvents,

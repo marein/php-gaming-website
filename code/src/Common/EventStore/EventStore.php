@@ -19,7 +19,7 @@ interface EventStore
      * @throws UnrecoverableException
      * @throws EventStoreException
      */
-    public function storedEventsSince(int $id, int $limit): array;
+    public function since(int $id, int $limit): array;
 
     /**
      * Returns the stored events from the given aggregate id.
@@ -30,7 +30,7 @@ interface EventStore
      * @return StoredEvent[]
      * @throws EventStoreException
      */
-    public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array;
+    public function byAggregateId(string $aggregateId, int $sinceId = 0): array;
 
     /**
      * Append the given event to the store.

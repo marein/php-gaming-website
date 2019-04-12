@@ -43,9 +43,9 @@ final class ThrottlingEventStore implements EventStore
     /**
      * @inheritdoc
      */
-    public function storedEventsSince(int $id, int $limit): array
+    public function since(int $id, int $limit): array
     {
-        $storedEvents = $this->eventStore->storedEventsSince($id, $limit);
+        $storedEvents = $this->eventStore->since($id, $limit);
 
         if (count($storedEvents) === 0) {
             usleep($this->throttleTimeInMicroseconds);
@@ -57,9 +57,9 @@ final class ThrottlingEventStore implements EventStore
     /**
      * @inheritdoc
      */
-    public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array
+    public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
-        $storedEvents = $this->eventStore->storedEventsByAggregateId($aggregateId, $sinceId);
+        $storedEvents = $this->eventStore->byAggregateId($aggregateId, $sinceId);
 
         if (count($storedEvents) === 0) {
             usleep($this->throttleTimeInMicroseconds);

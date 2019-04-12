@@ -40,7 +40,7 @@ final class DoctrineEventStore implements EventStore
     /**
      * @inheritdoc
      */
-    public function storedEventsSince(int $id, int $limit): array
+    public function since(int $id, int $limit): array
     {
         try {
             $rows = $this->connection->createQueryBuilder()
@@ -65,7 +65,7 @@ final class DoctrineEventStore implements EventStore
     /**
      * @inheritdoc
      */
-    public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array
+    public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
         try {
             $rows = $this->connection->createQueryBuilder()

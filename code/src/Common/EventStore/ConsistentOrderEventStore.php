@@ -27,9 +27,9 @@ final class ConsistentOrderEventStore implements EventStore
     /**
      * @inheritdoc
      */
-    public function storedEventsSince(int $id, int $limit): array
+    public function since(int $id, int $limit): array
     {
-        $storedEvents = $this->eventStore->storedEventsSince($id, $limit);
+        $storedEvents = $this->eventStore->since($id, $limit);
 
         $expectedStoredEventId = $id;
         $filteredStoredEvents = [];
@@ -54,9 +54,9 @@ final class ConsistentOrderEventStore implements EventStore
     /**
      * @inheritdoc
      */
-    public function storedEventsByAggregateId(string $aggregateId, int $sinceId = 0): array
+    public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
-        return $this->eventStore->storedEventsByAggregateId($aggregateId, $sinceId);
+        return $this->eventStore->byAggregateId($aggregateId, $sinceId);
     }
 
     /**
