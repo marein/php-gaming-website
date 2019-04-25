@@ -12,10 +12,11 @@ services:
         alias: 'doctrine.dbal.connect_four_connection'
 
     connect-four.message-broker:
-        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageBroker
+        class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
         public: false
         arguments:
             - '%env(APPLICATION_CONNECT_FOUR_RABBIT_MQ_DSN)%'
+            - 'gaming'
 
     connect-four.event-store:
         class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore

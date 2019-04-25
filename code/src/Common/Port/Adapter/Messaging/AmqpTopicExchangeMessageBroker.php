@@ -14,15 +14,17 @@ use Interop\Amqp\AmqpQueue;
 use Interop\Amqp\AmqpTopic;
 use Interop\Amqp\Impl\AmqpBind;
 
-/**
- * This class is used to simplify the interface through an AMQP library in the whole gaming domain.
- */
-final class GamingMessageBroker implements MessageBroker
+final class AmqpTopicExchangeMessageBroker implements MessageBroker
 {
     /**
      * @var string
      */
     private $dsn;
+
+    /**
+     * @var string
+     */
+    private $exchangeName;
 
     /**
      * @var bool
@@ -37,16 +39,18 @@ final class GamingMessageBroker implements MessageBroker
     /**
      * @var AmqpTopic
      */
-    private $gamingTopic;
+    private $topic;
 
     /**
-     * MessageBroker constructor.
+     * AmqpTopicExchangeMessageBroker constructor.
      *
      * @param string $dsn
+     * @param string $exchangeName
      */
-    public function __construct(string $dsn)
+    public function __construct(string $dsn, string $exchangeName)
     {
         $this->dsn = $dsn;
+        $this->exchangeName = $exchangeName;
         $this->isAlreadyInitialized = false;
     }
 
@@ -60,7 +64,7 @@ final class GamingMessageBroker implements MessageBroker
 
             $this->context = $amqpConnectionFactory->createContext();
 
-            $this->gamingTopic = $this->createTopic('gaming');
+            $this->topic = $this->createTopic($this->exchangeName);
 
             $this->isAlreadyInitialized = true;
         }
@@ -85,7 +89,7 @@ final class GamingMessageBroker implements MessageBroker
     }
 
     /**
-     * Create a durable queue and bind it to gaming exchange via the given routing keys.
+     * Create a durable queue and bind it to the topic exchange via the given routing keys.
      *
      * @param string $name
      * @param array  $routingKeys
@@ -100,7 +104,7 @@ final class GamingMessageBroker implements MessageBroker
 
         foreach ($routingKeys as $routingKey) {
             $this->context->bind(
-                new AmqpBind($this->gamingTopic, $queue, $routingKey)
+                new AmqpBind($this->topic, $queue, $routingKey)
             );
         }
 
@@ -120,7 +124,7 @@ final class GamingMessageBroker implements MessageBroker
         $amqpMessage->setRoutingKey((string)$message->name());
 
         $producer = $this->context->createProducer();
-        $producer->send($this->gamingTopic, $amqpMessage);
+        $producer->send($this->topic, $amqpMessage);
     }
 
     /**
