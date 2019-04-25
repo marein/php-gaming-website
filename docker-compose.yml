@@ -250,7 +250,7 @@ services:
             context: .
             dockerfile: ./container/php-fpm/Dockerfile
             target: builder
-        working_dir: /project
+        entrypoint: docker-php-entrypoint
         volumes:
             - ./code/composer.json:/project/composer.json
             - ./code/composer.lock:/project/composer.lock
