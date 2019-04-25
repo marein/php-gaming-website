@@ -7,6 +7,8 @@ FROM gamingplatform/php-fpm:7.3-development as builder
 
 ARG environment=development
 
+WORKDIR /project
+
 COPY /container/php-fpm/composer-install.sh /container/php-fpm/composer-install-after-code-copy.sh /
 COPY /code/composer.json /code/composer.lock /project/
 RUN cd /project && /composer-install.sh
