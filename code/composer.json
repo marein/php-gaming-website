@@ -22,7 +22,7 @@
     "doctrine/doctrine-bundle": "^1.10",
     "doctrine/doctrine-migrations-bundle": "^2.0",
     "predis/predis": "^1.1",
-    "marein/php-nchan-client": "^1.0",
+    "marein/php-nchan-client": "^2.0",
     "enqueue/amqp-lib": "^0.9.8",
     "dunglas/angular-csrf-bundle": "^1.1",
     "symfony/framework-bundle": "^4.2",
