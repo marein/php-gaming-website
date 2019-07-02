@@ -155,7 +155,7 @@ services:
     #          CI helper         #
     ##############################
     selenium:
-        image: selenium/standalone-chrome
+        image: selenium/standalone-chrome:3.14
     php:
         build:
             context: .
