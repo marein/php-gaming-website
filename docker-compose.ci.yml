@@ -159,7 +159,7 @@ services:
     php:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         entrypoint: docker-php-entrypoint
 
 volumes:

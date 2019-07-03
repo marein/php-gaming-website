@@ -7,7 +7,7 @@ services:
     traefik:
         build:
             context: .
-            dockerfile: ./container/traefik/Dockerfile
+            dockerfile: ./docker/traefik/Dockerfile
         ports:
             - "80:80"
             - "8084:8080"
@@ -20,7 +20,7 @@ services:
     mysql:
         build:
             context: .
-            dockerfile: ./container/mysql/Dockerfile
+            dockerfile: ./docker/mysql/Dockerfile
         command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
@@ -30,7 +30,7 @@ services:
     redis:
         build:
             context: .
-            dockerfile: ./container/redis/Dockerfile
+            dockerfile: ./docker/redis/Dockerfile
         command: redis-server --appendonly yes
         volumes:
             - redis:/data
@@ -38,7 +38,7 @@ services:
     rabbit-mq:
         build:
             context: .
-            dockerfile: ./container/rabbit-mq/Dockerfile
+            dockerfile: ./docker/rabbit-mq/Dockerfile
         hostname: rabbit-mq
         ports:
             - "8083:15672"
@@ -48,7 +48,7 @@ services:
     nchan:
         build:
             context: .
-            dockerfile: ./container/nchan/Dockerfile
+            dockerfile: ./docker/nchan/Dockerfile
         restart: on-failure
         labels:
             - "traefik.enable=true"
@@ -64,7 +64,7 @@ services:
     nginx:
         build:
             context: .
-            dockerfile: ./container/nginx/Dockerfile
+            dockerfile: ./docker/nginx/Dockerfile
         links:
             - php-fpm
         volumes:
@@ -77,7 +77,7 @@ services:
     php-fpm:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -99,7 +99,7 @@ services:
     php-connect-four-build-query-model:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         command: bin/restartOnChange /project/bin/console connect-four:build-query-model --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -116,7 +116,7 @@ services:
     php-connect-four-publish-stored-events-to-rabbit-mq:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         command: bin/restartOnChange /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -133,7 +133,7 @@ services:
     php-chat-publish-stored-events-to-rabbit-mq:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         command: bin/restartOnChange /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -150,7 +150,7 @@ services:
     php-identity-publish-stored-events-to-rabbit-mq:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         command: bin/restartOnChange /project/bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -167,7 +167,7 @@ services:
     php-web-interface-publish-running-games-count-to-nchan:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         command: bin/restartOnChange /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -184,7 +184,7 @@ services:
     php-web-interface-publish-rabbit-mq-events-to-nchan:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         command: bin/restartOnChange /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -201,7 +201,7 @@ services:
     php-chat-command-listener:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         command: bin/restartOnChange /project/bin/console chat:command-listener --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -218,7 +218,7 @@ services:
     php-connect-four-referee:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         command: bin/restartOnChange /project/bin/console connect-four:referee --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
@@ -239,7 +239,7 @@ services:
     php:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
         entrypoint: docker-php-entrypoint
         volumes:
             - ./src:/project/src:delegated
@@ -248,7 +248,7 @@ services:
     composer:
         build:
             context: .
-            dockerfile: ./container/php-fpm/Dockerfile
+            dockerfile: ./docker/php-fpm/Dockerfile
             target: builder
         entrypoint: docker-php-entrypoint
         volumes:

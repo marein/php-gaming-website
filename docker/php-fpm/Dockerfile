@@ -9,7 +9,7 @@ ARG environment=development
 
 WORKDIR /project
 
-COPY /container/php-fpm/composer-install.sh /container/php-fpm/composer-install-after-code-copy.sh /
+COPY /docker/php-fpm/composer-install.sh /docker/php-fpm/composer-install-after-code-copy.sh /
 COPY /composer.json /composer.lock /project/
 RUN cd /project && /composer-install.sh
 
@@ -25,7 +25,7 @@ ARG environment=development
 
 WORKDIR /project
 
-COPY /container/php-fpm/entrypoint.sh /container/php-fpm/cache-warmup.sh /
+COPY /docker/php-fpm/entrypoint.sh /docker/php-fpm/cache-warmup.sh /
 
 COPY --from=builder /project /project
 
