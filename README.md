@@ -285,9 +285,9 @@ Because there are direct method invocations to the controllers (except WebInterf
 the routing needs to be defined.
 2. The WebInterface is the only context which performs direct method invocations to the others.
 This needs to be rewritten. The interfaces in the folder
-[code/src/WebInterface/Application](/src/WebInterface/Application)
+[src/WebInterface/Application](/src/WebInterface/Application)
 need new implementations which are currently located in
-[code/src/WebInterface/Infrastructure/Integration](/src/WebInterface/Infrastructure/Integration).
+[src/WebInterface/Infrastructure/Integration](/src/WebInterface/Infrastructure/Integration).
 They're need to make
 [rpc](https://en.wikipedia.org/wiki/Remote_procedure_call)
 calls.
