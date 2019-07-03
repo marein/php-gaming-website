@@ -68,7 +68,7 @@ services:
         links:
             - php-fpm
         volumes:
-            - ./code/web/assets:/project/web/assets:delegated
+            - ./web/assets:/project/web/assets:delegated
         restart: on-failure
         labels:
             - "traefik.enable=true"
@@ -86,10 +86,10 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
-            - ./code/tests:/project/tests:delegated
-            - ./code/var:/project/var:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
+            - ./tests:/project/tests:delegated
+            - ./var:/project/var:delegated
             - vendor:/project/vendor
         restart: on-failure
 
@@ -109,8 +109,8 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
             - vendor:/project/vendor
         restart: on-failure
     php-connect-four-publish-stored-events-to-rabbit-mq:
@@ -126,8 +126,8 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
             - vendor:/project/vendor
         restart: on-failure
     php-chat-publish-stored-events-to-rabbit-mq:
@@ -143,8 +143,8 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
             - vendor:/project/vendor
         restart: on-failure
     php-identity-publish-stored-events-to-rabbit-mq:
@@ -160,8 +160,8 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
             - vendor:/project/vendor
         restart: on-failure
     php-web-interface-publish-running-games-count-to-nchan:
@@ -177,8 +177,8 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
             - vendor:/project/vendor
         restart: on-failure
     php-web-interface-publish-rabbit-mq-events-to-nchan:
@@ -194,8 +194,8 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
             - vendor:/project/vendor
         restart: on-failure
     php-chat-command-listener:
@@ -211,8 +211,8 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
             - vendor:/project/vendor
         restart: on-failure
     php-connect-four-referee:
@@ -228,8 +228,8 @@ services:
             - rabbit-mq
             - nchan
         volumes:
-            - ./code/config:/project/config:delegated
-            - ./code/src:/project/src:delegated
+            - ./config:/project/config:delegated
+            - ./src:/project/src:delegated
             - vendor:/project/vendor
         restart: on-failure
 
@@ -242,8 +242,8 @@ services:
             dockerfile: ./container/php-fpm/Dockerfile
         entrypoint: docker-php-entrypoint
         volumes:
-            - ./code/src:/project/src:delegated
-            - ./code/tests:/project/tests:delegated
+            - ./src:/project/src:delegated
+            - ./tests:/project/tests:delegated
             - vendor:/project/vendor
     composer:
         build:
@@ -252,8 +252,8 @@ services:
             target: builder
         entrypoint: docker-php-entrypoint
         volumes:
-            - ./code/composer.json:/project/composer.json
-            - ./code/composer.lock:/project/composer.lock
+            - ./composer.json:/project/composer.json
+            - ./composer.lock:/project/composer.lock
             - vendor:/project/vendor
     phpmyadmin:
         image: phpmyadmin/phpmyadmin

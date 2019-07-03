@@ -44,7 +44,7 @@ build() {
     docker-compose down --volumes
     docker-compose build --pull
     docker-compose up -d composer
-    docker cp "$(docker-compose ps -q composer)":/project/vendor code/
+    docker cp "$(docker-compose ps -q composer)":/project/vendor ./
     docker-compose up --remove-orphan
 }
 
@@ -79,7 +79,7 @@ acceptance() {
     buildProductionImages
 
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci up -d
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run -v $(pwd)/code/tests:/project/tests php bin/waitForIt php-fpm:9000 --timeout=120 -- vendor/bin/codecept run acceptance
+    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run -v $(pwd)/tests:/project/tests php bin/waitForIt php-fpm:9000 --timeout=120 -- vendor/bin/codecept run acceptance
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci down -v
 }
 

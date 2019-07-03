@@ -16,11 +16,11 @@ env:
         - secure: xZOsnT0NAWqO+aPq1FFjEXwGSXZtlCSGI+AIMwAeNMqqtf1eElkEEMfPfpj8ck4cAZ/EcSuCjPWvmo3rBJwgTzfn+Nj4vnb2WO/sa5nk4rSNywQrz07I7NeSFEfZY1cD6rADOrRKNB2Bapx4h7gBCMxEL7RBEfr5tERo5kttOgMOPp9hmplj2eQTWlcFo/jNNMQ8B56muG8QQpqkmHn9B0wRck4sjRMLM1YGI1418TnZ5sTf9cQBviVqH+n+k123RSrRYgU8m3LG6QdULyPQxsV9smadii1mk+oGWi3Ula0JVfs7HCCpvJo/4zJow4CH/Q/XYrrgtRBL1gHJ2lCTKeuoY2RT3ov1KcuMxxh+n+4pO+MFKOyl2TInydCuyGmaN2phB3FzjXPv7q11WqCH8xzr/juHebOTvQ50sNZHZEwXZelynvwLcE+1ejVxkVodQQwuKoSqaK762X18+srn1tSKqKgHL5OCWBb39vhvdz5CGNfr+5R8axrMKL/BvxWyqYNrEJqseFDvF3eua/byaCHw7lJmfq7j/aT4os0fDp9/raeHHRjoht/ebbuzJCcE4WGv0/asrgKRx4wczhNuVEE3BZbXzLH3XuyLgg7x/nJ2utJe0asly3GfjL5KyztbPKK/LdGhsHKBezKGKxg5jUbWN6QGpgnPGOE1edWUOaA=
 
 install:
-    - mkdir -p code/build/logs code/build/bin
+    - mkdir -p build/logs build/bin
     - bash project buildProductionImages
 
 script:
-    - docker-compose -f docker-compose.ci.yml run -v $(pwd)/code/tests:/project/tests php vendor/bin/codecept run unit --coverage-xml
+    - docker-compose -f docker-compose.ci.yml run -v $(pwd)/tests:/project/tests php vendor/bin/codecept run unit --coverage-xml
     - docker-compose -f docker-compose.ci.yml run php vendor/bin/phpcs src tests/unit --standard=PSR2 -v
     - docker-compose -f docker-compose.ci.yml run php vendor/bin/phpstan analyse -l 2 src
     - docker-compose -f docker-compose.ci.yml up -d
@@ -31,12 +31,10 @@ after_success:
     # We can't run php-coveralls inside our container because it needs information from the git repository.
     # To get this to work we need to run sed over the clover.xml and replace the project root directory within the
     # container with the travis build directory. php-coveralls can now find all the information it needs.
-    - cd code
     - sed -i 's@/project/@'$(pwd)/'@g' tests/_output/coverage.xml
     - travis_retry wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar -O build/bin/php-coveralls.phar
     - travis_retry php build/bin/php-coveralls.phar -v --coverage_clover=tests/_output/coverage.xml
     - rm -rf build
-    - cd ..
 
 deploy:
     provider: script

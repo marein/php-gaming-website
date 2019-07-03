@@ -1,2 +1,3 @@
-/code/var
-/code/vendor
+/build
+/var
+/vendor

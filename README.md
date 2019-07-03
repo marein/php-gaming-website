@@ -114,16 +114,16 @@ by Eric Evans.
 ### Chat
 
 To organize the business logic, the
-[Chat](/code/src/Chat)
+[Chat](/src/Chat)
 uses the 
 [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html)
 pattern. The tasks are to initiate chats, list messages from a chat, and allow authors to write messages in a chat.
 If authors are assigned to a chat, only those authors can write and read messages.
 
 The public interface is formed by a
-[controller](/code/src/Chat/Presentation/Http/ChatController.php),
+[controller](/src/Chat/Presentation/Http/ChatController.php),
 which can be called up via http, and a
-[command line task](/code/src/Chat/Presentation/Console/RabbitMqCommandListenerCommand.php),
+[command line task](/src/Chat/Presentation/Console/RabbitMqCommandListenerCommand.php),
 which serves as an interface to a message broker.
 
 This context publishes
@@ -132,7 +132,7 @@ through the message broker to inform other contexts what's happened here.
 First the domain events are stored to the event store.
 This happens in the same transaction in which the commands are executed.
 After that, a
-[command line task](/code/src/Chat/Presentation/Console/PublishStoredEventsToRabbitMqCommand.php)
+[command line task](/src/Chat/Presentation/Console/PublishStoredEventsToRabbitMqCommand.php)
 publish these stored events to the message broker.
 
 I've chosen MySQL as the storage.
@@ -140,16 +140,16 @@ I've chosen MySQL as the storage.
 ### Common
 
 This
-[Common](/code/src/Common)
+[Common](/src/Common)
 folder provides reusable components. If the project is more advanced, I'll outsource them as libraries.
 But there're already battle tested implementations out there (like a
 [Bus](https://tactician.thephpleague.com)
 by Tactician, or an
 [Event Store](https://github.com/prooph/event-store)
 by prooph). You may use them, instead of mine. The
-[Event Store](/code/src/Common/EventStore)
+[Event Store](/src/Common/EventStore)
 implementation inside
-[Common](/code/src/Common)
+[Common](/src/Common)
 isn't used to be a storage for an
 [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
 model. It's really just a storage for events.
@@ -157,7 +157,7 @@ model. It's really just a storage for events.
 ### Connect Four
 
 The
-[Connect Four](/code/src/ConnectFour)
+[Connect Four](/src/ConnectFour)
 is the context where I put the most effort in. The business logic is definitely worth building a proper
 [Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html).
 Players can open, join, abort and resign a game. Of course they can also perform moves.
@@ -166,7 +166,7 @@ The referee, which sits near the game desks, ensure that the people can talk to 
 This process is described below.
 
 As the
-[folder structure](/code/src/ConnectFour)
+[folder structure](/src/ConnectFour)
 shows, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
 uses a command and query bus. The opposite of this approach is the traditional application service I use in the
@@ -174,7 +174,7 @@ uses a command and query bus. The opposite of this approach is the traditional a
 context.
 
 The public interface is formed by a
-[controller](/code/src/ConnectFour/Port/Adapter/Http/GameController.php),
+[controller](/src/ConnectFour/Port/Adapter/Http/GameController.php),
 which can be called up via http.
 
 This context publishes
@@ -183,7 +183,7 @@ through the message broker to inform other contexts what's happened here.
 First the domain events are stored to the event store.
 This happens in the same transaction in which the commands are executed.
 After that, a
-[command line task](/code/src/ConnectFour/Port/Adapter/Console/PublishStoredEventsToRabbitMqCommand.php)
+[command line task](/src/ConnectFour/Port/Adapter/Console/PublishStoredEventsToRabbitMqCommand.php)
 publish these stored events to the message broker.
 
 The Connect Four context applies the
@@ -192,7 +192,7 @@ pattern. Not only the domain model is divided into command and query side, but a
 The query model is stored in an
 [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency)
 manner. A
-[command line task](/code/src/ConnectFour/Port/Adapter/Console/BuildQueryModelCommand.php)
+[command line task](/src/ConnectFour/Port/Adapter/Console/BuildQueryModelCommand.php)
 retrieves the stored events from the event store and then builds the query model.
 This is done for scalability reasons. Why exactly this was done is described in the section
 "[Scale-Out the application](#scale-out-the-application)".
@@ -206,7 +206,7 @@ There's also a
 [Process Manager](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html)
 involved.
 Its name is referee and it's a
-[command line task](/code/src/ConnectFour/Port/Adapter/Console/RefereeCommand.php).
+[command line task](/src/ConnectFour/Port/Adapter/Console/RefereeCommand.php).
 The referee picks up a player joined event and ensures, that a chat is initiated.
 When the chat is initiated, it assigns the chat to the game.
 This is done, so the storage of games and chats can be on different MySQL instances.
@@ -225,7 +225,7 @@ Maybe I'll implement this storage model in the next game.
 ### Identity
 
 The
-[Identity](/code/src/Identity)
+[Identity](/src/Identity)
 context is managing the user identities. To organize the business logic I've chosen the
 [Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html)
 pattern backed up by an ORM. In this case I've chosen Doctrine because it's a really matured ORM that applies the
@@ -233,7 +233,7 @@ pattern backed up by an ORM. In this case I've chosen Doctrine because it's a re
 pattern. The main responsibilities are that users can sign up, authenticate, change username and change password.
 
 As the
-[folder structure](/code/src/Identity)
+[folder structure](/src/Identity)
 shows, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
 uses a traditional application service. The opposite of this approach is the
@@ -242,20 +242,20 @@ command and query bus I use in the
 context.
 
 The public interface is formed by a
-[controller](/code/src/User/Port/Adapter/Http/UserController.php),
+[controller](/src/User/Port/Adapter/Http/UserController.php),
 which can be called up via http.
 
 ### Web Interface
 
 The
-[Web Interface](/code/src/WebInterface)
+[Web Interface](/src/WebInterface)
 acts like an
 [Backend For Frontend](https://samnewman.io/patterns/architectural/bff/).
 All browser interactions go through this context. The main responsibilities are the session management
 and the aggregation of the data from the other contexts. The
-[JavaScript](/code/src/WebInterface/Presentation/Http/JavaScript)
+[JavaScript](/src/WebInterface/Presentation/Http/JavaScript)
 and
-[StyleSheet](/code/src/WebInterface/Presentation/Http/StyleSheet)
+[StyleSheet](/src/WebInterface/Presentation/Http/StyleSheet)
 are also defined here.
 
 There're currently three pages.
@@ -276,18 +276,18 @@ I've assigned an abstraction layer to the Web Interface context for easier migra
 
 To have single deployable units, the following steps needs to be done
 1. Copy the folders (at
-[config](/code/config),
-[src](/code/src)
+[config](/config),
+[src](/src)
 and
-[tests](/code/tests))
+[tests](/tests))
 in a separate application for each context or the context that's worthwhile to be a single deployable unit.
 Because there are direct method invocations to the controllers (except WebInterface),
 the routing needs to be defined.
 2. The WebInterface is the only context which performs direct method invocations to the others.
 This needs to be rewritten. The interfaces in the folder
-[code/src/WebInterface/Application](/code/src/WebInterface/Application)
+[code/src/WebInterface/Application](/src/WebInterface/Application)
 need new implementations which are currently located in
-[code/src/WebInterface/Infrastructure/Integration](/code/src/WebInterface/Infrastructure/Integration).
+[code/src/WebInterface/Infrastructure/Integration](/src/WebInterface/Infrastructure/Integration).
 They're need to make
 [rpc](https://en.wikipedia.org/wiki/Remote_procedure_call)
 calls.
@@ -326,7 +326,7 @@ for the chat context.
 You may have seen that all contexts uses only one MySQL and one Redis instance.
 This could be different for the production environment depending on the scale.
 For this reason, different databases can be configured for the different contexts. Have a look at the
-[configuration file](/code/config/environment.env.dist).
+[configuration file](/config/environment.env.dist).
 There is an example. Have a look at the
 [advanced production compose file](/docker-compose.production-advanced.yml).
 We can split this even further.
@@ -346,7 +346,7 @@ Some other technologies:
 * [Redis](https://redis.io) for the query models or as a caching layer. Also the user sessions are stored here.
 * [Rabbit Mq](https://www.rabbitmq.com) as the message broker.
 * [Nchan](https://nchan.io) for real-time browser notifications.
-* Various [libraries](/code/composer.json) for php.
+* Various [libraries](/composer.json) for php.
 
 ## A note on testing
 
