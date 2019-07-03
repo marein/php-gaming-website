@@ -20,26 +20,5 @@ class AcceptanceTester extends \Codeception\Actor
 {
     use _generated\AcceptanceTesterActions;
     use \Codeception\Lib\Actor\Shared\Friend;
-
-    /**
-     * Wait for the current url.
-     *
-     * @param string $uri
-     * @param int    $timeout
-     */
-    public function waitForCurrentUrl(string $uri, int $timeout): void
-    {
-        try {
-            $this->seeInCurrentUrl($uri);
-        } catch (\PHPUnit\Framework\ExpectationFailedException $exception) {
-            $nextTimeout = $timeout - 1;
-
-            if ($nextTimeout <= 0) {
-                throw $exception;
-            }
-
-            $this->wait(1);
-            $this->waitForCurrentUrl($uri, $nextTimeout);
-        }
-    }
+    use \Codeception\Lib\Actor\Shared\Retry;
 }

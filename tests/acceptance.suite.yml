@@ -7,3 +7,6 @@ modules:
              host: selenium
              browser: chrome
         - \Helper\Acceptance
+
+step_decorators:
+    - \Codeception\Step\Retry

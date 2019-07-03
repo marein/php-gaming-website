@@ -63,11 +63,11 @@ class GameCest
                 $I->amOnPage('/');
                 $I->waitForElement('[data-game-id="' . $gameId . '"]', 2);
                 $I->click('[data-game-id="' . $gameId . '"]');
-                $I->waitForCurrentUrl('/game/' . $gameId, 2);
+                $I->retrySeeCurrentUrlEquals('/game/' . $gameId);
             }
         );
 
-        $I->waitForCurrentUrl('/game/' . $gameId, 2);
+        $I->retrySeeCurrentUrlEquals('/game/' . $gameId);
 
         return $gameId;
     }
