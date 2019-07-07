@@ -8,7 +8,8 @@ services:
             - '@connect-four.predis'
             - [
                 '@connect-four.game-projection',
-                '@connect-four.open-games-projection'
+                '@connect-four.open-games-projection',
+                '@connect-four.running-games-projection'
               ]
         tags:
             -  { name: console.command }

@@ -5,25 +5,23 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Predis\Client;
+use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGameStore;
 
-final class PredisRunningGamesProjection implements StoredEventSubscriber
+final class RunningGamesProjection implements StoredEventSubscriber
 {
-    const STORAGE_KEY = 'running-games';
-
     /**
-     * @var Client
+     * @var RunningGameStore
      */
-    private $predis;
+    private $runningGameStore;
 
     /**
-     * PredisRunningGamesProjection constructor.
+     * RunningGamesProjection constructor.
      *
-     * @param Client $predis
+     * @param RunningGameStore $runningGameStore
      */
-    public function __construct(Client $predis)
+    public function __construct(RunningGameStore $runningGameStore)
     {
-        $this->predis = $predis;
+        $this->runningGameStore = $runningGameStore;
     }
 
     /**
@@ -57,9 +55,8 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
     private function handlePlayerJoined(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
-        $gameId = $payload['gameId'];
 
-        $this->predis->sadd(self::STORAGE_KEY, $gameId);
+        $this->runningGameStore->add($payload['gameId']);
     }
 
     /**
@@ -100,8 +97,7 @@ final class PredisRunningGamesProjection implements StoredEventSubscriber
     private function handleGameFinished(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
-        $gameId = $payload['gameId'];
 
-        $this->predis->srem(self::STORAGE_KEY, $gameId);
+        $this->runningGameStore->remove($payload['gameId']);
     }
 }

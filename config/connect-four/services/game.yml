@@ -48,8 +48,8 @@ services:
         arguments:
             - '@connect-four.predis'
 
-    connect-four.running-games-finder:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGamesFinder
+    connect-four.running-games-store:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGameStore
         public: false
         arguments:
             - '@connect-four.predis'
@@ -65,3 +65,9 @@ services:
         public: false
         arguments:
             - '@connect-four.open-game-store'
+
+    connect-four.running-games-projection:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\RunningGamesProjection
+        public: false
+        arguments:
+            - '@connect-four.running-games-store'

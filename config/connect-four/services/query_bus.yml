@@ -57,4 +57,4 @@ services:
         class: Gaming\ConnectFour\Application\Game\Query\RunningGamesHandler
         public: false
         arguments:
-            - '@connect-four.running-games-finder'
+            - '@connect-four.running-games-store'
