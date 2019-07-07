@@ -4,21 +4,21 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Application\Game\Query;
 
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
-use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerFinder;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerStore;
 
 final class GamesByPlayerHandler
 {
     /**
-     * @var GamesByPlayerFinder
+     * @var GamesByPlayerStore
      */
     private $gamesByPlayerFinder;
 
     /**
      * GameHandler constructor.
      *
-     * @param GamesByPlayerFinder $gamesByPlayerFinder
+     * @param GamesByPlayerStore $gamesByPlayerFinder
      */
-    public function __construct(GamesByPlayerFinder $gamesByPlayerFinder)
+    public function __construct(GamesByPlayerStore $gamesByPlayerFinder)
     {
         $this->gamesByPlayerFinder = $gamesByPlayerFinder;
     }

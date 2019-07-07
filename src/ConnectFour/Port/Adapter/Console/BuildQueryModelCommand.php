@@ -12,7 +12,6 @@ use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\EventStore\ThrottlingEventStore;
 use Gaming\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
-use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisGamesByPlayerProjection;
 use Predis\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -60,8 +59,6 @@ final class BuildQueryModelCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // The creation of FollowEventStoreDispatcher could be done via container.
-        $gamesByPlayerProjection = new PredisGamesByPlayerProjection($this->predis);
-
         $eventStorePointer = new InMemoryCacheEventStorePointer(
             new PredisEventStorePointer(
                 $this->predis,
@@ -75,7 +72,6 @@ final class BuildQueryModelCommand extends Command
             $storedEventPublisher->subscribe($storedEventSubscriber);
         }
 
-        $storedEventPublisher->subscribe($gamesByPlayerProjection);
         $storedEventPublisher->subscribe(
             new SymfonyConsoleDebugSubscriber($output)
         );

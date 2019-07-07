@@ -9,7 +9,8 @@ services:
             - [
                 '@connect-four.game-projection',
                 '@connect-four.open-games-projection',
-                '@connect-four.running-games-projection'
+                '@connect-four.running-games-projection',
+                '@connect-four.games-by-player-projection'
               ]
         tags:
             -  { name: console.command }

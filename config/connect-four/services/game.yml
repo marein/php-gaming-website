@@ -36,8 +36,8 @@ services:
         arguments:
             - '@connect-four.event-store'
 
-    connect-four.games-by-player-finder:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerFinder
+    connect-four.games-by-player-store:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerStore
         public: false
         arguments:
             - '@connect-four.predis'
@@ -71,3 +71,9 @@ services:
         public: false
         arguments:
             - '@connect-four.running-games-store'
+
+    connect-four.games-by-player-projection:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\GamesByPlayerProjection
+        public: false
+        arguments:
+            - '@connect-four.games-by-player-store'

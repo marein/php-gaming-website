@@ -45,7 +45,7 @@ services:
         class: Gaming\ConnectFour\Application\Game\Query\GamesByPlayerHandler
         public: false
         arguments:
-            - '@connect-four.games-by-player-finder'
+            - '@connect-four.games-by-player-store'
 
     connect-four.query.open-games-handler:
         class: Gaming\ConnectFour\Application\Game\Query\OpenGamesHandler
