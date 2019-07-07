@@ -5,25 +5,24 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Predis\Client;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGameStore;
 
-final class PredisOpenGamesProjection implements StoredEventSubscriber
+final class OpenGamesProjection implements StoredEventSubscriber
 {
-    const STORAGE_KEY = 'open-games';
-
     /**
-     * @var Client
+     * @var OpenGameStore
      */
-    private $predis;
+    private $openGameStore;
 
     /**
-     * PredisOpenGamesProjection constructor.
+     * OpenGamesProjection constructor.
      *
-     * @param Client $predis
+     * @param OpenGameStore $openGameStore
      */
-    public function __construct(Client $predis)
+    public function __construct(OpenGameStore $openGameStore)
     {
-        $this->predis = $predis;
+        $this->openGameStore = $openGameStore;
     }
 
     /**
@@ -55,16 +54,9 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
     private function handleGameOpened(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
-        $gameId = $payload['gameId'];
-        $playerId = $payload['playerId'];
 
-        $this->predis->hset(
-            self::STORAGE_KEY,
-            $gameId,
-            json_encode([
-                'gameId'   => $gameId,
-                'playerId' => $playerId
-            ])
+        $this->openGameStore->save(
+            new OpenGame($payload['gameId'], $payload['playerId'])
         );
     }
 
@@ -74,9 +66,8 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
     private function handleGameAborted(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
-        $gameId = $payload['gameId'];
 
-        $this->predis->hdel(self::STORAGE_KEY, [$gameId]);
+        $this->openGameStore->remove($payload['gameId']);
     }
 
     /**
@@ -85,8 +76,7 @@ final class PredisOpenGamesProjection implements StoredEventSubscriber
     private function handlePlayerJoined(StoredEvent $storedEvent): void
     {
         $payload = json_decode($storedEvent->payload(), true);
-        $gameId = $payload['gameId'];
 
-        $this->predis->hdel(self::STORAGE_KEY, [$gameId]);
+        $this->openGameStore->remove($payload['gameId']);
     }
 }

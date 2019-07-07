@@ -4,23 +4,23 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Application\Game\Query;
 
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
-use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGamesFinder;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGameStore;
 
 final class OpenGamesHandler
 {
     /**
-     * @var OpenGamesFinder
+     * @var OpenGameStore
      */
-    private $openGamesFinder;
+    private $openGameStore;
 
     /**
      * OpenGamesHandler constructor.
      *
-     * @param OpenGamesFinder $openGamesFinder
+     * @param OpenGameStore $openGameStore
      */
-    public function __construct(OpenGamesFinder $openGamesFinder)
+    public function __construct(OpenGameStore $openGameStore)
     {
-        $this->openGamesFinder = $openGamesFinder;
+        $this->openGameStore = $openGameStore;
     }
 
     /**
@@ -30,6 +30,6 @@ final class OpenGamesHandler
      */
     public function __invoke(OpenGamesQuery $query): OpenGames
     {
-        return $this->openGamesFinder->all();
+        return $this->openGameStore->all();
     }
 }
