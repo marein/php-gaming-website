@@ -11,6 +11,7 @@ interface GamesByPlayerStore
      * This operation is idempotent.
      *
      * @param string $playerId
+     * @param string $gameId
      */
     public function addToPlayer(string $playerId, string $gameId): void;
 
@@ -20,6 +21,7 @@ interface GamesByPlayerStore
      * This operation is idempotent.
      *
      * @param string $playerId
+     * @param string $gameId
      */
     public function removeFromPlayer(string $playerId, string $gameId): void;
 

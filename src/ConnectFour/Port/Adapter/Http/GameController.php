@@ -11,6 +11,7 @@ use Gaming\ConnectFour\Application\Game\Command\OpenCommand;
 use Gaming\ConnectFour\Application\Game\Command\ResignCommand;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
@@ -114,6 +115,7 @@ class GameController
      */
     public function gameAction(Request $request): JsonResponse
     {
+        /** @var Game $game */
         $game = $this->queryBus->handle(
             new GameQuery(
                 $request->query->get('gameId')

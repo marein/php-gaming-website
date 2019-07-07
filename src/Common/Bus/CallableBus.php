@@ -8,7 +8,7 @@ use Gaming\Common\Bus\Exception\CommandHasNoHandlerException;
 final class CallableBus implements Bus
 {
     /**
-     * @var array
+     * @var callable[]
      */
     private $handler;
 
