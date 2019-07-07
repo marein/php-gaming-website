@@ -20,15 +20,17 @@ services:
             - '@connect-four.doctrine-dbal'
             - '@connect-four.domain-event-publisher'
 
-    connect-four.predis-game-finder:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameFinder
+    connect-four.game-store:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameStore
         public: false
-        decorates: connect-four.game-finder
         arguments:
             - '@connect-four.predis'
-            - '@connect-four.predis-game-finder.inner'
+            - '@connect-four.event-store-game-finder'
 
     connect-four.game-finder:
+        alias: 'connect-four.game-store'
+
+    connect-four.event-store-game-finder:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\EventStoreGameFinder
         public: false
         arguments:
@@ -51,3 +53,9 @@ services:
         public: false
         arguments:
             - '@connect-four.predis'
+
+    connect-four.game-projection:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\GameProjection
+        public: false
+        arguments:
+            - '@connect-four.game-store'

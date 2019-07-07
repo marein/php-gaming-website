@@ -8,10 +8,10 @@ use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\FollowEventStoreDispatcher;
 use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
 use Gaming\Common\EventStore\StoredEventPublisher;
+use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\EventStore\ThrottlingEventStore;
 use Gaming\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
-use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisGameProjection;
 use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisGamesByPlayerProjection;
 use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisOpenGamesProjection;
 use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisRunningGamesProjection;
@@ -33,17 +33,27 @@ final class BuildQueryModelCommand extends Command
     private $predis;
 
     /**
+     * @var StoredEventSubscriber[]
+     */
+    private $storedEventSubscribers;
+
+    /**
      * BuildQueryModelCommand constructor.
      *
-     * @param EventStore $eventStore
-     * @param Client     $predis
+     * @param EventStore              $eventStore
+     * @param Client                  $predis
+     * @param StoredEventSubscriber[] $storedEventSubscribers
      */
-    public function __construct(EventStore $eventStore, Client $predis)
-    {
+    public function __construct(
+        EventStore $eventStore,
+        Client $predis,
+        array $storedEventSubscribers
+    ) {
         parent::__construct('connect-four:build-query-model');
 
         $this->eventStore = $eventStore;
         $this->predis = $predis;
+        $this->storedEventSubscribers = $storedEventSubscribers;
     }
 
     /**
@@ -55,8 +65,6 @@ final class BuildQueryModelCommand extends Command
         $runningGamesProjection = new PredisRunningGamesProjection($this->predis);
         $openGamesProjection = new PredisOpenGamesProjection($this->predis);
         $gamesByPlayerProjection = new PredisGamesByPlayerProjection($this->predis);
-        $gameProjection = new PredisGameProjection($this->predis);
-        $debugSubscriber = new SymfonyConsoleDebugSubscriber($output);
 
         $eventStorePointer = new InMemoryCacheEventStorePointer(
             new PredisEventStorePointer(
@@ -66,11 +74,17 @@ final class BuildQueryModelCommand extends Command
         );
 
         $storedEventPublisher = new StoredEventPublisher();
+
+        foreach ($this->storedEventSubscribers as $storedEventSubscriber) {
+            $storedEventPublisher->subscribe($storedEventSubscriber);
+        }
+
         $storedEventPublisher->subscribe($runningGamesProjection);
         $storedEventPublisher->subscribe($openGamesProjection);
         $storedEventPublisher->subscribe($gamesByPlayerProjection);
-        $storedEventPublisher->subscribe($gameProjection);
-        $storedEventPublisher->subscribe($debugSubscriber);
+        $storedEventPublisher->subscribe(
+            new SymfonyConsoleDebugSubscriber($output)
+        );
 
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
             $eventStorePointer,

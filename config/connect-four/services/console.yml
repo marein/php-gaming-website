@@ -6,6 +6,9 @@ services:
         arguments:
             - '@connect-four.event-store'
             - '@connect-four.predis'
+            - [
+                '@connect-four.game-projection'
+              ]
         tags:
             -  { name: console.command }
 

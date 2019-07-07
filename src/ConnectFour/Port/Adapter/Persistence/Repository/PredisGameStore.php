@@ -5,11 +5,20 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
-use Gaming\ConnectFour\Port\Adapter\Persistence\Projection\PredisGameProjection;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
 use Predis\Client;
 
-final class PredisGameFinder implements GameFinder
+/**
+ * This class stores the game with serialize() and retrieves it with unserialize().
+ * A serialized game is around ~13 kilobyte in size. This is huge, compared to json with only ~1.3 kilobyte.
+ * If this becomes a bottleneck, we can serialize it to json at a later stage.
+ *
+ * If the model changes, the query model can be completely recreated, so we're not afraid to use serialize() here.
+ */
+final class PredisGameStore implements GameStore
 {
+    private const STORAGE_KEY_PREFIX = 'game.';
+
     /**
      * The predis client.
      *
@@ -18,14 +27,14 @@ final class PredisGameFinder implements GameFinder
     private $predis;
 
     /**
-     * If no game is found, this finder uses the fallback.
+     * If no game is found, this store uses this fallback.
      *
      * @var GameFinder
      */
     private $fallbackGameFinder;
 
     /**
-     * PredisGameFinder constructor.
+     * PredisGameStore constructor.
      *
      * @param Client     $predis
      * @param GameFinder $fallbackGameFinder
@@ -42,7 +51,7 @@ final class PredisGameFinder implements GameFinder
     public function find(string $gameId): Game
     {
         $serializedGame = $this->predis->get(
-            PredisGameProjection::STORAGE_KEY_PREFIX . $gameId
+            self::STORAGE_KEY_PREFIX . $gameId
         );
 
         // If no game is found, use the fallback.
@@ -51,5 +60,16 @@ final class PredisGameFinder implements GameFinder
         }
 
         return unserialize($serializedGame);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function save(Game $game): void
+    {
+        $this->predis->set(
+            self::STORAGE_KEY_PREFIX . $game->id(),
+            serialize($game)
+        );
     }
 }
