@@ -28,7 +28,7 @@ button {
 }
 
 button:hover {
-    cursor: hand;
+    cursor: pointer;
 }
 
 .button {
@@ -42,7 +42,7 @@ button:hover {
 }
 
 .button:hover {
-    cursor: hand;
+    cursor: pointer;
 }
 
 .button--yellow {
@@ -178,7 +178,7 @@ chat-widget {
     background-color: rgb(32, 32, 32);
     border: 3px solid rgb(50, 50, 50);
     border-radius: 50%;
-    cursor: hand;
+    cursor: pointer;
 }
 
 .game__field--red {
