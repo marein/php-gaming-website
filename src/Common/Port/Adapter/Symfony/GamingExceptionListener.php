@@ -5,7 +5,7 @@ namespace Gaming\Common\Port\Adapter\Symfony;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -17,9 +17,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 final class GamingExceptionListener
 {
     /**
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
         if ($event->getRequest()->getRequestFormat() === 'json') {
             $this->handleJson($event);
@@ -31,9 +31,9 @@ final class GamingExceptionListener
     /**
      * Set a new json response.
      *
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
-    private function handleJson(GetResponseForExceptionEvent $event): void
+    private function handleJson(ExceptionEvent $event): void
     {
         $exceptionName = $this->exceptionName($event->getException());
 
@@ -50,9 +50,9 @@ final class GamingExceptionListener
     /**
      * Set a new exception when 404 is detected.
      *
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
-    private function handleOther(GetResponseForExceptionEvent $event): void
+    private function handleOther(ExceptionEvent $event): void
     {
         $exceptionName = $this->exceptionName($event->getException());
 

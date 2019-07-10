@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Infrastructure\EventListener;
 
 use Gaming\WebInterface\Application\IdentityService;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 final class AssignUserIdOnKernelRequest
 {
@@ -24,9 +24,9 @@ final class AssignUserIdOnKernelRequest
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event): void
+    public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;
