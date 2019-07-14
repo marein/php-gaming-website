@@ -6,7 +6,6 @@ namespace Gaming\ConnectFour\Application\Game\Query;
 use Gaming\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
-use Gaming\ConnectFour\Domain\Game\Games;
 
 final class GameHandler
 {
@@ -16,20 +15,13 @@ final class GameHandler
     private $gameFinder;
 
     /**
-     * @var Games
-     */
-    private $games;
-
-    /**
      * GameHandler constructor.
      *
      * @param GameFinder $gameFinder
-     * @param Games      $games
      */
-    public function __construct(GameFinder $gameFinder, Games $games)
+    public function __construct(GameFinder $gameFinder)
     {
         $this->gameFinder = $gameFinder;
-        $this->games = $games;
     }
 
     /**

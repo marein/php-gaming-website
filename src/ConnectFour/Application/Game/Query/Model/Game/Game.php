@@ -32,7 +32,7 @@ final class Game implements \JsonSerializable
     /**
      * The players of the game.
      *
-     * @var array
+     * @var string[]
      */
     private $players = [];
 

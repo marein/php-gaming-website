@@ -39,7 +39,6 @@ services:
         public: false
         arguments:
             - '@connect-four.game-finder'
-            - '@connect-four.game-repository'
 
     connect-four.query.games-by-player-handler:
         class: Gaming\ConnectFour\Application\Game\Query\GamesByPlayerHandler
