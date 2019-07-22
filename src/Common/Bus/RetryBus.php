@@ -52,11 +52,11 @@ final class RetryBus implements Bus
     }
 
     /**
-     * Handle the given command.
+     * Handle the given message.
      * Retry if the configured exception occur and the number of retries isn't reached.
      *
      * @param object $message
-     * @param int   $currentTry
+     * @param int    $currentTry
      *
      * @return mixed
      * @throws \Exception

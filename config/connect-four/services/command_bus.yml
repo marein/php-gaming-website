@@ -1,6 +1,6 @@
 services:
 
-    # The following definitions decorate the callable command bus. This could be done with a factory object.
+    # The following definitions decorate the routing command bus. This could be done with a factory object.
     connect-four.command-bus:
         class: Gaming\Common\Port\Adapter\Bus\DoctrineReconnectBus
         public: false
@@ -21,56 +21,21 @@ services:
         class: Gaming\Common\Port\Adapter\Bus\DoctrineTransactionalBus
         public: false
         arguments:
-            - '@connect-four.callable-command-bus'
+            - '@connect-four.routing-command-bus'
             - '@connect-four.doctrine-dbal'
 
     # This is pretty ugly. We can use tags, or create this via a factory in php.
-    connect-four.callable-command-bus:
-        class: Gaming\Common\Bus\CallableBus
+    connect-four.routing-command-bus:
+        class: Gaming\Common\Bus\RoutingBus
         public: false
-        calls:
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Command\AbortCommand',
-                  '@connect-four.command.abort-handler'
-                ]
-              ]
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Command\ResignCommand',
-                  '@connect-four.command.resign-handler'
-                ]
-              ]
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Command\AssignChatCommand',
-                  '@connect-four.command.assign-chat-handler'
-                ]
-              ]
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Command\JoinCommand',
-                  '@connect-four.command.join-handler'
-                ]
-              ]
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Command\MoveCommand',
-                  '@connect-four.command.move-handler'
-                ]
-              ]
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Command\OpenCommand',
-                  '@connect-four.command.open-handler'
-                ]
-              ]
+        arguments:
+            -
+                'Gaming\ConnectFour\Application\Game\Command\AbortCommand': '@connect-four.command.abort-handler'
+                'Gaming\ConnectFour\Application\Game\Command\ResignCommand': '@connect-four.command.resign-handler'
+                'Gaming\ConnectFour\Application\Game\Command\AssignChatCommand': '@connect-four.command.assign-chat-handler'
+                'Gaming\ConnectFour\Application\Game\Command\JoinCommand': '@connect-four.command.join-handler'
+                'Gaming\ConnectFour\Application\Game\Command\MoveCommand': '@connect-four.command.move-handler'
+                'Gaming\ConnectFour\Application\Game\Command\OpenCommand': '@connect-four.command.open-handler'
 
     connect-four.command.abort-handler:
         class: Gaming\ConnectFour\Application\Game\Command\AbortHandler

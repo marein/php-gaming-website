@@ -2,37 +2,14 @@ services:
 
     # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.query-bus:
-        class: Gaming\Common\Bus\CallableBus
+        class: Gaming\Common\Bus\RoutingBus
         public: false
-        calls:
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Query\GameQuery',
-                  '@connect-four.query.game-handler'
-                ]
-              ]
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery',
-                  '@connect-four.query.games-by-player-handler'
-                ]
-              ]
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery',
-                  '@connect-four.query.open-games-handler'
-                ]
-              ]
-            - [
-                addHandler,
-                [
-                  'Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery',
-                  '@connect-four.query.running-games-handler'
-                ]
-              ]
+        arguments:
+            -
+                'Gaming\ConnectFour\Application\Game\Query\GameQuery': '@connect-four.query.game-handler'
+                'Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery': '@connect-four.query.games-by-player-handler'
+                'Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery': '@connect-four.query.open-games-handler'
+                'Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery': '@connect-four.query.running-games-handler'
 
     connect-four.query.game-handler:
         class: Gaming\ConnectFour\Application\Game\Query\GameHandler
