@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User\Event;
 
+use DateTimeImmutable;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Identity\Domain\Model\User\UserId;
@@ -20,7 +21,7 @@ final class UserSignedUp implements DomainEvent
     private $username;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     private $occurredOn;
 
@@ -59,7 +60,7 @@ final class UserSignedUp implements DomainEvent
     /**
      * @inheritdoc
      */
-    public function occurredOn(): \DateTimeImmutable
+    public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }

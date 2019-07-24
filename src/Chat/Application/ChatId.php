@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application;
 
+use Exception;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -51,7 +52,7 @@ final class ChatId
     {
         try {
             return new self(Uuid::fromString($chatId));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // This occurs if the given string is an invalid Uuid, hence an invalid ChatId.
             // Throw exception, that the chat can't be found.
             throw new ChatNotFoundException();

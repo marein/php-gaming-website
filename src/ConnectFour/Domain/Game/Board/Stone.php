@@ -8,10 +8,6 @@ namespace Gaming\ConnectFour\Domain\Game\Board;
  */
 final class Stone
 {
-    const NONE = 0;
-    const RED = 1;
-    const YELLOW = 2;
-
     /**
      * @var int
      */
@@ -28,13 +24,14 @@ final class Stone
     }
 
     /**
-     * Creates a yellow [Stone].
+     * Creates a null [Stone].
      *
      * @return Stone
      */
-    public static function yellow(): Stone
+    public static function none(): Stone
     {
-        return new self(self::YELLOW);
+        static $stone;
+        return $stone ?: $stone = new Stone(0);
     }
 
     /**
@@ -44,17 +41,19 @@ final class Stone
      */
     public static function red(): Stone
     {
-        return new self(self::RED);
+        static $stone;
+        return $stone ?: $stone = new Stone(1);
     }
 
     /**
-     * Creates a null [Stone].
+     * Creates a yellow [Stone].
      *
      * @return Stone
      */
-    public static function none(): Stone
+    public static function yellow(): Stone
     {
-        return new self(self::NONE);
+        static $stone;
+        return $stone ?: $stone = new Stone(2);
     }
 
     /**

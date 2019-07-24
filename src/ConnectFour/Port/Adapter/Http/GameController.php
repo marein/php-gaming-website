@@ -58,12 +58,15 @@ class GameController
         /** @var OpenGames $openGames */
         $openGames = $this->queryBus->handle(new OpenGamesQuery());
 
-        $games = array_map(function (OpenGame $openGame) {
-            return [
-                'gameId'   => $openGame->gameId(),
-                'playerId' => $openGame->playerId()
-            ];
-        }, $openGames->games());
+        $games = array_map(
+            static function (OpenGame $openGame) {
+                return [
+                    'gameId'   => $openGame->gameId(),
+                    'playerId' => $openGame->playerId()
+                ];
+            },
+            $openGames->games()
+        );
 
         return new JsonResponse([
             'games' => $games
@@ -99,9 +102,12 @@ class GameController
             )
         );
 
-        $games = array_map(function (GameByPlayer $openGame) {
-            return $openGame->gameId();
-        }, $gamesByPlayer->games());
+        $games = array_map(
+            static function (GameByPlayer $openGame) {
+                return $openGame->gameId();
+            },
+            $gamesByPlayer->games()
+        );
 
         return new JsonResponse([
             'games' => $games

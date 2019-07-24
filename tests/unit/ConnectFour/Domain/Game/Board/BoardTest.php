@@ -18,9 +18,12 @@ class BoardTest extends TestCase
         $size = new Size(7, 6);
 
         $countOfFields = $size->width() * $size->height();
-        $emptyFields = array_filter($board->fields(), function (Field $field) {
-            return $field->isEmpty();
-        });
+        $emptyFields = array_filter(
+            $board->fields(),
+            static function (Field $field) {
+                return $field->isEmpty();
+            }
+        );
 
         $this->assertCount($countOfFields, $emptyFields);
         $this->assertEquals(null, $board->lastUsedField());

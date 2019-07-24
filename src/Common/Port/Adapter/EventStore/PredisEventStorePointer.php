@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\EventStore;
 
+use Exception;
 use Gaming\Common\EventStore\EventStorePointer;
 use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
 use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
@@ -39,7 +40,7 @@ final class PredisEventStorePointer implements EventStorePointer
     {
         try {
             $this->predis->set($this->key, (string)$id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new FailedTrackMostRecentPublishedStoredEventIdException(
                 $e->getMessage(),
                 $e->getCode(),
@@ -59,7 +60,7 @@ final class PredisEventStorePointer implements EventStorePointer
             }
 
             return 0;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new FailedRetrieveMostRecentPublishedStoredEventIdException(
                 $e->getMessage(),
                 $e->getCode(),

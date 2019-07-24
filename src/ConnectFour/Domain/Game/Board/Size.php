@@ -31,7 +31,7 @@ final class Size
             throw new InvalidSizeException('Width and height must be greater then 1.');
         }
 
-        if (($width * $height) % 2 != 0) {
+        if (($width * $height) % 2 !== 0) {
             throw new InvalidSizeException('Product of width and height must be an even number.');
         }
 

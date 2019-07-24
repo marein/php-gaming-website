@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game;
 
+use Exception;
 use Gaming\Memory\Domain\Model\Game\Exception\GameNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -51,7 +52,7 @@ final class GameId
     {
         try {
             return new self(Uuid::fromString($gameId));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // This occurs if the given string is an invalid Uuid, hence an invalid GameId.
             // Throw exception, that the game can't be found.
             throw new GameNotFoundException();

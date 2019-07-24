@@ -105,7 +105,7 @@ final class Board
      */
     private function findPositionOfFirstEmptyFieldInColumn(int $column): int
     {
-        if ($column > $this->size->width() || $column < 1) {
+        if ($column < 1 || $column > $this->size->width()) {
             throw new OutOfSizeException();
         }
 
@@ -113,7 +113,7 @@ final class Board
         $reversedFields = array_reverse($this->fields, true);
 
         foreach ($reversedFields as $position => $field) {
-            if ($field->point()->x() == $column && $field->isEmpty()) {
+            if ($field->isEmpty() && $field->point()->x() === $column) {
                 return $position;
             }
         }
@@ -133,7 +133,7 @@ final class Board
         $fields = [];
 
         foreach ($this->fields as $field) {
-            if ($field->point()->x() == $column) {
+            if ($field->point()->x() === $column) {
                 $fields[] = $field;
             }
         }
@@ -153,7 +153,7 @@ final class Board
         $fields = [];
 
         foreach ($this->fields as $field) {
-            if ($field->point()->y() == $row) {
+            if ($field->point()->y() === $row) {
                 $fields[] = $field;
             }
         }
@@ -187,9 +187,7 @@ final class Board
             $points[] = new Point($x, $y);
         }
 
-        $fields = $this->findFieldsByPoints($points);
-
-        return $fields;
+        return $this->findFieldsByPoints($points);
     }
 
     /**
@@ -220,9 +218,7 @@ final class Board
             $points[] = new Point($x, $y);
         }
 
-        $fields = $this->findFieldsByPoints($points);
-
-        return $fields;
+        return  $this->findFieldsByPoints($points);
     }
 
     /**

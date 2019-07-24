@@ -97,7 +97,7 @@ final class ChatService
         $authors = json_decode($chat['authors'], true);
 
         // If authors are assigned to the chat, only those authors can write messages.
-        if (!empty($authors) && !in_array($authorId, $authors)) {
+        if (!empty($authors) && !in_array($authorId, $authors, true)) {
             throw new AuthorNotAllowedException();
         }
 

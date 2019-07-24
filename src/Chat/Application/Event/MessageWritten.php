@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Event;
 
+use DateTime;
+use DateTimeImmutable;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
@@ -35,24 +37,24 @@ final class MessageWritten implements DomainEvent
     private $message;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     private $writtenAt;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     private $occurredOn;
 
     /**
      * MessageWritten constructor.
      *
-     * @param ChatId             $chatId
-     * @param int                $messageId
-     * @param string             $ownerId
-     * @param string             $authorId
-     * @param string             $message
-     * @param \DateTimeImmutable $writtenAt
+     * @param ChatId            $chatId
+     * @param int               $messageId
+     * @param string            $ownerId
+     * @param string            $authorId
+     * @param string            $message
+     * @param DateTimeImmutable $writtenAt
      */
     public function __construct(
         ChatId $chatId,
@@ -60,7 +62,7 @@ final class MessageWritten implements DomainEvent
         string $ownerId,
         string $authorId,
         string $message,
-        \DateTimeImmutable $writtenAt
+        DateTimeImmutable $writtenAt
     ) {
         $this->chatId = $chatId;
         $this->messageId = $messageId;
@@ -82,7 +84,7 @@ final class MessageWritten implements DomainEvent
     /**
      * @inheritdoc
      */
-    public function occurredOn(): \DateTimeImmutable
+    public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }
@@ -106,7 +108,7 @@ final class MessageWritten implements DomainEvent
             'ownerId'   => $this->ownerId,
             'authorId'  => $this->authorId,
             'message'   => $this->message,
-            'writtenAt' => $this->writtenAt->format(\DateTime::ATOM)
+            'writtenAt' => $this->writtenAt->format(DateTime::ATOM)
         ];
     }
 }

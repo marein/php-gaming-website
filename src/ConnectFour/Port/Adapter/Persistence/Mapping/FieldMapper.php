@@ -47,9 +47,9 @@ final class FieldMapper implements Mapper
         $point = new Point($x, $y);
         $field = Field::empty($point);
 
-        if ($color == Stone::RED) {
+        if ($color === Stone::red()->color()) {
             $field = $field->placeStone(Stone::red());
-        } elseif ($color == STONE::YELLOW) {
+        } elseif ($color === Stone::yellow()->color()) {
             $field = $field->placeStone(Stone::yellow());
         }
 

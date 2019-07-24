@@ -48,7 +48,7 @@ final class AvarageTimeCalculator
     {
         $this->totalNumberOfTimes++;
 
-        if ($this->times->count() == self::MAXMIUM_NUMBER_OF_ITEMS) {
+        if ($this->times->count() === self::MAXMIUM_NUMBER_OF_ITEMS) {
             $this->times->dequeue();
         }
 
@@ -177,7 +177,7 @@ final class Client
 
         $start = microtime(true);
 
-        $response = @file_get_contents(
+        $response = (string)@file_get_contents(
             $this->endpoint . $url,
             false,
             stream_context_create($options)
@@ -248,7 +248,7 @@ while (count($games) > 0) {
 function performMove(Client $client, &$games)
 {
     foreach ($games as $key => $game) {
-        $column = rand(1, 7);
+        $column = random_int(1, 7);
 
         $client->move($game['id'], $column);
 

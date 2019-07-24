@@ -40,7 +40,7 @@ final class RefereeCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('connect-four:referee');

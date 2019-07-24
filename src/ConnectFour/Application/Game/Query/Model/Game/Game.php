@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
 use Gaming\Common\EventStore\StoredEvent;
+use JsonSerializable;
 
 /**
  * This class takes events from the event store and project these to itself.
@@ -13,7 +14,7 @@ use Gaming\Common\EventStore\StoredEvent;
  * we send the user the latest projection from the event store. This way, the domain model
  * itself stays clean and gets not inflated by a bunch of getters.
  */
-final class Game implements \JsonSerializable
+final class Game implements JsonSerializable
 {
     /**
      * The game id of the game.

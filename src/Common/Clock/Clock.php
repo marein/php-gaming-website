@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Clock;
 
+use DateTimeImmutable;
+use DateTimeZone;
+
 /**
  * Read this before you rant on this singleton.
  *
@@ -25,17 +28,16 @@ final class Clock
     /**
      * @var Clock|null
      */
-    private static $instance = null;
+    private static $instance;
 
     /**
-     * @var \DateTimeImmutable|null
+     * @var DateTimeImmutable|null
      */
     private $frozenAt;
 
     // This class cannot be instantiated.
     private function __construct()
     {
-        $this->frozenAt = null;
     }
 
     // This class cannot be cloned.
@@ -58,9 +60,9 @@ final class Clock
     /**
      * Get the current DateTime.
      *
-     * @return \DateTimeImmutable
+     * @return DateTimeImmutable
      */
-    public function now(): \DateTimeImmutable
+    public function now(): DateTimeImmutable
     {
         if ($this->frozenAt !== null) {
             return $this->frozenAt;
@@ -72,9 +74,9 @@ final class Clock
     /**
      * Freeze the clock.
      *
-     * @param \DateTimeImmutable|null $at
+     * @param DateTimeImmutable|null $at
      */
-    public function freeze(\DateTimeImmutable $at = null): void
+    public function freeze(DateTimeImmutable $at = null): void
     {
         $this->frozenAt = $at ?? $this->utc();
     }
@@ -90,10 +92,10 @@ final class Clock
     /**
      * Create an UTC DateTime.
      *
-     * @return \DateTimeImmutable
+     * @return DateTimeImmutable
      */
-    private function utc(): \DateTimeImmutable
+    private function utc(): DateTimeImmutable
     {
-        return new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        return new DateTimeImmutable('now', new DateTimeZone('UTC'));
     }
 }

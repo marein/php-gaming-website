@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\EventStore;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\TransactionIsolationLevel;
+use Exception;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
@@ -53,7 +55,7 @@ final class DoctrineEventStore implements EventStore
                 ->fetchAll();
 
             return $this->transformRowsToStoredEvents($rows);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new EventStoreException(
                 $e->getMessage(),
                 $e->getCode(),
@@ -79,7 +81,7 @@ final class DoctrineEventStore implements EventStore
                 ->fetchAll();
 
             return $this->transformRowsToStoredEvents($rows);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new EventStoreException(
                 $e->getMessage(),
                 $e->getCode(),
@@ -105,7 +107,7 @@ final class DoctrineEventStore implements EventStore
                 'json',
                 'datetime_immutable'
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new EventStoreException(
                 $e->getMessage(),
                 $e->getCode(),
@@ -135,7 +137,7 @@ final class DoctrineEventStore implements EventStore
             $this->connection->setTransactionIsolation($currentIsolationLevel);
 
             return $hasStoredEvent;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new UnrecoverableException(
                 'Something unexpected happened which can not rollback. Restart your process.',
                 $e->getCode(),
@@ -153,14 +155,17 @@ final class DoctrineEventStore implements EventStore
      */
     private function transformRowsToStoredEvents(array $rows): array
     {
-        return array_map(function ($row) {
-            return new StoredEvent(
-                (int)$row['id'],
-                $row['name'],
-                $row['aggregateId'],
-                $row['payload'],
-                new \DateTimeImmutable($row['occurredOn'])
-            );
-        }, $rows);
+        return array_map(
+            static function ($row) {
+                return new StoredEvent(
+                    (int)$row['id'],
+                    $row['name'],
+                    $row['aggregateId'],
+                    $row['payload'],
+                    new DateTimeImmutable($row['occurredOn'])
+                );
+            },
+            $rows
+        );
     }
 }

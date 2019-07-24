@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Event;
 
+use DateTimeImmutable;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
@@ -20,7 +21,7 @@ final class ChatInitiated implements DomainEvent
     private $ownerId;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     private $occurredOn;
 
@@ -48,7 +49,7 @@ final class ChatInitiated implements DomainEvent
     /**
      * @inheritdoc
      */
-    public function occurredOn(): \DateTimeImmutable
+    public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }

@@ -14,9 +14,11 @@ final class InvokeApplicationLifeCycleTest extends TestCase
     {
         $applicationLifeCycle = new InvokeApplicationLifeCycle();
 
-        $return = $applicationLifeCycle->run(function () {
-            return 12345;
-        });
+        $return = $applicationLifeCycle->run(
+            static function () {
+                return 12345;
+            }
+        );
 
         $this->assertSame(12345, $return);
     }

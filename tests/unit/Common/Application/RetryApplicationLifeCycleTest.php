@@ -29,7 +29,7 @@ final class RetryApplicationLifeCycleTest extends TestCase
      */
     public function itShouldRetry(): void
     {
-        $actionToCall = function () {
+        $actionToCall = static function () {
             // No op
         };
 
@@ -80,7 +80,6 @@ final class RetryApplicationLifeCycleTest extends TestCase
 
         // "run" always throws an exception.
         $applicationLifeCycle
-            ->expects($this->any())
             ->method('run')
             ->willThrowException(
                 new \RuntimeException('Custom exception')
@@ -98,9 +97,11 @@ final class RetryApplicationLifeCycleTest extends TestCase
             \RuntimeException::class
         );
 
-        $retryApplicationLifeCycle->run(function () {
-            // No op
-        });
+        $retryApplicationLifeCycle->run(
+            static function () {
+                // No op
+            }
+        );
     }
 
     /**
@@ -115,7 +116,6 @@ final class RetryApplicationLifeCycleTest extends TestCase
 
         // "run" always throws an exception.
         $applicationLifeCycle
-            ->expects($this->any())
             ->method('run')
             ->willThrowException(
                 new \RuntimeException('Custom exception')
@@ -123,7 +123,7 @@ final class RetryApplicationLifeCycleTest extends TestCase
 
         // Expect that "run" is called one time.
         $applicationLifeCycle
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('run');
 
         /** @var ApplicationLifeCycle $applicationLifeCycle */
@@ -133,8 +133,10 @@ final class RetryApplicationLifeCycleTest extends TestCase
             \InvalidArgumentException::class
         );
 
-        $retryApplicationLifeCycle->run(function () {
-            // No op
-        });
+        $retryApplicationLifeCycle->run(
+            static function () {
+                // No op
+            }
+        );
     }
 }

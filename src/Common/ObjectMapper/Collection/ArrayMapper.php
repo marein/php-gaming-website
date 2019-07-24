@@ -31,9 +31,12 @@ final class ArrayMapper implements Mapper
      */
     public function serialize($value)
     {
-        return array_map(function ($v) {
-            return $this->mapper->serialize($v);
-        }, $value);
+        return array_map(
+            function ($v) {
+                return $this->mapper->serialize($v);
+            },
+            $value
+        );
     }
 
     /**
@@ -45,8 +48,11 @@ final class ArrayMapper implements Mapper
      */
     public function deserialize($value)
     {
-        return array_map(function ($v) {
-            return $this->mapper->deserialize($v);
-        }, $value);
+        return array_map(
+            function ($v) {
+                return $this->mapper->deserialize($v);
+            },
+            $value
+        );
     }
 }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
+use Exception;
+use ReflectionClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -84,16 +86,16 @@ final class GamingExceptionListener
     /**
      * Returns the name of the exception without namespace and trailing "Exception".
      *
-     * @param \Exception $exception
+     * @param Exception $exception
      *
      * @return string
      */
-    private function exceptionName(\Exception $exception): string
+    private function exceptionName(Exception $exception): string
     {
         $exceptionName = str_replace(
             'Exception',
             '',
-            (new \ReflectionClass($exception))->getShortName()
+            (new ReflectionClass($exception))->getShortName()
         );
 
         $exceptionWords = preg_split(

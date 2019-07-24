@@ -47,7 +47,7 @@ final class Player
      */
     private function guardPlayerHasCorrectStone(Stone $stone): void
     {
-        if ($stone == Stone::none()) {
+        if ($stone === Stone::none()) {
             throw new PlayerHasInvalidStoneException('Stone should be Stone::red() or Stone::yellow().');
         }
     }

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-final class Move implements \JsonSerializable
+use JsonSerializable;
+
+final class Move implements JsonSerializable
 {
     /**
      * The x coordinate.

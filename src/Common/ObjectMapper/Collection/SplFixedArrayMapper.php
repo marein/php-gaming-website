@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\Common\ObjectMapper\Collection;
 
 use Gaming\Common\ObjectMapper\Mapper;
+use SplFixedArray;
 
 final class SplFixedArrayMapper implements Mapper
 {
@@ -25,7 +26,7 @@ final class SplFixedArrayMapper implements Mapper
     /**
      * Serialize the given \SplFixedArray instance.
      *
-     * @param \SplFixedArray $value The \SplFixedArray to serialize.
+     * @param SplFixedArray $value The \SplFixedArray to serialize.
      *
      * @return array
      */
@@ -39,10 +40,10 @@ final class SplFixedArrayMapper implements Mapper
      *
      * @param array $value The array to deserialize.
      *
-     * @return \SplFixedArray
+     * @return SplFixedArray
      */
     public function deserialize($value)
     {
-        return \SplFixedArray::fromArray($this->mapper->deserialize($value));
+        return SplFixedArray::fromArray($this->mapper->deserialize($value));
     }
 }

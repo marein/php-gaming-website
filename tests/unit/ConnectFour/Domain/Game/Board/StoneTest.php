@@ -10,9 +10,17 @@ class StoneTest extends TestCase
     /**
      * @test
      */
+    public function aNoneStoneCanBeCreated(): void
+    {
+        $this->assertSame(0, Stone::none()->color());
+    }
+
+    /**
+     * @test
+     */
     public function aRedStoneCanBeCreated(): void
     {
-        $this->assertSame(Stone::red()->color(), Stone::RED);
+        $this->assertSame(1, Stone::red()->color());
     }
 
     /**
@@ -20,14 +28,6 @@ class StoneTest extends TestCase
      */
     public function aYellowStoneCanBeCreated(): void
     {
-        $this->assertSame(Stone::yellow()->color(), Stone::YELLOW);
-    }
-
-    /**
-     * @test
-     */
-    public function aNoneStoneCanBeCreated(): void
-    {
-        $this->assertSame(Stone::none()->color(), Stone::NONE);
+        $this->assertSame(2, Stone::yellow()->color());
     }
 }

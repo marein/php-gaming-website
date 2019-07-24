@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Exception;
 
-final class GameNotFoundException extends \Exception
+use Exception;
+
+final class GameNotFoundException extends Exception
 {
 
 }

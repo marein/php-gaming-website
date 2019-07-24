@@ -5,6 +5,7 @@ namespace Gaming\Common\EventStore;
 
 use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
 use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
+use InvalidArgumentException;
 
 final class FollowEventStoreDispatcher
 {
@@ -46,14 +47,14 @@ final class FollowEventStoreDispatcher
      * @param int $batchSize The number of stored events which gets pulled out of the event store and
      *                       published through the stored event publisher.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws FailedTrackMostRecentPublishedStoredEventIdException
      * @throws FailedRetrieveMostRecentPublishedStoredEventIdException
      */
     public function dispatch(int $batchSize): void
     {
         if ($batchSize < 1) {
-            throw new \InvalidArgumentException('batchSize must be greater than 0');
+            throw new InvalidArgumentException('batchSize must be greater than 0');
         }
 
         $lastStoredEventId = $this->eventStorePointer->retrieveMostRecentPublishedStoredEventId();

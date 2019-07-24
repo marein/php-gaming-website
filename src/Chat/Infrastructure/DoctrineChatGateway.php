@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Infrastructure;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Gaming\Chat\Application\ChatGateway;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
-use Ramsey\Uuid\Uuid;
 
 final class DoctrineChatGateway implements ChatGateway
 {
-    const TABLE_CHAT = 'chat';
-    const TABLE_MESSAGE = 'message';
+    private const TABLE_CHAT = 'chat';
+    private const TABLE_MESSAGE = 'message';
 
     /**
      * @var Connection
@@ -56,7 +56,7 @@ final class DoctrineChatGateway implements ChatGateway
         ChatId $chatId,
         string $authorId,
         string $message,
-        \DateTimeImmutable $writtenAt
+        DateTimeImmutable $writtenAt
     ): int {
         $this->connection->insert(
             self::TABLE_MESSAGE,

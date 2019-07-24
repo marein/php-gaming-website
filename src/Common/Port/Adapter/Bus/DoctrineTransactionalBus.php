@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\Common\Port\Adapter\Bus;
 
 use Doctrine\DBAL\Driver\Connection;
+use Exception;
 use Gaming\Common\Bus\Bus;
 
 final class DoctrineTransactionalBus implements Bus
@@ -43,7 +44,7 @@ final class DoctrineTransactionalBus implements Bus
             $this->connection->commit();
 
             return $return;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->connection->rollBack();
 
             throw $exception;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Gaming\Common\ObjectMapper;
 
 use Gaming\Common\ObjectMapper\Exception\MapperException;
+use ReflectionClass;
+use ReflectionProperty;
 
 final class ObjectMapper implements Mapper
 {
@@ -13,7 +15,7 @@ final class ObjectMapper implements Mapper
     private $className;
 
     /**
-     * @var \ReflectionClass
+     * @var ReflectionClass
      */
     private $reflectionClass;
 
@@ -30,7 +32,7 @@ final class ObjectMapper implements Mapper
     public function __construct(string $className)
     {
         $this->className = $className;
-        $this->reflectionClass = new \ReflectionClass($this->className);
+        $this->reflectionClass = new ReflectionClass($this->className);
         $this->properties = [];
     }
 
@@ -56,7 +58,7 @@ final class ObjectMapper implements Mapper
             throw new MapperException('Property "' . $name . '" in class "' . $this->className . '" does not exists.');
         }
 
-        $reflectionProperty = new \ReflectionProperty($class->getName(), $name);
+        $reflectionProperty = new ReflectionProperty($class->getName(), $name);
         $reflectionProperty->setAccessible(true);
 
         $this->properties[] = new Property($name, $serializedName ?? $name, $reflectionProperty, $mapper);

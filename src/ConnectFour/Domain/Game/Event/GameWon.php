@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
 
+use DateTimeImmutable;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\ConnectFour\Domain\Game\GameId;
@@ -21,7 +22,7 @@ final class GameWon implements DomainEvent
     private $winnerPlayer;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     private $occurredOn;
 
@@ -60,7 +61,7 @@ final class GameWon implements DomainEvent
     /**
      * @inheritdoc
      */
-    public function occurredOn(): \DateTimeImmutable
+    public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }

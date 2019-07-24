@@ -29,7 +29,7 @@ final class RetryBusTest extends TestCase
      */
     public function itShouldRetry(): void
     {
-        $actionToCall = function () {
+        $actionToCall = static function () {
             // No op
         };
 
@@ -80,7 +80,6 @@ final class RetryBusTest extends TestCase
 
         // "handle" always throws an exception.
         $bus
-            ->expects($this->any())
             ->method('handle')
             ->willThrowException(
                 new \RuntimeException('Custom exception')
@@ -98,9 +97,11 @@ final class RetryBusTest extends TestCase
             \RuntimeException::class
         );
 
-        $retryBus->handle(function () {
-            // No op
-        });
+        $retryBus->handle(
+            static function () {
+                // No op
+            }
+        );
     }
 
     /**
@@ -115,7 +116,6 @@ final class RetryBusTest extends TestCase
 
         // "handle" always throws an exception.
         $bus
-            ->expects($this->any())
             ->method('handle')
             ->willThrowException(
                 new \RuntimeException('Custom exception')
@@ -123,7 +123,7 @@ final class RetryBusTest extends TestCase
 
         // Expect that "handle" is called one time.
         $bus
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('handle');
 
         /** @var Bus $bus */
@@ -133,8 +133,10 @@ final class RetryBusTest extends TestCase
             \InvalidArgumentException::class
         );
 
-        $retryBus->handle(function () {
-            // No op
-        });
+        $retryBus->handle(
+            static function () {
+                // No op
+            }
+        );
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game\Event;
 
+use DateTimeImmutable;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Memory\Domain\Model\Game\GameId;
@@ -22,7 +23,7 @@ final class GameStarted implements DomainEvent
     private $playerPool;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     private $occurredOn;
 
@@ -54,7 +55,7 @@ final class GameStarted implements DomainEvent
         return [
             'gameId'    => $this->gameId->toString(),
             'playerIds' => array_map(
-                function (Player $player) {
+                static function (Player $player) {
                     return $player->id();
                 },
                 $this->playerPool->players()
@@ -65,7 +66,7 @@ final class GameStarted implements DomainEvent
     /**
      * @inheritdoc
      */
-    public function occurredOn(): \DateTimeImmutable
+    public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }

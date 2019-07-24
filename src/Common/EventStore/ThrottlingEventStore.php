@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\Common\EventStore;
 
 use Gaming\Common\Domain\DomainEvent;
+use InvalidArgumentException;
 
 /**
  * This event store implementation puts the thread to sleep when no events are retrieved.
@@ -28,12 +29,12 @@ final class ThrottlingEventStore implements EventStore
      * @param EventStore $eventStore
      * @param int        $throttleTimeInMilliseconds
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(EventStore $eventStore, int $throttleTimeInMilliseconds)
     {
         if ($throttleTimeInMilliseconds < 1) {
-            throw new \InvalidArgumentException('throttleTimeInMilliseconds must be greater than 0');
+            throw new InvalidArgumentException('throttleTimeInMilliseconds must be greater than 0');
         }
 
         $this->eventStore = $eventStore;

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Application;
 
+use Exception;
+
 interface ApplicationLifeCycle
 {
     /**
@@ -11,7 +13,7 @@ interface ApplicationLifeCycle
      * @param callable $action
      *
      * @return mixed
-     * @throws \Exception Any application based exception
+     * @throws Exception Any application based exception
      */
     public function run(callable $action);
 }

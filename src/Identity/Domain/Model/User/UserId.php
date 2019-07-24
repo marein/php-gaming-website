@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User;
 
+use Exception;
 use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -51,7 +52,7 @@ final class UserId
     {
         try {
             return new self(Uuid::fromString($userId));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // This occurs if the given string is an invalid Uuid, hence an invalid UserId.
             // Throw exception, that the user can't be found.
             throw new UserNotFoundException();

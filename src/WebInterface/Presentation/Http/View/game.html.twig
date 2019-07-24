@@ -45,6 +45,6 @@
         </chat-widget>
     </div>
     <event-source url="/sse/sub?id=game-{{ game.gameId }}"
-                  {% if app.environment == 'dev' %}verbose{% endif %}>
+        {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>
 {% endblock %}

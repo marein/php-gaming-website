@@ -16,6 +16,6 @@ class ShuffleDealerTest extends TestCase
 
         $cardsWithoutDuplicates = array_unique($dealer->dealIn());
 
-        $this->assertEquals(3, count($cardsWithoutDuplicates));
+        $this->assertCount(3, $cardsWithoutDuplicates);
     }
 }

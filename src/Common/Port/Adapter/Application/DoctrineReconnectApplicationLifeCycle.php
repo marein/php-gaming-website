@@ -5,6 +5,7 @@ namespace Gaming\Common\Port\Adapter\Application;
 
 use Doctrine\DBAL\Connection;
 use Gaming\Common\Application\ApplicationLifeCycle;
+use InvalidArgumentException;
 
 /**
  * This class aims to get around the "Server has gone away" Exception.
@@ -42,7 +43,7 @@ final class DoctrineReconnectApplicationLifeCycle implements ApplicationLifeCycl
      * @param Connection           $connection
      * @param int                  $idleBetweenRunsInSeconds
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(
         ApplicationLifeCycle $applicationLifeCycle,
@@ -50,7 +51,7 @@ final class DoctrineReconnectApplicationLifeCycle implements ApplicationLifeCycl
         int $idleBetweenRunsInSeconds
     ) {
         if ($idleBetweenRunsInSeconds < 1) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Idle between runs in seconds must be greater than 0.'
             );
         }

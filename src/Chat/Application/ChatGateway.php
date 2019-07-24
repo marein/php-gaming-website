@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application;
 
+use DateTimeImmutable;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 
 interface ChatGateway
@@ -20,10 +21,10 @@ interface ChatGateway
     /**
      * Create a message.
      *
-     * @param ChatId             $chatId
-     * @param string             $authorId
-     * @param string             $message
-     * @param \DateTimeImmutable $writtenAt
+     * @param ChatId            $chatId
+     * @param string            $authorId
+     * @param string            $message
+     * @param DateTimeImmutable $writtenAt
      *
      * @return int
      */
@@ -31,7 +32,7 @@ interface ChatGateway
         ChatId $chatId,
         string $authorId,
         string $message,
-        \DateTimeImmutable $writtenAt
+        DateTimeImmutable $writtenAt
     ): int;
 
     /**

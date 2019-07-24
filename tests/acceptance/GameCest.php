@@ -35,7 +35,7 @@ class GameCest
         $I->pressKey('[name="message"]', \Facebook\WebDriver\WebDriverKeys::ENTER);
 
         $jane->does(
-            function (AcceptanceTester $I) {
+            static function (AcceptanceTester $I) {
                 $I->waitForText('Hi Jane.', 3, '#chat');
                 $I->fillField('message', 'Hi.');
                 $I->pressKey('[name="message"]', \Facebook\WebDriver\WebDriverKeys::ENTER);
@@ -59,7 +59,7 @@ class GameCest
         $gameId = $this->prepareOpenGameScenario($I);
 
         $friend->does(
-            function (AcceptanceTester $I) use ($gameId) {
+            static function (AcceptanceTester $I) use ($gameId) {
                 $I->amOnPage('/');
                 $I->waitForElement('[data-game-id="' . $gameId . '"]', 2);
                 $I->click('[data-game-id="' . $gameId . '"]');

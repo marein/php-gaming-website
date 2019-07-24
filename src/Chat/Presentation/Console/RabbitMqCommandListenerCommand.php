@@ -40,7 +40,7 @@ final class RabbitMqCommandListenerCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('chat:command-listener');

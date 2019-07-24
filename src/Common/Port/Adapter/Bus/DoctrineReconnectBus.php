@@ -5,6 +5,7 @@ namespace Gaming\Common\Port\Adapter\Bus;
 
 use Doctrine\DBAL\Connection;
 use Gaming\Common\Bus\Bus;
+use InvalidArgumentException;
 
 /**
  * This class aims to get around the "Server has gone away" Exception.
@@ -42,7 +43,7 @@ final class DoctrineReconnectBus implements Bus
      * @param Connection $connection
      * @param int        $idleBetweenHandlesInSeconds
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(
         Bus $bus,
@@ -50,7 +51,7 @@ final class DoctrineReconnectBus implements Bus
         int $idleBetweenHandlesInSeconds
     ) {
         if ($idleBetweenHandlesInSeconds < 1) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Idle between handles in seconds must be greater than 0.'
             );
         }

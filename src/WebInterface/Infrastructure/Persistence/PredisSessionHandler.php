@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Infrastructure\Persistence;
 
 use Predis\Client;
+use SessionHandlerInterface;
 
 /**
  * Class PredisSessionHandler
  *
  * There is no locking mechanism implemented. Currently, no locking mechanism is needed.
  */
-final class PredisSessionHandler implements \SessionHandlerInterface
+final class PredisSessionHandler implements SessionHandlerInterface
 {
     /**
      * @var Client
@@ -44,7 +45,7 @@ final class PredisSessionHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -52,7 +53,7 @@ final class PredisSessionHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function destroy($sessionId)
+    public function destroy($sessionId): bool
     {
         $this->predis->del([
             $this->generateKey($sessionId)
@@ -64,7 +65,7 @@ final class PredisSessionHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): bool
     {
         return true;
     }
@@ -72,7 +73,7 @@ final class PredisSessionHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function open($savePath, $name)
+    public function open($savePath, $name): bool
     {
         return true;
     }
@@ -80,7 +81,7 @@ final class PredisSessionHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function read($sessionId)
+    public function read($sessionId): string
     {
         return (string)$this->predis->get(
             $this->generateKey($sessionId)
@@ -90,7 +91,7 @@ final class PredisSessionHandler implements \SessionHandlerInterface
     /**
      * @inheritdoc
      */
-    public function write($sessionId, $sessionData)
+    public function write($sessionId, $sessionData): bool
     {
         $this->predis->setex(
             $this->generateKey($sessionId),

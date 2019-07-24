@@ -58,7 +58,7 @@ final class Field
      */
     public function isEmpty(): bool
     {
-        return $this->stone->color() == Stone::NONE;
+        return $this->stone->color() === Stone::none()->color();
     }
 
     /**

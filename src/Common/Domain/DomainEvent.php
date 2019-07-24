@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Domain;
 
+use DateTimeImmutable;
+
 interface DomainEvent
 {
     /**
@@ -15,9 +17,9 @@ interface DomainEvent
     /**
      * Returns the DateTimeImmutable when the event occurred.
      *
-     * @return \DateTimeImmutable
+     * @return DateTimeImmutable
      */
-    public function occurredOn(): \DateTimeImmutable;
+    public function occurredOn(): DateTimeImmutable;
 
     /**
      * Returns the aggregate id of the event.

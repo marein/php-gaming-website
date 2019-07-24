@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\ObjectMapper;
 
+use ReflectionProperty;
+
 /**
  * This class represents a property for the ObjectMapper.
  */
@@ -24,7 +26,7 @@ final class Property
     private $serializedName;
 
     /**
-     * @var \ReflectionProperty
+     * @var ReflectionProperty
      */
     private $reflectionProperty;
 
@@ -33,13 +35,13 @@ final class Property
      *
      * @param string              $name
      * @param string              $serializedName
-     * @param \ReflectionProperty $reflectionProperty
+     * @param ReflectionProperty $reflectionProperty
      * @param Mapper              $mapper
      */
     public function __construct(
         string $name,
         string $serializedName,
-        \ReflectionProperty $reflectionProperty,
+        ReflectionProperty $reflectionProperty,
         Mapper $mapper
     ) {
         $this->name = $name;
@@ -81,9 +83,9 @@ final class Property
     /**
      * Returns the reflection property.
      *
-     * @return \ReflectionProperty
+     * @return ReflectionProperty
      */
-    public function reflectionProperty(): \ReflectionProperty
+    public function reflectionProperty(): ReflectionProperty
     {
         return $this->reflectionProperty;
     }

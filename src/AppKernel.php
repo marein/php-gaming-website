@@ -46,7 +46,7 @@ class AppKernel extends BaseKernel
             new MonologBundle()
         ];
 
-        if (in_array($this->getEnvironment(), ['dev'], true)) {
+        if ($this->getEnvironment() === 'dev') {
             $bundles[] = new DebugBundle();
             $bundles[] = new WebProfilerBundle();
         }
@@ -57,7 +57,7 @@ class AppKernel extends BaseKernel
     /**
      * @inheritdoc
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load($this->getProjectDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }

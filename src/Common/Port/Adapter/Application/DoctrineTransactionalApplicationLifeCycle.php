@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\Common\Port\Adapter\Application;
 
 use Doctrine\DBAL\Driver\Connection;
+use Exception;
 use Gaming\Common\Application\ApplicationLifeCycle;
 
 final class DoctrineTransactionalApplicationLifeCycle implements ApplicationLifeCycle
@@ -36,7 +37,7 @@ final class DoctrineTransactionalApplicationLifeCycle implements ApplicationLife
             $this->connection->commit();
 
             return $return;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->connection->rollBack();
 
             throw $exception;

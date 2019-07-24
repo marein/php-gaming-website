@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
+use DateTimeImmutable;
+
 final class StoredEvent
 {
     /**
@@ -26,7 +28,7 @@ final class StoredEvent
     private $payload;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     private $occurredOn;
 
@@ -37,14 +39,14 @@ final class StoredEvent
      * @param string             $name
      * @param string             $aggregateId
      * @param string             $payload
-     * @param \DateTimeImmutable $occurredOn
+     * @param DateTimeImmutable $occurredOn
      */
     public function __construct(
         int $id,
         string $name,
         string $aggregateId,
         string $payload,
-        \DateTimeImmutable $occurredOn
+        DateTimeImmutable $occurredOn
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -86,9 +88,9 @@ final class StoredEvent
     }
 
     /**
-     * @return \DateTimeImmutable
+     * @return DateTimeImmutable
      */
-    public function occurredOn(): \DateTimeImmutable
+    public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }

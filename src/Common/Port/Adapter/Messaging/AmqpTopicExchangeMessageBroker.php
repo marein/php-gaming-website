@@ -57,7 +57,7 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     /**
      * Used for lazy load the connection.
      */
-    private function initialize()
+    private function initialize(): void
     {
         if (!$this->isAlreadyInitialized) {
             $amqpConnectionFactory = new AmqpConnectionFactory($this->dsn);
@@ -148,7 +148,7 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
         );
 
         while (true) {
-            $message = $enqueueConsumer->receive(0);
+            $message = $enqueueConsumer->receive();
 
             $consumer->handle(
                 new Message(

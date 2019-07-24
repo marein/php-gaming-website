@@ -8,7 +8,7 @@ use Gaming\ConnectFour\Domain\Game\Exception\InvalidNumberOfRequiredMatchesExcep
 
 final class VerticalWinningRule implements WinningRule
 {
-    const MINIMUM = 4;
+    private const MINIMUM = 4;
 
     /**
      * @var int

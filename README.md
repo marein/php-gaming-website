@@ -242,7 +242,7 @@ command and query bus I use in the
 context.
 
 The public interface is formed by a
-[controller](/src/User/Port/Adapter/Http/UserController.php),
+[controller](/src/Identity/Port/Adapter/Http/UserController.php),
 which can be called up via http.
 
 ### Web Interface
@@ -253,9 +253,9 @@ acts like an
 [Backend For Frontend](https://samnewman.io/patterns/architectural/bff/).
 All browser interactions go through this context. The main responsibilities are the session management
 and the aggregation of the data from the other contexts. The
-[JavaScript](/src/WebInterface/Presentation/Http/JavaScript)
+[JavaScript](/web/assets/js)
 and
-[StyleSheet](/src/WebInterface/Presentation/Http/StyleSheet)
+[StyleSheet](/web/assets/css)
 are also defined here.
 
 There're currently three pages.

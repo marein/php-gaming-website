@@ -81,7 +81,7 @@ final class PlayerPool
     {
         $players = array_filter(
             $this->players,
-            function (Player $current) use ($player) {
+            static function (Player $current) use ($player) {
                 return $player->id() !== $current->id();
             }
         );

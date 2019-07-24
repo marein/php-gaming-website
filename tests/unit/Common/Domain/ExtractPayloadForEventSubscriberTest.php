@@ -16,7 +16,7 @@ final class ExtractPayloadForEventSubscriberTest extends TestCase
             'event-name'
         );
 
-        $this->assertSame(null, $subscriber->payload);
+        $this->assertNull($subscriber->payload());
     }
 
     /**
@@ -37,7 +37,7 @@ final class ExtractPayloadForEventSubscriberTest extends TestCase
         /** @var DomainEvent $domainEvent */
         $subscriber->handle($domainEvent);
 
-        $this->assertSame($expected, $subscriber->payload);
+        $this->assertSame($expected, $subscriber->payload());
     }
 
     /**

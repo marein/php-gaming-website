@@ -71,7 +71,9 @@ final class Players
     {
         if ($this->currentPlayer->id() === $playerId) {
             return $this->currentPlayer;
-        } elseif ($this->nextPlayer->id() === $playerId) {
+        }
+
+        if ($this->nextPlayer->id() === $playerId) {
             return $this->nextPlayer;
         }
 
@@ -90,7 +92,9 @@ final class Players
     {
         if ($this->currentPlayer->id() === $playerId) {
             return $this->nextPlayer;
-        } elseif ($this->nextPlayer->id() === $playerId) {
+        }
+
+        if ($this->nextPlayer->id() === $playerId) {
             return $this->currentPlayer;
         }
 

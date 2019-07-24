@@ -3,14 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Domain;
 
-/**
- * @property-read array|null $payload
- * The payload of the given event name when handled, null otherwise.
- */
 final class ExtractPayloadForEventSubscriber implements DomainEventSubscriber
 {
-    private const READONLY_PROPERTIES = ['payload'];
-
     /**
      * @var array|null
      */
@@ -48,18 +42,10 @@ final class ExtractPayloadForEventSubscriber implements DomainEventSubscriber
     }
 
     /**
-     * Accessor for private readonly properties.
-     *
-     * @param string $name
-     *
-     * @return mixed
+     * @return array|null
      */
-    public function __get(string $name)
+    public function payload(): ?array
     {
-        if (in_array($name, self::READONLY_PROPERTIES)) {
-            return $this->$name;
-        }
-
-        // todo: Trigger error if not in array.
+        return $this->payload;
     }
 }

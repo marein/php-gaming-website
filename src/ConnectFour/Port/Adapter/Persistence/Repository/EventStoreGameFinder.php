@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
+use Exception;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
@@ -74,7 +75,7 @@ final class EventStoreGameFinder implements GameFinder
     {
         try {
             GameId::fromString($gameId);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new GameNotFoundException();
         }
     }

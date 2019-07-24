@@ -54,7 +54,7 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('chat:publish-stored-events-to-rabbit-mq');

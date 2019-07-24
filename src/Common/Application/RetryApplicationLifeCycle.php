@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Application;
 
+use Exception;
+use InvalidArgumentException;
+
 final class RetryApplicationLifeCycle implements ApplicationLifeCycle
 {
     /**
@@ -27,7 +30,7 @@ final class RetryApplicationLifeCycle implements ApplicationLifeCycle
      * @param int                  $numberOfRetries
      * @param string               $retryOnException FQCN of the exception which trigger the retries.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(
         ApplicationLifeCycle $applicationLifeCycle,
@@ -35,7 +38,7 @@ final class RetryApplicationLifeCycle implements ApplicationLifeCycle
         string $retryOnException
     ) {
         if ($numberOfRetries < 1) {
-            throw new \InvalidArgumentException('Number of retries must be greater than 0.');
+            throw new InvalidArgumentException('Number of retries must be greater than 0.');
         }
 
         $this->applicationLifeCycle = $applicationLifeCycle;
@@ -59,13 +62,13 @@ final class RetryApplicationLifeCycle implements ApplicationLifeCycle
      * @param int      $currentTry
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     private function runOrThrow(callable $action, int $currentTry = 1)
     {
         try {
             return $this->applicationLifeCycle->run($action);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             if ($exception instanceof $this->retryOnException && $currentTry < $this->numberOfRetries) {
                 return $this->runOrThrow($action, $currentTry + 1);
             }

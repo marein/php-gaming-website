@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Bus;
 
+use Exception;
+
 interface Bus
 {
     /**
@@ -11,7 +13,7 @@ interface Bus
      * @param object $message
      *
      * @return mixed
-     * @throws \Exception Any application based exception
+     * @throws Exception Any application based exception
      */
     public function handle(object $message);
 }

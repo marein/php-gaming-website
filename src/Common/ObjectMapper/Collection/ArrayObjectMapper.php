@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\ObjectMapper\Collection;
 
+use ArrayObject;
 use Gaming\Common\ObjectMapper\Mapper;
 
 final class ArrayObjectMapper implements Mapper
@@ -25,7 +26,7 @@ final class ArrayObjectMapper implements Mapper
     /**
      * Serialize the given \ArrayObject instance.
      *
-     * @param \ArrayObject $value The \ArrayObject to serialize.
+     * @param ArrayObject $value The \ArrayObject to serialize.
      *
      * @return array
      */
@@ -39,10 +40,10 @@ final class ArrayObjectMapper implements Mapper
      *
      * @param array $value The array to deserialize.
      *
-     * @return \ArrayObject
+     * @return ArrayObject
      */
     public function deserialize($value)
     {
-        return new \ArrayObject($this->mapper->deserialize($value));
+        return new ArrayObject($this->mapper->deserialize($value));
     }
 }

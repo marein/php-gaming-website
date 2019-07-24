@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Exception;
 
-class ChatException extends \Exception
+use Exception;
+
+class ChatException extends Exception
 {
 
 }

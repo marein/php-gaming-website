@@ -11,7 +11,7 @@ final class DoctrineEventStoreSchema
      * @param Schema $schema
      * @param string $tableName
      */
-    public static function up(Schema $schema, string $tableName)
+    public static function up(Schema $schema, string $tableName): void
     {
         $table = $schema->createTable($tableName);
 
@@ -29,7 +29,7 @@ final class DoctrineEventStoreSchema
      * @param Schema $schema
      * @param string $tableName
      */
-    public static function down(Schema $schema, string $tableName)
+    public static function down(Schema $schema, string $tableName): void
     {
         $schema->dropTable($tableName);
     }
