@@ -14,7 +14,7 @@ extensions:
 # We want a high test coverage for our business logic and some special classes.
 # Other parts are covered by acceptance tests, which have no coverage report.
 #
-# Libraries in the /code/src/Common folder have tests but are not counted in the coverage report.
+# Libraries in the /src/Common folder have tests but are not counted in the coverage report.
 # Those libraries are meant to be split out in the future. They don't belong to this project.
 coverage:
     enabled: true
