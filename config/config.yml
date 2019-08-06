@@ -8,6 +8,8 @@ framework:
     secret: '%env(APPLICATION_KERNEL_SECRET)%'
     templating:
         engines: ['twig']
+    validation:
+        enabled: true
     router:
         resource: "%kernel.project_dir%/config/routing.yml"
 
