@@ -5,9 +5,16 @@ services:
         class: Gaming\Common\Port\Adapter\Bus\DoctrineReconnectBus
         public: false
         arguments:
-            - '@connect-four.retry-command-bus'
+            - '@connect-four.symfony-validator-command-bus'
             - '@connect-four.doctrine-dbal'
             - 300
+
+    connect-four.symfony-validator-command-bus:
+        class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
+        public: false
+        arguments:
+            - '@connect-four.retry-command-bus'
+            - '@validator'
 
     connect-four.retry-command-bus:
         class: Gaming\Common\Bus\RetryBus

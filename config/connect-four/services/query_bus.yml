@@ -2,6 +2,13 @@ services:
 
     # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.query-bus:
+        class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
+        public: false
+        arguments:
+            - '@connect-four.routing-query-bus'
+            - '@validator'
+
+    connect-four.routing-query-bus:
         class: Gaming\Common\Bus\RoutingBus
         public: false
         arguments:
