@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Model\Subscription;
+namespace Gaming\Tests\Unit\Common\MessageBroker\Model\Subscription;
 
 use Gaming\Common\MessageBroker\Exception\InvalidDomainException;
+use Gaming\Common\MessageBroker\Model\Subscription\WholeDomain;
 use PHPUnit\Framework\TestCase;
 
 class WholeDomainTest extends TestCase

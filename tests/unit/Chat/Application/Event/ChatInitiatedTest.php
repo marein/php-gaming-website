@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Chat\Application\Event;
+namespace Gaming\Tests\Unit\Chat\Application\Event;
 
 use Gaming\Chat\Application\ChatId;
+use Gaming\Chat\Application\Event\ChatInitiated;
 use Gaming\Common\Clock\Clock;
 use PHPUnit\Framework\TestCase;
 

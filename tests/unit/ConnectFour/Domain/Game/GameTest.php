@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game;
+namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
+use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
@@ -18,6 +19,7 @@ use Gaming\ConnectFour\Domain\Game\Exception\GameRunningException;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
+use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
 use PHPUnit\Framework\TestCase;
 

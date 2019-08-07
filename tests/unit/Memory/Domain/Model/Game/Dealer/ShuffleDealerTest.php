@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Memory\Domain\Model\Game\Dealer;
+namespace Gaming\Tests\Unit\Memory\Domain\Model\Game\Dealer;
 
+use Gaming\Memory\Domain\Model\Game\Dealer\ShuffleDealer;
 use PHPUnit\Framework\TestCase;
 
 class ShuffleDealerTest extends TestCase

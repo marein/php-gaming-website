@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Memory\Domain\Model\Game\Event;
+namespace Gaming\Tests\Unit\Memory\Domain\Model\Game\Event;
 
 use Gaming\Common\Clock\Clock;
+use Gaming\Memory\Domain\Model\Game\Event\GameClosed;
 use Gaming\Memory\Domain\Model\Game\GameId;
 use PHPUnit\Framework\TestCase;
 

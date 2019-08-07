@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game\Event;
+namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Event;
 
 use Gaming\Common\Clock\Clock;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
+use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Player;
 use PHPUnit\Framework\TestCase;

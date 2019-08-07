@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game\Board;
+namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 
+use Gaming\ConnectFour\Domain\Game\Board\Point;
 use PHPUnit\Framework\TestCase;
 
 class PointTest extends TestCase

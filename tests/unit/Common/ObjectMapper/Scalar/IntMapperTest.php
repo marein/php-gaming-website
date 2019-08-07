@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\ObjectMapper\Scalar;
+namespace Gaming\Tests\Unit\Common\ObjectMapper\Scalar;
 
+use Gaming\Common\ObjectMapper\Scalar\IntMapper;
 use PHPUnit\Framework\TestCase;
 
 final class IntMapperTest extends TestCase

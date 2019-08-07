@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Memory\Domain\Model\Game;
+namespace Gaming\Tests\Unit\Memory\Domain\Model\Game;
 
 use Gaming\Memory\Domain\Model\Game\Dealer\LazyDealer;
 use Gaming\Memory\Domain\Model\Game\Event\GameClosed;
@@ -11,6 +11,7 @@ use Gaming\Memory\Domain\Model\Game\Event\PlayerJoined;
 use Gaming\Memory\Domain\Model\Game\Event\PlayerLeaved;
 use Gaming\Memory\Domain\Model\Game\Exception\GameNotOpenException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotAllowedToStartGameException;
+use Gaming\Memory\Domain\Model\Game\Game;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase

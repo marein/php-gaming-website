@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game;
+namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Domain\Game\GameId;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 

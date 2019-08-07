@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\ObjectMapper\Collection;
+namespace Gaming\Tests\Unit\Common\ObjectMapper\Collection;
 
+use Gaming\Common\ObjectMapper\Collection\ArrayMapper;
 use Gaming\Common\ObjectMapper\Mapper;
 use PHPUnit\Framework\TestCase;
 

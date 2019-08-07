@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Application;
+namespace Gaming\Tests\Unit\Chat\Application;
 
 use Gaming\Chat\Application\ChatGateway;
 use Gaming\Chat\Application\ChatId;
@@ -10,6 +10,8 @@ use Gaming\Chat\Application\Event\ChatInitiated;
 use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
+use Gaming\Common\Application\ApplicationLifeCycle;
+use Gaming\Common\Application\InvokeApplicationLifeCycle;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\EventStore\EventStore;
 use PHPUnit\Framework\TestCase;

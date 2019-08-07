@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game;
+namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
 use Gaming\ConnectFour\Domain\Game\Board\Size;
+use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
 use PHPUnit\Framework\TestCase;
 

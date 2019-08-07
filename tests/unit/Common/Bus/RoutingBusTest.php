@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Bus;
+namespace Gaming\Tests\Unit\Common\Bus;
 
 use Gaming\Common\Bus\Exception\MissingHandlerException;
+use Gaming\Common\Bus\RoutingBus;
 use PHPUnit\Framework\TestCase;
 
 final class RoutingBusTest extends TestCase

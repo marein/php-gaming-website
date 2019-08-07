@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Model\Message;
+namespace Gaming\Tests\Unit\Common\MessageBroker\Model\Message;
 
 use Gaming\Common\MessageBroker\Exception\InvalidDomainException;
 use Gaming\Common\MessageBroker\Exception\InvalidFormatException;
 use Gaming\Common\MessageBroker\Exception\InvalidNameException;
+use Gaming\Common\MessageBroker\Model\Message\Name;
 use PHPUnit\Framework\TestCase;
 
 class NameTest extends TestCase

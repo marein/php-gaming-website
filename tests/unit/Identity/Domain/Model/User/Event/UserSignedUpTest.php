@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Identity\Domain\Model\User\Event;
+namespace Gaming\Tests\Unit\Identity\Domain\Model\User\Event;
 
 use Gaming\Common\Clock\Clock;
+use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gaming\Identity\Domain\Model\User\UserId;
 use PHPUnit\Framework\TestCase;
 

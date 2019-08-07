@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game\Board;
+namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 
+use Gaming\ConnectFour\Domain\Game\Board\Field;
+use Gaming\ConnectFour\Domain\Game\Board\Point;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use PHPUnit\Framework\TestCase;
 
 class FieldTest extends TestCase

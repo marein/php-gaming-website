@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Port\Adapter\Bus;
+namespace Gaming\Tests\Unit\Common\Port\Adapter\Bus;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Violation;
+use Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationInterface;

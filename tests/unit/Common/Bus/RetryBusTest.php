@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Bus;
+namespace Gaming\Tests\Unit\Common\Bus;
 
+use Gaming\Common\Bus\Bus;
+use Gaming\Common\Bus\RetryBus;
 use PHPUnit\Framework\TestCase;
 
 final class RetryBusTest extends TestCase

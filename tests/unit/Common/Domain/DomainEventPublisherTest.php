@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Domain;
+namespace Gaming\Tests\Unit\Common\Domain;
 
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\DomainEventPublisher;
+use Gaming\Common\Domain\DomainEventSubscriber;
 use PHPUnit\Framework\TestCase;
 
 final class DomainEventPublisherTest extends TestCase

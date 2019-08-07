@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Chat\Application;
+namespace Gaming\Tests\Unit\Chat\Application;
 
+use Gaming\Chat\Application\ChatId;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;

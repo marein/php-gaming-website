@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Application;
+namespace Gaming\Tests\Unit\Common\Application;
 
+use Gaming\Common\Application\ApplicationLifeCycle;
+use Gaming\Common\Application\RetryApplicationLifeCycle;
 use PHPUnit\Framework\TestCase;
 
 final class RetryApplicationLifeCycleTest extends TestCase

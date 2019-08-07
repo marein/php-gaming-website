@@ -1,11 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Identity\Domain\Model\User;
+namespace Gaming\Tests\Unit\Identity\Domain\Model\User;
 
+use Gaming\Identity\Domain\Model\User\Credentials;
 use Gaming\Identity\Domain\Model\User\Event\UserArrived;
 use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
+use Gaming\Identity\Domain\Model\User\User;
 use Gaming\Identity\Port\Adapter\HashAlgorithm\NotSecureHashAlgorithm;
 use PHPUnit\Framework\TestCase;
 

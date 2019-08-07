@@ -1,8 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game\Board;
+namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 
+use Gaming\ConnectFour\Domain\Game\Board\Board;
+use Gaming\ConnectFour\Domain\Game\Board\Field;
+use Gaming\ConnectFour\Domain\Game\Board\Point;
+use Gaming\ConnectFour\Domain\Game\Board\Size;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Gaming\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 use PHPUnit\Framework\TestCase;

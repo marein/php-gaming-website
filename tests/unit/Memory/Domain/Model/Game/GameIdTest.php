@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Memory\Domain\Model\Game;
+namespace Gaming\Tests\Unit\Memory\Domain\Model\Game;
 
 use Gaming\Memory\Domain\Model\Game\Exception\GameNotFoundException;
+use Gaming\Memory\Domain\Model\Game\GameId;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 

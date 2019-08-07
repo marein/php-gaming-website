@@ -1,11 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Memory\Domain\Model\Game;
+namespace Gaming\Tests\Unit\Memory\Domain\Model\Game;
 
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotJoinedException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerPoolIsEmptyException;
+use Gaming\Memory\Domain\Model\Game\Player;
+use Gaming\Memory\Domain\Model\Game\PlayerPool;
 use PHPUnit\Framework\TestCase;
 
 class PlayerPoolTest extends TestCase

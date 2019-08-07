@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Port\Adapter\Messaging;
+namespace Gaming\Tests\Unit\Common\Port\Adapter\Messaging;
 
 use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
 use Gaming\Common\MessageBroker\Model\Subscription\WholeDomain;
+use Gaming\Common\Port\Adapter\Messaging\SubscriptionsToRoutingKeysTranslator;
 use PHPUnit\Framework\TestCase;
 
 class SubscriptionsToRoutingKeysTranslatorTest extends TestCase

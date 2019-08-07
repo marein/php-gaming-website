@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game\WinningRule;
+namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\WinningRule;
 
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
+use Gaming\ConnectFour\Domain\Game\WinningRule\MultipleWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRule;
 use PHPUnit\Framework\TestCase;
 
 class MultipleWinningRuleTest extends TestCase

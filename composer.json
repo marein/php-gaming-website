@@ -12,6 +12,11 @@
       "Gaming\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Gaming\\Tests\\Unit\\": "tests/unit/"
+    }
+  },
   "require": {
     "php": ">=7.3",
     "ext-json": "*",

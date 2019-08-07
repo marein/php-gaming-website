@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Identity\Domain\Model\User;
+namespace Gaming\Tests\Unit\Identity\Domain\Model\User;
 
 use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
+use Gaming\Identity\Domain\Model\User\UserId;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 

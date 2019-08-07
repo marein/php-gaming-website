@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Application;
+namespace Gaming\Tests\Unit\Common\Application;
 
+use Gaming\Common\Application\InvokeApplicationLifeCycle;
 use PHPUnit\Framework\TestCase;
 
 final class InvokeApplicationLifeCycleTest extends TestCase

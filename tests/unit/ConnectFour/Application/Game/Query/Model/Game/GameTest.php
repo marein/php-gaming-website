@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
+namespace Gaming\Tests\Unit\ConnectFour\Application\Game\Query\Model\Game;
 
 use Gaming\Common\EventStore\StoredEvent;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase

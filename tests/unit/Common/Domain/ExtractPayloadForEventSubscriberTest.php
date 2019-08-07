@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\Domain;
+namespace Gaming\Tests\Unit\Common\Domain;
 
+use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\ExtractPayloadForEventSubscriber;
 use PHPUnit\Framework\TestCase;
 
 final class ExtractPayloadForEventSubscriberTest extends TestCase
