@@ -1,0 +1,41 @@
+services:
+
+    # The following definitions decorate the routing command bus. This could be done with a factory object.
+    identity.command-bus:
+        class: Gaming\Common\Port\Adapter\Bus\DoctrineReconnectBus
+        public: false
+        arguments:
+            - '@identity.symfony-validator-command-bus'
+            - '@identity.doctrine-dbal'
+            - 300
+
+    identity.symfony-validator-command-bus:
+        class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
+        public: false
+        arguments:
+            - '@identity.retry-command-bus'
+            - '@validator'
+
+    identity.retry-command-bus:
+        class: Gaming\Common\Bus\RetryBus
+        public: false
+        arguments:
+            - '@identity.doctrine-transactional-command-bus'
+            - 3
+            - 'Gaming\Common\Domain\Exception\ConcurrencyException'
+
+    identity.doctrine-transactional-command-bus:
+        class: Gaming\Common\Port\Adapter\Bus\DoctrineTransactionalBus
+        public: false
+        arguments:
+            - '@identity.routing-command-bus'
+            - '@identity.doctrine-dbal'
+
+    # This is pretty ugly. We can use tags, or create this via a factory in php.
+    identity.routing-command-bus:
+        class: Gaming\Common\Bus\RoutingBus
+        public: false
+        arguments:
+            -
+                'Gaming\Identity\Application\User\Command\ArriveCommand': ['@identity.user-service', 'arrive']
+                'Gaming\Identity\Application\User\Command\SignUpCommand': ['@identity.user-service', 'signUp']

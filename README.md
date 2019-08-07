@@ -169,9 +169,9 @@ As the
 [folder structure](/src/ConnectFour)
 shows, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
-uses a command and query bus. The opposite of this approach is the traditional application service I use in the
-[Identity](#identity)
-context.
+is split into several callable classes. Cross-cutting concerns are handled via a decorated
+[mediator](/src/Common/Bus/Bus.php)
+instead of handling them directly inside the classes.
 
 The public interface is formed by a
 [controller](/src/ConnectFour/Port/Adapter/Http/GameController.php),
@@ -236,10 +236,9 @@ As the
 [folder structure](/src/Identity)
 shows, this context uses the "Ports and Adapters" architecture. The
 [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
-uses a traditional application service. The opposite of this approach is the
-command and query bus I use in the
-[Connect Four](#connect-four)
-context.
+uses a traditional application service. Cross-cutting concerns are handled via a decorated
+[mediator](/src/Common/Bus/Bus.php)
+instead of handling them directly inside the service.
 
 The public interface is formed by a
 [controller](/src/Identity/Port/Adapter/Http/UserController.php),

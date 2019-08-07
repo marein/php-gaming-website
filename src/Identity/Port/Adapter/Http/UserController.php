@@ -3,27 +3,27 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Http;
 
+use Gaming\Common\Bus\Bus;
 use Gaming\Identity\Application\User\Command\ArriveCommand;
 use Gaming\Identity\Application\User\Command\SignUpCommand;
-use Gaming\Identity\Application\User\UserService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final class UserController
 {
     /**
-     * @var UserService
+     * @var Bus
      */
-    private $userService;
+    private $commandBus;
 
     /**
-     * UserService constructor.
+     * UserController constructor.
      *
-     * @param UserService $userService
+     * @param Bus $commandBus
      */
-    public function __construct(UserService $userService)
+    public function __construct(Bus $commandBus)
     {
-        $this->userService = $userService;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -31,7 +31,7 @@ final class UserController
      */
     public function arriveAction(): JsonResponse
     {
-        $userId = $this->userService->arrive(
+        $userId = $this->commandBus->handle(
             new ArriveCommand()
         );
 
@@ -49,7 +49,7 @@ final class UserController
     {
         $userId = $request->query->get('userId');
 
-        $this->userService->signUp(
+        $this->commandBus->handle(
             new SignUpCommand(
                 $userId,
                 $request->request->get('username'),

@@ -10,7 +10,7 @@ services:
         class: Gaming\Identity\Port\Adapter\Http\UserController
         public: false
         arguments:
-            - '@identity.user-service'
+            - '@identity.command-bus'
 
     identity.user-repository:
         class: Gaming\Identity\Port\Adapter\Persistence\Repository\DoctrineUserRepository
@@ -27,6 +27,5 @@ services:
         class: Gaming\Identity\Application\User\UserService
         public: false
         arguments:
-            - '@identity.application-life-cycle'
             - '@identity.user-repository'
             - '@identity.hash-algorithm'
