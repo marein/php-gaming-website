@@ -5,6 +5,7 @@ namespace Gaming\Common\Bus;
 
 use Exception;
 use Gaming\Common\Bus\Exception\ApplicationException;
+use Gaming\Common\Bus\Exception\MissingHandlerException;
 
 interface Bus
 {
@@ -15,6 +16,7 @@ interface Bus
      *
      * @return mixed
      * @throws ApplicationException
+     * @throws MissingHandlerException
      * @throws Exception Any application based exception
      */
     public function handle(object $message);
