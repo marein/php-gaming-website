@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Handles the exception for the whole gaming domain based on convention.
  * For example, if an exception has "NotFound" in its name, this class sets the status code to 404.
  *
- * todo: Return meaningful exception messages for the user.
+ * @deprecated See https://github.com/marein/php-gaming-website/issues/34
  */
 final class GamingExceptionListener
 {
