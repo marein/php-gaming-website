@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application;
 
+use Gaming\Chat\Application\Command\InitiateChatCommand;
+use Gaming\Chat\Application\Command\WriteMessageCommand;
 use Gaming\Chat\Application\Event\ChatInitiated;
 use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
+use Gaming\Chat\Application\Query\MessagesQuery;
 use Gaming\Common\Application\ApplicationLifeCycle;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\EventStore\EventStore;
@@ -53,19 +56,18 @@ final class ChatService
     /**
      * Initiate a new chat.
      *
-     * @param string $ownerId
-     * @param array  $authors
+     * @param InitiateChatCommand $initiateChatCommand
      *
      * @return string
      */
-    public function initiateChat(string $ownerId, array $authors): string
+    public function initiateChat(InitiateChatCommand $initiateChatCommand): string
     {
         return $this->applicationLifeCycle->run(
-            function () use ($ownerId, $authors) {
-                $chatId = $this->chatGateway->create($ownerId, $authors);
+            function () use ($initiateChatCommand) {
+                $chatId = $this->chatGateway->create($initiateChatCommand->ownerId(), $initiateChatCommand->authors());
 
                 $this->eventStore->append(
-                    new ChatInitiated($chatId, $ownerId)
+                    new ChatInitiated($chatId, $initiateChatCommand->ownerId())
                 );
 
                 return $chatId->toString();
@@ -76,18 +78,17 @@ final class ChatService
     /**
      * Write a message to the chat.
      *
-     * @param string $chatId
-     * @param string $authorId
-     * @param string $message
+     * @param WriteMessageCommand $writeMessageCommand
      *
      * @throws ChatNotFoundException
      * @throws AuthorNotAllowedException
      * @throws EmptyMessageException
      */
-    public function writeMessage(string $chatId, string $authorId, string $message): void
+    public function writeMessage(WriteMessageCommand $writeMessageCommand): void
     {
-        $chatId = ChatId::fromString($chatId);
-        $message = trim(substr($message, 0, 140));
+        $chatId = ChatId::fromString($writeMessageCommand->chatId());
+        $authorId = $writeMessageCommand->authorId();
+        $message = trim(substr($writeMessageCommand->message(), 0, 140));
 
         if ($message === '') {
             throw new EmptyMessageException();
@@ -118,20 +119,17 @@ final class ChatService
     /**
      * Get messages by chat.
      *
-     * @param string $chatId
-     * @param string $authorId
-     * @param int    $offset
-     * @param int    $limit
+     * @param MessagesQuery $messagesQuery
      *
      * @return array
      */
-    public function messages(string $chatId, string $authorId, int $offset, int $limit): array
+    public function messages(MessagesQuery $messagesQuery): array
     {
         return $this->chatGateway->messages(
-            ChatId::fromString($chatId),
-            $authorId,
-            $offset,
-            $limit
+            ChatId::fromString($messagesQuery->chatId()),
+            $messagesQuery->authorId(),
+            $messagesQuery->offset(),
+            $messagesQuery->limit()
         );
     }
 }

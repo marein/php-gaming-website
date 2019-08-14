@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\Chat\Infrastructure\Messaging;
 
 use Gaming\Chat\Application\ChatService;
+use Gaming\Chat\Application\Command\InitiateChatCommand;
 use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
 use Gaming\Common\MessageBroker\Model\Consumer\Name;
 use Gaming\Common\MessageBroker\Model\Message\Message;
@@ -34,8 +35,10 @@ final class CommandConsumer implements Consumer
         $payload = json_decode($message->body(), true);
 
         $this->chatService->initiateChat(
-            $payload['ownerId'],
-            $payload['authors']
+            new InitiateChatCommand(
+                $payload['ownerId'],
+                $payload['authors']
+            )
         );
     }
 

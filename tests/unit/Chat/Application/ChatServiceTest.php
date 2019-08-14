@@ -6,10 +6,13 @@ namespace Gaming\Tests\Unit\Chat\Application;
 use Gaming\Chat\Application\ChatGateway;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Chat\Application\ChatService;
+use Gaming\Chat\Application\Command\InitiateChatCommand;
+use Gaming\Chat\Application\Command\WriteMessageCommand;
 use Gaming\Chat\Application\Event\ChatInitiated;
 use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
+use Gaming\Chat\Application\Query\MessagesQuery;
 use Gaming\Common\Application\ApplicationLifeCycle;
 use Gaming\Common\Application\InvokeApplicationLifeCycle;
 use Gaming\Common\Clock\Clock;
@@ -52,7 +55,9 @@ final class ChatServiceTest extends TestCase
             $eventStore
         );
 
-        $chatId = $chatService->initiateChat($ownerId, $authors);
+        $chatId = $chatService->initiateChat(
+            new InitiateChatCommand($ownerId, $authors)
+        );
         $this->assertSame($generatedChatId->toString(), $chatId);
 
         Clock::instance()->resume();
@@ -79,7 +84,13 @@ final class ChatServiceTest extends TestCase
         );
 
         // Test also if trim is performed.
-        $chatService->writeMessage(ChatId::generate()->toString(), 'authorId', '   ');
+        $chatService->writeMessage(
+            new WriteMessageCommand(
+                ChatId::generate()->toString(),
+                'authorId',
+                '   '
+            )
+        );
     }
 
     /**
@@ -111,7 +122,13 @@ final class ChatServiceTest extends TestCase
             $eventStore
         );
 
-        $chatService->writeMessage($chatId->toString(), 'authorId3', 'message');
+        $chatService->writeMessage(
+            new WriteMessageCommand(
+                $chatId->toString(),
+                'authorId3',
+                'message'
+            )
+        );
     }
 
     /**
@@ -157,7 +174,13 @@ final class ChatServiceTest extends TestCase
             $eventStore
         );
 
-        $chatService->writeMessage($chatId->toString(), $authorId, $message);
+        $chatService->writeMessage(
+            new WriteMessageCommand(
+                $chatId->toString(),
+                $authorId,
+                $message
+            )
+        );
 
         Clock::instance()->resume();
     }
@@ -191,7 +214,14 @@ final class ChatServiceTest extends TestCase
             $eventStore
         );
 
-        $messages = $chatService->messages($chatId->toString(), $authorId, $offset, $limit);
+        $messages = $chatService->messages(
+            new MessagesQuery(
+                $chatId->toString(),
+                $authorId,
+                $offset,
+                $limit
+            )
+        );
 
         $this->assertSame(['a', 'a', 'a'], $messages);
     }

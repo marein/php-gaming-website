@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Gaming\Chat\Presentation\Http;
 
 use Gaming\Chat\Application\ChatService;
+use Gaming\Chat\Application\Command\WriteMessageCommand;
+use Gaming\Chat\Application\Query\MessagesQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -34,9 +36,11 @@ final class ChatController
         $chatId = $request->query->get('chatId');
 
         $this->chatService->writeMessage(
-            $chatId,
-            $request->request->get('authorId'),
-            $request->request->get('message')
+            new WriteMessageCommand(
+                $chatId,
+                $request->request->get('authorId'),
+                $request->request->get('message')
+            )
         );
 
         return new JsonResponse([
@@ -53,10 +57,12 @@ final class ChatController
     {
         return new JsonResponse(
             $this->chatService->messages(
-                $request->query->get('chatId'),
-                $request->query->get('authorId'),
-                (int)$request->query->get('offset'),
-                (int)$request->query->get('limit')
+                new MessagesQuery(
+                    $request->query->get('chatId'),
+                    $request->query->get('authorId'),
+                    (int)$request->query->get('offset'),
+                    (int)$request->query->get('limit')
+                )
             )
         );
     }
