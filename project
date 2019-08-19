@@ -41,6 +41,7 @@ help() {
 }
 
 build() {
+    docker-compose pull
     docker-compose down --volumes
     docker-compose build --pull
     docker-compose up -d composer
