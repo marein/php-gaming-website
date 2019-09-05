@@ -16,22 +16,22 @@ final class Violation
     private $identifier;
 
     /**
-     * @var mixed[]
+     * @var ViolationParameter[]
      */
-    private $context;
+    private $parameters;
 
     /**
      * Violation constructor.
      *
-     * @param string  $propertyPath
-     * @param string  $identifier
-     * @param mixed[] $context
+     * @param string               $propertyPath
+     * @param string               $identifier
+     * @param ViolationParameter[] $parameters
      */
-    public function __construct(string $propertyPath, string $identifier, array $context)
+    public function __construct(string $propertyPath, string $identifier, array $parameters)
     {
         $this->propertyPath = $propertyPath;
         $this->identifier = $identifier;
-        $this->context = $context;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -51,10 +51,10 @@ final class Violation
     }
 
     /**
-     * @return mixed[]
+     * @return ViolationParameter[]
      */
-    public function context(): array
+    public function parameters(): array
     {
-        return $this->context;
+        return $this->parameters;
     }
 }

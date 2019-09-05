@@ -6,6 +6,7 @@ namespace Gaming\Common\Port\Adapter\Bus;
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Violation;
+use Gaming\Common\Bus\ViolationParameter;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -89,7 +90,10 @@ final class SymfonyValidatorBus implements Bus
                 $name
             );
 
-            $parameters[$nameWithoutTemplateCode] = $value;
+            $parameters[] = new ViolationParameter(
+                $nameWithoutTemplateCode,
+                $value
+            );
         }
 
         return $parameters;

@@ -6,6 +6,7 @@ namespace Gaming\Tests\Unit\Common\Port\Adapter\Bus;
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Violation;
+use Gaming\Common\Bus\ViolationParameter;
 use Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -98,7 +99,13 @@ class SymfonyValidatorBusTest extends TestCase
         } catch (ApplicationException $e) {
             $this->assertEquals(
                 [
-                    new Violation('value', 'limit_exceeded', ['limit' => 10]),
+                    new Violation(
+                        'value',
+                        'limit_exceeded',
+                        [
+                            new ViolationParameter('limit', 10)
+                        ]
+                    ),
                     new Violation('value', 'not_blank', []),
                     new Violation('anotherValue', 'not_blank', [])
                 ],
