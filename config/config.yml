@@ -32,8 +32,18 @@ monolog:
 services:
     # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.
+    # todo: This can be removed as soon as https://github.com/marein/php-gaming-website/issues/34 is done.
     gaming.exception-to-json-listener:
         class: Gaming\Common\Port\Adapter\Symfony\GamingExceptionListener
         public: false
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: -100 }
+
+    # Lower priority so that the profiler is respected.
+    gaming.application-exception-to-json-listener:
+        class: Gaming\Common\Port\Adapter\Symfony\TransformApplicationExceptionListener
+        public: false
+        arguments:
+            - []
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: -99 }
