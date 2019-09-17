@@ -4,7 +4,8 @@ services:
         class: Gaming\Chat\Presentation\Http\ChatController
         public: false
         arguments:
-            - '@chat.chat-service'
+            - '@chat.command-bus'
+            - '@chat.query-bus'
 
     chat.chat-gateway:
         class: Gaming\Chat\Infrastructure\DoctrineChatGateway
@@ -16,6 +17,5 @@ services:
         class: Gaming\Chat\Application\ChatService
         public: false
         arguments:
-            - '@chat.application-life-cycle'
             - '@chat.chat-gateway'
             - '@chat.event-store'

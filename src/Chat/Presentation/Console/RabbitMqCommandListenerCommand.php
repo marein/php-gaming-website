@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Presentation\Console;
 
-use Gaming\Chat\Application\ChatService;
 use Gaming\Chat\Infrastructure\Messaging\CommandConsumer;
+use Gaming\Common\Bus\Bus;
 use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\Port\Adapter\Messaging\SymfonyConsoleConsumer;
 use Symfony\Component\Console\Command\Command;
@@ -19,22 +19,22 @@ final class RabbitMqCommandListenerCommand extends Command
     private $messageBroker;
 
     /**
-     * @var ChatService
+     * @var Bus
      */
-    private $chatService;
+    private $commandBus;
 
     /**
      * RabbitMqCommandListenerCommand constructor.
      *
      * @param MessageBroker $messageBroker
-     * @param ChatService   $chatService
+     * @param Bus           $commandBus
      */
-    public function __construct(MessageBroker $messageBroker, ChatService $chatService)
+    public function __construct(MessageBroker $messageBroker, Bus $commandBus)
     {
         parent::__construct();
 
         $this->messageBroker = $messageBroker;
-        $this->chatService = $chatService;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -54,7 +54,7 @@ final class RabbitMqCommandListenerCommand extends Command
         $this->messageBroker->consume(
             new SymfonyConsoleConsumer(
                 new CommandConsumer(
-                    $this->chatService
+                    $this->commandBus
                 ),
                 $output
             )

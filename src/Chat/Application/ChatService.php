@@ -11,7 +11,6 @@ use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
 use Gaming\Chat\Application\Query\MessagesQuery;
-use Gaming\Common\Application\ApplicationLifeCycle;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\EventStore\EventStore;
 
@@ -21,11 +20,6 @@ use Gaming\Common\EventStore\EventStore;
  */
 final class ChatService
 {
-    /**
-     * @var ApplicationLifeCycle
-     */
-    private $applicationLifeCycle;
-
     /**
      * @var ChatGateway
      */
@@ -39,16 +33,13 @@ final class ChatService
     /**
      * ChatService constructor.
      *
-     * @param ApplicationLifeCycle $applicationLifeCycle
      * @param ChatGateway          $chatGateway
      * @param EventStore           $eventStore
      */
     public function __construct(
-        ApplicationLifeCycle $applicationLifeCycle,
         ChatGateway $chatGateway,
         EventStore $eventStore
     ) {
-        $this->applicationLifeCycle = $applicationLifeCycle;
         $this->chatGateway = $chatGateway;
         $this->eventStore = $eventStore;
     }
@@ -62,17 +53,13 @@ final class ChatService
      */
     public function initiateChat(InitiateChatCommand $initiateChatCommand): string
     {
-        return $this->applicationLifeCycle->run(
-            function () use ($initiateChatCommand) {
-                $chatId = $this->chatGateway->create($initiateChatCommand->ownerId(), $initiateChatCommand->authors());
+        $chatId = $this->chatGateway->create($initiateChatCommand->ownerId(), $initiateChatCommand->authors());
 
-                $this->eventStore->append(
-                    new ChatInitiated($chatId, $initiateChatCommand->ownerId())
-                );
-
-                return $chatId->toString();
-            }
+        $this->eventStore->append(
+            new ChatInitiated($chatId, $initiateChatCommand->ownerId())
         );
+
+        return $chatId->toString();
     }
 
     /**
@@ -105,14 +92,10 @@ final class ChatService
         $ownerId = $chat['ownerId'];
         $writtenAt = Clock::instance()->now();
 
-        $this->applicationLifeCycle->run(
-            function () use ($chatId, $ownerId, $authorId, $message, $writtenAt) {
-                $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
+        $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
 
-                $this->eventStore->append(
-                    new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message, $writtenAt)
-                );
-            }
+        $this->eventStore->append(
+            new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message, $writtenAt)
         );
     }
 

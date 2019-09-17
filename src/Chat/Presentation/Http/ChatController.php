@@ -3,27 +3,36 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Presentation\Http;
 
-use Gaming\Chat\Application\ChatService;
 use Gaming\Chat\Application\Command\WriteMessageCommand;
 use Gaming\Chat\Application\Query\MessagesQuery;
+use Gaming\Common\Bus\Bus;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ChatController
 {
     /**
-     * @var ChatService
+     * @var Bus
      */
-    private $chatService;
+    private $commandBus;
+
+    /**
+     * @var Bus
+     */
+    private $queryBus;
 
     /**
      * ChatController constructor.
      *
-     * @param ChatService $chatService
+     * @param Bus $commandBus
+     * @param Bus $queryBus
      */
-    public function __construct(ChatService $chatService)
-    {
-        $this->chatService = $chatService;
+    public function __construct(
+        Bus $commandBus,
+        Bus $queryBus
+    ) {
+        $this->commandBus = $commandBus;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -35,7 +44,7 @@ final class ChatController
     {
         $chatId = $request->query->get('chatId');
 
-        $this->chatService->writeMessage(
+        $this->commandBus->handle(
             new WriteMessageCommand(
                 $chatId,
                 $request->request->get('authorId'),
@@ -56,7 +65,7 @@ final class ChatController
     public function messagesAction(Request $request): JsonResponse
     {
         return new JsonResponse(
-            $this->chatService->messages(
+            $this->queryBus->handle(
                 new MessagesQuery(
                     $request->query->get('chatId'),
                     $request->query->get('authorId'),

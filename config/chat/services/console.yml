@@ -15,6 +15,6 @@ services:
         public: false
         arguments:
             - '@chat.message-broker'
-            - '@chat.chat-service'
+            - '@chat.command-bus'
         tags:
             -  { name: console.command }

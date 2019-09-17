@@ -1,0 +1,33 @@
+services:
+
+    # The following definitions decorate the routing command bus. This could be done with a factory object.
+    chat.command-bus:
+        class: Gaming\Common\Port\Adapter\Bus\DoctrineReconnectBus
+        public: false
+        arguments:
+            - '@chat.symfony-validator-command-bus'
+            - '@chat.doctrine-dbal'
+            - 300
+
+    chat.symfony-validator-command-bus:
+        class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
+        public: false
+        arguments:
+            - '@chat.doctrine-transactional-command-bus'
+            - '@validator'
+
+    chat.doctrine-transactional-command-bus:
+        class: Gaming\Common\Port\Adapter\Bus\DoctrineTransactionalBus
+        public: false
+        arguments:
+            - '@chat.routing-command-bus'
+            - '@chat.doctrine-dbal'
+
+    # This is pretty ugly. We can use tags, or create this via a factory in php.
+    chat.routing-command-bus:
+        class: Gaming\Common\Bus\RoutingBus
+        public: false
+        arguments:
+            -
+                'Gaming\Chat\Application\Command\InitiateChatCommand': ['@chat.chat-service', 'initiateChat']
+                'Gaming\Chat\Application\Command\WriteMessageCommand': ['@chat.chat-service', 'writeMessage']

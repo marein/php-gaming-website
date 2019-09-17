@@ -1,8 +1,9 @@
 imports:
-    - { resource: services/application_life_cycle.yml }
     - { resource: services/chat.yml }
+    - { resource: services/command_bus.yml }
     - { resource: services/console.yml }
     - { resource: services/persistence.yml }
+    - { resource: services/query_bus.yml }
 
 doctrine:
     dbal:

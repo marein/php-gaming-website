@@ -13,8 +13,6 @@ use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
 use Gaming\Chat\Application\Query\MessagesQuery;
-use Gaming\Common\Application\ApplicationLifeCycle;
-use Gaming\Common\Application\InvokeApplicationLifeCycle;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\EventStore\EventStore;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +30,6 @@ final class ChatServiceTest extends TestCase
         $ownerId = 'ownerId';
         $authors = ['authorId1', 'authorId2'];
 
-        $applicationLifeCycle = new InvokeApplicationLifeCycle();
         $chatGateway = $this->createMock(ChatGateway::class);
         $eventStore = $this->createMock(EventStore::class);
 
@@ -50,7 +47,6 @@ final class ChatServiceTest extends TestCase
         /** @var ChatGateway $chatGateway */
         /** @var EventStore $eventStore */
         $chatService = new ChatService(
-            $applicationLifeCycle,
             $chatGateway,
             $eventStore
         );
@@ -70,15 +66,12 @@ final class ChatServiceTest extends TestCase
     {
         $this->expectException(EmptyMessageException::class);
 
-        $applicationLifeCycle = $this->createMock(ApplicationLifeCycle::class);
         $chatGateway = $this->createMock(ChatGateway::class);
         $eventStore = $this->createMock(EventStore::class);
 
-        /** @var ApplicationLifeCycle $applicationLifeCycle */
         /** @var ChatGateway $chatGateway */
         /** @var EventStore $eventStore */
         $chatService = new ChatService(
-            $applicationLifeCycle,
             $chatGateway,
             $eventStore
         );
@@ -103,7 +96,6 @@ final class ChatServiceTest extends TestCase
         $chatId = ChatId::generate();
         $assignedAuthors = json_encode(['authorId1', 'authorId2']);
 
-        $applicationLifeCycle = $this->createMock(ApplicationLifeCycle::class);
         $chatGateway = $this->createMock(ChatGateway::class);
         $eventStore = $this->createMock(EventStore::class);
 
@@ -113,11 +105,9 @@ final class ChatServiceTest extends TestCase
             ->with($chatId)
             ->willReturn(['chatId' => $chatId, 'authors' => $assignedAuthors]);
 
-        /** @var ApplicationLifeCycle $applicationLifeCycle */
         /** @var ChatGateway $chatGateway */
         /** @var EventStore $eventStore */
         $chatService = new ChatService(
-            $applicationLifeCycle,
             $chatGateway,
             $eventStore
         );
@@ -145,7 +135,6 @@ final class ChatServiceTest extends TestCase
         $writtenAt = Clock::instance()->now();
         $messageId = 7;
 
-        $applicationLifeCycle = new InvokeApplicationLifeCycle();
         $chatGateway = $this->createMock(ChatGateway::class);
         $eventStore = $this->createMock(EventStore::class);
 
@@ -169,7 +158,6 @@ final class ChatServiceTest extends TestCase
         /** @var ChatGateway $chatGateway */
         /** @var EventStore $eventStore */
         $chatService = new ChatService(
-            $applicationLifeCycle,
             $chatGateway,
             $eventStore
         );
@@ -195,7 +183,6 @@ final class ChatServiceTest extends TestCase
         $offset = 0;
         $limit = 10;
 
-        $applicationLifeCycle = $this->createMock(ApplicationLifeCycle::class);
         $chatGateway = $this->createMock(ChatGateway::class);
         $eventStore = $this->createMock(EventStore::class);
 
@@ -205,11 +192,9 @@ final class ChatServiceTest extends TestCase
             ->with($chatId, $authorId, $offset, $limit)
             ->willReturn(['a', 'a', 'a']);
 
-        /** @var ApplicationLifeCycle $applicationLifeCycle */
         /** @var ChatGateway $chatGateway */
         /** @var EventStore $eventStore */
         $chatService = new ChatService(
-            $applicationLifeCycle,
             $chatGateway,
             $eventStore
         );
