@@ -14,8 +14,8 @@ help() {
     echo down
     echo Shorthand to down a started project.
     echo
-    echo assets
-    echo Build assets for the browser and watch for changes.
+    echo composer
+    echo Shorthand for interacting with composer during development.
     echo
     echo tests
     echo Run unit tests, code sniffer, static analyzer and acceptance tests.
@@ -55,6 +55,12 @@ up() {
 
 down() {
     docker-compose down
+}
+
+composer() {
+    docker-compose up -d composer
+    docker-compose run composer composer "$@"
+    docker cp "$(docker-compose ps -q composer)":/project/vendor ./
 }
 
 tests() {
@@ -110,5 +116,5 @@ if [ "$*" = "" ]
 then
     help
 else
-    $*
+    $1 "${@:2}"
 fi
