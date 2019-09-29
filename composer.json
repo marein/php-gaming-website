@@ -1,6 +1,7 @@
 {
   "name": "marein/php-gaming-website",
   "description": "A gaming website where people can play against each other.",
+  "license": "MIT",
   "authors": [
     {
       "name": "Markus Reinhold",
