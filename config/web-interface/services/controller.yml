@@ -3,7 +3,7 @@ services:
     web-interface.page-controller:
         class: Gaming\WebInterface\Presentation\Http\PageController
         arguments:
-            - '@templating'
+            - '@twig'
             - '@web-interface.connect-four-service'
         tags:
             - 'controller.service_arguments'

@@ -36,7 +36,6 @@
     "symfony/console": "^4.3",
     "symfony/dotenv": "^4.3",
     "symfony/twig-bundle": "^4.3",
-    "symfony/templating": "^4.3",
     "symfony/asset": "^4.3",
     "twig/twig": "^2.11",
     "symfony/monolog-bundle": "^3.4",
