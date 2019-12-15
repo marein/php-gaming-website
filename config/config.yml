@@ -27,6 +27,9 @@ monolog:
             path: "php://stderr"
             level: error
 
+twig:
+    strict_variables: '%kernel.debug%'
+
 services:
     # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.
