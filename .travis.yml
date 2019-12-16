@@ -22,7 +22,7 @@ install:
 script:
     - docker-compose -f docker-compose.ci.yml run -v $(pwd)/tests:/project/tests php vendor/bin/codecept run unit --coverage-xml
     - docker-compose -f docker-compose.ci.yml run php vendor/bin/phpcs src tests/unit --standard=PSR2 -v
-    - docker-compose -f docker-compose.ci.yml run php vendor/bin/phpstan analyse -l 2 src
+    - docker-compose -f docker-compose.ci.yml run php vendor/bin/phpstan analyse -l 1 src
     - docker-compose -f docker-compose.ci.yml up -d
     - docker-compose -f docker-compose.ci.yml run php bin/waitForIt php-fpm:9000 --timeout=120 -- vendor/bin/codecept run acceptance
     - docker-compose -f docker-compose.ci.yml down -v
