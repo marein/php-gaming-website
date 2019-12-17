@@ -21,6 +21,6 @@ doctrine:
                 connection: identity
                 mappings:
                     user:
-                        type:     yml
+                        type:     xml
                         dir:      '%kernel.project_dir%/src/Identity/Port/Adapter/Persistence/Mapping/User'
                         prefix:   Gaming\Identity\Domain\Model\User

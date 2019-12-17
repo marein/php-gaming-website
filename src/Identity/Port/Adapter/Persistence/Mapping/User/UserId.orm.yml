@@ -1,6 +1,0 @@
-Gaming\Identity\Domain\Model\User\UserId:
-    type: embeddable
-    id:
-        userId:
-            column: id
-            type: uuid_binary_ordered_time
