@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
-use Exception;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 /**
  * Handles the exception for the whole gaming domain based on convention.
@@ -37,7 +37,7 @@ final class GamingExceptionListener
      */
     private function handleJson(ExceptionEvent $event): void
     {
-        $exceptionName = $this->exceptionName($event->getException());
+        $exceptionName = $this->exceptionName($event->getThrowable());
 
         $event->setResponse(
             new JsonResponse(
@@ -56,13 +56,13 @@ final class GamingExceptionListener
      */
     private function handleOther(ExceptionEvent $event): void
     {
-        $exceptionName = $this->exceptionName($event->getException());
+        $exceptionName = $this->exceptionName($event->getThrowable());
 
         if ($this->statusCodeByExceptionName($exceptionName) === 404) {
-            $event->setException(
+            $event->setThrowable(
                 new NotFoundHttpException(
                     $exceptionName,
-                    $event->getException()
+                    $event->getThrowable()
                 )
             );
         }
@@ -86,16 +86,16 @@ final class GamingExceptionListener
     /**
      * Returns the name of the exception without namespace and trailing "Exception".
      *
-     * @param Exception $exception
+     * @param Throwable $throwable
      *
      * @return string
      */
-    private function exceptionName(Exception $exception): string
+    private function exceptionName(Throwable $throwable): string
     {
         $exceptionName = str_replace(
             'Exception',
             '',
-            (new ReflectionClass($exception))->getShortName()
+            (new ReflectionClass($throwable))->getShortName()
         );
 
         $exceptionWords = preg_split(
