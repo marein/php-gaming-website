@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace {
 
     use Gaming\AppKernel;
-    use Symfony\Component\Debug\Debug;
     use Symfony\Component\Dotenv\Dotenv;
+    use Symfony\Component\ErrorHandler\Debug;
     use Symfony\Component\HttpFoundation\Request;
 
     require_once __DIR__ . '/../vendor/autoload.php';

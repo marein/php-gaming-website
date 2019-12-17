@@ -7,8 +7,8 @@ namespace {
     use Gaming\AppKernel;
     use Symfony\Bundle\FrameworkBundle\Console\Application;
     use Symfony\Component\Console\Input\ArgvInput;
-    use Symfony\Component\Debug\Debug;
     use Symfony\Component\Dotenv\Dotenv;
+    use Symfony\Component\ErrorHandler\Debug;
 
     umask(0000);
 
