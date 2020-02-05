@@ -3,7 +3,7 @@ ARG environment=development
 ##############################
 #     Build dependencies     #
 ##############################
-FROM gamingplatform/php-fpm:7.3-development as builder
+FROM gamingplatform/php-fpm:7.4-development as builder
 
 ARG environment=development
 
@@ -19,7 +19,7 @@ RUN cd /project && /composer-install-after-code-copy.sh
 ##############################
 #       Build php-fpm        #
 ##############################
-FROM gamingplatform/php-fpm:7.3-$environment
+FROM gamingplatform/php-fpm:7.4-$environment
 
 ARG environment=development
 
