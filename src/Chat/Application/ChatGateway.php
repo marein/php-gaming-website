@@ -48,6 +48,8 @@ interface ChatGateway
     /**
      * Get messages by chat.
      *
+     * If authors are assigned to the chat, only those authors can read messages.
+     *
      * @param ChatId $chatId
      * @param string $authorId
      * @param int    $offset

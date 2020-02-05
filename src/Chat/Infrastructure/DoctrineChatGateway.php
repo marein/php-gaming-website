@@ -77,7 +77,6 @@ final class DoctrineChatGateway implements ChatGateway
      */
     public function messages(ChatId $chatId, string $authorId, int $offset, int $limit): array
     {
-        // If authors are assigned to the chat, only those authors can read messages.
         // Directly format the date as \DateTime::ATOM, since we know that our server saves dates as UTC.
         return $this->connection->createQueryBuilder()
             ->select('
