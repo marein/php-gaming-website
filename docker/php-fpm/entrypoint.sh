@@ -2,11 +2,7 @@
 
 if [ "$WAIT_FOR" != "" ]
 then
-    IFS=","
-    for v in $WAIT_FOR
-    do
-        /project/bin/waitForIt $v --timeout=120
-    done
+    wait-for-tcp-server "$WAIT_FOR" 120
 fi
 
 /project/bin/console doctrine:database:create --connection=chat --if-not-exists >/dev/null 2>/dev/null

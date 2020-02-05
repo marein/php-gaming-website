@@ -86,7 +86,7 @@ acceptance() {
     buildProductionImages
 
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci up -d
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run -v $(pwd)/tests:/project/tests php bin/waitForIt php-fpm:9000 --timeout=120 -- vendor/bin/codecept run acceptance
+    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run -v $(pwd)/tests:/project/tests php bash -c 'wait-for-tcp-server php-fpm:9000 120 && vendor/bin/codecept run acceptance'
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci down -v
 }
 
