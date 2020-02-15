@@ -99,7 +99,7 @@ class WidgetElement extends HTMLElement
     }
 
     /**
-     * @param {String} message
+     * @param {Object} message
      * @returns {Node}
      */
     _createMessageNode(message)
