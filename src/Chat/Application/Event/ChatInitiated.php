@@ -13,17 +13,17 @@ final class ChatInitiated implements DomainEvent
     /**
      * @var ChatId
      */
-    private $chatId;
+    private ChatId $chatId;
 
     /**
      * @var string
      */
-    private $ownerId;
+    private string $ownerId;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * ChatInitiated constructor.

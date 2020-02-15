@@ -16,12 +16,12 @@ final class RabbitMqCommandListenerCommand extends Command
     /**
      * @var MessageBroker
      */
-    private $messageBroker;
+    private MessageBroker $messageBroker;
 
     /**
      * @var Bus
      */
-    private $commandBus;
+    private Bus $commandBus;
 
     /**
      * RabbitMqCommandListenerCommand constructor.

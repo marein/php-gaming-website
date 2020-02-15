@@ -8,12 +8,12 @@ final class InitiateChatCommand
     /**
      * @var string
      */
-    private $ownerId;
+    private string $ownerId;
 
     /**
      * @var string[]
      */
-    private $authors;
+    private array $authors;
 
     /**
      * InitiateChatCommand constructor.

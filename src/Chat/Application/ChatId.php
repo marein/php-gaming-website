@@ -13,7 +13,7 @@ final class ChatId
     /**
      * @var string
      */
-    private $chatId;
+    private string $chatId;
 
     /**
      * ChatId constructor.

@@ -23,12 +23,12 @@ final class ChatService
     /**
      * @var ChatGateway
      */
-    private $chatGateway;
+    private ChatGateway $chatGateway;
 
     /**
      * @var EventStore
      */
-    private $eventStore;
+    private EventStore $eventStore;
 
     /**
      * ChatService constructor.

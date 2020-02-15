@@ -14,37 +14,37 @@ final class MessageWritten implements DomainEvent
     /**
      * @var ChatId
      */
-    private $chatId;
+    private ChatId $chatId;
 
     /**
      * @var int
      */
-    private $messageId;
+    private int $messageId;
 
     /**
      * @var string
      */
-    private $ownerId;
+    private string $ownerId;
 
     /**
      * @var string
      */
-    private $authorId;
+    private string $authorId;
 
     /**
      * @var string
      */
-    private $message;
+    private string $message;
 
     /**
      * @var DateTimeImmutable
      */
-    private $writtenAt;
+    private DateTimeImmutable $writtenAt;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * MessageWritten constructor.

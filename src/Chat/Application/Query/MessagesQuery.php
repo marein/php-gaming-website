@@ -8,22 +8,22 @@ final class MessagesQuery
     /**
      * @var string
      */
-    private $chatId;
+    private string $chatId;
 
     /**
      * @var string
      */
-    private $authorId;
+    private string $authorId;
 
     /**
      * @var int
      */
-    private $offset;
+    private int $offset;
 
     /**
      * @var int
      */
-    private $limit;
+    private int $limit;
 
     /**
      * MessagesQuery constructor.

@@ -8,17 +8,17 @@ final class WriteMessageCommand
     /**
      * @var string
      */
-    private $chatId;
+    private string $chatId;
 
     /**
      * @var string
      */
-    private $authorId;
+    private string $authorId;
 
     /**
      * @var string
      */
-    private $message;
+    private string $message;
 
     /**
      * WriteMessageCommand constructor.

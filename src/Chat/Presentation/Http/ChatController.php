@@ -14,12 +14,12 @@ final class ChatController
     /**
      * @var Bus
      */
-    private $commandBus;
+    private Bus $commandBus;
 
     /**
      * @var Bus
      */
-    private $queryBus;
+    private Bus $queryBus;
 
     /**
      * ChatController constructor.

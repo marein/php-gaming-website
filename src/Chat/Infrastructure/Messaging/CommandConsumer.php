@@ -15,7 +15,7 @@ final class CommandConsumer implements Consumer
     /**
      * @var Bus
      */
-    private $commandBus;
+    private Bus $commandBus;
 
     /**
      * CommandConsumer constructor.

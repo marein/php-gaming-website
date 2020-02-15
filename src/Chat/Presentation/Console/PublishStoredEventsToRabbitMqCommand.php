@@ -23,17 +23,17 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
     /**
      * @var EventStore
      */
-    private $eventStore;
+    private Eventstore $eventStore;
 
     /**
      * @var Client
      */
-    private $predis;
+    private Client $predis;
 
     /**
      * @var MessageBroker
      */
-    private $messageBroker;
+    private MessageBroker $messageBroker;
 
     /**
      * PublishStoredEventsToRabbitMqCommand constructor.

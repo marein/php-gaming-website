@@ -14,7 +14,7 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
     /**
      * @var MessageBroker
      */
-    private $messageBroker;
+    private MessageBroker $messageBroker;
 
     /**
      * PublishStoredEventsToRabbitMqSubscriber constructor.

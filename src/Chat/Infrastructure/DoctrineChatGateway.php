@@ -17,7 +17,7 @@ final class DoctrineChatGateway implements ChatGateway
     /**
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * DoctrineChatGateway constructor.
