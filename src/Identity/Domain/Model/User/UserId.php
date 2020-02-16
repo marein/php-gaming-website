@@ -13,7 +13,7 @@ final class UserId
     /**
      * @var UuidInterface
      */
-    private $userId;
+    private UuidInterface $userId;
 
     /**
      * UserId constructor.

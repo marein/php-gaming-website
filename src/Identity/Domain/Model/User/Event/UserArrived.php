@@ -13,12 +13,12 @@ final class UserArrived implements DomainEvent
     /**
      * @var UserId
      */
-    private $userId;
+    private UserId $userId;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * UserArrived constructor.

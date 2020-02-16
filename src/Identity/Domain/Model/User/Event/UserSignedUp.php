@@ -13,17 +13,17 @@ final class UserSignedUp implements DomainEvent
     /**
      * @var UserId
      */
-    private $userId;
+    private UserId $userId;
 
     /**
      * @var string
      */
-    private $username;
+    private string $username;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * UserSignedUp constructor.

@@ -14,7 +14,7 @@ final class UserController
     /**
      * @var Bus
      */
-    private $commandBus;
+    private Bus $commandBus;
 
     /**
      * UserController constructor.

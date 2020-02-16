@@ -17,24 +17,24 @@ class User implements AggregateRoot
     /**
      * @var UserId
      */
-    private $userId;
+    private UserId $userId;
 
     /**
      * This version is for optimistic concurrency control.
      *
-     * @var integer
+     * @var integer|null
      */
-    private $version;
+    private ?int $version;
 
     /**
      * @var bool
      */
-    private $isSignedUp;
+    private bool $isSignedUp;
 
     /**
-     * @var Credentials
+     * @var Credentials|null
      */
-    private $credentials;
+    private ?Credentials $credentials;
 
     /**
      * User constructor.
@@ -44,7 +44,9 @@ class User implements AggregateRoot
     private function __construct(UserId $userId)
     {
         $this->userId = $userId;
+        $this->version = null;
         $this->isSignedUp = false;
+        $this->credentials = null;
     }
 
     /**
@@ -99,7 +101,7 @@ class User implements AggregateRoot
      */
     public function authenticate(string $password, HashAlgorithm $hashAlgorithm): bool
     {
-        if (!$this->isSignedUp) {
+        if (!$this->isSignedUp || $this->credentials === null) {
             return false;
         }
 

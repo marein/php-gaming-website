@@ -18,12 +18,12 @@ final class UserService
     /**
      * @var Users
      */
-    private $users;
+    private Users $users;
 
     /**
      * @var HashAlgorithm
      */
-    private $hashAlgorithm;
+    private HashAlgorithm $hashAlgorithm;
 
     /**
      * UserService constructor.

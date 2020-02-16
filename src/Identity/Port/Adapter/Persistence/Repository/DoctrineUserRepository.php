@@ -17,12 +17,12 @@ final class DoctrineUserRepository implements Users
     /**
      * @var EntityManager
      */
-    private $manager;
+    private EntityManager $manager;
 
     /**
      * @var DomainEventPublisher
      */
-    private $domainEventPublisher;
+    private DomainEventPublisher $domainEventPublisher;
 
     /**
      * DoctrineUserRepository constructor.

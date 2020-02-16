@@ -8,17 +8,17 @@ final class SignUpCommand
     /**
      * @var string
      */
-    private $userId;
+    private string $userId;
 
     /**
      * @var string
      */
-    private $username;
+    private string $username;
 
     /**
      * @var string
      */
-    private $password;
+    private string $password;
 
     /**
      * SignUpCommand constructor.

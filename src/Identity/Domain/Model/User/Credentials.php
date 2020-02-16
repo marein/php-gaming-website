@@ -10,12 +10,12 @@ final class Credentials
     /**
      * @var string
      */
-    private $username;
+    private string $username;
 
     /**
      * @var string
      */
-    private $password;
+    private string $password;
 
     /**
      * Credentials constructor.
