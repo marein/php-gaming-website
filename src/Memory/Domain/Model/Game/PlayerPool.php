@@ -12,12 +12,12 @@ final class PlayerPool
     /**
      * @var Player[]
      */
-    private $players;
+    private array $players;
 
     /**
      * @var int
      */
-    private $currentPlayerPosition;
+    private int $currentPlayerPosition;
 
     /**
      * PlayerPool constructor.

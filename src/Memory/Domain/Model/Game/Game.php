@@ -26,17 +26,17 @@ final class Game implements AggregateRoot
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var PlayerPool
      */
-    private $playerPool;
+    private PlayerPool $playerPool;
 
     /**
      * @var int[]
      */
-    private $cards;
+    private array $cards;
 
     /**
      * This is used to determine the state of the game.
@@ -45,7 +45,7 @@ final class Game implements AggregateRoot
      *
      * @var int
      */
-    private $state;
+    private int $state;
     private const STATE_OPEN = 1;
     private const STATE_RUNNING = 2;
     private const STATE_CLOSED = 3;

@@ -13,7 +13,7 @@ final class GameId
     /**
      * @var string
      */
-    private $gameId;
+    private string $gameId;
 
     /**
      * GameId constructor.

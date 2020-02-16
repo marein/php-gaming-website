@@ -8,7 +8,7 @@ final class Player
     /**
      * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * Player constructor.

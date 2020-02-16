@@ -14,17 +14,17 @@ final class PlayerLeaved implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var Player
      */
-    private $player;
+    private Player $player;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * PlayerLeaved constructor.

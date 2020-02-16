@@ -15,22 +15,23 @@ final class GameStarted implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var PlayerPool
      */
-    private $playerPool;
+    private PlayerPool $playerPool;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * GameStarted constructor.
      *
-     * @param GameId $gameId
+     * @param GameId     $gameId
+     * @param PlayerPool $playerPool
      */
     public function __construct(GameId $gameId, PlayerPool $playerPool)
     {

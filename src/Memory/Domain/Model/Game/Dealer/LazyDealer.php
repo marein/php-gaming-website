@@ -11,7 +11,7 @@ final class LazyDealer implements Dealer
     /**
      * @var int
      */
-    private $numberOfPairs;
+    private int $numberOfPairs;
 
     /**
      * ShuffleDealer constructor.

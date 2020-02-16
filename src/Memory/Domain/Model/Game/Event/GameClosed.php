@@ -13,12 +13,12 @@ final class GameClosed implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * GameClosed constructor.

@@ -8,7 +8,7 @@ final class ShuffleDealer implements Dealer
     /**
      * @var int
      */
-    private $numberOfPairs;
+    private int $numberOfPairs;
 
     /**
      * ShuffleDealer constructor.
