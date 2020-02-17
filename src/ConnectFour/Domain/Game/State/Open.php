@@ -19,12 +19,12 @@ final class Open implements State
     /**
      * @var Configuration
      */
-    private $configuration;
+    private Configuration $configuration;
 
     /**
      * @var Player
      */
-    private $player;
+    private Player $player;
 
     /**
      * Open constructor.

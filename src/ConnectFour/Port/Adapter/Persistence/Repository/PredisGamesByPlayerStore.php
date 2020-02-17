@@ -15,7 +15,7 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
     /**
      * @var Client
      */
-    private $predis;
+    private Client $predis;
 
     /**
      * PredisGamesByPlayerStore constructor.

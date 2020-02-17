@@ -13,7 +13,7 @@ final class StoneMapper implements Mapper
     /**
      * @var ObjectMapper $objectMapper
      */
-    private $objectMapper;
+    private ObjectMapper $objectMapper;
 
     /**
      * StoneMapper constructor.

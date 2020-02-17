@@ -12,7 +12,7 @@ final class OpenHandler
     /**
      * @var Games
      */
-    private $games;
+    private Games $games;
 
     /**
      * OpenHandler constructor.

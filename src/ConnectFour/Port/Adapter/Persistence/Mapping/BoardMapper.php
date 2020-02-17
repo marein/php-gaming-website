@@ -13,7 +13,7 @@ final class BoardMapper implements Mapper
     /**
      * @var ObjectMapper $objectMapper
      */
-    private $objectMapper;
+    private ObjectMapper $objectMapper;
 
     /**
      * BoardMapper constructor.

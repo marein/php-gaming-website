@@ -20,7 +20,7 @@ final class StateMapper implements Mapper
     /**
      * @var DiscriminatorMapper $discriminatorMapper
      */
-    private $discriminatorMapper;
+    private DiscriminatorMapper $discriminatorMapper;
 
     /**
      * StateMapper constructor.

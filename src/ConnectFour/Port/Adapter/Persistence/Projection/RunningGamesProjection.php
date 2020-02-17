@@ -12,7 +12,7 @@ final class RunningGamesProjection implements StoredEventSubscriber
     /**
      * @var RunningGameStore
      */
-    private $runningGameStore;
+    private RunningGameStore $runningGameStore;
 
     /**
      * RunningGamesProjection constructor.

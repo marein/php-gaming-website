@@ -8,12 +8,12 @@ final class Point
     /**
      * @var int
      */
-    private $x;
+    private int $x;
 
     /**
      * @var int
      */
-    private $y;
+    private int $y;
 
     /**
      * Point constructor.

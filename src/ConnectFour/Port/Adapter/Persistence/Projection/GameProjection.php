@@ -14,7 +14,7 @@ final class GameProjection implements StoredEventSubscriber
     /**
      * @var GameStore
      */
-    private $gameStore;
+    private GameStore $gameStore;
 
     /**
      * GameProjection constructor.

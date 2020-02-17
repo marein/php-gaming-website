@@ -22,12 +22,12 @@ final class RefereeConsumer implements Consumer
     /**
      * @var Bus
      */
-    private $commandBus;
+    private Bus $commandBus;
 
     /**
      * @var MessageBroker
      */
-    private $messageBroker;
+    private MessageBroker $messageBroker;
 
     /**
      * RefereeConsumer constructor.

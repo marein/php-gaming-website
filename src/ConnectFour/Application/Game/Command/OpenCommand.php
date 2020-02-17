@@ -8,7 +8,7 @@ final class OpenCommand
     /**
      * @var string
      */
-    private $playerId;
+    private string $playerId;
 
     /**
      * OpenCommand constructor.

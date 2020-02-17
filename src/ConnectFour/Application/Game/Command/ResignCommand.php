@@ -8,12 +8,12 @@ final class ResignCommand
     /**
      * @var string
      */
-    private $gameId;
+    private string $gameId;
 
     /**
      * @var string
      */
-    private $playerId;
+    private string $playerId;
 
     /**
      * ResignCommand constructor.

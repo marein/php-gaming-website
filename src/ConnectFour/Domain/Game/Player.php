@@ -11,12 +11,12 @@ final class Player
     /**
      * @var string
      */
-    private $playerId;
+    private string $playerId;
 
     /**
      * @var Stone
      */
-    private $stone;
+    private Stone $stone;
 
     /**
      * Player constructor.

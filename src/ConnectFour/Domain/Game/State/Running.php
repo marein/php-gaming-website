@@ -21,22 +21,22 @@ final class Running implements State
     /**
      * @var WinningRule
      */
-    private $winningRule;
+    private WinningRule $winningRule;
 
     /**
      * @var int
      */
-    private $numberOfMovesUntilDraw;
+    private int $numberOfMovesUntilDraw;
 
     /**
      * @var Board
      */
-    private $board;
+    private Board $board;
 
     /**
      * @var Players
      */
-    private $players;
+    private Players $players;
 
     /**
      * Running constructor.

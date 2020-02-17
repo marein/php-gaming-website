@@ -11,12 +11,12 @@ final class Players
     /**
      * @var Player
      */
-    private $currentPlayer;
+    private Player $currentPlayer;
 
     /**
      * @var Player
      */
-    private $nextPlayer;
+    private Player $nextPlayer;
 
     /**
      * Players constructor.

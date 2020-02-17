@@ -11,7 +11,7 @@ final class Stone
     /**
      * @var int
      */
-    private $color;
+    private int $color;
 
     /**
      * Stone constructor.

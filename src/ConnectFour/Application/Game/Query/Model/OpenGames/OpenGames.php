@@ -8,7 +8,7 @@ final class OpenGames
     /**
      * @var OpenGame[]
      */
-    private $games;
+    private array $games;
 
     /**
      * OpenGames constructor.

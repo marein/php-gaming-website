@@ -15,7 +15,7 @@ final class PredisOpenGameStore implements OpenGameStore
     /**
      * @var Client
      */
-    private $predis;
+    private Client $predis;
 
     /**
      * PredisOpenGameStore constructor.

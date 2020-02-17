@@ -10,7 +10,7 @@ final class CommonWinningRule implements WinningRule
     /**
      * @var WinningRule
      */
-    private $winningRule;
+    private WinningRule $winningRule;
 
     /**
      * CommonWinningRule constructor.

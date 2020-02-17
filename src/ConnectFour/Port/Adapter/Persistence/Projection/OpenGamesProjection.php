@@ -13,7 +13,7 @@ final class OpenGamesProjection implements StoredEventSubscriber
     /**
      * @var OpenGameStore
      */
-    private $openGameStore;
+    private OpenGameStore $openGameStore;
 
     /**
      * OpenGamesProjection constructor.

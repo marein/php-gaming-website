@@ -21,49 +21,49 @@ final class Game implements JsonSerializable
      *
      * @var string
      */
-    private $gameId = '';
+    private string $gameId = '';
 
     /**
      * The assigned chat id of the game.
      *
      * @var string
      */
-    private $chatId = '';
+    private string $chatId = '';
 
     /**
      * The players of the game.
      *
      * @var string[]
      */
-    private $players = [];
+    private array $players = [];
 
     /**
      * The width of the game.
      *
      * @var int
      */
-    private $width = 0;
+    private int $width = 0;
 
     /**
      * The height of the game.
      *
      * @var int
      */
-    private $height = 0;
+    private int $height = 0;
 
     /**
      * Tell if the game is finished.
      *
      * @var bool
      */
-    private $finished = false;
+    private bool $finished = false;
 
     /**
      * The moves of the game.
      *
      * @var Move[]
      */
-    private $moves = [];
+    private array $moves = [];
 
     /**
      * Returns the id.

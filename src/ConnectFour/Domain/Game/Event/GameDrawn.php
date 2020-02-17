@@ -13,12 +13,12 @@ final class GameDrawn implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * GameDrawn constructor.

@@ -12,7 +12,7 @@ final class GameMapper
     /**
      * @var ObjectMapper $objectMapper
      */
-    private $objectMapper;
+    private ObjectMapper $objectMapper;
 
     /**
      * GameMapper constructor.

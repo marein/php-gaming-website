@@ -11,10 +11,10 @@ final class GamesByPlayerHandler
     /**
      * @var GamesByPlayerStore
      */
-    private $gamesByPlayerFinder;
+    private GamesByPlayerStore $gamesByPlayerFinder;
 
     /**
-     * GameHandler constructor.
+     * GamesByPlayerHandler constructor.
      *
      * @param GamesByPlayerStore $gamesByPlayerFinder
      */

@@ -15,22 +15,22 @@ final class PlayerMoved implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var Point
      */
-    private $point;
+    private Point $point;
 
     /**
      * @var Stone
      */
-    private $stone;
+    private Stone $stone;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * PlayerMoved constructor.

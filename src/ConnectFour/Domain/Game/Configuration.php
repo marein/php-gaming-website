@@ -12,12 +12,12 @@ final class Configuration
     /**
      * @var Size
      */
-    private $size;
+    private Size $size;
 
     /**
      * @var WinningRule
      */
-    private $winningRule;
+    private WinningRule $winningRule;
 
     /**
      * Configuration constructor.

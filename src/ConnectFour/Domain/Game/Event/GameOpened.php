@@ -15,22 +15,22 @@ final class GameOpened implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var Size
      */
-    private $size;
+    private Size $size;
 
     /**
      * @var Player
      */
-    private $player;
+    private Player $player;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * GameOpened constructor.

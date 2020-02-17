@@ -8,17 +8,17 @@ final class MoveCommand
     /**
      * @var string
      */
-    private $gameId;
+    private string $gameId;
 
     /**
      * @var string
      */
-    private $playerId;
+    private string $playerId;
 
     /**
      * @var int
      */
-    private $column;
+    private int $column;
 
     /**
      * MoveCommand constructor.

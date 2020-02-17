@@ -11,7 +11,7 @@ final class AbortHandler
     /**
      * @var Games
      */
-    private $games;
+    private Games $games;
 
     /**
      * AbortHandler constructor.

@@ -13,7 +13,7 @@ final class PredisRunningGameStore implements RunningGameStore
     /**
      * @var Client
      */
-    private $predis;
+    private Client $predis;
 
     /**
      * PredisRunningGameStore constructor.

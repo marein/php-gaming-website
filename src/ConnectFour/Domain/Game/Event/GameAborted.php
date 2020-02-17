@@ -14,22 +14,22 @@ final class GameAborted implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var Player
      */
-    private $abortedPlayer;
+    private Player $abortedPlayer;
 
     /**
      * @var Player|null
      */
-    private $opponentPlayer;
+    private ?Player $opponentPlayer;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * GameAborted constructor.

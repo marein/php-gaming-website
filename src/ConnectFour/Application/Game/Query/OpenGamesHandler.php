@@ -11,7 +11,7 @@ final class OpenGamesHandler
     /**
      * @var OpenGameStore
      */
-    private $openGameStore;
+    private OpenGameStore $openGameStore;
 
     /**
      * OpenGamesHandler constructor.

@@ -11,7 +11,7 @@ final class MoveHandler
     /**
      * @var Games
      */
-    private $games;
+    private Games $games;
 
     /**
      * MoveHandler constructor.

@@ -24,14 +24,14 @@ final class PredisGameStore implements GameStore
      *
      * @var Client
      */
-    private $predis;
+    private Client $predis;
 
     /**
      * If no game is found, this store uses this fallback.
      *
      * @var GameFinder
      */
-    private $fallbackGameFinder;
+    private GameFinder $fallbackGameFinder;
 
     /**
      * PredisGameStore constructor.

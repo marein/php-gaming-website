@@ -27,12 +27,12 @@ class GameController
     /**
      * @var Bus
      */
-    private $commandBus;
+    private Bus $commandBus;
 
     /**
      * @var Bus
      */
-    private $queryBus;
+    private Bus $queryBus;
 
     /**
      * GameController constructor.

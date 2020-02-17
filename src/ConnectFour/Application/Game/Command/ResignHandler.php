@@ -11,7 +11,7 @@ final class ResignHandler
     /**
      * @var Games
      */
-    private $games;
+    private Games $games;
 
     /**
      * ResignHandler constructor.

@@ -14,17 +14,17 @@ final class GameWon implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var Player
      */
-    private $winnerPlayer;
+    private Player $winnerPlayer;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * GameWon constructor.

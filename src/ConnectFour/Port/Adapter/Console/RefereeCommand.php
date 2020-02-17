@@ -16,12 +16,12 @@ final class RefereeCommand extends Command
     /**
      * @var MessageBroker
      */
-    private $messageBroker;
+    private MessageBroker $messageBroker;
 
     /**
      * @var Bus
      */
-    private $commandBus;
+    private Bus $commandBus;
 
     /**
      * RefereeCommand constructor.

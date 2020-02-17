@@ -11,7 +11,7 @@ final class RunningGamesHandler
     /**
      * @var RunningGameStore
      */
-    private $runningGamesFinder;
+    private RunningGameStore $runningGamesFinder;
 
     /**
      * RunningGamesHandler constructor.

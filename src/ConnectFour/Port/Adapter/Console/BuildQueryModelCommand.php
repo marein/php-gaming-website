@@ -22,17 +22,17 @@ final class BuildQueryModelCommand extends Command
     /**
      * @var EventStore
      */
-    private $eventStore;
+    private EventStore $eventStore;
 
     /**
      * @var Client
      */
-    private $predis;
+    private Client $predis;
 
     /**
      * @var StoredEventSubscriber[]
      */
-    private $storedEventSubscribers;
+    private array $storedEventSubscribers;
 
     /**
      * BuildQueryModelCommand constructor.

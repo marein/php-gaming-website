@@ -8,7 +8,7 @@ final class RunningGames
     /**
      * @var int
      */
-    private $count;
+    private int $count;
 
     /**
      * RunningGames constructor.

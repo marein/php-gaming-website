@@ -13,7 +13,7 @@ final class HorizontalWinningRule implements WinningRule
     /**
      * @var int
      */
-    private $numberOfRequiredMatches;
+    private int $numberOfRequiredMatches;
 
     /**
      * HorizontalWinningRule constructor.
@@ -36,7 +36,7 @@ final class HorizontalWinningRule implements WinningRule
      */
     public function calculate(Board $board): bool
     {
-        if (!$board->lastUsedField()) {
+        if ($board->lastUsedField() === null) {
             return false;
         }
 

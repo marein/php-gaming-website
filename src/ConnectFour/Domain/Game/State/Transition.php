@@ -10,12 +10,12 @@ final class Transition
     /**
      * @var State
      */
-    private $state;
+    private State $state;
 
     /**
      * @var DomainEvent[]
      */
-    private $domainEvents;
+    private array $domainEvents;
 
     /**
      * Transition constructor.

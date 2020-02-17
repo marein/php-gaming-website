@@ -26,17 +26,17 @@ final class Game implements AggregateRoot
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var State
      */
-    private $state;
+    private State $state;
 
     /**
      * @var string
      */
-    private $chatId;
+    private string $chatId;
 
     /**
      * Game constructor.

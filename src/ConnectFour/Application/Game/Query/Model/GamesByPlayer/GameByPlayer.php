@@ -8,7 +8,7 @@ final class GameByPlayer
     /**
      * @var string
      */
-    private $gameId;
+    private string $gameId;
 
     /**
      * GameByPlayer constructor.

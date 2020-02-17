@@ -8,7 +8,7 @@ final class GameQuery
     /**
      * @var string
      */
-    private $gameId;
+    private string $gameId;
 
     /**
      * GameQuery constructor.

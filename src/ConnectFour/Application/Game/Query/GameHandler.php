@@ -12,7 +12,7 @@ final class GameHandler
     /**
      * @var GameFinder
      */
-    private $gameFinder;
+    private GameFinder $gameFinder;
 
     /**
      * GameHandler constructor.

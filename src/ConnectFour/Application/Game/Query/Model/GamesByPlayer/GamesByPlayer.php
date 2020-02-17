@@ -8,7 +8,7 @@ final class GamesByPlayer
     /**
      * @var GameByPlayer[]
      */
-    private $games;
+    private array $games;
 
     /**
      * GamesByPlayer constructor.

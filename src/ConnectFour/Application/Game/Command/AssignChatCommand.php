@@ -8,12 +8,12 @@ final class AssignChatCommand
     /**
      * @var string
      */
-    private $gameId;
+    private string $gameId;
 
     /**
      * @var string
      */
-    private $chatId;
+    private string $chatId;
 
     /**
      * AssignChatCommand constructor.

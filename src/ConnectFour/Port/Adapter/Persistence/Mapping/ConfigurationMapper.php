@@ -12,7 +12,7 @@ final class ConfigurationMapper implements Mapper
     /**
      * @var ObjectMapper $objectMapper
      */
-    private $objectMapper;
+    private ObjectMapper $objectMapper;
 
     /**
      * ConfigurationMapper constructor.

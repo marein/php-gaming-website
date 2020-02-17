@@ -12,7 +12,7 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
     /**
      * @var GamesByPlayerStore
      */
-    private $gamesByPlayerStore;
+    private GamesByPlayerStore $gamesByPlayerStore;
 
     /**
      * GamesByPlayerProjection constructor.

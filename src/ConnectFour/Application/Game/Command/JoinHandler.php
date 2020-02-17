@@ -11,7 +11,7 @@ final class JoinHandler
     /**
      * @var Games
      */
-    private $games;
+    private Games $games;
 
     /**
      * JoinHandler constructor.

@@ -14,22 +14,22 @@ final class GameResigned implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var Player
      */
-    private $resignedPlayer;
+    private Player $resignedPlayer;
 
     /**
      * @var Player
      */
-    private $opponentPlayer;
+    private Player $opponentPlayer;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * GameResigned constructor.

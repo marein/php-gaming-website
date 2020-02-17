@@ -12,21 +12,21 @@ final class Move implements JsonSerializable
      *
      * @var int
      */
-    private $x;
+    private int $x;
 
     /**
      * The y coordinate.
      *
      * @var int
      */
-    private $y;
+    private int $y;
 
     /**
      * The color. Can be 0, 1 or 2. 0 means empty.
      *
      * @var int
      */
-    private $color;
+    private int $color;
 
     /**
      * Move constructor.

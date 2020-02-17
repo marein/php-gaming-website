@@ -8,10 +8,10 @@ final class GamesByPlayerQuery
     /**
      * @var string
      */
-    private $playerId;
+    private string $playerId;
 
     /**
-     * GameQuery constructor.
+     * GamesByPlayerQuery constructor.
      *
      * @param string $playerId
      */

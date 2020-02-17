@@ -13,17 +13,17 @@ final class ChatAssigned implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var string
      */
-    private $chatId;
+    private string $chatId;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * ChatAssigned constructor.

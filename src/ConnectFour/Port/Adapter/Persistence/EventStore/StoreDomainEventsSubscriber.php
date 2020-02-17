@@ -12,10 +12,10 @@ final class StoreDomainEventsSubscriber implements DomainEventSubscriber
     /**
      * @var EventStore
      */
-    private $eventStore;
+    private EventStore $eventStore;
 
     /**
-     * StoreEventsListener constructor.
+     * StoreDomainEventsSubscriber constructor.
      *
      * @param EventStore $eventStore
      */

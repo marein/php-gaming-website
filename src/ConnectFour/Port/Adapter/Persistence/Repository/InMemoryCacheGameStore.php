@@ -11,17 +11,17 @@ final class InMemoryCacheGameStore implements GameStore
     /**
      * @var GameStore
      */
-    private $gameStore;
+    private GameStore $gameStore;
 
     /**
      * @var int
      */
-    private $cacheSize;
+    private int $cacheSize;
 
     /**
      * @var Game[]
      */
-    private $cachedGames;
+    private array $cachedGames;
 
     /**
      * InMemoryCacheGameStore constructor.

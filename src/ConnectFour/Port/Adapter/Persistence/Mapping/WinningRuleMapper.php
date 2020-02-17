@@ -19,7 +19,7 @@ final class WinningRuleMapper implements Mapper
     /**
      * @var DiscriminatorMapper $discriminatorMapper
      */
-    private $discriminatorMapper;
+    private DiscriminatorMapper $discriminatorMapper;
 
     /**
      * WinningRuleMapper constructor.

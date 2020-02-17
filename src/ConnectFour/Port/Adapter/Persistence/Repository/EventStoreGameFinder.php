@@ -16,7 +16,7 @@ final class EventStoreGameFinder implements GameFinder
     /**
      * @var EventStore
      */
-    private $eventStore;
+    private EventStore $eventStore;
 
     /**
      * EventStoreGameFinder constructor.

@@ -11,17 +11,17 @@ final class Board
     /**
      * @var Size
      */
-    private $size;
+    private Size $size;
 
     /**
      * @var Field[]
      */
-    private $fields;
+    private array $fields;
 
     /**
      * @var Field|null
      */
-    private $lastUsedField;
+    private ?Field $lastUsedField;
 
     /**
      * Board constructor.

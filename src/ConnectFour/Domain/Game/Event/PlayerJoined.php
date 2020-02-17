@@ -14,22 +14,22 @@ final class PlayerJoined implements DomainEvent
     /**
      * @var GameId
      */
-    private $gameId;
+    private GameId $gameId;
 
     /**
      * @var Player
      */
-    private $joinedPlayer;
+    private Player $joinedPlayer;
 
     /**
      * @var Player
      */
-    private $opponentPlayer;
+    private Player $opponentPlayer;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * PlayerJoined constructor.

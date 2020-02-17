@@ -13,7 +13,7 @@ final class PlayersMapper implements Mapper
     /**
      * @var ObjectMapper $objectMapper
      */
-    private $objectMapper;
+    private ObjectMapper $objectMapper;
 
     /**
      * PlayersMapper constructor.

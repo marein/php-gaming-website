@@ -8,12 +8,12 @@ final class OpenGame
     /**
      * @var string
      */
-    private $gameId;
+    private string $gameId;
 
     /**
      * @var string
      */
-    private $playerId;
+    private string $playerId;
 
     /**
      * OpenGame constructor.

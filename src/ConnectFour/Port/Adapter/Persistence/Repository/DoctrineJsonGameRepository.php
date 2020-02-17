@@ -20,7 +20,7 @@ final class DoctrineJsonGameRepository implements Games
      *
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * This is not a real identity map as described in PoEAA.
@@ -30,30 +30,30 @@ final class DoctrineJsonGameRepository implements Games
      *
      * @var array
      */
-    private $identityMap;
+    private array $identityMap;
 
     /**
      * The domain event publisher where domain events gets published.
      *
      * @var DomainEventPublisher
      */
-    private $domainEventPublisher;
+    private DomainEventPublisher $domainEventPublisher;
 
     /**
      * The game mapper to serialize the game to an array structure and back.
      *
      * Use $this->gameMapper() instead of this property. The GameMapper gets lazy loaded.
      *
-     * @var GameMapper
+     * @var GameMapper|null
      */
-    private $gameMapper;
+    private ?GameMapper $gameMapper;
 
     /**
      * The table where the game gets persisted.
      *
      * @var string
      */
-    private $tableName;
+    private string $tableName;
 
     /**
      * DoctrineGameRepository constructor.
@@ -66,6 +66,7 @@ final class DoctrineJsonGameRepository implements Games
         $this->connection = $connection;
         $this->domainEventPublisher = $domainEventPublisher;
         $this->tableName = 'game';
+        $this->gameMapper = null;
         $this->identityMap = [];
     }
 
@@ -215,7 +216,7 @@ final class DoctrineJsonGameRepository implements Games
      */
     private function gameMapper(): GameMapper
     {
-        if (!$this->gameMapper) {
+        if ($this->gameMapper === null) {
             $this->gameMapper = (new GameMapperFactory())->create();
         }
 

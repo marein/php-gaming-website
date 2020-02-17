@@ -10,7 +10,7 @@ final class MultipleWinningRule implements WinningRule
     /**
      * @var WinningRule[]
      */
-    private $winningRules;
+    private array $winningRules;
 
     /**
      * MultipleWinningRule constructor.

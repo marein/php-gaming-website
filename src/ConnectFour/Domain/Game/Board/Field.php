@@ -8,12 +8,12 @@ final class Field
     /**
      * @var Point
      */
-    private $point;
+    private Point $point;
 
     /**
      * @var Stone
      */
-    private $stone;
+    private Stone $stone;
 
     /**
      * Field constructor.
