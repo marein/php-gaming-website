@@ -8,7 +8,7 @@ trait IsAggregateRoot
     /**
      * @var DomainEvent[]
      */
-    private $domainEvents = [];
+    private array $domainEvents = [];
 
     /**
      * Flush all stored domain events.

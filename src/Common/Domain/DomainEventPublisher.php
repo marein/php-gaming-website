@@ -8,7 +8,7 @@ final class DomainEventPublisher
     /**
      * @var DomainEventSubscriber[]
      */
-    private $subscribers;
+    private array $subscribers;
 
     /**
      * DomainEventPublisher constructor.

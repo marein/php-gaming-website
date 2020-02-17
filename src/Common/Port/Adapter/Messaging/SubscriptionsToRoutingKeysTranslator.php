@@ -16,7 +16,7 @@ final class SubscriptionsToRoutingKeysTranslator implements SubscriptionTranslat
     /**
      * @var string[]
      */
-    private $routingKeys;
+    private array $routingKeys;
 
     /**
      * SubscriptionsToRoutingKeysTranslator constructor.

@@ -8,17 +8,17 @@ final class Violation
     /**
      * @var string
      */
-    private $propertyPath;
+    private string $propertyPath;
 
     /**
      * @var string
      */
-    private $identifier;
+    private string $identifier;
 
     /**
      * @var ViolationParameter[]
      */
-    private $parameters;
+    private array $parameters;
 
     /**
      * Violation constructor.

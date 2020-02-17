@@ -12,17 +12,17 @@ final class ObjectMapper implements Mapper
     /**
      * @var string
      */
-    private $className;
+    private string $className;
 
     /**
      * @var ReflectionClass
      */
-    private $reflectionClass;
+    private ReflectionClass $reflectionClass;
 
     /**
      * @var Property[]
      */
-    private $properties;
+    private array $properties;
 
     /**
      * ObjectMapper constructor.

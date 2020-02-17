@@ -10,7 +10,7 @@ final class InMemoryEventStore implements EventStore
     /**
      * @var StoredEvent[]
      */
-    private $storedEvents = [];
+    private array $storedEvents = [];
 
     /**
      * @inheritdoc

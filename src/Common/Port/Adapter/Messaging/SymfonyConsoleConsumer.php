@@ -15,12 +15,12 @@ final class SymfonyConsoleConsumer implements Consumer
      *
      * @var Consumer
      */
-    private $consumer;
+    private Consumer $consumer;
 
     /**
      * @var OutputInterface
      */
-    private $output;
+    private OutputInterface $output;
 
     /**
      * SymfonyConsoleConsumer constructor.

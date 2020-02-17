@@ -10,7 +10,7 @@ final class RoutingBus implements Bus
     /**
      * @var callable[]
      */
-    private $messageClassToHandlerMap;
+    private array $messageClassToHandlerMap;
 
     /**
      * RoutingBus constructor.

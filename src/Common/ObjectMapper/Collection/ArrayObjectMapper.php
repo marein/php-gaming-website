@@ -11,7 +11,7 @@ final class ArrayObjectMapper implements Mapper
     /**
      * @var ArrayMapper
      */
-    private $mapper;
+    private ArrayMapper $mapper;
 
     /**
      * ArrayObjectMapper constructor.

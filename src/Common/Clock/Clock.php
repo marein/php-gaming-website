@@ -28,16 +28,17 @@ final class Clock
     /**
      * @var Clock|null
      */
-    private static $instance;
+    private static ?Clock $instance = null;
 
     /**
      * @var DateTimeImmutable|null
      */
-    private $frozenAt;
+    private ?DateTimeImmutable $frozenAt;
 
     // This class cannot be instantiated.
     private function __construct()
     {
+        $this->frozenAt = null;
     }
 
     // This class cannot be cloned.

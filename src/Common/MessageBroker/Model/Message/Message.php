@@ -8,12 +8,12 @@ final class Message
     /**
      * @var Name
      */
-    private $name;
+    private Name $name;
 
     /**
      * @var string
      */
-    private $body;
+    private string $body;
 
     /**
      * Message constructor.

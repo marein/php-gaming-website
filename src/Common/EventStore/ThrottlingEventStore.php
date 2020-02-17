@@ -16,12 +16,12 @@ final class ThrottlingEventStore implements EventStore
      *
      * @var EventStore
      */
-    private $eventStore;
+    private EventStore $eventStore;
 
     /**
      * @var int
      */
-    private $throttleTimeInMicroseconds;
+    private int $throttleTimeInMicroseconds;
 
     /**
      * ThrottlingEventStore constructor.

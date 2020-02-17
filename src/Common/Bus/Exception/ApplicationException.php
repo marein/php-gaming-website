@@ -19,7 +19,7 @@ final class ApplicationException extends BusException
     /**
      * @var Violation[]
      */
-    private $violations;
+    private array $violations;
 
     /**
      * ValidationException constructor.

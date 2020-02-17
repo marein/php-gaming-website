@@ -20,12 +20,12 @@ final class DoctrineEventStore implements EventStore
     /**
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @var string
      */
-    private $table;
+    private string $table;
 
     /**
      * DoctrineEventStore constructor.

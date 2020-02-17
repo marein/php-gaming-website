@@ -11,7 +11,7 @@ final class WholeDomain implements Subscription
     /**
      * @var string
      */
-    private $domain;
+    private string $domain;
 
     /**
      * WholeDomain constructor.

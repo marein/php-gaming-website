@@ -10,17 +10,17 @@ final class DiscriminatorMapper implements Mapper
     /**
      * @var string
      */
-    private $discriminatorName;
+    private string $discriminatorName;
 
     /**
      * @var Discriminator[]
      */
-    private $discriminatorsByClassName;
+    private array $discriminatorsByClassName;
 
     /**
      * @var Discriminator[]
      */
-    private $discriminatorsBySerializedClassName;
+    private array $discriminatorsBySerializedClassName;
 
     /**
      * DiscriminatorMapper constructor.

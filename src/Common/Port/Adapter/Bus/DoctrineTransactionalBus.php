@@ -12,12 +12,12 @@ final class DoctrineTransactionalBus implements Bus
     /**
      * @var Bus
      */
-    private $bus;
+    private Bus $bus;
 
     /**
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * DoctrineTransactionalBus constructor.

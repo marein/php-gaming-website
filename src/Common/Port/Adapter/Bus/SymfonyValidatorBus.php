@@ -15,12 +15,12 @@ final class SymfonyValidatorBus implements Bus
     /**
      * @var Bus
      */
-    private $bus;
+    private Bus $bus;
 
     /**
      * @var ValidatorInterface
      */
-    private $validator;
+    private ValidatorInterface $validator;
 
     /**
      * SymfonyValidatorBus constructor.

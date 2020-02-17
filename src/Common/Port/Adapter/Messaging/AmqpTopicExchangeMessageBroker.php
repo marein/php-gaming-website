@@ -19,27 +19,27 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     /**
      * @var string
      */
-    private $dsn;
+    private string $dsn;
 
     /**
      * @var string
      */
-    private $exchangeName;
+    private string $exchangeName;
 
     /**
      * @var bool
      */
-    private $isAlreadyInitialized;
+    private bool $isAlreadyInitialized;
 
     /**
      * @var AmqpContext
      */
-    private $context;
+    private AmqpContext $context;
 
     /**
      * @var AmqpTopic
      */
-    private $topic;
+    private AmqpTopic $topic;
 
     /**
      * AmqpTopicExchangeMessageBroker constructor.

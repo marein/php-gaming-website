@@ -8,20 +8,21 @@ final class ExtractPayloadForEventSubscriber implements DomainEventSubscriber
     /**
      * @var array|null
      */
-    private $payload;
+    private ?array $payload;
 
     /**
      * @var string
      */
-    private $eventName;
+    private string $eventName;
 
     /**
-     * ExtractPayloadSubscriber constructor.
+     * ExtractPayloadForEventSubscriber constructor.
      *
      * @param string $eventName
      */
     public function __construct(string $eventName)
     {
+        $this->payload = null;
         $this->eventName = $eventName;
     }
 

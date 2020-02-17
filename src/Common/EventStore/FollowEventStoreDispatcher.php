@@ -12,17 +12,17 @@ final class FollowEventStoreDispatcher
     /**
      * @var EventStorePointer
      */
-    private $eventStorePointer;
+    private EventStorePointer $eventStorePointer;
 
     /**
      * @var EventStore
      */
-    private $eventStore;
+    private EventStore $eventStore;
 
     /**
      * @var StoredEventPublisher
      */
-    private $storedEventPublisher;
+    private StoredEventPublisher $storedEventPublisher;
 
     /**
      * FollowEventStoreDispatcher constructor.

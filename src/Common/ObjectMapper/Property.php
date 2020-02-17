@@ -13,22 +13,22 @@ final class Property
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var Mapper
      */
-    private $mapper;
+    private Mapper $mapper;
 
     /**
      * @var string
      */
-    private $serializedName;
+    private string $serializedName;
 
     /**
      * @var ReflectionProperty
      */
-    private $reflectionProperty;
+    private ReflectionProperty $reflectionProperty;
 
     /**
      * Property constructor.

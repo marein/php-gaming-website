@@ -12,7 +12,7 @@ final class ConsistentOrderEventStore implements EventStore
      *
      * @var EventStore
      */
-    private $eventStore;
+    private EventStore $eventStore;
 
     /**
      * ConsistentOrderEventStore constructor.

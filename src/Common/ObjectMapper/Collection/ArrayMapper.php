@@ -10,7 +10,7 @@ final class ArrayMapper implements Mapper
     /**
      * @var Mapper
      */
-    private $mapper;
+    private Mapper $mapper;
 
     /**
      * ArrayMapper constructor.

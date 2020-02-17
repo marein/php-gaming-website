@@ -11,7 +11,7 @@ final class SplFixedArrayMapper implements Mapper
     /**
      * @var ArrayMapper
      */
-    private $mapper;
+    private ArrayMapper $mapper;
 
     /**
      * SplFixedArrayMapper constructor.

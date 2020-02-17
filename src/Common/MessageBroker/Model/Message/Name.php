@@ -13,12 +13,12 @@ final class Name
     /**
      * @var string
      */
-    private $domain;
+    private string $domain;
 
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * Name constructor.

@@ -8,12 +8,12 @@ final class InMemoryCacheEventStorePointer implements EventStorePointer
     /**
      * @var EventStorePointer
      */
-    private $eventStorePointer;
+    private EventStorePointer $eventStorePointer;
 
     /**
      * @var int
      */
-    private $cachedId;
+    private int $cachedId;
 
     /**
      * InMemoryCacheEventStorePointer constructor.

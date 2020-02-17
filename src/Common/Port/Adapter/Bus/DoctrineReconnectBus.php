@@ -19,22 +19,22 @@ final class DoctrineReconnectBus implements Bus
     /**
      * @var Bus
      */
-    private $bus;
+    private Bus $bus;
 
     /**
      * @var Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @var int
      */
-    private $idleBetweenHandlesInSeconds;
+    private int $idleBetweenHandlesInSeconds;
 
     /**
      * @var int
      */
-    private $timeOfLastHandle;
+    private int $timeOfLastHandle;
 
     /**
      * DoctrineReconnectBus constructor.

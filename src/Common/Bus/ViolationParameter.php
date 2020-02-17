@@ -8,7 +8,7 @@ final class ViolationParameter
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var bool|int|float|string

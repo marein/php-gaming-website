@@ -8,7 +8,7 @@ final class StoredEventPublisher
     /**
      * @var StoredEventSubscriber[]
      */
-    private $subscribers;
+    private array $subscribers;
 
     /**
      * StoredEventPublisher constructor.

@@ -14,12 +14,12 @@ final class PredisEventStorePointer implements EventStorePointer
     /**
      * @var Client
      */
-    private $predis;
+    private Client $predis;
 
     /**
      * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * PredisEventStorePointer constructor.

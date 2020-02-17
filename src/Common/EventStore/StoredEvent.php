@@ -10,27 +10,27 @@ final class StoredEvent
     /**
      * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
      */
-    private $aggregateId;
+    private string $aggregateId;
 
     /**
      * @var string
      */
-    private $payload;
+    private string $payload;
 
     /**
      * @var DateTimeImmutable
      */
-    private $occurredOn;
+    private DateTimeImmutable $occurredOn;
 
     /**
      * StoredEvent constructor.

@@ -12,7 +12,7 @@ final class SymfonyConsoleDebugSubscriber implements StoredEventSubscriber
     /**
      * @var OutputInterface
      */
-    private $output;
+    private OutputInterface $output;
 
     /**
      * SymfonyConsoleDebugSubscriber constructor.

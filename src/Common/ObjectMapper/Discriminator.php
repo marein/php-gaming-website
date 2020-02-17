@@ -11,20 +11,20 @@ final class Discriminator
     /**
      * @var string
      */
-    private $className;
+    private string $className;
 
     /**
      * @var string
      */
-    private $serializedClassName;
+    private string $serializedClassName;
 
     /**
      * @var Mapper
      */
-    private $mapper;
+    private Mapper $mapper;
 
     /**
-     * Property constructor.
+     * Discriminator constructor.
      *
      * @param string $className
      * @param Mapper $mapper

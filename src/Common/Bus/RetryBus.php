@@ -11,17 +11,17 @@ final class RetryBus implements Bus
     /**
      * @var Bus
      */
-    private $bus;
+    private Bus $bus;
 
     /**
      * @var int
      */
-    private $numberOfRetries;
+    private int $numberOfRetries;
 
     /**
      * @var string
      */
-    private $retryOnException;
+    private string $retryOnException;
 
     /**
      * RetryBus constructor.

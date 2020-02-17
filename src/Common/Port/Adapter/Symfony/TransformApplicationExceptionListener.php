@@ -18,7 +18,7 @@ final class TransformApplicationExceptionListener
     /**
      * @var array<string, int>
      */
-    private $identifierToStatusCode;
+    private array $identifierToStatusCode;
 
     /**
      * TransformApplicationExceptionListener constructor.
