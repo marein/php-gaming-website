@@ -27,7 +27,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * @var BrowserNotifier
      */
-    private $browserNotifier;
+    private BrowserNotifier $browserNotifier;
 
     /**
      * PublishRabbitMqEventsToNchanConsumer constructor.

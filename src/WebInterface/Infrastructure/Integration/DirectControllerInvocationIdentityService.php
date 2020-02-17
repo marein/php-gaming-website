@@ -13,7 +13,7 @@ final class DirectControllerInvocationIdentityService implements IdentityService
     /**
      * @var UserController
      */
-    private $userController;
+    private UserController $userController;
 
     /**
      * DirectControllerInvocationIdentityService constructor.

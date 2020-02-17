@@ -13,7 +13,7 @@ final class DirectControllerInvocationChatService implements ChatService
     /**
      * @var ChatController
      */
-    private $chatController;
+    private ChatController $chatController;
 
     /**
      * DirectControllerInvocationChatService constructor.

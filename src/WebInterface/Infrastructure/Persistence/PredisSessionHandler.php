@@ -16,17 +16,17 @@ final class PredisSessionHandler implements SessionHandlerInterface
     /**
      * @var Client
      */
-    private $predis;
+    private Client $predis;
 
     /**
      * @var string
      */
-    private $keyPrefix;
+    private string $keyPrefix;
 
     /**
      * @var int
      */
-    private $lifetime;
+    private int $lifetime;
 
     /**
      * PredisSessionHandler constructor.

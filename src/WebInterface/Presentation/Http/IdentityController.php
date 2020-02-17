@@ -12,7 +12,7 @@ final class IdentityController
     /**
      * @var IdentityService
      */
-    private $identityService;
+    private IdentityService $identityService;
 
     /**
      * IdentityController constructor.

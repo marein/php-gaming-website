@@ -12,7 +12,7 @@ final class NchanBrowserNotifier implements BrowserNotifier
     /**
      * @var Nchan
      */
-    private $nchan;
+    private Nchan $nchan;
 
     /**
      * NchanBrowserNotifier constructor.

@@ -11,7 +11,7 @@ final class AssignUserIdOnKernelRequest
     /**
      * @var IdentityService
      */
-    private $identityService;
+    private IdentityService $identityService;
 
     /**
      * AssignUserIdOnKernelRequest constructor.

@@ -14,12 +14,12 @@ final class PublishRunningGamesCountToNchanCommand extends Command
     /**
      * @var ConnectFourService
      */
-    private $connectFourService;
+    private ConnectFourService $connectFourService;
 
     /**
      * @var BrowserNotifier
      */
-    private $browserNotifier;
+    private BrowserNotifier $browserNotifier;
 
     /**
      * PublishRunningGamesCountToNchanCommand constructor.

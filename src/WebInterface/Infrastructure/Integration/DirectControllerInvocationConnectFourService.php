@@ -13,7 +13,7 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
     /**
      * @var GameController
      */
-    private $gameController;
+    private GameController $gameController;
 
     /**
      * DirectControllerInvocationConnectFourService constructor.

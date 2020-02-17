@@ -16,12 +16,12 @@ final class PublishRabbitMqEventsToNchanCommand extends Command
     /**
      * @var MessageBroker
      */
-    private $messageBroker;
+    private MessageBroker $messageBroker;
 
     /**
      * @var BrowserNotifier
      */
-    private $browserNotifier;
+    private BrowserNotifier $browserNotifier;
 
     /**
      * PublishRabbitMqEventsToNchanCommand constructor.

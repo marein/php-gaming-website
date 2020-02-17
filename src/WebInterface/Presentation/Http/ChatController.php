@@ -12,7 +12,7 @@ final class ChatController
     /**
      * @var ChatService
      */
-    private $chatService;
+    private ChatService $chatService;
 
     /**
      * ChatController constructor.

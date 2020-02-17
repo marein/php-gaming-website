@@ -12,7 +12,7 @@ final class ConnectFourController
     /**
      * @var ConnectFourService
      */
-    private $connectFourService;
+    private ConnectFourService $connectFourService;
 
     /**
      * ConnectFourController constructor.

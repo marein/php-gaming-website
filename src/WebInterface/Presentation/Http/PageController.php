@@ -13,12 +13,12 @@ final class PageController
     /**
      * @var Environment
      */
-    private $twig;
+    private Environment $twig;
 
     /**
      * @var ConnectFourService
      */
-    private $connectFourService;
+    private ConnectFourService $connectFourService;
 
     /**
      * PageController constructor.
