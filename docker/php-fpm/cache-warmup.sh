@@ -2,7 +2,7 @@
 
 if [ "$environment" = "development" ]
 then
-    /project/bin/console cache:warmup
+    bin/console cache:warmup
 else
-    /project/bin/console cache:warmup --env=prod
+    bin/console cache:warmup --env=prod
 fi

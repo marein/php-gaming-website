@@ -114,7 +114,7 @@ services:
     ##############################
     php-connect-four-build-query-model:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console connect-four:build-query-model --env=prod
+        command: bin/console connect-four:build-query-model --env=prod
         environment:
             APPLICATION_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             APPLICATION_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
@@ -132,7 +132,7 @@ services:
         restart: on-failure
     php-connect-four-publish-stored-events-to-rabbit-mq:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             APPLICATION_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             APPLICATION_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
@@ -150,7 +150,7 @@ services:
         restart: on-failure
     php-chat-publish-stored-events-to-rabbit-mq:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             APPLICATION_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             APPLICATION_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
@@ -168,7 +168,7 @@ services:
         restart: on-failure
     php-identity-publish-stored-events-to-rabbit-mq:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             APPLICATION_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             APPLICATION_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
@@ -186,7 +186,7 @@ services:
         restart: on-failure
     php-web-interface-publish-running-games-count-to-nchan:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
+        command: bin/console web-interface:publish-running-games-count-to-nchan --env=prod
         environment:
             APPLICATION_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             APPLICATION_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
@@ -204,7 +204,7 @@ services:
         restart: on-failure
     php-web-interface-publish-rabbit-mq-events-to-nchan:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
+        command: bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
         environment:
             APPLICATION_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             APPLICATION_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
@@ -222,7 +222,7 @@ services:
         restart: on-failure
     php-chat-command-listener:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console chat:command-listener --env=prod
+        command: bin/console chat:command-listener --env=prod
         environment:
             APPLICATION_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             APPLICATION_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379
@@ -239,7 +239,7 @@ services:
         restart: on-failure
     php-connect-four-referee:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console connect-four:referee --env=prod
+        command: bin/console connect-four:referee --env=prod
         environment:
             APPLICATION_CHAT_DOCTRINE_DBAL_URL: mysql://root:password@mysql-chat:3306/chat
             APPLICATION_CHAT_PREDIS_CLIENT_URL: redis://redis-chat:6379

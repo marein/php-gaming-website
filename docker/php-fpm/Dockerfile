@@ -11,10 +11,10 @@ WORKDIR /project
 
 COPY /docker/php-fpm/composer-install.sh /docker/php-fpm/composer-install-after-code-copy.sh /
 COPY /composer.json /composer.lock /project/
-RUN cd /project && /composer-install.sh
+RUN /composer-install.sh
 
 COPY / /project
-RUN cd /project && /composer-install-after-code-copy.sh
+RUN /composer-install-after-code-copy.sh
 
 ##############################
 #       Build php-fpm        #

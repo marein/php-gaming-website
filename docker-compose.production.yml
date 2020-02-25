@@ -74,7 +74,7 @@ services:
     ##############################
     php-connect-four-build-query-model:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console connect-four:build-query-model --env=prod
+        command: bin/console connect-four:build-query-model --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -85,7 +85,7 @@ services:
         restart: on-failure
     php-connect-four-publish-stored-events-to-rabbit-mq:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -96,7 +96,7 @@ services:
         restart: on-failure
     php-chat-publish-stored-events-to-rabbit-mq:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -107,7 +107,7 @@ services:
         restart: on-failure
     php-identity-publish-stored-events-to-rabbit-mq:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -118,7 +118,7 @@ services:
         restart: on-failure
     php-web-interface-publish-running-games-count-to-nchan:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
+        command: bin/console web-interface:publish-running-games-count-to-nchan --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -129,7 +129,7 @@ services:
         restart: on-failure
     php-web-interface-publish-rabbit-mq-events-to-nchan:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
+        command: bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -140,7 +140,7 @@ services:
         restart: on-failure
     php-chat-command-listener:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console chat:command-listener --env=prod
+        command: bin/console chat:command-listener --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -151,7 +151,7 @@ services:
         restart: on-failure
     php-connect-four-referee:
         image: marein/php-gaming-website:php-fpm
-        command: /project/bin/console connect-four:referee --env=prod
+        command: bin/console connect-four:referee --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:

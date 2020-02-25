@@ -100,7 +100,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange /project/bin/console connect-four:build-query-model --env=prod
+        command: bin/restartOnChange bin/console connect-four:build-query-model --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -117,7 +117,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange /project/bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/restartOnChange bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -134,7 +134,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange /project/bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/restartOnChange bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -151,7 +151,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange /project/bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
+        command: bin/restartOnChange bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -168,7 +168,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange /project/bin/console web-interface:publish-running-games-count-to-nchan --env=prod
+        command: bin/restartOnChange bin/console web-interface:publish-running-games-count-to-nchan --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -185,7 +185,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange /project/bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
+        command: bin/restartOnChange bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -202,7 +202,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange /project/bin/console chat:command-listener --env=prod
+        command: bin/restartOnChange bin/console chat:command-listener --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
@@ -219,7 +219,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange /project/bin/console connect-four:referee --env=prod
+        command: bin/restartOnChange bin/console connect-four:referee --env=prod
         environment:
             WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
         links:
