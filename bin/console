@@ -16,17 +16,13 @@ namespace {
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    $additionalEnvironmentPaths = [];
-    $additionalEnvironmentPath = __DIR__ . '/../config/environment.env';
-
-    if (file_exists($additionalEnvironmentPath)) {
-        $additionalEnvironmentPaths[] = $additionalEnvironmentPath;
-    }
-
-    (new Dotenv())->load(__DIR__ . '/../config/environment.env.dist', ...$additionalEnvironmentPaths);
+    (new Dotenv(false))->loadEnv(__DIR__ . '/../config/environment.env', 'APPLICATION_ENVIRONMENT');
 
     $input = new ArgvInput();
-    $environment = $input->getParameterOption(['--env', '-e'], getenv('APPLICATION_ENVIRONMENT'));
+    $environment = $input->getParameterOption(
+            ['--env', '-e'],
+            $_SERVER['APPLICATION_ENVIRONMENT'] ?? $_ENV['APPLICATION_ENVIRONMENT'] ?? 'dev'
+    );
     $isDevelopmentEnvironment = $environment !== 'prod';
 
     if ($isDevelopmentEnvironment) {

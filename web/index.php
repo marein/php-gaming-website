@@ -10,16 +10,9 @@ namespace {
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    $additionalEnvironmentPaths = [];
-    $additionalEnvironmentPath = __DIR__ . '/../config/environment.env';
+    (new Dotenv(false))->loadEnv(__DIR__ . '/../config/environment.env', 'APPLICATION_ENVIRONMENT');
 
-    if (file_exists($additionalEnvironmentPath)) {
-        $additionalEnvironmentPaths[] = $additionalEnvironmentPath;
-    }
-
-    (new Dotenv())->load(__DIR__ . '/../config/environment.env.dist', ...$additionalEnvironmentPaths);
-
-    $environment = getenv('APPLICATION_ENVIRONMENT');
+    $environment = $_SERVER['APPLICATION_ENVIRONMENT'] ?? $_ENV['APPLICATION_ENVIRONMENT'] ?? 'dev';
     $isDevelopmentEnvironment = $environment !== 'prod';
 
     if ($isDevelopmentEnvironment) {
