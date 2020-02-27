@@ -326,8 +326,6 @@ You may have seen that all contexts uses only one MySQL and one Redis instance.
 This could be different for the production environment depending on the scale.
 For this reason, different databases can be configured for the different contexts. Have a look at the
 [configuration file](/config/environment.env.dist).
-There is an example. Have a look at the
-[advanced production compose file](/docker-compose.production-advanced.yml).
 We can split this even further.
 For example, we can create a Redis instance per query model in the "Connect Four" context.
 Of course, the code must be adapted. Whether it's worth it depends also on the scale.
