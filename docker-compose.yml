@@ -1,5 +1,23 @@
 version: '3.4'
 
+x-php-container:
+    &php-container
+    build:
+        context: .
+        dockerfile: ./docker/php-fpm/Dockerfile
+    environment:
+        WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
+    links:
+        - mysql
+        - redis
+        - rabbit-mq
+        - nchan
+    volumes:
+        - ./config:/project/config:delegated
+        - ./src:/project/src:delegated
+        - vendor:/project/vendor
+    restart: on-failure
+
 services:
     ##############################
     #  Database and application  #
@@ -75,163 +93,41 @@ services:
             - "traefik.priority=10"
             - "traefik.frontend.rule=PathPrefix:/"
     php-fpm:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
+        <<: *php-container
         volumes:
             - ./config:/project/config:delegated
             - ./src:/project/src:delegated
             - ./tests:/project/tests:delegated
             - ./var:/project/var:delegated
             - vendor:/project/vendor
-        restart: on-failure
 
     ##############################
     #   Long running processes   #
     ##############################
     php-connect-four-build-query-model:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange bin/console connect-four:build-query-model --env=prod
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
-        volumes:
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - vendor:/project/vendor
-        restart: on-failure
+        <<: *php-container
+        command: bin/restartOnChange bin/console connect-four:build-query-model
     php-connect-four-publish-stored-events-to-rabbit-mq:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange bin/console connect-four:publish-stored-events-to-rabbit-mq --env=prod
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
-        volumes:
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - vendor:/project/vendor
-        restart: on-failure
+        <<: *php-container
+        command: bin/restartOnChange bin/console connect-four:publish-stored-events-to-rabbit-mq
     php-chat-publish-stored-events-to-rabbit-mq:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange bin/console chat:publish-stored-events-to-rabbit-mq --env=prod
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
-        volumes:
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - vendor:/project/vendor
-        restart: on-failure
+        <<: *php-container
+        command: bin/restartOnChange bin/console chat:publish-stored-events-to-rabbit-mq
     php-identity-publish-stored-events-to-rabbit-mq:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange bin/console identity:publish-stored-events-to-rabbit-mq --env=prod
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
-        volumes:
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - vendor:/project/vendor
-        restart: on-failure
+        <<: *php-container
+        command: bin/restartOnChange bin/console identity:publish-stored-events-to-rabbit-mq
     php-web-interface-publish-running-games-count-to-nchan:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange bin/console web-interface:publish-running-games-count-to-nchan --env=prod
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
-        volumes:
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - vendor:/project/vendor
-        restart: on-failure
+        <<: *php-container
+        command: bin/restartOnChange bin/console web-interface:publish-running-games-count-to-nchan
     php-web-interface-publish-rabbit-mq-events-to-nchan:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange bin/console web-interface:publish-rabbit-mq-events-to-nchan --env=prod
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
-        volumes:
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - vendor:/project/vendor
-        restart: on-failure
+        <<: *php-container
+        command: bin/restartOnChange bin/console web-interface:publish-rabbit-mq-events-to-nchan
     php-chat-command-listener:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange bin/console chat:command-listener --env=prod
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
-        volumes:
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - vendor:/project/vendor
-        restart: on-failure
+        <<: *php-container
+        command: bin/restartOnChange bin/console chat:command-listener
     php-connect-four-referee:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-        command: bin/restartOnChange bin/console connect-four:referee --env=prod
-        environment:
-            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        links:
-            - mysql
-            - redis
-            - rabbit-mq
-            - nchan
-        volumes:
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - vendor:/project/vendor
-        restart: on-failure
+        <<: *php-container
+        command: bin/restartOnChange bin/console connect-four:referee
 
     ##############################
     #     Development helper     #
