@@ -7,7 +7,7 @@ x-php-container:
         dockerfile: ./docker/php-fpm/Dockerfile
     environment:
         WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-    links:
+    depends_on:
         - mysql
         - redis
         - rabbit-mq
@@ -29,7 +29,7 @@ services:
         ports:
             - "80:80"
             - "8084:8080"
-        links:
+        depends_on:
             - nchan
             - service-js-polyfill
             - nginx
@@ -83,7 +83,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/nginx/Dockerfile
-        links:
+        depends_on:
             - php-fpm
         volumes:
             - ./web/assets:/project/web/assets:delegated
@@ -159,7 +159,7 @@ services:
             PMA_PASSWORD: password
         ports:
             - "8081:80"
-        links:
+        depends_on:
             - mysql
     phpredisadmin:
         image: erikdubbelboer/phpredisadmin
@@ -167,7 +167,7 @@ services:
             REDIS_1_HOST: redis
         ports:
             - "8082:80"
-        links:
+        depends_on:
             - redis
 
 volumes:

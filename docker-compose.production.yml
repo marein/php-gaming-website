@@ -6,7 +6,7 @@ x-php-container:
     environment:
         APPLICATION_ENVIRONMENT: prod
         WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-    links:
+    depends_on:
         - mysql
         - redis
         - rabbit-mq
@@ -21,7 +21,7 @@ services:
         image: marein/php-gaming-website:traefik
         ports:
             - "80:80"
-        links:
+        depends_on:
             - nchan
             - service-js-polyfill
             - nginx
@@ -63,7 +63,7 @@ services:
             - "traefik.frontend.rule=PathPrefixStrip:/polyfill"
     nginx:
         image: marein/php-gaming-website:nginx
-        links:
+        depends_on:
             - php-fpm
         restart: on-failure
         labels:
