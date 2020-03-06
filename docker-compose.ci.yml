@@ -26,7 +26,6 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
     mysql:
         image: marein/php-gaming-website:mysql
-        command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
         volumes:

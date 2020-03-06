@@ -39,7 +39,6 @@ services:
         build:
             context: .
             dockerfile: ./docker/mysql/Dockerfile
-        command: mysqld
         environment:
             MYSQL_ROOT_PASSWORD: password
         volumes:
