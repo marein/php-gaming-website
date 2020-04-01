@@ -14,28 +14,12 @@ use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
-class AppKernel extends BaseKernel
+final class AppKernel extends BaseKernel
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getCacheDir()
-    {
-        return $this->getProjectDir() . '/var/cache/' . $this->environment;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogDir()
-    {
-        return $this->getProjectDir() . '/var/logs';
-    }
-
     /**
      * @inheritdoc
      */
-    public function registerBundles()
+    public function registerBundles(): array
     {
         $bundles = [
             new FrameworkBundle(),
