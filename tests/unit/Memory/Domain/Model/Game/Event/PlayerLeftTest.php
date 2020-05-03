@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\Memory\Domain\Model\Game\Event;
 
 use Gaming\Common\Clock\Clock;
-use Gaming\Memory\Domain\Model\Game\Event\PlayerLeaved;
+use Gaming\Memory\Domain\Model\Game\Event\PlayerLeft;
 use Gaming\Memory\Domain\Model\Game\GameId;
 use Gaming\Memory\Domain\Model\Game\Player;
 use PHPUnit\Framework\TestCase;
 
-final class PlayerLeavedTest extends TestCase
+final class PlayerLeftTest extends TestCase
 {
     /**
      * @test
@@ -25,15 +25,15 @@ final class PlayerLeavedTest extends TestCase
             'playerId' => $playerId
         ];
 
-        $playerLeaved = new PlayerLeaved(
+        $playerLeft = new PlayerLeft(
             $gameId,
             new Player($playerId)
         );
 
-        $this->assertSame('PlayerLeaved', $playerLeaved->name());
-        $this->assertSame($gameId->toString(), $playerLeaved->aggregateId());
-        $this->assertSame(Clock::instance()->now(), $playerLeaved->occurredOn());
-        $this->assertSame($payload, $playerLeaved->payload());
+        $this->assertSame('PlayerLeft', $playerLeft->name());
+        $this->assertSame($gameId->toString(), $playerLeft->aggregateId());
+        $this->assertSame(Clock::instance()->now(), $playerLeft->occurredOn());
+        $this->assertSame($payload, $playerLeft->payload());
 
         Clock::instance()->resume();
     }

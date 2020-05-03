@@ -8,7 +8,7 @@ use Gaming\Memory\Domain\Model\Game\Event\GameClosed;
 use Gaming\Memory\Domain\Model\Game\Event\GameOpened;
 use Gaming\Memory\Domain\Model\Game\Event\GameStarted;
 use Gaming\Memory\Domain\Model\Game\Event\PlayerJoined;
-use Gaming\Memory\Domain\Model\Game\Event\PlayerLeaved;
+use Gaming\Memory\Domain\Model\Game\Event\PlayerLeft;
 use Gaming\Memory\Domain\Model\Game\Exception\GameNotOpenException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotAllowedToStartGameException;
 use Gaming\Memory\Domain\Model\Game\Game;
@@ -77,12 +77,12 @@ class GameTest extends TestCase
         $game->leave('playerId1');
 
         $domainEvents = $game->flushDomainEvents();
-        $playerLeaved = $domainEvents[0];
+        $playerLeft = $domainEvents[0];
 
         $this->assertCount(1, $domainEvents);
-        $this->assertInstanceOf(PlayerLeaved::class, $playerLeaved);
-        $this->assertSame($game->id()->toString(), $playerLeaved->aggregateId());
-        $this->assertSame('playerId1', $playerLeaved->payload()['playerId']);
+        $this->assertInstanceOf(PlayerLeft::class, $playerLeft);
+        $this->assertSame($game->id()->toString(), $playerLeft->aggregateId());
+        $this->assertSame('playerId1', $playerLeft->payload()['playerId']);
     }
 
     /**
@@ -95,14 +95,14 @@ class GameTest extends TestCase
         $game->leave('playerId1');
 
         $domainEvents = $game->flushDomainEvents();
-        $playerLeaved = $domainEvents[0];
+        $playerLeft = $domainEvents[0];
         $gameClosed = $domainEvents[1];
 
         $this->assertCount(2, $domainEvents);
 
-        $this->assertInstanceOf(PlayerLeaved::class, $playerLeaved);
-        $this->assertSame($game->id()->toString(), $playerLeaved->aggregateId());
-        $this->assertSame('playerId1', $playerLeaved->payload()['playerId']);
+        $this->assertInstanceOf(PlayerLeft::class, $playerLeft);
+        $this->assertSame($game->id()->toString(), $playerLeft->aggregateId());
+        $this->assertSame('playerId1', $playerLeft->payload()['playerId']);
 
         $this->assertInstanceOf(GameClosed::class, $gameClosed);
         $this->assertSame($game->id()->toString(), $gameClosed->aggregateId());

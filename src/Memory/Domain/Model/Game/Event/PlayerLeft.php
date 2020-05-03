@@ -9,7 +9,7 @@ use Gaming\Common\Domain\DomainEvent;
 use Gaming\Memory\Domain\Model\Game\GameId;
 use Gaming\Memory\Domain\Model\Game\Player;
 
-final class PlayerLeaved implements DomainEvent
+final class PlayerLeft implements DomainEvent
 {
     /**
      * @var GameId
@@ -27,7 +27,7 @@ final class PlayerLeaved implements DomainEvent
     private DateTimeImmutable $occurredOn;
 
     /**
-     * PlayerLeaved constructor.
+     * PlayerLeft constructor.
      *
      * @param GameId $gameId
      * @param Player $player
@@ -71,6 +71,6 @@ final class PlayerLeaved implements DomainEvent
      */
     public function name(): string
     {
-        return 'PlayerLeaved';
+        return 'PlayerLeft';
     }
 }

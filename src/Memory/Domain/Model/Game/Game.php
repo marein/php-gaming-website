@@ -11,7 +11,7 @@ use Gaming\Memory\Domain\Model\Game\Event\GameClosed;
 use Gaming\Memory\Domain\Model\Game\Event\GameOpened;
 use Gaming\Memory\Domain\Model\Game\Event\GameStarted;
 use Gaming\Memory\Domain\Model\Game\Event\PlayerJoined;
-use Gaming\Memory\Domain\Model\Game\Event\PlayerLeaved;
+use Gaming\Memory\Domain\Model\Game\Event\PlayerLeft;
 use Gaming\Memory\Domain\Model\Game\Exception\GameNotOpenException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerAlreadyJoinedException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotAllowedToStartGameException;
@@ -140,7 +140,7 @@ final class Game implements AggregateRoot
 
         $this->playerPool = $this->playerPool->leave($player);
 
-        $this->domainEvents[] = new PlayerLeaved(
+        $this->domainEvents[] = new PlayerLeft(
             $this->gameId,
             $player
         );
