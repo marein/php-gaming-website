@@ -31,7 +31,7 @@ final class Stone
     public static function none(): Stone
     {
         static $stone;
-        return $stone ?: $stone = new Stone(0);
+        return $stone ??= new Stone(0);
     }
 
     /**
@@ -42,7 +42,7 @@ final class Stone
     public static function red(): Stone
     {
         static $stone;
-        return $stone ?: $stone = new Stone(1);
+        return $stone ??= new Stone(1);
     }
 
     /**
@@ -53,7 +53,7 @@ final class Stone
     public static function yellow(): Stone
     {
         static $stone;
-        return $stone ?: $stone = new Stone(2);
+        return $stone ??= new Stone(2);
     }
 
     /**

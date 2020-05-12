@@ -216,10 +216,6 @@ final class DoctrineJsonGameRepository implements Games
      */
     private function gameMapper(): GameMapper
     {
-        if ($this->gameMapper === null) {
-            $this->gameMapper = (new GameMapperFactory())->create();
-        }
-
-        return $this->gameMapper;
+        return $this->gameMapper ??= (new GameMapperFactory())->create();
     }
 }

@@ -51,11 +51,7 @@ final class Clock
      */
     public static function instance(): Clock
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
+        return self::$instance ??= new self();
     }
 
     /**
