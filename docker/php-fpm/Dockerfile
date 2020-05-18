@@ -31,5 +31,7 @@ COPY --from=builder /project /project
 
 RUN /cache-warmup.sh
 
+COPY /docker/php-fpm/${environment}.ini /usr/local/etc/php/conf.d/
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
