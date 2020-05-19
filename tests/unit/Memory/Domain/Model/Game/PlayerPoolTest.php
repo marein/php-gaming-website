@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 class PlayerPoolTest extends TestCase
 {
-
     /**
      * @test
      */
