@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace {
 
-    use Gaming\AppKernel;
+    use Gaming\Kernel;
     use Symfony\Bundle\FrameworkBundle\Console\Application;
     use Symfony\Component\Console\Input\ArgvInput;
     use Symfony\Component\Dotenv\Dotenv;
@@ -29,7 +29,7 @@ namespace {
         Debug::enable();
     }
 
-    $kernel = new AppKernel($environment, $isDevelopmentEnvironment);
+    $kernel = new Kernel($environment, $isDevelopmentEnvironment);
     $application = new Application($kernel);
     $application->run($input);
 }

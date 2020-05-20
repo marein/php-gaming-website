@@ -14,7 +14,7 @@ use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
-final class AppKernel extends BaseKernel
+final class Kernel extends BaseKernel
 {
     /**
      * @inheritdoc

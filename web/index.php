@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace {
 
-    use Gaming\AppKernel;
+    use Gaming\Kernel;
     use Symfony\Component\Dotenv\Dotenv;
     use Symfony\Component\ErrorHandler\Debug;
     use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +19,7 @@ namespace {
         Debug::enable();
     }
 
-    $kernel = new AppKernel($environment, $isDevelopmentEnvironment);
+    $kernel = new Kernel($environment, $isDevelopmentEnvironment);
     $request = Request::createFromGlobals();
     $response = $kernel->handle($request);
     $response->send();
