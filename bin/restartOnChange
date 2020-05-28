@@ -1,8 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+trap 'kill $(jobs -p)' EXIT
 
 while true; do
-  nohup $@ > /dev/stdout 2>&1 &
-  PID=$!
-  inotifywait -e modify,create,delete --exclude "__$" -r /project/src /project/config
-  kill $PID
+  $@ &
+  inotifywait -e create,modify,delete --exclude "__$" -r /project/src /project/config &
+  wait -n $(jobs -p)
+  kill $(jobs -p)
+  wait
 done
