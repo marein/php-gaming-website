@@ -11,6 +11,7 @@ framework:
     csrf_protection: ~
     session:
         handler_id: web-interface.session-handler
+        cookie_samesite: lax
 
 twig:
     paths:
