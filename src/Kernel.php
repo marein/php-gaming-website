@@ -6,6 +6,7 @@ namespace Gaming;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Dunglas\AngularCsrfBundle\DunglasAngularCsrfBundle;
+use Gaming\Common\CsrfProtectionBundle\CsrfProtectionBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -26,6 +27,7 @@ final class Kernel extends BaseKernel
             new DoctrineBundle(),
             new DoctrineMigrationsBundle(),
             new DunglasAngularCsrfBundle(),
+            new CsrfProtectionBundle(),
             new TwigBundle(),
             new MonologBundle()
         ];
