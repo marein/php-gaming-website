@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Gaming\Common\CsrfProtectionBundle\EventListener;
 
 use Gaming\Common\CsrfProtectionBundle\Guard\AtLeastOneGuard;
+use Gaming\Common\CsrfProtectionBundle\Guard\FeatureToggleGuard;
 use Gaming\Common\CsrfProtectionBundle\Guard\NullOriginHeaderGuard;
 use Gaming\Common\CsrfProtectionBundle\Guard\OriginHeaderGuard;
 use Gaming\Common\CsrfProtectionBundle\Guard\PathGuard;
@@ -72,8 +73,14 @@ final class CsrfProtectionListener
                 new SafeMethodGuard(),
                 new PathGuard($this->protectedPaths),
                 new OriginHeaderGuard($this->allowedOrigins),
-                new RefererHeaderGuard($this->shouldFallbackToReferer, $this->allowedOrigins),
-                new NullOriginHeaderGuard($this->shouldAllowNullOrigin)
+                new FeatureToggleGuard(
+                    $this->shouldFallbackToReferer,
+                    new RefererHeaderGuard($this->allowedOrigins)
+                ),
+                new FeatureToggleGuard(
+                    $this->shouldAllowNullOrigin,
+                    new NullOriginHeaderGuard()
+                )
             ]
         );
 

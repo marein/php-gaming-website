@@ -8,11 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 final class RefererHeaderGuard implements Guard
 {
     /**
-     * @var bool
-     */
-    private bool $isEnabled;
-
-    /**
      * @var string[]
      */
     private array $allowedOrigins;
@@ -20,12 +15,10 @@ final class RefererHeaderGuard implements Guard
     /**
      * RefererHeaderGuard constructor.
      *
-     * @param bool     $isEnabled
      * @param string[] $allowedOrigins
      */
-    public function __construct(bool $isEnabled, array $allowedOrigins)
+    public function __construct(array $allowedOrigins)
     {
-        $this->isEnabled = $isEnabled;
         $this->allowedOrigins = $allowedOrigins;
     }
 
@@ -34,7 +27,7 @@ final class RefererHeaderGuard implements Guard
      */
     public function isSafe(Request $request): bool
     {
-        return $this->isEnabled && in_array(
+        return in_array(
             $this->readRefererSchemeAndHttpHostFromRequest($request),
             [...$this->allowedOrigins, $request->getSchemeAndHttpHost()],
             true
