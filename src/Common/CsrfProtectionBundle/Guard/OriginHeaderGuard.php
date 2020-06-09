@@ -17,7 +17,7 @@ final class OriginHeaderGuard implements Guard
      *
      * @param string[] $allowedOrigins
      */
-    public function __construct($allowedOrigins)
+    public function __construct(array $allowedOrigins)
     {
         $this->allowedOrigins = $allowedOrigins;
     }
