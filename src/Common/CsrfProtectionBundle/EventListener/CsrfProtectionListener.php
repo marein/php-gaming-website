@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\CsrfProtectionBundle\EventListener;
 
-use Gaming\Common\CsrfProtectionBundle\Guard\AtLeastOneGuard;
 use Gaming\Common\CsrfProtectionBundle\Guard\FeatureToggleGuard;
+use Gaming\Common\CsrfProtectionBundle\Guard\LogicalOrGuard;
 use Gaming\Common\CsrfProtectionBundle\Guard\NullOriginHeaderGuard;
 use Gaming\Common\CsrfProtectionBundle\Guard\OriginHeaderGuard;
 use Gaming\Common\CsrfProtectionBundle\Guard\PathGuard;
@@ -68,7 +68,7 @@ final class CsrfProtectionListener
             return;
         }
 
-        $guard = new AtLeastOneGuard(
+        $guard = new LogicalOrGuard(
             [
                 new SafeMethodGuard(),
                 new PathGuard($this->protectedPaths),

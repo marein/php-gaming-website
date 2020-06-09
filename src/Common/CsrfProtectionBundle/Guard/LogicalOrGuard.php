@@ -5,7 +5,7 @@ namespace Gaming\Common\CsrfProtectionBundle\Guard;
 
 use Symfony\Component\HttpFoundation\Request;
 
-final class AtLeastOneGuard implements Guard
+final class LogicalOrGuard implements Guard
 {
     /**
      * @var Guard[]
@@ -13,7 +13,7 @@ final class AtLeastOneGuard implements Guard
     private array $guards;
 
     /**
-     * AtLeastOneGuard constructor.
+     * LogicalOrGuard constructor.
      *
      * @param Guard[] $guards
      */
