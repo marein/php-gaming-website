@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\CsrfProtectionBundle\DependencyInjection;
+namespace Gaming\Common\StandardHeadersCsrfBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -13,7 +13,7 @@ final class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('csrf_protection');
+        $treeBuilder = new TreeBuilder('standard_headers_csrf');
 
         $treeBuilder->getRootNode()
             ->children()

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Gaming\Common\CsrfProtectionBundle\EventListener;
+namespace Gaming\Common\StandardHeadersCsrfBundle\EventListener;
 
-use Gaming\Common\CsrfProtectionBundle\Guard\Guard;
+use Gaming\Common\StandardHeadersCsrfBundle\Guard\Guard;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -15,7 +15,7 @@ final class CsrfProtectionListener
     private Guard $guard;
 
     /**
-     * CsrfProtectionListener constructor.
+     * StandardHeadersCsrfListener constructor.
      *
      * @param Guard $guard
      */
