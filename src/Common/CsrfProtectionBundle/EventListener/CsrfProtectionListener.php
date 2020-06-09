@@ -3,56 +3,25 @@ declare(strict_types=1);
 
 namespace Gaming\Common\CsrfProtectionBundle\EventListener;
 
-use Gaming\Common\CsrfProtectionBundle\Guard\FeatureToggleGuard;
-use Gaming\Common\CsrfProtectionBundle\Guard\LogicalOrGuard;
-use Gaming\Common\CsrfProtectionBundle\Guard\NullOriginHeaderGuard;
-use Gaming\Common\CsrfProtectionBundle\Guard\OriginHeaderGuard;
-use Gaming\Common\CsrfProtectionBundle\Guard\PathGuard;
-use Gaming\Common\CsrfProtectionBundle\Guard\RefererHeaderGuard;
-use Gaming\Common\CsrfProtectionBundle\Guard\SafeMethodGuard;
+use Gaming\Common\CsrfProtectionBundle\Guard\Guard;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class CsrfProtectionListener
 {
     /**
-     * @var string[]
+     * @var Guard
      */
-    private array $protectedPaths;
-
-    /**
-     * @var string[]
-     */
-    private array $allowedOrigins;
-
-    /**
-     * @var bool
-     */
-    private bool $shouldFallbackToReferer;
-
-    /**
-     * @var bool
-     */
-    private bool $shouldAllowNullOrigin;
+    private Guard $guard;
 
     /**
      * CsrfProtectionListener constructor.
      *
-     * @param string[] $protectedPaths
-     * @param string[] $allowedOrigins
-     * @param bool     $shouldFallbackToReferer
-     * @param bool     $shouldAllowNullOrigin
+     * @param Guard $guard
      */
-    public function __construct(
-        array $protectedPaths,
-        array $allowedOrigins,
-        bool $shouldFallbackToReferer,
-        bool $shouldAllowNullOrigin
-    ) {
-        $this->protectedPaths = $protectedPaths;
-        $this->allowedOrigins = $allowedOrigins;
-        $this->shouldFallbackToReferer = $shouldFallbackToReferer;
-        $this->shouldAllowNullOrigin = $shouldAllowNullOrigin;
+    public function __construct(Guard $guard)
+    {
+        $this->guard = $guard;
     }
 
     /**
@@ -64,27 +33,7 @@ final class CsrfProtectionListener
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        $guard = new LogicalOrGuard(
-            [
-                new SafeMethodGuard(),
-                new PathGuard($this->protectedPaths),
-                new OriginHeaderGuard($this->allowedOrigins),
-                new FeatureToggleGuard(
-                    $this->shouldFallbackToReferer,
-                    new RefererHeaderGuard($this->allowedOrigins)
-                ),
-                new FeatureToggleGuard(
-                    $this->shouldAllowNullOrigin,
-                    new NullOriginHeaderGuard()
-                )
-            ]
-        );
-
-        if (!$guard->isSafe($event->getRequest())) {
+        if ($event->isMasterRequest() && !$this->guard->isSafe($event->getRequest())) {
             throw new AccessDeniedHttpException('CSRF attack detected.');
         }
     }

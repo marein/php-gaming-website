@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Gaming\Common\CsrfProtectionBundle\DependencyInjection;
 
-use Gaming\Common\CsrfProtectionBundle\EventListener\CsrfProtectionListener;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 final class CsrfProtectionExtension extends Extension
 {
@@ -16,16 +15,27 @@ final class CsrfProtectionExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $loader = new XmlFileLoader(
+            $container,
+            new FileLocator(dirname(__DIR__) . '/Resources/config')
+        );
+        $loader->load('services.xml');
+
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        $container->setDefinition(
-            'csrf_protection.event_listener.csrf_protection_listener',
-            (new Definition(CsrfProtectionListener::class))
-                ->setArgument(0, $config['protected_paths'])
-                ->setArgument(1, $config['allowed_origins'])
-                ->setArgument(2, $config['fallback_to_referer'])
-                ->setArgument(3, $config['allow_null_origin'])
-                ->addTag('kernel.event_listener', ['event' => KernelEvents::REQUEST])
-        );
+        $container->getDefinition('csrf_protection.guard.path_guard')
+            ->replaceArgument(0, $config['protected_paths']);
+
+        $container->getDefinition('csrf_protection.guard.origin_header_guard')
+            ->replaceArgument(0, $config['allowed_origins']);
+
+        $container->getDefinition('csrf_protection.guard.referer_header_guard')
+            ->replaceArgument(0, $config['allowed_origins']);
+
+        $container->getDefinition('csrf_protection.guard.referer_header_guard.feature_toggle')
+            ->replaceArgument(0, $config['fallback_to_referer']);
+
+        $container->getDefinition('csrf_protection.guard.null_origin_header_guard.feature_toggle')
+            ->replaceArgument(0, $config['allow_null_origin']);
     }
 }
