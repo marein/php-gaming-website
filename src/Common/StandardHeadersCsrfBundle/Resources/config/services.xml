@@ -3,8 +3,8 @@
            xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance"
            xsd:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="standard_headers_csrf.event_listener.csrf_protection_listener"
-                 class="Gaming\Common\StandardHeadersCsrfBundle\EventListener\CsrfProtectionListener">
+        <service id="standard_headers_csrf.event_listener.csrf_guard_listener"
+                 class="Gaming\Common\StandardHeadersCsrfBundle\EventListener\CsrfGuardListener">
             <argument type="service"
                       id="standard_headers_csrf.guard"/>
             <tag name="kernel.event_listener" event="kernel.request"/>

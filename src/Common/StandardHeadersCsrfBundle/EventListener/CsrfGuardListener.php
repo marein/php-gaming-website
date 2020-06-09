@@ -7,7 +7,7 @@ use Gaming\Common\StandardHeadersCsrfBundle\Guard\Guard;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-final class CsrfProtectionListener
+final class CsrfGuardListener
 {
     /**
      * @var Guard
@@ -15,7 +15,7 @@ final class CsrfProtectionListener
     private Guard $guard;
 
     /**
-     * StandardHeadersCsrfListener constructor.
+     * CsrfGuardListener constructor.
      *
      * @param Guard $guard
      */
