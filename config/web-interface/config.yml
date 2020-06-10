@@ -6,21 +6,11 @@ imports:
     - { resource: services/persistence.yml }
 
 # The framework configuration belongs here, because when we transition to the microservice approach,
-# the other contexts don't need csrf_protection and don't have the concept of a session.
+# the other contexts don't have the concept of a session.
 framework:
-    csrf_protection: ~
     session:
         handler_id: web-interface.session-handler
 
 twig:
     paths:
         "%kernel.project_dir%/src/WebInterface/Presentation/Http/View": web-interface
-
-dunglas_angular_csrf:
-    cookie:
-        # The cookie is currently set on every get or head request. We can definitely optimise this.
-        # The clients can retrieve the cookie at a special path and store it locally for further processing.
-        set_on:
-            - { path: ^/, methods: [GET, HEAD] }
-    secure:
-        - { path: ^/, methods: [POST, PUT, PATCH, LINK] }
