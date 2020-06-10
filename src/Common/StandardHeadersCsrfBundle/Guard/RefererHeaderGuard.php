@@ -43,7 +43,7 @@ final class RefererHeaderGuard implements Guard
      */
     private function readRefererSchemeAndHttpHostFromRequest(Request $request): string
     {
-        $components = parse_url($request->headers->get('referer', ''));
+        $components = (array)parse_url((string)$request->headers->get('referer', ''));
 
         $referer = ($components['scheme'] ?? '') . '://' . ($components['host'] ?? '');
 
