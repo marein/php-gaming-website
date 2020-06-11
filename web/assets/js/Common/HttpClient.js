@@ -2,7 +2,6 @@ class HttpClient
 {
     constructor()
     {
-        this._csrfToken = this._readCsrfTokenFromCookie();
         this.onError = (response) => {
 
         };
@@ -46,7 +45,6 @@ class HttpClient
             request.open('POST', url);
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            request.setRequestHeader('X-XSRF-TOKEN', this._csrfToken);
             request.addEventListener('load', () => {
                 let response = JSON.parse(request.responseText);
 
@@ -85,15 +83,6 @@ class HttpClient
         }
 
         return preparedPostParameters.join('&');
-    }
-
-    /**
-     * @returns {String}
-     */
-    _readCsrfTokenFromCookie()
-    {
-        let matches = document.cookie.match(/XSRF-TOKEN=([^;]+);?/);
-        return matches[1];
     }
 }
 
