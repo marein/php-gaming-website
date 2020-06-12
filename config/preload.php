@@ -9,7 +9,7 @@ namespace {
 
     require_once $projectDirectory . '/vendor/autoload.php';
 
-    require_once $projectDirectory . '/var/cache/prod/srcGaming_KernelProdContainer.preload.php';
+    require_once $projectDirectory . '/var/cache/prod/Gaming_KernelProdContainer.preload.php';
 
     $finder = Finder::create()
         ->files()
