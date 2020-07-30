@@ -97,11 +97,6 @@ final class Client
     private $sessionId;
 
     /**
-     * @var string $csrfToken
-     */
-    private $csrfToken;
-
-    /**
      * @var AverageTimeCalculator $averageTimeCalculator
      */
     private $averageTimeCalculator;
@@ -122,8 +117,6 @@ final class Client
         foreach ($headers as $header) {
             if (preg_match('/PHPSESSID=([^;]+);/', $header, $matches)) {
                 $this->sessionId = $matches[1];
-            } elseif (preg_match('/XSRF-TOKEN=([^;]+);/', $header, $matches)) {
-                $this->csrfToken = $matches[1];
             }
         }
     }
@@ -166,7 +159,7 @@ final class Client
         if ($method === 'POST') {
             $options['http']['content'] = http_build_query($content);
             $headers[] = 'Content-type: application/x-www-form-urlencoded';
-            $headers[] = 'X-XSRF-TOKEN: ' . $this->csrfToken;
+            $headers[] = 'ORIGIN: ' . $this->endpoint;
         }
 
         if ($this->sessionId) {
