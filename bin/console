@@ -16,7 +16,7 @@ namespace {
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    (new Dotenv(false))->loadEnv(__DIR__ . '/../config/environment.env', 'APPLICATION_ENVIRONMENT');
+    (new Dotenv('APPLICATION_ENVIRONMENT'))->loadEnv(__DIR__ . '/../config/environment.env');
 
     $input = new ArgvInput();
     $environment = $input->getParameterOption(
