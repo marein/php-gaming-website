@@ -10,7 +10,7 @@ declare(strict_types=1);
  * Usage: ./createLoad [host] [numberOfGamesToPlay]
  */
 
-final class AvarageTimeCalculator
+final class AverageTimeCalculator
 {
     const MAXMIUM_NUMBER_OF_ITEMS = 500;
 
@@ -102,20 +102,20 @@ final class Client
     private $csrfToken;
 
     /**
-     * @var AvarageTimeCalculator $avarageTimeCalculator
+     * @var AverageTimeCalculator $averageTimeCalculator
      */
-    private $avarageTimeCalculator;
+    private $averageTimeCalculator;
 
     /**
      * Client constructor.
      *
      * @param string $endpoint
      */
-    public function __construct(string $endpoint, AvarageTimeCalculator $avarageTimeCalculator)
+    public function __construct(string $endpoint, AverageTimeCalculator $averageTimeCalculator)
     {
         $this->endpoint = $endpoint;
         $this->sessionId = '';
-        $this->avarageTimeCalculator = $avarageTimeCalculator;
+        $this->averageTimeCalculator = $averageTimeCalculator;
 
         $headers = $this->request(false, 'GET', '/')['headers'];
 
@@ -185,7 +185,7 @@ final class Client
 
         $time = (microtime(true) - $start) * 1000;
 
-        $this->avarageTimeCalculator->add(
+        $this->averageTimeCalculator->add(
             (int)$time
         );
 
@@ -207,11 +207,11 @@ if (count($argv) !== 3) {
     );
 }
 
-$avarageTimeCalculator = new AvarageTimeCalculator();
+$averageTimeCalculator = new AverageTimeCalculator();
 $start = microtime(true);
 $baseUrl = (string)$argv[1];
-$player1 = new Client($baseUrl, $avarageTimeCalculator);
-$player2 = new Client($baseUrl, $avarageTimeCalculator);
+$player1 = new Client($baseUrl, $averageTimeCalculator);
+$player2 = new Client($baseUrl, $averageTimeCalculator);
 
 $games = [];
 $totalNumberOfGames = (int)$argv[2];
@@ -233,10 +233,10 @@ while (count($games) > 0) {
     performMove($player2, $games);
 
     system('clear');
-    echo "Average:\t" . $avarageTimeCalculator->average() . ' ms' . PHP_EOL;
-    echo "Minumum:\t" . $avarageTimeCalculator->minimum() . ' ms' . PHP_EOL;
-    echo "Maximum:\t" . $avarageTimeCalculator->maximum() . ' ms' . PHP_EOL;
-    echo "Total:\t\t" . $avarageTimeCalculator->totalNumberOfTimes() . ' requests' . PHP_EOL;
+    echo "Average:\t" . $averageTimeCalculator->average() . ' ms' . PHP_EOL;
+    echo "Minumum:\t" . $averageTimeCalculator->minimum() . ' ms' . PHP_EOL;
+    echo "Maximum:\t" . $averageTimeCalculator->maximum() . ' ms' . PHP_EOL;
+    echo "Total:\t\t" . $averageTimeCalculator->totalNumberOfTimes() . ' requests' . PHP_EOL;
     echo "Running:\t" . (int)(microtime(true) - $start) . ' seconds' . PHP_EOL;
     echo PHP_EOL;
     echo "Games:\t\t" . ($totalNumberOfGames - count($games)) . ' / ' . $totalNumberOfGames . PHP_EOL;
