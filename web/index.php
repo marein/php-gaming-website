@@ -10,7 +10,7 @@ namespace {
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    (new Dotenv(false))->loadEnv(__DIR__ . '/../config/environment.env', 'APPLICATION_ENVIRONMENT');
+    (new Dotenv('APPLICATION_ENVIRONMENT'))->loadEnv(__DIR__ . '/../config/environment.env');
 
     $environment = $_SERVER['APPLICATION_ENVIRONMENT'] ?? $_ENV['APPLICATION_ENVIRONMENT'] ?? 'dev';
     $isDevelopmentEnvironment = $environment !== 'prod';
