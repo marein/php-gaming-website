@@ -7,21 +7,21 @@ lobby:
     methods:
         - GET
     defaults:
-        _controller: web-interface.page-controller:lobbyAction
+        _controller: web-interface.page-controller::lobbyAction
 
 profile:
     path: /profile
     methods:
         - GET
     defaults:
-        _controller: web-interface.page-controller:profileAction
+        _controller: web-interface.page-controller::profileAction
 
 game:
     path: /game/{id}
     methods:
         - GET
     defaults:
-        _controller: web-interface.page-controller:gameAction
+        _controller: web-interface.page-controller::gameAction
 
 ###############################################
 #                Chat Service                 #
@@ -32,7 +32,7 @@ write_message:
     methods:
         - POST
     defaults:
-        _controller: web-interface.chat-controller:writeMessageAction
+        _controller: web-interface.chat-controller::writeMessageAction
         _format: json
 
 messages:
@@ -40,7 +40,7 @@ messages:
     methods:
         - GET
     defaults:
-        _controller: web-interface.chat-controller:messagesAction
+        _controller: web-interface.chat-controller::messagesAction
         _format: json
 
 ###############################################
@@ -52,7 +52,7 @@ open:
     methods:
         - POST
     defaults:
-        _controller: web-interface.connect-four-controller:openAction
+        _controller: web-interface.connect-four-controller::openAction
         _format: json
 
 abort:
@@ -60,7 +60,7 @@ abort:
     methods:
         - POST
     defaults:
-        _controller: web-interface.connect-four-controller:abortAction
+        _controller: web-interface.connect-four-controller::abortAction
         _format: json
 
 resign:
@@ -68,7 +68,7 @@ resign:
     methods:
         - POST
     defaults:
-        _controller: web-interface.connect-four-controller:resignAction
+        _controller: web-interface.connect-four-controller::resignAction
         _format: json
 
 join:
@@ -76,7 +76,7 @@ join:
     methods:
         - POST
     defaults:
-        _controller: web-interface.connect-four-controller:joinAction
+        _controller: web-interface.connect-four-controller::joinAction
         _format: json
 
 move:
@@ -84,7 +84,7 @@ move:
     methods:
         - POST
     defaults:
-        _controller: web-interface.connect-four-controller:moveAction
+        _controller: web-interface.connect-four-controller::moveAction
         _format: json
 
 game_json:
@@ -92,7 +92,7 @@ game_json:
     methods:
         - GET
     defaults:
-        _controller: web-interface.connect-four-controller:showAction
+        _controller: web-interface.connect-four-controller::showAction
         _format: json
 
 ###############################################
@@ -104,5 +104,5 @@ sign_up:
     methods:
         - POST
     defaults:
-        _controller: web-interface.identity-controller:signUpAction
+        _controller: web-interface.identity-controller::signUpAction
         _format: json
