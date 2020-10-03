@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "948929999b5cb920aa6ea11fd70b8062",
+    "content-hash": "a67acf211bc7c4fc5d731d6a905aca41",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -6252,6 +6252,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {
