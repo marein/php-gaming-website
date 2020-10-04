@@ -21,26 +21,27 @@
   "require": {
     "php": "^7.4",
     "ext-json": "*",
-    "ramsey/uuid": "^3.8",
-    "ramsey/uuid-doctrine": "^1.5",
     "doctrine/dbal": "^2.9",
-    "doctrine/orm": "^2.6",
     "doctrine/doctrine-bundle": "^2.1",
     "doctrine/doctrine-migrations-bundle": "^2.0",
-    "predis/predis": "^1.1",
-    "marein/php-nchan-client": "^2.0",
+    "doctrine/orm": "^2.6",
     "enqueue/amqp-lib": "^0.10.1",
-    "symfony/framework-bundle": "^5.1",
-    "symfony/yaml": "^5.1",
+    "marein/php-nchan-client": "^2.0",
+    "marein/symfony-standard-headers-csrf-bundle": "^1.0",
+    "predis/predis": "^1.1",
+    "psr/log": "^1.1",
+    "ramsey/uuid": "^3.8",
+    "ramsey/uuid-doctrine": "^1.5",
+    "symfony/asset": "^5.1",
     "symfony/console": "^5.1",
     "symfony/dotenv": "^5.1",
-    "symfony/twig-bundle": "^5.1",
-    "symfony/asset": "^5.1",
-    "twig/twig": "^2.11",
+    "symfony/finder": "^5.1",
+    "symfony/framework-bundle": "^5.1",
     "symfony/monolog-bundle": "^3.4",
-    "psr/log": "^1.1",
+    "symfony/twig-bundle": "^5.1",
     "symfony/validator": "^5.1",
-    "symfony/finder": "^5.1"
+    "symfony/yaml": "^5.1",
+    "twig/twig": "^2.11"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.2",
@@ -54,5 +55,8 @@
     "codeception/module-asserts": "^1.2",
     "codeception/module-webdriver": "^1.1",
     "codeception/codeception": "^4.1"
+  },
+  "config": {
+    "sort-packages": true
   }
 }
