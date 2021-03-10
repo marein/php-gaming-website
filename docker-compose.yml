@@ -135,7 +135,8 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        entrypoint: docker-php-entrypoint
+        entrypoint: ''
+        command: 'true'
         volumes:
             - ./src:/project/src:delegated
             - ./tests:/project/tests:delegated
@@ -145,7 +146,8 @@ services:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
             target: builder
-        entrypoint: docker-php-entrypoint
+        entrypoint: ''
+        command: 'true'
         volumes:
             - ./composer.json:/project/composer.json
             - ./composer.lock:/project/composer.lock
