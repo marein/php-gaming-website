@@ -1,4 +1,4 @@
 migrations_paths:
-  'Gaming\ConnectFour\Port\Adapter\Persistence\Migration': '../../src/ConnectFour/Port/Adapter/Persistence/Migration'
+    'Gaming\ConnectFour\Port\Adapter\Persistence\Migration': '../../src/ConnectFour/Port/Adapter/Persistence/Migration'
 table_storage:
-  table_name: migration_versions
+    table_name: migration_versions

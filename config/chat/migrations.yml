@@ -1,4 +1,4 @@
 migrations_paths:
-  'Gaming\Chat\Infrastructure\Migration': '../../src/Chat/Infrastructure/Migration'
+    'Gaming\Chat\Infrastructure\Migration': '../../src/Chat/Infrastructure/Migration'
 table_storage:
-  table_name: migration_versions
+    table_name: migration_versions
