@@ -18,21 +18,21 @@ bin/console doctrine:database:create \
     --if-not-exists
 bin/console doctrine:migrations:migrate \
     --configuration=config/chat/migrations.yml \
-    --db=chat \
-    --no-interaction \
+    --conn=chat \
     --all-or-nothing \
-    --allow-no-migration
+    --allow-no-migration \
+    --no-interaction
 bin/console doctrine:migrations:migrate \
     --configuration=config/connect-four/migrations.yml \
-    --db=connect_four \
-    --no-interaction \
+    --conn=connect_four \
     --all-or-nothing \
-    --allow-no-migration
+    --allow-no-migration \
+    --no-interaction
 bin/console doctrine:migrations:migrate \
     --configuration=config/identity/migrations.yml \
-    --db=identity \
-    --no-interaction \
+    --conn=identity \
     --all-or-nothing \
-    --allow-no-migration
+    --allow-no-migration \
+    --no-interaction
 
 exec "$@"

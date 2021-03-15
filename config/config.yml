@@ -53,3 +53,14 @@ services:
             - []
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: -99 }
+
+    # Workaround for doctrine/doctrine-migrations-bundle:^3.0
+    # It uses Doctrine\Migrations\Configuration\Connection\ExistingConnection by default.
+    # Although the connection is configurable via a separate config file or cli argument,
+    # this will not work because the ExistingConnection behaviour prevents overriding.
+    # See https://github.com/marein/php-gaming-website/issues/62.
+    gaming.doctrine_migations.connection_loader:
+        class: Doctrine\Migrations\Configuration\Connection\ConnectionRegistryConnection
+        decorates: doctrine.migrations.connection_loader
+        factory: ['Doctrine\Migrations\Configuration\Connection\ConnectionRegistryConnection', 'withSimpleDefault']
+        arguments: ['@doctrine']

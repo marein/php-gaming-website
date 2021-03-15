@@ -3,7 +3,7 @@ ARG environment=development
 ##############################
 #     Build dependencies     #
 ##############################
-FROM gamingplatform/php-fpm:7.4-development as builder
+FROM gamingplatform/php-fpm:8.0-development as builder
 
 ARG environment=development
 
@@ -19,7 +19,7 @@ RUN /composer-install-after-code-copy.sh
 ##############################
 #       Build php-fpm        #
 ##############################
-FROM gamingplatform/php-fpm:7.4-$environment
+FROM gamingplatform/php-fpm:8.0-$environment
 
 ARG environment=development
 
@@ -31,7 +31,7 @@ COPY --from=builder /project /project
 
 RUN /cache-warmup.sh
 
-COPY /docker/php-fpm/${environment}.ini /usr/local/etc/php/conf.d/
+COPY /docker/php-fpm/${environment}.ini /etc/php/8.0/fpm/conf.d/
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]

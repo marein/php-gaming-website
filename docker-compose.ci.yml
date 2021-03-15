@@ -98,7 +98,8 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
-        entrypoint: docker-php-entrypoint
+        entrypoint: ''
+        command: 'true'
 
 volumes:
     mysql:
