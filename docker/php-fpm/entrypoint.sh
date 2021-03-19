@@ -20,14 +20,17 @@ then
         --if-not-exists
     bin/console doctrine:migrations:migrate \
         --configuration=config/chat/migrations.yml \
+        --conn=chat \
         --allow-no-migration \
         --no-interaction
     bin/console doctrine:migrations:migrate \
         --configuration=config/connect-four/migrations.yml \
+        --conn=connect_four \
         --allow-no-migration \
         --no-interaction
     bin/console doctrine:migrations:migrate \
         --configuration=config/identity/migrations.yml \
+        --conn=identity \
         --allow-no-migration \
         --no-interaction
 fi
