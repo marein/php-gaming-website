@@ -98,7 +98,7 @@ class GameController
         /** @var GamesByPlayer $gamesByPlayer */
         $gamesByPlayer = $this->queryBus->handle(
             new GamesByPlayerQuery(
-                $request->query->get('playerId')
+                (string)$request->query->get('playerId')
             )
         );
 
@@ -124,7 +124,7 @@ class GameController
         /** @var Game $game */
         $game = $this->queryBus->handle(
             new GameQuery(
-                $request->query->get('gameId')
+                (string)$request->query->get('gameId')
             )
         );
 
@@ -140,7 +140,7 @@ class GameController
     {
         $gameId = $this->commandBus->handle(
             new OpenCommand(
-                $request->request->get('playerId')
+                (string)$request->request->get('playerId')
             )
         );
 
@@ -156,12 +156,12 @@ class GameController
      */
     public function joinAction(Request $request): JsonResponse
     {
-        $gameId = $request->query->get('gameId');
+        $gameId = (string)$request->query->get('gameId');
 
         $this->commandBus->handle(
             new JoinCommand(
                 $gameId,
-                $request->request->get('playerId')
+                (string)$request->request->get('playerId')
             )
         );
 
@@ -177,12 +177,12 @@ class GameController
      */
     public function abortAction(Request $request): JsonResponse
     {
-        $gameId = $request->query->get('gameId');
+        $gameId = (string)$request->query->get('gameId');
 
         $this->commandBus->handle(
             new AbortCommand(
                 $gameId,
-                $request->request->get('playerId')
+                (string)$request->request->get('playerId')
             )
         );
 
@@ -198,12 +198,12 @@ class GameController
      */
     public function resignAction(Request $request): JsonResponse
     {
-        $gameId = $request->query->get('gameId');
+        $gameId = (string)$request->query->get('gameId');
 
         $this->commandBus->handle(
             new ResignCommand(
                 $gameId,
-                $request->request->get('playerId')
+                (string)$request->request->get('playerId')
             )
         );
 
@@ -219,12 +219,12 @@ class GameController
      */
     public function moveAction(Request $request): JsonResponse
     {
-        $gameId = $request->query->get('gameId');
+        $gameId = (string)$request->query->get('gameId');
 
         $this->commandBus->handle(
             new MoveCommand(
                 $gameId,
-                $request->request->get('playerId'),
+                (string)$request->request->get('playerId'),
                 (int)$request->request->get('column')
             )
         );
