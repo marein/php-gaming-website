@@ -6,23 +6,23 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerStore;
-use Predis\Client;
+use Predis\ClientInterface;
 
 final class PredisGamesByPlayerStore implements GamesByPlayerStore
 {
     private const STORAGE_KEY_PREFIX = 'games-by-player.';
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
-    private Client $predis;
+    private ClientInterface $predis;
 
     /**
      * PredisGamesByPlayerStore constructor.
      *
-     * @param Client $predis
+     * @param ClientInterface $predis
      */
-    public function __construct(Client $predis)
+    public function __construct(ClientInterface $predis)
     {
         $this->predis = $predis;
     }

@@ -7,14 +7,14 @@ use Exception;
 use Gaming\Common\EventStore\EventStorePointer;
 use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
 use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
-use Predis\Client;
+use Predis\ClientInterface;
 
 final class PredisEventStorePointer implements EventStorePointer
 {
     /**
-     * @var Client
+     * @var ClientInterface
      */
-    private Client $predis;
+    private ClientInterface $predis;
 
     /**
      * @var string
@@ -24,10 +24,10 @@ final class PredisEventStorePointer implements EventStorePointer
     /**
      * PredisEventStorePointer constructor.
      *
-     * @param Client $predis The predis instance which handles the connection.
-     * @param string $key    The key where the id is stored
+     * @param ClientInterface $predis The predis instance which handles the connection.
+     * @param string          $key    The key where the id is stored
      */
-    public function __construct(Client $predis, string $key)
+    public function __construct(ClientInterface $predis, string $key)
     {
         $this->predis = $predis;
         $this->key = $key;

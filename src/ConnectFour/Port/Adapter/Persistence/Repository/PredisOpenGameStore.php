@@ -6,23 +6,23 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGameStore;
-use Predis\Client;
+use Predis\ClientInterface;
 
 final class PredisOpenGameStore implements OpenGameStore
 {
     private const STORAGE_KEY = 'open-games';
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
-    private Client $predis;
+    private ClientInterface $predis;
 
     /**
      * PredisOpenGameStore constructor.
      *
-     * @param Client $predis
+     * @param ClientInterface $predis
      */
-    public function __construct(Client $predis)
+    public function __construct(ClientInterface $predis)
     {
         $this->predis = $predis;
     }

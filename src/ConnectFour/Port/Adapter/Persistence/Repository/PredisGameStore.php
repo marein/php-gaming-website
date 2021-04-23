@@ -6,7 +6,7 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
-use Predis\Client;
+use Predis\ClientInterface;
 
 /**
  * This class stores the game with serialize() and retrieves it with unserialize().
@@ -22,9 +22,9 @@ final class PredisGameStore implements GameStore
     /**
      * The predis client.
      *
-     * @var Client
+     * @var ClientInterface
      */
-    private Client $predis;
+    private ClientInterface $predis;
 
     /**
      * If no game is found, this store uses this fallback.
@@ -36,10 +36,10 @@ final class PredisGameStore implements GameStore
     /**
      * PredisGameStore constructor.
      *
-     * @param Client     $predis
-     * @param GameFinder $fallbackGameFinder
+     * @param ClientInterface $predis
+     * @param GameFinder      $fallbackGameFinder
      */
-    public function __construct(Client $predis, GameFinder $fallbackGameFinder)
+    public function __construct(ClientInterface $predis, GameFinder $fallbackGameFinder)
     {
         $this->predis = $predis;
         $this->fallbackGameFinder = $fallbackGameFinder;
