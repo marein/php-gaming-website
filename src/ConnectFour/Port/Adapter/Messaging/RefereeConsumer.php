@@ -96,10 +96,13 @@ final class RefereeConsumer implements Consumer
         $this->messageBroker->publish(
             new Message(
                 new MessageName('Chat', 'InitiateChat'),
-                json_encode([
-                    'ownerId' => $payload['gameId'],
-                    'authors' => []
-                ])
+                json_encode(
+                    [
+                        'ownerId' => $payload['gameId'],
+                        'authors' => []
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
             )
         );
     }

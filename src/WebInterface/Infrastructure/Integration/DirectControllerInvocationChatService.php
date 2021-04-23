@@ -76,6 +76,6 @@ final class DirectControllerInvocationChatService implements ChatService
             new Request($queryParameter, $postParameter)
         );
 
-        return json_decode($response->getContent(), true);
+        return json_decode((string)$response->getContent(), true);
     }
 }

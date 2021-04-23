@@ -83,7 +83,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=lobby',
-            json_encode($payload)
+            json_encode($payload, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -96,7 +96,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=lobby',
-            json_encode($payload)
+            json_encode($payload, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -109,7 +109,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload)
+            json_encode($payload, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -120,7 +120,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
      */
     private function handlePlayerJoined(array $payload): void
     {
-        $payloadAsJson = json_encode($payload);
+        $payloadAsJson = json_encode($payload, JSON_THROW_ON_ERROR);
 
         $this->browserNotifier->publish(
             '/pub?id=lobby',
@@ -142,7 +142,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload)
+            json_encode($payload, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -155,7 +155,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload)
+            json_encode($payload, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -168,7 +168,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload)
+            json_encode($payload, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -181,7 +181,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload)
+            json_encode($payload, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -194,7 +194,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     {
         $this->browserNotifier->publish(
             '/pub?id=game-' . $payload['ownerId'],
-            json_encode($payload)
+            json_encode($payload, JSON_THROW_ON_ERROR)
         );
     }
 }

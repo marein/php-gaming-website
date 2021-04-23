@@ -164,6 +164,6 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
             new Request($queryParameter, $postParameter)
         );
 
-        return json_decode($response->getContent(), true);
+        return json_decode((string)$response->getContent(), true);
     }
 }
