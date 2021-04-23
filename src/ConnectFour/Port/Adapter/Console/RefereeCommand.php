@@ -49,7 +49,7 @@ final class RefereeCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->messageBroker->consume(
             new SymfonyConsoleConsumer(
@@ -60,5 +60,7 @@ final class RefereeCommand extends Command
                 $output
             )
         );
+
+        return Command::SUCCESS;
     }
 }

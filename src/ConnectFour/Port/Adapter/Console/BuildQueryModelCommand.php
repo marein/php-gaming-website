@@ -56,7 +56,7 @@ final class BuildQueryModelCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // The creation of FollowEventStoreDispatcher could be done via container.
         $eventStorePointer = new InMemoryCacheEventStorePointer(

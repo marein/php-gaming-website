@@ -47,7 +47,7 @@ final class PublishRunningGamesCountToNchanCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $lastRunningGamesCount = -1;
 
