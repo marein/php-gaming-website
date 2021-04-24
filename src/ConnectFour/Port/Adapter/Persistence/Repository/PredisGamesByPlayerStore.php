@@ -57,9 +57,7 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
     {
         return new GamesByPlayer(
             array_map(
-                static function ($value) {
-                    return new GameByPlayer($value);
-                },
+                static fn($value): GameByPlayer => new GameByPlayer($value),
                 $this->predis->lrange($this->storageKeyForPlayer($playerId), 0, 100)
             )
         );

@@ -58,14 +58,12 @@ final class PredisOpenGameStore implements OpenGameStore
     public function all(): OpenGames
     {
         return new OpenGames(
-            array_values(
-                array_map(
-                    static function ($value) {
-                        $payload = json_decode($value, true);
-                        return new OpenGame($payload['gameId'], $payload['playerId']);
-                    },
-                    $this->predis->hgetall(self::STORAGE_KEY)
-                )
+            array_map(
+                static function (string $value): OpenGame {
+                    $payload = json_decode($value, true);
+                    return new OpenGame($payload['gameId'], $payload['playerId']);
+                },
+                array_values($this->predis->hgetall(self::STORAGE_KEY))
             )
         );
     }

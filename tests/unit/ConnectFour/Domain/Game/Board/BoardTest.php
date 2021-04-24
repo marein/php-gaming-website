@@ -25,9 +25,7 @@ class BoardTest extends TestCase
         $countOfFields = $size->width() * $size->height();
         $emptyFields = array_filter(
             $board->fields(),
-            static function (Field $field) {
-                return $field->isEmpty();
-            }
+            static fn(Field $field): bool => $field->isEmpty()
         );
 
         $this->assertCount($countOfFields, $emptyFields);

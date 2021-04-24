@@ -30,11 +30,9 @@ final class RoutingBusTest extends TestCase
 
         $bus = new RoutingBus(
             [
-                get_class($requestMessage) => function (object $message) {
-                    return $this->createMessage(
-                        $message->value . ' World!'
-                    );
-                }
+                get_class($requestMessage) => fn(object $message): object => $this->createMessage(
+                    $message->value . ' World!'
+                )
             ]
         );
         $response = $bus->handle($requestMessage);

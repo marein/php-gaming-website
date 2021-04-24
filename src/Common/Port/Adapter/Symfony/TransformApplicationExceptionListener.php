@@ -65,21 +65,17 @@ final class TransformApplicationExceptionListener
     private function transformViolationsToArray(ApplicationException $applicationException): array
     {
         return array_map(
-            static function (Violation $violation) {
-                return [
-                    'propertyPath' => $violation->propertyPath(),
-                    'identifier'   => $violation->identifier(),
-                    'parameters'   => array_map(
-                        static function (ViolationParameter $parameter) {
-                            return [
-                                'name'  => $parameter->name(),
-                                'value' => $parameter->value()
-                            ];
-                        },
-                        $violation->parameters()
-                    )
-                ];
-            },
+            static fn(Violation $violation): array => [
+                'propertyPath' => $violation->propertyPath(),
+                'identifier'   => $violation->identifier(),
+                'parameters'   => array_map(
+                    static fn(ViolationParameter $parameter): array => [
+                        'name'  => $parameter->name(),
+                        'value' => $parameter->value()
+                    ],
+                    $violation->parameters()
+                )
+            ],
             $applicationException->violations()
         );
     }

@@ -56,9 +56,7 @@ final class GameStarted implements DomainEvent
         return [
             'gameId'    => $this->gameId->toString(),
             'playerIds' => array_map(
-                static function (Player $player) {
-                    return $player->id();
-                },
+                static fn(Player $player): string => $player->id(),
                 $this->playerPool->players()
             )
         ];

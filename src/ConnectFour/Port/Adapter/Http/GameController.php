@@ -59,12 +59,10 @@ class GameController
         $openGames = $this->queryBus->handle(new OpenGamesQuery());
 
         $games = array_map(
-            static function (OpenGame $openGame) {
-                return [
-                    'gameId'   => $openGame->gameId(),
-                    'playerId' => $openGame->playerId()
-                ];
-            },
+            static fn(OpenGame $openGame): array => [
+                'gameId'   => $openGame->gameId(),
+                'playerId' => $openGame->playerId()
+            ],
             $openGames->games()
         );
 
@@ -103,9 +101,7 @@ class GameController
         );
 
         $games = array_map(
-            static function (GameByPlayer $openGame) {
-                return $openGame->gameId();
-            },
+            static fn(GameByPlayer $openGame): string => $openGame->gameId(),
             $gamesByPlayer->games()
         );
 
