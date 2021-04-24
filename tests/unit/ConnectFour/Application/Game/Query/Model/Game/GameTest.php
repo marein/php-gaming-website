@@ -16,28 +16,31 @@ class GameTest extends TestCase
     {
         $expectedGameId = 'gameId';
         $expectedFinished = false;
-        $expectedSerializedGame = json_encode([
-            'gameId'   => $expectedGameId,
-            'chatId'   => 'chatId',
-            'players'   => [
-                'player1', 'player2'
-            ],
-            'finished' => $expectedFinished,
-            'height'   => 6,
-            'width'    => 7,
-            'moves'    => [
-                [
-                    'x'     => 1,
-                    'y'     => 1,
-                    'color' => 1
+        $expectedSerializedGame = json_encode(
+            [
+                'gameId'   => $expectedGameId,
+                'chatId'   => 'chatId',
+                'players'   => [
+                    'player1', 'player2'
                 ],
-                [
-                    'x'     => 1,
-                    'y'     => 2,
-                    'color' => 2
+                'finished' => $expectedFinished,
+                'height'   => 6,
+                'width'    => 7,
+                'moves'    => [
+                    [
+                        'x'     => 1,
+                        'y'     => 1,
+                        'color' => 1
+                    ],
+                    [
+                        'x'     => 1,
+                        'y'     => 2,
+                        'color' => 2
+                    ]
                 ]
-            ]
-        ]);
+            ],
+            JSON_THROW_ON_ERROR
+        );
 
         $game = new Game();
         foreach ($this->storedEvents() as $storedEvent) {
@@ -47,7 +50,7 @@ class GameTest extends TestCase
         $this->assertEquals($expectedGameId, $game->id());
         $this->assertEquals($expectedFinished, $game->finished());
         // Implicitly test if it's serializable.
-        $this->assertEquals($expectedSerializedGame, json_encode($game));
+        $this->assertEquals($expectedSerializedGame, json_encode($game, JSON_THROW_ON_ERROR));
     }
 
     /**

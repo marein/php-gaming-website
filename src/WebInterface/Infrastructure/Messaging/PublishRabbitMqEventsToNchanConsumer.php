@@ -48,7 +48,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
 
         $method = self::ROUTING_KEY_TO_METHOD[$name];
         $payload = array_merge(
-            json_decode($message->body(), true),
+            json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR),
             ['eventName' => $name]
         );
 

@@ -29,7 +29,9 @@ final class RunningGamesProjection implements StoredEventSubscriber
      */
     public function handle(StoredEvent $storedEvent): void
     {
-        $this->{'handle' . $storedEvent->name()}($storedEvent);
+        $this->{'handle' . $storedEvent->name()}(
+            json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
@@ -50,54 +52,50 @@ final class RunningGamesProjection implements StoredEventSubscriber
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handlePlayerJoined(StoredEvent $storedEvent): void
+    private function handlePlayerJoined(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->runningGameStore->add($payload['gameId']);
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameAborted(StoredEvent $storedEvent): void
+    private function handleGameAborted(array $payload): void
     {
-        $this->handleGameFinished($storedEvent);
+        $this->handleGameFinished($payload);
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameResigned(StoredEvent $storedEvent): void
+    private function handleGameResigned(array $payload): void
     {
-        $this->handleGameFinished($storedEvent);
+        $this->handleGameFinished($payload);
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameWon(StoredEvent $storedEvent): void
+    private function handleGameWon(array $payload): void
     {
-        $this->handleGameFinished($storedEvent);
+        $this->handleGameFinished($payload);
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameDrawn(StoredEvent $storedEvent): void
+    private function handleGameDrawn(array $payload): void
     {
-        $this->handleGameFinished($storedEvent);
+        $this->handleGameFinished($payload);
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameFinished(StoredEvent $storedEvent): void
+    private function handleGameFinished(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->runningGameStore->remove($payload['gameId']);
     }
 }

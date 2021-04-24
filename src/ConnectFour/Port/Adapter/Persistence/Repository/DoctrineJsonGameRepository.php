@@ -140,7 +140,7 @@ final class DoctrineJsonGameRepository implements Games
             throw new GameNotFoundException();
         }
 
-        $gameAsArray = json_decode($row['aggregate'], true);
+        $gameAsArray = json_decode($row['aggregate'], true, 512, JSON_THROW_ON_ERROR);
 
         $this->registerAggregateId($gameAsArray['gameId'], (int)$row['version']);
 

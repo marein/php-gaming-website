@@ -30,7 +30,9 @@ final class OpenGamesProjection implements StoredEventSubscriber
      */
     public function handle(StoredEvent $storedEvent): void
     {
-        $this->{'handle' . $storedEvent->name()}($storedEvent);
+        $this->{'handle' . $storedEvent->name()}(
+            json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
@@ -49,34 +51,28 @@ final class OpenGamesProjection implements StoredEventSubscriber
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameOpened(StoredEvent $storedEvent): void
+    private function handleGameOpened(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->openGameStore->save(
             new OpenGame($payload['gameId'], $payload['playerId'])
         );
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameAborted(StoredEvent $storedEvent): void
+    private function handleGameAborted(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->openGameStore->remove($payload['gameId']);
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handlePlayerJoined(StoredEvent $storedEvent): void
+    private function handlePlayerJoined(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->openGameStore->remove($payload['gameId']);
     }
 }

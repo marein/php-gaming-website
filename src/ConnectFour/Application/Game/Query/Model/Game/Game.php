@@ -113,7 +113,7 @@ final class Game implements JsonSerializable
 
         if (method_exists($this, $method)) {
             $this->$method(
-                json_decode($storedEvent->payload(), true)
+                json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR)
             );
         }
     }

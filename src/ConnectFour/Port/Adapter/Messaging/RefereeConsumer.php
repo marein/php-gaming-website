@@ -47,9 +47,10 @@ final class RefereeConsumer implements Consumer
     public function handle(Message $message): void
     {
         $method = self::ROUTING_KEY_TO_METHOD[(string)$message->name()];
-        $payload = json_decode($message->body(), true);
 
-        $this->$method($payload);
+        $this->$method(
+            json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**

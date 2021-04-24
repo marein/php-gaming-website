@@ -39,7 +39,8 @@ final class PredisOpenGameStore implements OpenGameStore
                 [
                     'gameId'   => $openGame->gameId(),
                     'playerId' => $openGame->playerId()
-                ]
+                ],
+                JSON_THROW_ON_ERROR
             )
         );
     }
@@ -60,7 +61,7 @@ final class PredisOpenGameStore implements OpenGameStore
         return new OpenGames(
             array_map(
                 static function (string $value): OpenGame {
-                    $payload = json_decode($value, true);
+                    $payload = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
                     return new OpenGame($payload['gameId'], $payload['playerId']);
                 },
                 array_values($this->predis->hgetall(self::STORAGE_KEY))

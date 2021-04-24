@@ -29,7 +29,9 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
      */
     public function handle(StoredEvent $storedEvent): void
     {
-        $this->{'handle' . $storedEvent->name()}($storedEvent);
+        $this->{'handle' . $storedEvent->name()}(
+            json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
@@ -47,12 +49,10 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handlePlayerJoined(StoredEvent $storedEvent): void
+    private function handlePlayerJoined(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->gamesByPlayerStore->addToPlayer(
             $payload['joinedPlayerId'],
             $payload['gameId']
@@ -65,12 +65,10 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameAborted(StoredEvent $storedEvent): void
+    private function handleGameAborted(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         // We're only interested in running games.
         if ($payload['opponentPlayerId'] === '') {
             return;

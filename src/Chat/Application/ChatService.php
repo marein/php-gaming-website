@@ -82,7 +82,7 @@ final class ChatService
         }
 
         $chat = $this->chatGateway->byId($chatId);
-        $authors = json_decode($chat['authors'], true);
+        $authors = json_decode($chat['authors'], true, 512, JSON_THROW_ON_ERROR);
 
         // If authors are assigned to the chat, only those authors can write messages.
         if (!empty($authors) && !in_array($authorId, $authors, true)) {
