@@ -15,11 +15,6 @@ final class FieldMapper implements Mapper
      */
     public function serialize($value)
     {
-        // The field can be null in Board::lastUsedField
-        if ($value === null) {
-            return null;
-        }
-
         /** @var Field $value */
         return sprintf(
             '%s|%s|%s',
@@ -34,25 +29,13 @@ final class FieldMapper implements Mapper
      */
     public function deserialize($value)
     {
-        // The field can be null in Board::lastUsedField
-        if ($value === null) {
-            return null;
-        }
-
         [$x, $y, $color] = explode('|', $value);
-        $x = (int)$x;
-        $y = (int)$y;
-        $color = (int)$color;
+        $point = new Point((int)$x, (int)$y);
 
-        $point = new Point($x, $y);
-        $field = Field::empty($point);
-
-        if ($color === Stone::red()->color()) {
-            $field = $field->placeStone(Stone::red());
-        } elseif ($color === Stone::yellow()->color()) {
-            $field = $field->placeStone(Stone::yellow());
-        }
-
-        return $field;
+        return match ((int)$color) {
+            Stone::red()->color() => Field::empty($point)->placeStone(Stone::red()),
+            Stone::yellow()->color() => Field::empty($point)->placeStone(Stone::yellow()),
+            default => Field::empty($point)
+        };
     }
 }

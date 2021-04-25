@@ -36,7 +36,7 @@ final class VerticalWinningRule implements WinningRule
      */
     public function calculate(Board $board): bool
     {
-        if ($board->lastUsedField() === null) {
+        if ($board->lastUsedField()->isEmpty()) {
             return false;
         }
 

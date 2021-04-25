@@ -29,7 +29,7 @@ class BoardTest extends TestCase
         );
 
         $this->assertCount($countOfFields, $emptyFields);
-        $this->assertEquals(null, $board->lastUsedField());
+        $this->assertTrue($board->lastUsedField()->isEmpty());
         $this->assertEquals($size, $board->size());
         $this->assertCount(
             $countOfFields,
