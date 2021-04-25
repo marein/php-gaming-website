@@ -149,10 +149,11 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
 
         while (true) {
             $message = $enqueueConsumer->receive();
+            assert($message instanceof AmqpMessage);
 
             $consumer->handle(
                 new Message(
-                    Name::fromString($message->getRoutingKey()),
+                    Name::fromString((string)$message->getRoutingKey()),
                     $message->getBody()
                 )
             );
