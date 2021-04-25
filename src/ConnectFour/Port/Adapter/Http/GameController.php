@@ -55,8 +55,8 @@ class GameController
      */
     public function openGamesAction(Request $request): JsonResponse
     {
-        /** @var OpenGames $openGames */
         $openGames = $this->queryBus->handle(new OpenGamesQuery());
+        assert($openGames instanceof OpenGames);
 
         $games = array_map(
             static fn(OpenGame $openGame): array => [
@@ -78,8 +78,8 @@ class GameController
      */
     public function runningGamesAction(Request $request): JsonResponse
     {
-        /** @var RunningGames $runningGames */
         $runningGames = $this->queryBus->handle(new RunningGamesQuery());
+        assert($runningGames instanceof RunningGames);
 
         return new JsonResponse([
             'count' => $runningGames->count()
@@ -93,12 +93,12 @@ class GameController
      */
     public function gamesByPlayerAction(Request $request): JsonResponse
     {
-        /** @var GamesByPlayer $gamesByPlayer */
         $gamesByPlayer = $this->queryBus->handle(
             new GamesByPlayerQuery(
                 (string)$request->query->get('playerId')
             )
         );
+        assert($gamesByPlayer instanceof GamesByPlayer);
 
         $games = array_map(
             static fn(GameByPlayer $openGame): string => $openGame->gameId(),
@@ -117,12 +117,12 @@ class GameController
      */
     public function gameAction(Request $request): JsonResponse
     {
-        /** @var Game $game */
         $game = $this->queryBus->handle(
             new GameQuery(
                 (string)$request->query->get('gameId')
             )
         );
+        assert($game instanceof Game);
 
         return new JsonResponse($game);
     }

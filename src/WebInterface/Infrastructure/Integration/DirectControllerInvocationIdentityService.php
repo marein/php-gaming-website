@@ -5,8 +5,8 @@ namespace Gaming\WebInterface\Infrastructure\Integration;
 
 use Gaming\Identity\Port\Adapter\Http\UserController;
 use Gaming\WebInterface\Application\IdentityService;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 final class DirectControllerInvocationIdentityService implements IdentityService
 {
@@ -63,10 +63,10 @@ final class DirectControllerInvocationIdentityService implements IdentityService
     {
         $method = $actionName . 'Action';
 
-        /** @var JsonResponse $response */
         $response = $this->userController->$method(
             new Request($queryParameter, $postParameter)
         );
+        assert($response instanceof Response);
 
         return json_decode((string)$response->getContent(), true, 512, JSON_THROW_ON_ERROR);
     }

@@ -15,7 +15,8 @@ final class FieldMapper implements Mapper
      */
     public function serialize($value)
     {
-        /** @var Field $value */
+        assert($value instanceof Field);
+
         return sprintf(
             '%s|%s|%s',
             $value->point()->x(),

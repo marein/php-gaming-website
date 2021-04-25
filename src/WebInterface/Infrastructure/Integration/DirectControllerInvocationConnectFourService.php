@@ -5,8 +5,8 @@ namespace Gaming\WebInterface\Infrastructure\Integration;
 
 use Gaming\ConnectFour\Port\Adapter\Http\GameController;
 use Gaming\WebInterface\Application\ConnectFourService;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 final class DirectControllerInvocationConnectFourService implements ConnectFourService
 {
@@ -159,10 +159,10 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
     {
         $method = $actionName . 'Action';
 
-        /** @var JsonResponse $response */
         $response = $this->gameController->$method(
             new Request($queryParameter, $postParameter)
         );
+        assert($response instanceof Response);
 
         return json_decode((string)$response->getContent(), true, 512, JSON_THROW_ON_ERROR);
     }

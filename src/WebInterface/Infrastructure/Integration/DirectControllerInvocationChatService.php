@@ -5,8 +5,8 @@ namespace Gaming\WebInterface\Infrastructure\Integration;
 
 use Gaming\Chat\Presentation\Http\ChatController;
 use Gaming\WebInterface\Application\ChatService;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 final class DirectControllerInvocationChatService implements ChatService
 {
@@ -71,10 +71,10 @@ final class DirectControllerInvocationChatService implements ChatService
     {
         $method = $actionName . 'Action';
 
-        /** @var JsonResponse $response */
         $response = $this->chatController->$method(
             new Request($queryParameter, $postParameter)
         );
+        assert($response instanceof Response);
 
         return json_decode((string)$response->getContent(), true, 512, JSON_THROW_ON_ERROR);
     }

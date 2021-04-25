@@ -109,7 +109,6 @@ final class Board
             throw new OutOfSizeException();
         }
 
-        /** @var Field[] $reversedFields */
         $reversedFields = array_reverse($this->fields, true);
 
         foreach ($reversedFields as $position => $field) {
