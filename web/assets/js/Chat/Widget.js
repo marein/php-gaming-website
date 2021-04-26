@@ -49,7 +49,7 @@ class WidgetElement extends HTMLElement
     _loadMessages(chatId)
     {
         service.messages(chatId).then((messages) => {
-            messages.forEach((message) => {
+            messages.messages.forEach((message) => {
                 this._appendMessage(message);
             });
 

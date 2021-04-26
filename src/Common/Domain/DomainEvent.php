@@ -31,7 +31,7 @@ interface DomainEvent
     /**
      * Returns the payload. This array must only hold primitive types.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function payload(): array;
 }

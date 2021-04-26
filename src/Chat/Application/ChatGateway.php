@@ -11,8 +11,8 @@ interface ChatGateway
     /**
      * Create a chat.
      *
-     * @param string $ownerId
-     * @param array  $authors
+     * @param string   $ownerId
+     * @param string[] $authors
      *
      * @return ChatId
      */
@@ -40,7 +40,7 @@ interface ChatGateway
      *
      * @param ChatId $chatId
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws ChatNotFoundException
      */
     public function byId(ChatId $chatId): array;
@@ -55,7 +55,7 @@ interface ChatGateway
      * @param int    $offset
      * @param int    $limit
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function messages(ChatId $chatId, string $authorId, int $offset, int $limit): array;
 }

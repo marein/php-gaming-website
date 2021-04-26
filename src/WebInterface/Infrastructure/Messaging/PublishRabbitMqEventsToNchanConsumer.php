@@ -77,7 +77,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish game opened.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleGameOpened(array $payload): void
     {
@@ -90,7 +90,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish game aborted.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleGameAborted(array $payload): void
     {
@@ -103,7 +103,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish game resigned.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleGameResigned(array $payload): void
     {
@@ -116,7 +116,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish player joined.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handlePlayerJoined(array $payload): void
     {
@@ -136,7 +136,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish game won.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleGameWon(array $payload): void
     {
@@ -149,7 +149,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish game drawn.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleGameDrawn(array $payload): void
     {
@@ -162,7 +162,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish player moved.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handlePlayerMoved(array $payload): void
     {
@@ -175,7 +175,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish chat assigned.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleChatAssigned(array $payload): void
     {
@@ -188,7 +188,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     /**
      * Publish message written.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleMessageWritten(array $payload): void
     {

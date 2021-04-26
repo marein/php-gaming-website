@@ -104,7 +104,7 @@ final class ChatService
      *
      * @param MessagesQuery $messagesQuery
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function messages(MessagesQuery $messagesQuery): array
     {

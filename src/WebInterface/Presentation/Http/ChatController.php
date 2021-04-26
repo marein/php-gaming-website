@@ -49,13 +49,13 @@ final class ChatController
      */
     public function messagesAction(Request $request, string $chatId): JsonResponse
     {
-        return new JsonResponse(
-            $this->chatService->messages(
+        return new JsonResponse([
+            'messages' => $this->chatService->messages(
                 $chatId,
                 $request->getSession()->get('user'),
                 0,
                 10000
             )
-        );
+        ]);
     }
 }

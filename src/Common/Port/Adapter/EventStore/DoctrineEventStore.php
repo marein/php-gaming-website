@@ -149,7 +149,7 @@ final class DoctrineEventStore implements EventStore
     /**
      * Transform the sql rows to stored event instances.
      *
-     * @param array $rows
+     * @param array<int, array<string, mixed>> $rows
      *
      * @return StoredEvent[]
      */

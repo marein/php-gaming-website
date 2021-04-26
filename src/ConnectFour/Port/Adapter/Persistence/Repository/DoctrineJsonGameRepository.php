@@ -28,7 +28,7 @@ final class DoctrineJsonGameRepository implements Games
      * concurrency control. I don't want to pollute my entity with a version property.
      * This array gets never cleared so this can be a memory leak in a long running process.
      *
-     * @var array
+     * @var array<string, array<string, mixed>>
      */
     private array $identityMap;
 

@@ -85,10 +85,7 @@ final class Game implements JsonSerializable
         return $this->finished;
     }
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
         return [
             'gameId'   => $this->gameId,
@@ -121,7 +118,7 @@ final class Game implements JsonSerializable
     /**
      * Open the game.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function whenGameOpened(array $payload): void
     {
@@ -134,7 +131,7 @@ final class Game implements JsonSerializable
     /**
      * Assign the joined player.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function whenPlayerJoined(array $payload): void
     {
@@ -144,7 +141,7 @@ final class Game implements JsonSerializable
     /**
      * Project a player movement.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function whenPlayerMoved(array $payload): void
     {
@@ -162,7 +159,7 @@ final class Game implements JsonSerializable
     /**
      * Mark the game as finished.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function whenGameAborted(array $payload): void
     {
@@ -172,7 +169,7 @@ final class Game implements JsonSerializable
     /**
      * Mark the game as finished.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function whenGameResigned(array $payload): void
     {
@@ -182,7 +179,7 @@ final class Game implements JsonSerializable
     /**
      * Mark the game as finished.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function whenGameWon(array $payload): void
     {
@@ -192,7 +189,7 @@ final class Game implements JsonSerializable
     /**
      * Mark the game as finished.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function whenGameDrawn(array $payload): void
     {
@@ -202,7 +199,7 @@ final class Game implements JsonSerializable
     /**
      * Assign the chat id.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function whenChatAssigned(array $payload): void
     {

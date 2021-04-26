@@ -75,7 +75,7 @@ final class RefereeConsumer implements Consumer
     /**
      * Assign chat to game.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleChatInitiated(array $payload): void
     {
@@ -90,7 +90,7 @@ final class RefereeConsumer implements Consumer
     /**
      * Publish initiate chat command to other context.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handlePlayerJoined(array $payload): void
     {

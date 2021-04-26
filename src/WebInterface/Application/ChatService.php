@@ -12,7 +12,7 @@ interface ChatService
      * @param string $authorId
      * @param string $message
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function writeMessage(string $chatId, string $authorId, string $message): array;
 
@@ -24,7 +24,7 @@ interface ChatService
      * @param int    $offset
      * @param int    $limit
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function messages(string $chatId, string $authorId, int $offset, int $limit): array;
 }

@@ -149,11 +149,11 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
     /**
      * Make a call to the controller.
      *
-     * @param string $actionName
-     * @param array  $queryParameter
-     * @param array  $postParameter
+     * @param string               $actionName
+     * @param array<string, mixed> $queryParameter
+     * @param array<string, mixed> $postParameter
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function sendRequest(string $actionName, array $queryParameter = [], array $postParameter = []): array
     {

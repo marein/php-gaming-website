@@ -60,7 +60,7 @@ final class TransformApplicationExceptionListener
      *
      * @param ApplicationException $applicationException
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     private function transformViolationsToArray(ApplicationException $applicationException): array
     {
