@@ -79,7 +79,7 @@ sniffer() {
 }
 
 analyzer() {
-    docker-compose run php vendor/bin/phpstan analyse -l 1 src
+    docker-compose run php vendor/bin/phpstan analyse
 }
 
 acceptance() {
