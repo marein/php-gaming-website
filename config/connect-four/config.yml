@@ -2,6 +2,7 @@ imports:
     - { resource: services/command_bus.yml }
     - { resource: services/console.yml }
     - { resource: services/game.yml }
+    - { resource: services/normalizer.yml }
     - { resource: services/persistence.yml }
     - { resource: services/query_bus.yml }
     - { resource: services/subscriber.yml }

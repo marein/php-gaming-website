@@ -1,0 +1,4 @@
+Gaming\ConnectFour\Domain\Game\Game:
+  properties:
+    domainEvents:
+      exclude: true
