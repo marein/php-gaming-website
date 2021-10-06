@@ -11,6 +11,12 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 
+/**
+ * This class provides a factory for jms/serializer used in our service container.
+ * The bundle which integrates jms/serializer with symfony cleanly is currently only
+ * capable of configuring one serializer for the application. This factory can be used
+ * to create a jms/serializer for each context with some application-wide defaults.
+ */
 final class JmsSerializerFactory
 {
     /**

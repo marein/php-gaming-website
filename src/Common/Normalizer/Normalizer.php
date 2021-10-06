@@ -5,6 +5,10 @@ namespace Gaming\Common\Normalizer;
 
 use Gaming\Common\Normalizer\Exception\NormalizerException;
 
+/**
+ * This interface abstracts the library used for normalization so that
+ * we can exchange it in the future.
+ */
 interface Normalizer
 {
     /**
