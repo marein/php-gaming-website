@@ -50,11 +50,11 @@ final class FieldSubscriber implements SubscribingHandlerInterface
      */
     public function deserializeFieldFromJson(
         JsonDeserializationVisitor $visitor,
-        string $fieldAsString,
+        string $field,
         array $type,
         Context $context
     ): Field {
-        [$x, $y, $color] = explode('|', $fieldAsString);
+        [$x, $y, $color] = explode('|', $field);
         $point = new Point((int)$x, (int)$y);
 
         return match ((int)$color) {

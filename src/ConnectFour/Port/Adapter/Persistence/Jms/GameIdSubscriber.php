@@ -41,10 +41,10 @@ final class GameIdSubscriber implements SubscribingHandlerInterface
      */
     public function deserializeGameIdFromJson(
         JsonDeserializationVisitor $visitor,
-        string $gameIdAsString,
+        string $gameId,
         array $type,
         Context $context
     ): GameId {
-        return GameId::fromString($gameIdAsString);
+        return GameId::fromString($gameId);
     }
 }
