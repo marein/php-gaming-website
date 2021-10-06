@@ -60,7 +60,5 @@ final class RefereeCommand extends Command
                 $output
             )
         );
-
-        return Command::SUCCESS;
     }
 }

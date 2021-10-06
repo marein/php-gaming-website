@@ -59,7 +59,5 @@ final class PublishRabbitMqEventsToNchanCommand extends Command
                 $output
             )
         );
-
-        return Command::SUCCESS;
     }
 }

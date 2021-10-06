@@ -59,7 +59,5 @@ final class RabbitMqCommandListenerCommand extends Command
                 $output
             )
         );
-
-        return Command::SUCCESS;
     }
 }
