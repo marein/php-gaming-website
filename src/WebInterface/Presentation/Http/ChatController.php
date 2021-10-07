@@ -35,8 +35,8 @@ final class ChatController
         return new JsonResponse(
             $this->chatService->writeMessage(
                 $chatId,
-                $request->getSession()->get('user'),
-                $request->request->get('message')
+                (string)$request->getSession()->get('user'),
+                (string)$request->request->get('message')
             )
         );
     }
@@ -52,7 +52,7 @@ final class ChatController
         return new JsonResponse([
             'messages' => $this->chatService->messages(
                 $chatId,
-                $request->getSession()->get('user'),
+                (string)$request->getSession()->get('user'),
                 0,
                 10000
             )
