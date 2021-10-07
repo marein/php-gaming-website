@@ -19,6 +19,7 @@ services:
         arguments:
             - '@connect-four.doctrine-dbal'
             - '@connect-four.domain-event-publisher'
+            - '@connect-four.normalizer'
 
     connect-four.game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameStore
