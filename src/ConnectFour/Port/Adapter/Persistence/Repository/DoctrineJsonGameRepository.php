@@ -6,12 +6,11 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 use Doctrine\DBAL\Connection;
 use Gaming\Common\Domain\DomainEventPublisher;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
+use Gaming\Common\Normalizer\Normalizer;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Games;
-use Gaming\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapper;
-use Gaming\ConnectFour\Port\Adapter\Persistence\Mapping\GameMapperFactory;
 
 final class DoctrineJsonGameRepository implements Games
 {
@@ -40,13 +39,11 @@ final class DoctrineJsonGameRepository implements Games
     private DomainEventPublisher $domainEventPublisher;
 
     /**
-     * The game mapper to serialize the game to an array structure and back.
+     * The normalizer to normalize the game to an array structure and back.
      *
-     * Use $this->gameMapper() instead of this property. The GameMapper gets lazy loaded.
-     *
-     * @var GameMapper|null
+     * @var Normalizer
      */
-    private ?GameMapper $gameMapper;
+    private Normalizer $normalizer;
 
     /**
      * The table where the game gets persisted.
@@ -60,14 +57,19 @@ final class DoctrineJsonGameRepository implements Games
      *
      * @param Connection           $connection           The doctrine connection.
      * @param DomainEventPublisher $domainEventPublisher The domain event publisher where domain events gets published.
+     * @param Normalizer           $normalizer           The normalizer to normalize the game
+     *                                                   to an array structure and back.
      */
-    public function __construct(Connection $connection, DomainEventPublisher $domainEventPublisher)
-    {
+    public function __construct(
+        Connection $connection,
+        DomainEventPublisher $domainEventPublisher,
+        Normalizer $normalizer
+    ) {
         $this->connection = $connection;
-        $this->domainEventPublisher = $domainEventPublisher;
-        $this->tableName = 'game';
-        $this->gameMapper = null;
         $this->identityMap = [];
+        $this->domainEventPublisher = $domainEventPublisher;
+        $this->normalizer = $normalizer;
+        $this->tableName = 'game';
     }
 
     /**
@@ -142,9 +144,9 @@ final class DoctrineJsonGameRepository implements Games
 
         $gameAsArray = json_decode($row['aggregate'], true, 512, JSON_THROW_ON_ERROR);
 
-        $this->registerAggregateId($gameAsArray['gameId'], (int)$row['version']);
+        $this->registerAggregateId($id->toString(), (int)$row['version']);
 
-        return $this->gameMapper()->deserialize($gameAsArray);
+        return $this->normalizer->denormalize($gameAsArray, Game::class);
     }
 
     /**
@@ -160,7 +162,7 @@ final class DoctrineJsonGameRepository implements Games
         $version = $this->identityMap[$id]['version'];
 
         $result = $this->connection->update($this->tableName, [
-            'aggregate' => $this->gameMapper()->serialize($game),
+            'aggregate' => $this->normalizer->normalize($game, Game::class),
             'version'   => $version + 1
         ], ['id' => $id, 'version' => $version], [
             'id'        => 'uuid_binary_ordered_time',
@@ -185,7 +187,7 @@ final class DoctrineJsonGameRepository implements Games
     {
         $this->connection->insert($this->tableName, [
             'id'        => $id,
-            'aggregate' => $this->gameMapper()->serialize($game),
+            'aggregate' => $this->normalizer->normalize($game, Game::class),
             'version'   => 1
         ], [
             'id'        => 'uuid_binary_ordered_time',
@@ -207,15 +209,5 @@ final class DoctrineJsonGameRepository implements Games
         $this->identityMap[$id] = [
             'version' => $version
         ];
-    }
-
-    /**
-     * Lazy loads the GameMapper.
-     *
-     * @return GameMapper
-     */
-    private function gameMapper(): GameMapper
-    {
-        return $this->gameMapper ??= (new GameMapperFactory())->create();
     }
 }
