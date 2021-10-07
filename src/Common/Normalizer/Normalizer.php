@@ -19,12 +19,7 @@ interface Normalizer
     public function normalize(mixed $value, string $typeName): mixed;
 
     /**
-     * @template T
-     *
      * @param mixed $value A scalar or a nestable array of scalars.
-     * @param T $typeName
-     *
-     * @return T
      * @throws NormalizerException
      */
     public function denormalize(mixed $value, string $typeName): mixed;
