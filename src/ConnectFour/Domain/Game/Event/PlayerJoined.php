@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
@@ -60,9 +61,9 @@ final class PlayerJoined implements DomainEvent
     public function payload(): array
     {
         return [
-            'gameId'           => $this->gameId->toString(),
+            'gameId' => $this->gameId->toString(),
             'opponentPlayerId' => $this->opponentPlayer->id(),
-            'joinedPlayerId'   => $this->joinedPlayer->id()
+            'joinedPlayerId' => $this->joinedPlayer->id()
         ];
     }
 

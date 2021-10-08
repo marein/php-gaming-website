@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
@@ -36,8 +37,8 @@ final class PlayerMoved implements DomainEvent
      * PlayerMoved constructor.
      *
      * @param GameId $gameId
-     * @param Point  $point
-     * @param Stone  $stone
+     * @param Point $point
+     * @param Stone $stone
      */
     public function __construct(GameId $gameId, Point $point, Stone $stone)
     {
@@ -62,9 +63,9 @@ final class PlayerMoved implements DomainEvent
     {
         return [
             'gameId' => $this->gameId->toString(),
-            'x'      => $this->point->x(),
-            'y'      => $this->point->y(),
-            'color'  => $this->stone->color()
+            'x' => $this->point->x(),
+            'y' => $this->point->y(),
+            'color' => $this->stone->color()
         ];
     }
 

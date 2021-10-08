@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
@@ -55,9 +56,9 @@ final class DoctrineJsonGameRepository implements Games
     /**
      * DoctrineGameRepository constructor.
      *
-     * @param Connection           $connection           The doctrine connection.
+     * @param Connection $connection The doctrine connection.
      * @param DomainEventPublisher $domainEventPublisher The domain event publisher where domain events gets published.
-     * @param Normalizer           $normalizer           The normalizer to normalize the game
+     * @param Normalizer $normalizer The normalizer to normalize the game
      *                                                   to an array structure and back.
      */
     public function __construct(
@@ -153,7 +154,7 @@ final class DoctrineJsonGameRepository implements Games
      * Update the game in the database.
      *
      * @param string $id
-     * @param Game   $game
+     * @param Game $game
      *
      * @throws ConcurrencyException
      */
@@ -161,14 +162,19 @@ final class DoctrineJsonGameRepository implements Games
     {
         $version = $this->identityMap[$id]['version'];
 
-        $result = $this->connection->update($this->tableName, [
-            'aggregate' => $this->normalizer->normalize($game, Game::class),
-            'version'   => $version + 1
-        ], ['id' => $id, 'version' => $version], [
-            'id'        => 'uuid_binary_ordered_time',
-            'aggregate' => 'json',
-            'version'   => 'integer'
-        ]);
+        $result = $this->connection->update(
+            $this->tableName,
+            [
+                'aggregate' => $this->normalizer->normalize($game, Game::class),
+                'version' => $version + 1
+            ],
+            ['id' => $id, 'version' => $version],
+            [
+                'id' => 'uuid_binary_ordered_time',
+                'aggregate' => 'json',
+                'version' => 'integer'
+            ]
+        );
 
         if ($result === 0) {
             throw new ConcurrencyException();
@@ -181,19 +187,23 @@ final class DoctrineJsonGameRepository implements Games
      * Insert the new game in the database.
      *
      * @param string $id
-     * @param Game   $game
+     * @param Game $game
      */
     private function insert(string $id, Game $game): void
     {
-        $this->connection->insert($this->tableName, [
-            'id'        => $id,
-            'aggregate' => $this->normalizer->normalize($game, Game::class),
-            'version'   => 1
-        ], [
-            'id'        => 'uuid_binary_ordered_time',
-            'aggregate' => 'json',
-            'version'   => 'integer'
-        ]);
+        $this->connection->insert(
+            $this->tableName,
+            [
+                'id' => $id,
+                'aggregate' => $this->normalizer->normalize($game, Game::class),
+                'version' => 1
+            ],
+            [
+                'id' => 'uuid_binary_ordered_time',
+                'aggregate' => 'json',
+                'version' => 'integer'
+            ]
+        );
 
         $this->registerAggregateId($id, 1);
     }
@@ -202,7 +212,7 @@ final class DoctrineJsonGameRepository implements Games
      * Register game id with its version for optimistic locking.
      *
      * @param string $id
-     * @param int    $version
+     * @param int $version
      */
     private function registerAggregateId(string $id, int $version): void
     {

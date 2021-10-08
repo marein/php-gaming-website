@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
@@ -67,10 +68,10 @@ final class TransformApplicationExceptionListener
         return array_map(
             static fn(Violation $violation): array => [
                 'propertyPath' => $violation->propertyPath(),
-                'identifier'   => $violation->identifier(),
-                'parameters'   => array_map(
+                'identifier' => $violation->identifier(),
+                'parameters' => array_map(
                     static fn(ViolationParameter $parameter): array => [
-                        'name'  => $parameter->name(),
+                        'name' => $parameter->name(),
                         'value' => $parameter->value()
                     ],
                     $violation->parameters()

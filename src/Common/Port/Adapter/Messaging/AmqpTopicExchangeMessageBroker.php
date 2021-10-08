@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Messaging;
@@ -91,7 +92,7 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     /**
      * Create a durable queue and bind it to the topic exchange via the given routing keys.
      *
-     * @param string   $name
+     * @param string $name
      * @param string[] $routingKeys
      *
      * @return AmqpQueue

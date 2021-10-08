@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
@@ -60,7 +61,7 @@ final class GameResigned implements DomainEvent
     public function payload(): array
     {
         return [
-            'gameId'           => $this->gameId->toString(),
+            'gameId' => $this->gameId->toString(),
             'resignedPlayerId' => $this->resignedPlayer->id(),
             'opponentPlayerId' => $this->opponentPlayer->id()
         ];

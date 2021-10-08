@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\Domain;
@@ -48,7 +49,7 @@ final class ExtractPayloadForEventSubscriberTest extends TestCase
      *
      * @param string $domainEventName
      * @param string $subscribedEventName
-     * @param bool   $shouldBeSubscribedTo
+     * @param bool $shouldBeSubscribedTo
      */
     public function itShouldOnlyBeSubscribedToItsEvent(
         string $domainEventName,

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
@@ -25,7 +26,7 @@ interface EventStore
      * Returns the stored events from the given aggregate id.
      *
      * @param string $aggregateId
-     * @param int    $sinceId
+     * @param int $sinceId
      *
      * @return StoredEvent[]
      * @throws EventStoreException

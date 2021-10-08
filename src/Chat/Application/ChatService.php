@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Application;
@@ -33,8 +34,8 @@ final class ChatService
     /**
      * ChatService constructor.
      *
-     * @param ChatGateway          $chatGateway
-     * @param EventStore           $eventStore
+     * @param ChatGateway $chatGateway
+     * @param EventStore $eventStore
      */
     public function __construct(
         ChatGateway $chatGateway,

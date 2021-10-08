@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\State;
@@ -30,7 +31,7 @@ final class Open implements State
      * Open constructor.
      *
      * @param Configuration $configuration
-     * @param Player        $player
+     * @param Player $player
      */
     public function __construct(Configuration $configuration, Player $player)
     {

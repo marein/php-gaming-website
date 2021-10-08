@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Http;
@@ -26,7 +27,7 @@ final class ChatController
 
     /**
      * @param Request $request
-     * @param string  $chatId
+     * @param string $chatId
      *
      * @return JsonResponse
      */
@@ -43,19 +44,21 @@ final class ChatController
 
     /**
      * @param Request $request
-     * @param string  $chatId
+     * @param string $chatId
      *
      * @return JsonResponse
      */
     public function messagesAction(Request $request, string $chatId): JsonResponse
     {
-        return new JsonResponse([
-            'messages' => $this->chatService->messages(
-                $chatId,
-                (string)$request->getSession()->get('user'),
-                0,
-                10000
-            )
-        ]);
+        return new JsonResponse(
+            [
+                'messages' => $this->chatService->messages(
+                    $chatId,
+                    (string)$request->getSession()->get('user'),
+                    0,
+                    10000
+                )
+            ]
+        );
     }
 }

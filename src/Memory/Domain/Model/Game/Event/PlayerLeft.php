@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game\Event;
@@ -53,7 +54,7 @@ final class PlayerLeft implements DomainEvent
     public function payload(): array
     {
         return [
-            'gameId'   => $this->gameId->toString(),
+            'gameId' => $this->gameId->toString(),
             'playerId' => $this->player->id()
         ];
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Messaging;
@@ -25,7 +26,7 @@ final class SymfonyConsoleConsumer implements Consumer
     /**
      * SymfonyConsoleConsumer constructor.
      *
-     * @param Consumer        $consumer
+     * @param Consumer $consumer
      * @param OutputInterface $output
      */
     public function __construct(Consumer $consumer, OutputInterface $output)

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\Bus;
@@ -49,8 +50,7 @@ final class RoutingBusTest extends TestCase
      */
     private function createMessage(string $value): object
     {
-        $message = new class()
-        {
+        $message = new class () {
             public $value;
         };
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
@@ -27,7 +28,7 @@ final class InMemoryCacheGameStore implements GameStore
      * InMemoryCacheGameStore constructor.
      *
      * @param GameStore $gameStore
-     * @param int       $cacheSize
+     * @param int $cacheSize
      */
     public function __construct(GameStore $gameStore, int $cacheSize)
     {

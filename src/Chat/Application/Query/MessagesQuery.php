@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Query;
@@ -30,8 +31,8 @@ final class MessagesQuery
      *
      * @param string $chatId
      * @param string $authorId
-     * @param int    $offset
-     * @param int    $limit
+     * @param int $offset
+     * @param int $limit
      */
     public function __construct(string $chatId, string $authorId, int $offset, int $limit)
     {

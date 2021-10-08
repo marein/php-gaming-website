@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\EventStore;
@@ -25,7 +26,7 @@ final class PredisEventStorePointer implements EventStorePointer
      * PredisEventStorePointer constructor.
      *
      * @param ClientInterface $predis The predis instance which handles the connection.
-     * @param string          $key    The key where the id is stored
+     * @param string $key The key where the id is stored
      */
     public function __construct(ClientInterface $predis, string $key)
     {

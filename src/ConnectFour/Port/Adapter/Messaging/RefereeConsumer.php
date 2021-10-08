@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Messaging;
@@ -15,7 +16,7 @@ use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
 final class RefereeConsumer implements Consumer
 {
     private const ROUTING_KEY_TO_METHOD = [
-        'Chat.ChatInitiated'       => 'handleChatInitiated',
+        'Chat.ChatInitiated' => 'handleChatInitiated',
         'ConnectFour.PlayerJoined' => 'handlePlayerJoined'
     ];
 
@@ -32,7 +33,7 @@ final class RefereeConsumer implements Consumer
     /**
      * RefereeConsumer constructor.
      *
-     * @param Bus           $commandBus
+     * @param Bus $commandBus
      * @param MessageBroker $messageBroker
      */
     public function __construct(Bus $commandBus, MessageBroker $messageBroker)

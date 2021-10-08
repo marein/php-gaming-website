@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Messaging;
@@ -13,15 +14,15 @@ use Gaming\WebInterface\Application\BrowserNotifier;
 final class PublishRabbitMqEventsToNchanConsumer implements Consumer
 {
     private const ROUTING_KEY_TO_METHOD = [
-        'ConnectFour.GameOpened'   => 'handleGameOpened',
-        'ConnectFour.GameAborted'  => 'handleGameAborted',
+        'ConnectFour.GameOpened' => 'handleGameOpened',
+        'ConnectFour.GameAborted' => 'handleGameAborted',
         'ConnectFour.GameResigned' => 'handleGameResigned',
-        'ConnectFour.GameWon'      => 'handleGameWon',
-        'ConnectFour.GameDrawn'    => 'handleGameDrawn',
-        'ConnectFour.PlayerMoved'  => 'handlePlayerMoved',
+        'ConnectFour.GameWon' => 'handleGameWon',
+        'ConnectFour.GameDrawn' => 'handleGameDrawn',
+        'ConnectFour.PlayerMoved' => 'handlePlayerMoved',
         'ConnectFour.PlayerJoined' => 'handlePlayerJoined',
         'ConnectFour.ChatAssigned' => 'handleChatAssigned',
-        'Chat.MessageWritten'      => 'handleMessageWritten'
+        'Chat.MessageWritten' => 'handleMessageWritten'
     ];
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Console;
@@ -38,9 +39,9 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
     /**
      * PublishStoredEventsToRabbitMqCommand constructor.
      *
-     * @param EventStore      $eventStore
+     * @param EventStore $eventStore
      * @param ClientInterface $predis
-     * @param MessageBroker   $messageBroker
+     * @param MessageBroker $messageBroker
      */
     public function __construct(EventStore $eventStore, ClientInterface $predis, MessageBroker $messageBroker)
     {

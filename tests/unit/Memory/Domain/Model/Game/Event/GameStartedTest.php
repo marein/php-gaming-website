@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Memory\Domain\Model\Game\Event;
@@ -27,7 +28,7 @@ final class GameStartedTest extends TestCase
             new Player('playerId2')
         );
         $payload = [
-            'gameId'    => $gameId->toString(),
+            'gameId' => $gameId->toString(),
             'playerIds' => ['playerId1', 'playerId2']
         ];
 

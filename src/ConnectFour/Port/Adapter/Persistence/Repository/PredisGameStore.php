@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
@@ -37,7 +38,7 @@ final class PredisGameStore implements GameStore
      * PredisGameStore constructor.
      *
      * @param ClientInterface $predis
-     * @param GameFinder      $fallbackGameFinder
+     * @param GameFinder $fallbackGameFinder
      */
     public function __construct(ClientInterface $predis, GameFinder $fallbackGameFinder)
     {

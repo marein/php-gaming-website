@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Memory\Domain\Model\Game\Event;
@@ -22,9 +23,9 @@ final class GameOpenedTest extends TestCase
         $numberOfCards = 42;
         $playerId = 'playerId';
         $payload = [
-            'gameId'        => $gameId->toString(),
+            'gameId' => $gameId->toString(),
             'numberOfCards' => $numberOfCards,
-            'playerId'      => $playerId
+            'playerId' => $playerId
         ];
 
         $gameOpened = new GameOpened(

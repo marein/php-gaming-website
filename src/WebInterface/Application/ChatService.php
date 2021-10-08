@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Application;
@@ -21,8 +22,8 @@ interface ChatService
      *
      * @param string $chatId
      * @param string $authorId
-     * @param int    $offset
-     * @param int    $limit
+     * @param int $offset
+     * @param int $limit
      *
      * @return array<string, mixed>
      */

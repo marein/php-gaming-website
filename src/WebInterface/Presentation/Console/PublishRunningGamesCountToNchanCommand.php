@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Console;
@@ -25,7 +26,7 @@ final class PublishRunningGamesCountToNchanCommand extends Command
      * PublishRunningGamesCountToNchanCommand constructor.
      *
      * @param ConnectFourService $connectFourService
-     * @param BrowserNotifier    $browserNotifier
+     * @param BrowserNotifier $browserNotifier
      */
     public function __construct(ConnectFourService $connectFourService, BrowserNotifier $browserNotifier)
     {
@@ -61,7 +62,7 @@ final class PublishRunningGamesCountToNchanCommand extends Command
                     json_encode(
                         [
                             'eventName' => 'ConnectFour.RunningGamesUpdated',
-                            'count'     => $currentRunningGamesCount
+                            'count' => $currentRunningGamesCount
                         ],
                         JSON_THROW_ON_ERROR
                     )

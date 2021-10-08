@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
@@ -22,7 +23,7 @@ final class Configuration
     /**
      * Configuration constructor.
      *
-     * @param Size        $size
+     * @param Size $size
      * @param WinningRule $winningRule
      */
     private function __construct(Size $size, WinningRule $winningRule)
@@ -51,7 +52,7 @@ final class Configuration
     /**
      * Create a custom [Configuration].
      *
-     * @param Size        $size
+     * @param Size $size
      * @param WinningRule $winningRule
      *
      * @return Configuration

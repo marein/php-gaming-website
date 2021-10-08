@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Http;
@@ -52,7 +53,7 @@ final class ConnectFourController
 
     /**
      * @param Request $request
-     * @param string  $gameId
+     * @param string $gameId
      *
      * @return JsonResponse
      */
@@ -68,7 +69,7 @@ final class ConnectFourController
 
     /**
      * @param Request $request
-     * @param string  $gameId
+     * @param string $gameId
      *
      * @return JsonResponse
      */
@@ -84,7 +85,7 @@ final class ConnectFourController
 
     /**
      * @param Request $request
-     * @param string  $gameId
+     * @param string $gameId
      *
      * @return JsonResponse
      */
@@ -100,7 +101,7 @@ final class ConnectFourController
 
     /**
      * @param Request $request
-     * @param string  $gameId
+     * @param string $gameId
      *
      * @return JsonResponse
      */

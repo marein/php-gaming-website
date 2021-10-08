@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Integration;
@@ -37,7 +38,7 @@ final class DirectControllerInvocationChatService implements ChatService
             ],
             [
                 'authorId' => $authorId,
-                'message'  => $message
+                'message' => $message
             ]
         );
     }
@@ -50,10 +51,10 @@ final class DirectControllerInvocationChatService implements ChatService
         return $this->sendRequest(
             'messages',
             [
-                'chatId'   => $chatId,
+                'chatId' => $chatId,
                 'authorId' => $authorId,
-                'offset'   => $offset,
-                'limit'    => $limit
+                'offset' => $offset,
+                'limit' => $limit
             ]
         );
     }
@@ -61,7 +62,7 @@ final class DirectControllerInvocationChatService implements ChatService
     /**
      * Make a call to the controller.
      *
-     * @param string               $actionName
+     * @param string $actionName
      * @param array<string, mixed> $queryParameter
      * @param array<string, mixed> $postParameter
      *

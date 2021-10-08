@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Board;
@@ -26,9 +27,9 @@ final class Board
     /**
      * Board constructor.
      *
-     * @param Size    $size
+     * @param Size $size
      * @param Field[] $fields
-     * @param Field   $lastUsedField
+     * @param Field $lastUsedField
      */
     private function __construct(Size $size, array $fields, Field $lastUsedField)
     {
@@ -72,7 +73,7 @@ final class Board
      * Drops a [Stone] in the given column.
      *
      * @param Stone $stone
-     * @param int   $column
+     * @param int $column
      *
      * @return Board
      * @throws ColumnAlreadyFilledException
@@ -217,7 +218,7 @@ final class Board
             $points[] = new Point($x, $y);
         }
 
-        return  $this->findFieldsByPoints($points);
+        return $this->findFieldsByPoints($points);
     }
 
     /**

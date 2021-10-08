@@ -1,5 +1,10 @@
 <?php
+
 declare(strict_types=1);
+
+use Codeception\Actor;
+use Codeception\Lib\Actor\Shared\Friend;
+use Codeception\Lib\Actor\Shared\Retry;
 
 /**
  * Inherited Methods
@@ -16,9 +21,9 @@ declare(strict_types=1);
  *
  * @SuppressWarnings(PHPMD)
  */
-class AcceptanceTester extends \Codeception\Actor
+class AcceptanceTester extends Actor
 {
     use _generated\AcceptanceTesterActions;
-    use \Codeception\Lib\Actor\Shared\Friend;
-    use \Codeception\Lib\Actor\Shared\Retry;
+    use Friend;
+    use Retry;
 }

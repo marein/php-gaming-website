@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
@@ -37,7 +38,7 @@ final class PredisOpenGameStore implements OpenGameStore
             $openGame->gameId(),
             json_encode(
                 [
-                    'gameId'   => $openGame->gameId(),
+                    'gameId' => $openGame->gameId(),
                     'playerId' => $openGame->playerId()
                 ],
                 JSON_THROW_ON_ERROR

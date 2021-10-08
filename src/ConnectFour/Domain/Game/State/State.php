@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\State;
@@ -46,7 +47,7 @@ interface State
      *
      * @param GameId $gameId
      * @param string $playerId
-     * @param int    $column
+     * @param int $column
      *
      * @return Transition
      * @throws GameException

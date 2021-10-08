@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Bus;
@@ -23,8 +24,8 @@ final class Violation
     /**
      * Violation constructor.
      *
-     * @param string               $propertyPath
-     * @param string               $identifier
+     * @param string $propertyPath
+     * @param string $identifier
      * @param ViolationParameter[] $parameters
      */
     public function __construct(string $propertyPath, string $identifier, array $parameters)

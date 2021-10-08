@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Event;
@@ -23,9 +24,9 @@ final class PlayerJoinedTest extends TestCase
         $joinedPlayerId = 'joinedPlayerId';
         $opponentPlayerId = 'opponentPlayerId';
         $payload = [
-            'gameId'           => $gameId->toString(),
+            'gameId' => $gameId->toString(),
             'opponentPlayerId' => $opponentPlayerId,
-            'joinedPlayerId'   => $joinedPlayerId
+            'joinedPlayerId' => $joinedPlayerId
         ];
 
         $playerJoined = new PlayerJoined(

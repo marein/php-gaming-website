@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
@@ -34,8 +35,8 @@ final class GameAborted implements DomainEvent
     /**
      * GameAborted constructor.
      *
-     * @param GameId      $gameId
-     * @param Player      $abortedPlayer
+     * @param GameId $gameId
+     * @param Player $abortedPlayer
      * @param Player|null $opponentPlayer
      */
     public function __construct(GameId $gameId, Player $abortedPlayer, Player $opponentPlayer = null)
@@ -60,8 +61,8 @@ final class GameAborted implements DomainEvent
     public function payload(): array
     {
         return [
-            'gameId'           => $this->gameId->toString(),
-            'abortedPlayerId'  => $this->abortedPlayer->id(),
+            'gameId' => $this->gameId->toString(),
+            'abortedPlayerId' => $this->abortedPlayer->id(),
             'opponentPlayerId' => $this->opponentPlayer ? $this->opponentPlayer->id() : ''
         ];
     }

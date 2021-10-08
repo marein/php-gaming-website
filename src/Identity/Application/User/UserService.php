@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Application\User;
@@ -28,7 +29,7 @@ final class UserService
     /**
      * UserService constructor.
      *
-     * @param Users         $users
+     * @param Users $users
      * @param HashAlgorithm $hashAlgorithm
      */
     public function __construct(Users $users, HashAlgorithm $hashAlgorithm)

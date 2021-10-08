@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Http;
@@ -23,7 +24,7 @@ final class PageController
     /**
      * PageController constructor.
      *
-     * @param Environment        $twig
+     * @param Environment $twig
      * @param ConnectFourService $connectFourService
      */
     public function __construct(
@@ -39,8 +40,8 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/lobby.html.twig', [
                 'maximumNumberOfGamesInList' => 10,
-                'openGames'                  => $this->connectFourService->openGames()['games'],
-                'runningGames'               => $this->connectFourService->runningGames()
+                'openGames' => $this->connectFourService->openGames()['games'],
+                'runningGames' => $this->connectFourService->runningGames()
             ])
         );
     }

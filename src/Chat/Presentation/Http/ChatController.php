@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Presentation\Http;
@@ -52,9 +53,11 @@ final class ChatController
             )
         );
 
-        return new JsonResponse([
-            'chatId' => $chatId
-        ]);
+        return new JsonResponse(
+            [
+                'chatId' => $chatId
+            ]
+        );
     }
 
     /**

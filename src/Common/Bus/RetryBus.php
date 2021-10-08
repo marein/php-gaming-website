@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Bus;
@@ -26,8 +27,8 @@ final class RetryBus implements Bus
     /**
      * RetryBus constructor.
      *
-     * @param Bus    $bus
-     * @param int    $numberOfRetries
+     * @param Bus $bus
+     * @param int $numberOfRetries
      * @param string $retryOnException FQCN of the exception which trigger the retries.
      *
      * @throws InvalidArgumentException
@@ -59,7 +60,7 @@ final class RetryBus implements Bus
      * Retry if the configured exception occur and the number of retries isn't reached.
      *
      * @param object $message
-     * @param int    $currentTry
+     * @param int $currentTry
      *
      * @return mixed
      * @throws Exception

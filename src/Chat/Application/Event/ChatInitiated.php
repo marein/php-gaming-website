@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Event;
@@ -68,7 +69,7 @@ final class ChatInitiated implements DomainEvent
     public function payload(): array
     {
         return [
-            'chatId'  => $this->chatId->toString(),
+            'chatId' => $this->chatId->toString(),
             'ownerId' => $this->ownerId
         ];
     }

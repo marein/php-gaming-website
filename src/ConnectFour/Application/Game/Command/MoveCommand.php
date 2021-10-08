@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
@@ -25,7 +26,7 @@ final class MoveCommand
      *
      * @param string $gameId
      * @param string $playerId
-     * @param int    $column
+     * @param int $column
      */
     public function __construct(string $gameId, string $playerId, int $column)
     {

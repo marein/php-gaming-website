@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Presentation\Console;
@@ -27,7 +28,7 @@ final class RabbitMqCommandListenerCommand extends Command
      * RabbitMqCommandListenerCommand constructor.
      *
      * @param MessageBroker $messageBroker
-     * @param Bus           $commandBus
+     * @param Bus $commandBus
      */
     public function __construct(MessageBroker $messageBroker, Bus $commandBus)
     {

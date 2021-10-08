@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Http;
@@ -35,9 +36,11 @@ final class UserController
             new ArriveCommand()
         );
 
-        return new JsonResponse([
-            'userId' => $userId
-        ]);
+        return new JsonResponse(
+            [
+                'userId' => $userId
+            ]
+        );
     }
 
     /**
@@ -57,8 +60,10 @@ final class UserController
             )
         );
 
-        return new JsonResponse([
-            'userId' => $userId
-        ]);
+        return new JsonResponse(
+            [
+                'userId' => $userId
+            ]
+        );
     }
 }

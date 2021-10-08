@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User\Event;
@@ -52,7 +53,7 @@ final class UserSignedUp implements DomainEvent
     public function payload(): array
     {
         return [
-            'userId'   => $this->userId->toString(),
+            'userId' => $this->userId->toString(),
             'username' => $this->username
         ];
     }

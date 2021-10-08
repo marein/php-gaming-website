@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Bus;
@@ -39,9 +40,9 @@ final class DoctrineReconnectBus implements Bus
     /**
      * DoctrineReconnectBus constructor.
      *
-     * @param Bus        $bus
+     * @param Bus $bus
      * @param Connection $connection
-     * @param int        $idleBetweenHandlesInSeconds
+     * @param int $idleBetweenHandlesInSeconds
      *
      * @throws InvalidArgumentException
      */

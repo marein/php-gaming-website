@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User;
@@ -20,8 +21,8 @@ final class Credentials
     /**
      * Credentials constructor.
      *
-     * @param string        $username
-     * @param string        $password
+     * @param string $username
+     * @param string $password
      * @param HashAlgorithm $hashAlgorithm
      */
     public function __construct(string $username, string $password, HashAlgorithm $hashAlgorithm)
@@ -41,7 +42,7 @@ final class Credentials
     /**
      * Returns true if the given credentials matches credentials.
      *
-     * @param string        $password
+     * @param string $password
      * @param HashAlgorithm $hashAlgorithm
      *
      * @return bool

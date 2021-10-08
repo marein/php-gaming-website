@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Integration;
@@ -53,7 +54,7 @@ final class DirectControllerInvocationIdentityService implements IdentityService
     /**
      * Make a call to the controller.
      *
-     * @param string               $actionName
+     * @param string $actionName
      * @param array<string, mixed> $queryParameter
      * @param array<string, mixed> $postParameter
      *

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
@@ -27,8 +28,8 @@ final class FollowEventStoreDispatcher
     /**
      * FollowEventStoreDispatcher constructor.
      *
-     * @param EventStorePointer    $eventStorePointer
-     * @param EventStore           $eventStore
+     * @param EventStorePointer $eventStorePointer
+     * @param EventStore $eventStore
      * @param StoredEventPublisher $storedEventPublisher
      */
     public function __construct(

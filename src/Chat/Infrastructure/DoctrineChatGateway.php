@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Infrastructure;
@@ -39,7 +40,7 @@ final class DoctrineChatGateway implements ChatGateway
         $this->connection->insert(
             self::TABLE_CHAT,
             [
-                'id'      => $chatId->toString(),
+                'id' => $chatId->toString(),
                 'ownerId' => $ownerId,
                 'authors' => $authors
             ],
@@ -61,9 +62,9 @@ final class DoctrineChatGateway implements ChatGateway
         $this->connection->insert(
             self::TABLE_MESSAGE,
             [
-                'chatId'    => $chatId->toString(),
-                'authorId'  => $authorId,
-                'message'   => $message,
+                'chatId' => $chatId->toString(),
+                'authorId' => $authorId,
+                'message' => $message,
                 'writtenAt' => $writtenAt
             ],
             ['uuid_binary_ordered_time', 'string', 'string', 'datetime_immutable']

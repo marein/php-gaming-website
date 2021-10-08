@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Bus;
@@ -18,7 +19,7 @@ final class ViolationParameter
     /**
      * ViolationParameter constructor.
      *
-     * @param string                $name
+     * @param string $name
      * @param bool|int|float|string $value
      */
     public function __construct(string $name, bool|int|float|string $value)

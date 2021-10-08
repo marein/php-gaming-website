@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Event;
@@ -25,9 +26,9 @@ final class PlayerMovedTest extends TestCase
         $color = Stone::red()->color();
         $payload = [
             'gameId' => $gameId->toString(),
-            'x'      => $x,
-            'y'      => $y,
-            'color'  => $color
+            'x' => $x,
+            'y' => $y,
+            'color' => $color
         ];
 
         $playerMoved = new PlayerMoved(

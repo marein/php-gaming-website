@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
@@ -41,8 +42,8 @@ final class Game implements AggregateRoot
     /**
      * Game constructor.
      *
-     * @param GameId        $gameId
-     * @param State         $state
+     * @param GameId $gameId
+     * @param State $state
      * @param DomainEvent[] $domainEvents
      */
     private function __construct(GameId $gameId, State $state, array $domainEvents)
@@ -63,7 +64,7 @@ final class Game implements AggregateRoot
 
     /**
      * @param Configuration $configuration
-     * @param string        $playerId
+     * @param string $playerId
      *
      * @return Game
      */
@@ -93,7 +94,7 @@ final class Game implements AggregateRoot
      * The given player makes the move in the given column.
      *
      * @param string $playerId
-     * @param int    $column
+     * @param int $column
      *
      * @throws GameException
      */

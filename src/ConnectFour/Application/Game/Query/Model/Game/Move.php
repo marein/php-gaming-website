@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
@@ -45,8 +46,8 @@ final class Move implements JsonSerializable
     public function jsonSerialize(): mixed
     {
         return [
-            'x'     => $this->x,
-            'y'     => $this->y,
+            'x' => $this->x,
+            'y' => $this->y,
             'color' => $this->color
         ];
     }

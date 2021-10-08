@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Application;
@@ -11,7 +12,7 @@ interface ChatGateway
     /**
      * Create a chat.
      *
-     * @param string   $ownerId
+     * @param string $ownerId
      * @param string[] $authors
      *
      * @return ChatId
@@ -21,9 +22,9 @@ interface ChatGateway
     /**
      * Create a message.
      *
-     * @param ChatId            $chatId
-     * @param string            $authorId
-     * @param string            $message
+     * @param ChatId $chatId
+     * @param string $authorId
+     * @param string $message
      * @param DateTimeImmutable $writtenAt
      *
      * @return int
@@ -52,8 +53,8 @@ interface ChatGateway
      *
      * @param ChatId $chatId
      * @param string $authorId
-     * @param int    $offset
-     * @param int    $limit
+     * @param int $offset
+     * @param int $limit
      *
      * @return array<int, array<string, mixed>>
      */

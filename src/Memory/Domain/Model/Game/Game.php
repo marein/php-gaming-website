@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game;
@@ -53,9 +54,9 @@ final class Game implements AggregateRoot
     /**
      * Game constructor.
      *
-     * @param GameId        $gameId
-     * @param PlayerPool    $playerPool
-     * @param int[]         $cards
+     * @param GameId $gameId
+     * @param PlayerPool $playerPool
+     * @param int[] $cards
      * @param DomainEvent[] $domainEvents
      */
     private function __construct(GameId $gameId, PlayerPool $playerPool, array $cards, array $domainEvents)

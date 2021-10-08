@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Application;
@@ -81,7 +82,7 @@ interface ConnectFourService
      *
      * @param string $gameId
      * @param string $playerId
-     * @param int    $column
+     * @param int $column
      *
      * @return array<string, mixed>
      */

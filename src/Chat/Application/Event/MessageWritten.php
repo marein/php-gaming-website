@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Event;
@@ -49,11 +50,11 @@ final class MessageWritten implements DomainEvent
     /**
      * MessageWritten constructor.
      *
-     * @param ChatId            $chatId
-     * @param int               $messageId
-     * @param string            $ownerId
-     * @param string            $authorId
-     * @param string            $message
+     * @param ChatId $chatId
+     * @param int $messageId
+     * @param string $ownerId
+     * @param string $authorId
+     * @param string $message
      * @param DateTimeImmutable $writtenAt
      */
     public function __construct(
@@ -103,11 +104,11 @@ final class MessageWritten implements DomainEvent
     public function payload(): array
     {
         return [
-            'chatId'    => $this->chatId->toString(),
+            'chatId' => $this->chatId->toString(),
             'messageId' => $this->messageId,
-            'ownerId'   => $this->ownerId,
-            'authorId'  => $this->authorId,
-            'message'   => $this->message,
+            'ownerId' => $this->ownerId,
+            'authorId' => $this->authorId,
+            'message' => $this->message,
             'writtenAt' => $this->writtenAt->format(DateTime::ATOM)
         ];
     }

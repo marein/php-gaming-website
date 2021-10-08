@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Bus;
@@ -26,7 +27,7 @@ final class SymfonyValidatorBus implements Bus
     /**
      * SymfonyValidatorBus constructor.
      *
-     * @param Bus                $bus
+     * @param Bus $bus
      * @param ValidatorInterface $validator
      */
     public function __construct(Bus $bus, ValidatorInterface $validator)

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Persistence;
@@ -32,8 +33,8 @@ final class PredisSessionHandler implements SessionHandlerInterface
      * PredisSessionHandler constructor.
      *
      * @param ClientInterface $predis
-     * @param string          $keyPrefix
-     * @param int             $lifetime
+     * @param string $keyPrefix
+     * @param int $lifetime
      */
     public function __construct(ClientInterface $predis, string $keyPrefix, int $lifetime)
     {

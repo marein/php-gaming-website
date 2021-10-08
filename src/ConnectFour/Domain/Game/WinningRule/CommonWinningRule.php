@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\WinningRule;
@@ -17,11 +18,13 @@ final class CommonWinningRule implements WinningRule
      */
     public function __construct()
     {
-        $this->winningRule = new MultipleWinningRule([
-            new VerticalWinningRule(4),
-            new HorizontalWinningRule(4),
-            new DiagonalWinningRule(4)
-        ]);
+        $this->winningRule = new MultipleWinningRule(
+            [
+                new VerticalWinningRule(4),
+                new HorizontalWinningRule(4),
+                new DiagonalWinningRule(4)
+            ]
+        );
     }
 
     /**

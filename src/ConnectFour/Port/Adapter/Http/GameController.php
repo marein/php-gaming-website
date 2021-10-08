@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Http;
@@ -60,15 +61,17 @@ class GameController
 
         $games = array_map(
             static fn(OpenGame $openGame): array => [
-                'gameId'   => $openGame->gameId(),
+                'gameId' => $openGame->gameId(),
                 'playerId' => $openGame->playerId()
             ],
             $openGames->games()
         );
 
-        return new JsonResponse([
-            'games' => $games
-        ]);
+        return new JsonResponse(
+            [
+                'games' => $games
+            ]
+        );
     }
 
     /**
@@ -81,9 +84,11 @@ class GameController
         $runningGames = $this->queryBus->handle(new RunningGamesQuery());
         assert($runningGames instanceof RunningGames);
 
-        return new JsonResponse([
-            'count' => $runningGames->count()
-        ]);
+        return new JsonResponse(
+            [
+                'count' => $runningGames->count()
+            ]
+        );
     }
 
     /**
@@ -105,9 +110,11 @@ class GameController
             $gamesByPlayer->games()
         );
 
-        return new JsonResponse([
-            'games' => $games
-        ]);
+        return new JsonResponse(
+            [
+                'games' => $games
+            ]
+        );
     }
 
     /**
@@ -140,9 +147,11 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 
     /**
@@ -161,9 +170,11 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 
     /**
@@ -182,9 +193,11 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 
     /**
@@ -203,9 +216,11 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 
     /**
@@ -225,8 +240,10 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 }

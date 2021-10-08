@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Chat\Application\Event;
@@ -20,7 +21,7 @@ final class ChatInitiatedTest extends TestCase
         $chatId = ChatId::generate();
         $ownerId = 'ownerId';
         $payload = [
-            'chatId'  => $chatId->toString(),
+            'chatId' => $chatId->toString(),
             'ownerId' => $ownerId
         ];
 

@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Application\Game\Query\Model\Game;
 
+use DateTimeImmutable;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use PHPUnit\Framework\TestCase;
@@ -18,23 +20,24 @@ class GameTest extends TestCase
         $expectedFinished = false;
         $expectedSerializedGame = json_encode(
             [
-                'gameId'   => $expectedGameId,
-                'chatId'   => 'chatId',
-                'players'   => [
-                    'player1', 'player2'
+                'gameId' => $expectedGameId,
+                'chatId' => 'chatId',
+                'players' => [
+                    'player1',
+                    'player2'
                 ],
                 'finished' => $expectedFinished,
-                'height'   => 6,
-                'width'    => 7,
-                'moves'    => [
+                'height' => 6,
+                'width' => 7,
+                'moves' => [
                     [
-                        'x'     => 1,
-                        'y'     => 1,
+                        'x' => 1,
+                        'y' => 1,
                         'color' => 1
                     ],
                     [
-                        'x'     => 1,
-                        'y'     => 2,
+                        'x' => 1,
+                        'y' => 2,
                         'color' => 2
                     ]
                 ]
@@ -65,7 +68,7 @@ class GameTest extends TestCase
                 'GameAborted',
                 'gameId',
                 '{}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         );
 
@@ -85,7 +88,7 @@ class GameTest extends TestCase
                 'GameResigned',
                 'gameId',
                 '{}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         );
 
@@ -105,7 +108,7 @@ class GameTest extends TestCase
                 'GameWon',
                 'gameId',
                 '{}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         );
 
@@ -125,7 +128,7 @@ class GameTest extends TestCase
                 'GameDrawn',
                 'gameId',
                 '{}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         );
 
@@ -146,21 +149,21 @@ class GameTest extends TestCase
                 'GameOpened',
                 'gameId',
                 '{"gameId": "gameId", "width": 7, "height": 6, "playerId": "player1"}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             new StoredEvent(
                 2,
                 'ChatAssigned',
                 'gameId',
                 '{"gameId": "gameId", "chatId": "chatId"}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             new StoredEvent(
                 3,
                 'PlayerJoined',
                 'gameId',
                 '{"gameId": "gameId", "opponentPlayerId": "player1", "joinedPlayerId": "player2"}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             // Apply this event twice, so immutability gets tested.
             new StoredEvent(
@@ -168,21 +171,21 @@ class GameTest extends TestCase
                 'PlayerJoined',
                 'gameId',
                 '{"gameId": "gameId", "opponentPlayerId": "player1", "joinedPlayerId": "player2"}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             new StoredEvent(
                 4,
                 'PlayerMoved',
                 'gameId',
                 '{"gameId": "gameId", "x": 1, "y": 1, "color": 1}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             new StoredEvent(
                 5,
                 'PlayerMoved',
                 'gameId',
                 '{"gameId": "gameId", "x": 1, "y": 2, "color": 2}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             // Apply this event twice, so immutability gets tested.
             new StoredEvent(
@@ -190,7 +193,7 @@ class GameTest extends TestCase
                 'PlayerMoved',
                 'gameId',
                 '{"gameId": "gameId", "x": 1, "y": 2, "color": 2}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         ];
     }

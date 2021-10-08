@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\State;
@@ -42,9 +43,9 @@ final class Running implements State
      * Running constructor.
      *
      * @param WinningRule $winningRule
-     * @param int         $numberOfMovesUntilDraw
-     * @param Board       $board
-     * @param Players     $players
+     * @param int $numberOfMovesUntilDraw
+     * @param Board $board
+     * @param Players $players
      */
     public function __construct(
         WinningRule $winningRule,

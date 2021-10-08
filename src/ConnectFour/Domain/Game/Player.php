@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
@@ -22,7 +23,7 @@ final class Player
      * Player constructor.
      *
      * @param string $playerId
-     * @param Stone  $stone
+     * @param Stone $stone
      *
      * @throws PlayerHasInvalidStoneException
      */

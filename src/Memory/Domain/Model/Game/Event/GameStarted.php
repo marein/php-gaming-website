@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game\Event;
@@ -30,7 +31,7 @@ final class GameStarted implements DomainEvent
     /**
      * GameStarted constructor.
      *
-     * @param GameId     $gameId
+     * @param GameId $gameId
      * @param PlayerPool $playerPool
      */
     public function __construct(GameId $gameId, PlayerPool $playerPool)
@@ -54,7 +55,7 @@ final class GameStarted implements DomainEvent
     public function payload(): array
     {
         return [
-            'gameId'    => $this->gameId->toString(),
+            'gameId' => $this->gameId->toString(),
             'playerIds' => array_map(
                 static fn(Player $player): string => $player->id(),
                 $this->playerPool->players()

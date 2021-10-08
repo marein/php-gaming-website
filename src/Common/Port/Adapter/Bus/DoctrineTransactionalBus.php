@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Bus;
@@ -22,7 +23,7 @@ final class DoctrineTransactionalBus implements Bus
     /**
      * DoctrineTransactionalBus constructor.
      *
-     * @param Bus        $bus        The bus who is being wrapped.
+     * @param Bus $bus The bus who is being wrapped.
      * @param Connection $connection The connection which handles the transaction.
      */
     public function __construct(Bus $bus, Connection $connection)

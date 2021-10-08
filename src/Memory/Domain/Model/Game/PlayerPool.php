@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game;
@@ -23,7 +24,7 @@ final class PlayerPool
      * PlayerPool constructor.
      *
      * @param Player[] $players
-     * @param int      $currentPlayerPosition
+     * @param int $currentPlayerPosition
      */
     private function __construct(array $players, int $currentPlayerPosition)
     {

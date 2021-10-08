@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
@@ -35,10 +36,10 @@ final class StoredEvent
     /**
      * StoredEvent constructor.
      *
-     * @param int                $id
-     * @param string             $name
-     * @param string             $aggregateId
-     * @param string             $payload
+     * @param int $id
+     * @param string $name
+     * @param string $aggregateId
+     * @param string $payload
      * @param DateTimeImmutable $occurredOn
      */
     public function __construct(

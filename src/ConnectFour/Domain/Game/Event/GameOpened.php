@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
@@ -36,7 +37,7 @@ final class GameOpened implements DomainEvent
      * GameOpened constructor.
      *
      * @param GameId $gameId
-     * @param Size   $size
+     * @param Size $size
      * @param Player $player
      */
     public function __construct(GameId $gameId, Size $size, Player $player)
@@ -61,9 +62,9 @@ final class GameOpened implements DomainEvent
     public function payload(): array
     {
         return [
-            'gameId'   => $this->gameId->toString(),
-            'width'    => $this->size->width(),
-            'height'   => $this->size->height(),
+            'gameId' => $this->gameId->toString(),
+            'width' => $this->size->width(),
+            'height' => $this->size->height(),
             'playerId' => $this->player->id()
         ];
     }

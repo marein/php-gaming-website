@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
@@ -27,7 +28,7 @@ final class ThrottlingEventStore implements EventStore
      * ThrottlingEventStore constructor.
      *
      * @param EventStore $eventStore
-     * @param int        $throttleTimeInMilliseconds
+     * @param int $throttleTimeInMilliseconds
      *
      * @throws InvalidArgumentException
      */

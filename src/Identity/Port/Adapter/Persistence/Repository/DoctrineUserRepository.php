@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Persistence\Repository;
@@ -27,7 +28,7 @@ final class DoctrineUserRepository implements Users
     /**
      * DoctrineUserRepository constructor.
      *
-     * @param EntityManager        $manager
+     * @param EntityManager $manager
      * @param DomainEventPublisher $domainEventPublisher
      */
     public function __construct(EntityManager $manager, DomainEventPublisher $domainEventPublisher)

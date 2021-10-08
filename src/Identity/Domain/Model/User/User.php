@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User;
@@ -94,7 +95,7 @@ class User implements AggregateRoot
      *
      * todo: We can raise an UserAuthenticationAttempted event.
      *
-     * @param string        $password
+     * @param string $password
      * @param HashAlgorithm $hashAlgorithm
      *
      * @return bool

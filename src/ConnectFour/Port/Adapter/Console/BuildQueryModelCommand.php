@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Console;
@@ -37,8 +38,8 @@ final class BuildQueryModelCommand extends Command
     /**
      * BuildQueryModelCommand constructor.
      *
-     * @param EventStore              $eventStore
-     * @param ClientInterface         $predis
+     * @param EventStore $eventStore
+     * @param ClientInterface $predis
      * @param StoredEventSubscriber[] $storedEventSubscribers
      */
     public function __construct(

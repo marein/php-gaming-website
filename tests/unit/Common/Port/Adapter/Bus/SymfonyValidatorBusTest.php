@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\Port\Adapter\Bus;
@@ -124,8 +125,7 @@ class SymfonyValidatorBusTest extends TestCase
      */
     private function createMessage(string $value): object
     {
-        $message = new class()
-        {
+        $message = new class () {
             public $value;
         };
 
@@ -150,8 +150,8 @@ class SymfonyValidatorBusTest extends TestCase
     /**
      * Create constraint violation.
      *
-     * @param string  $propertyPath
-     * @param string  $message
+     * @param string $propertyPath
+     * @param string $message
      * @param mixed[] $context
      *
      * @return ConstraintViolationInterface

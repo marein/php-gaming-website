@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\State;
@@ -20,7 +21,7 @@ final class Transition
     /**
      * Transition constructor.
      *
-     * @param State         $state
+     * @param State $state
      * @param DomainEvent[] $domainEvents
      */
     public function __construct(State $state, array $domainEvents = [])

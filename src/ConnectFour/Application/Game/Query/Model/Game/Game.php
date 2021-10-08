@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
@@ -88,13 +89,13 @@ final class Game implements JsonSerializable
     public function jsonSerialize(): mixed
     {
         return [
-            'gameId'   => $this->gameId,
-            'chatId'   => $this->chatId,
-            'players'  => $this->players,
+            'gameId' => $this->gameId,
+            'chatId' => $this->chatId,
+            'players' => $this->players,
             'finished' => $this->finished,
-            'height'   => $this->height,
-            'width'    => $this->width,
-            'moves'    => $this->moves
+            'height' => $this->height,
+            'width' => $this->width,
+            'moves' => $this->moves
         ];
     }
 

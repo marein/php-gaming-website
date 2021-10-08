@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Model\Message;
@@ -18,7 +19,7 @@ final class Message
     /**
      * Message constructor.
      *
-     * @param Name   $name
+     * @param Name $name
      * @param string $body
      */
     public function __construct(Name $name, string $body)

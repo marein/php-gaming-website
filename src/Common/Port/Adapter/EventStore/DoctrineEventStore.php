@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\EventStore;
@@ -31,7 +32,7 @@ final class DoctrineEventStore implements EventStore
      * DoctrineEventStore constructor.
      *
      * @param Connection $connection
-     * @param string     $table
+     * @param string $table
      */
     public function __construct(Connection $connection, string $table)
     {
@@ -96,17 +97,21 @@ final class DoctrineEventStore implements EventStore
     public function append(DomainEvent $domainEvent): void
     {
         try {
-            $this->connection->insert($this->table, [
-                'name'        => $domainEvent->name(),
-                'aggregateId' => $domainEvent->aggregateId(),
-                'payload'     => $domainEvent->payload(),
-                'occurredOn'  => $domainEvent->occurredOn()
-            ], [
-                'string',
-                'uuid_binary',
-                'json',
-                'datetime_immutable'
-            ]);
+            $this->connection->insert(
+                $this->table,
+                [
+                    'name' => $domainEvent->name(),
+                    'aggregateId' => $domainEvent->aggregateId(),
+                    'payload' => $domainEvent->payload(),
+                    'occurredOn' => $domainEvent->occurredOn()
+                ],
+                [
+                    'string',
+                    'uuid_binary',
+                    'json',
+                    'datetime_immutable'
+                ]
+            );
         } catch (Exception $e) {
             throw new EventStoreException(
                 $e->getMessage(),

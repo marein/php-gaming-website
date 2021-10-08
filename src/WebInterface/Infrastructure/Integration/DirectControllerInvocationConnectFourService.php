@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Integration;
@@ -141,7 +142,7 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
             ],
             [
                 'playerId' => $playerId,
-                'column'   => $column
+                'column' => $column
             ]
         );
     }
@@ -149,7 +150,7 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
     /**
      * Make a call to the controller.
      *
-     * @param string               $actionName
+     * @param string $actionName
      * @param array<string, mixed> $queryParameter
      * @param array<string, mixed> $postParameter
      *

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Console;
@@ -26,7 +27,7 @@ final class PublishRabbitMqEventsToNchanCommand extends Command
     /**
      * PublishRabbitMqEventsToNchanCommand constructor.
      *
-     * @param MessageBroker   $messageBroker
+     * @param MessageBroker $messageBroker
      * @param BrowserNotifier $browserNotifier
      */
     public function __construct(MessageBroker $messageBroker, BrowserNotifier $browserNotifier)

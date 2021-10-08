@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\EventStore\Subscriber;
@@ -29,12 +30,14 @@ final class SymfonyConsoleDebugSubscriber implements StoredEventSubscriber
      */
     public function handle(StoredEvent $storedEvent): void
     {
-        $this->output->writeln(sprintf(
-            'Received #%s "%s" with "%s"',
-            $storedEvent->id(),
-            $storedEvent->name(),
-            $storedEvent->payload()
-        ));
+        $this->output->writeln(
+            sprintf(
+                'Received #%s "%s" with "%s"',
+                $storedEvent->id(),
+                $storedEvent->name(),
+                $storedEvent->payload()
+            )
+        );
     }
 
     /**

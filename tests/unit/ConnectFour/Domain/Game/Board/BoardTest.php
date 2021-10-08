@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
@@ -92,7 +93,7 @@ class BoardTest extends TestCase
      * @test
      * @dataProvider columnProvider
      *
-     * @param int     $column
+     * @param int $column
      * @param Field[] $expectedFields
      */
     public function itShouldFindFieldsByColumn(int $column, array $expectedFields): void
@@ -151,7 +152,7 @@ class BoardTest extends TestCase
      * @test
      * @dataProvider rowProvider
      *
-     * @param int     $row
+     * @param int $row
      * @param Field[] $expectedFields
      */
     public function itShouldFindFieldsByRow(int $row, array $expectedFields): void
@@ -213,7 +214,7 @@ class BoardTest extends TestCase
      * @test
      * @dataProvider mainDiagonalProvider
      *
-     * @param Point   $point
+     * @param Point $point
      * @param Field[] $expectedFields
      */
     public function itShouldFindFieldsInMainDiagonal(Point $point, array $expectedFields): void
@@ -271,7 +272,7 @@ class BoardTest extends TestCase
      * @test
      * @dataProvider counterDiagonalProvider
      *
-     * @param Point   $point
+     * @param Point $point
      * @param Field[] $expectedFields
      */
     public function itShouldFindFieldsInCounterDiagonal(Point $point, array $expectedFields): void

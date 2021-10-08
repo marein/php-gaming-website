@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Command;
@@ -18,7 +19,7 @@ final class InitiateChatCommand
     /**
      * InitiateChatCommand constructor.
      *
-     * @param string   $ownerId
+     * @param string $ownerId
      * @param string[] $authors
      */
     public function __construct(string $ownerId, array $authors)

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
@@ -53,7 +54,7 @@ final class GameWon implements DomainEvent
     public function payload(): array
     {
         return [
-            'gameId'         => $this->gameId->toString(),
+            'gameId' => $this->gameId->toString(),
             'winnerPlayerId' => $this->winnerPlayer->id()
         ];
     }
