@@ -15,24 +15,13 @@ final class DoctrineChatGateway implements ChatGateway
     private const TABLE_CHAT = 'chat';
     private const TABLE_MESSAGE = 'message';
 
-    /**
-     * @var Connection
-     */
     private Connection $connection;
 
-    /**
-     * DoctrineChatGateway constructor.
-     *
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function create(string $ownerId, array $authors): ChatId
     {
         $chatId = ChatId::generate();
@@ -50,9 +39,6 @@ final class DoctrineChatGateway implements ChatGateway
         return $chatId;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function createMessage(
         ChatId $chatId,
         string $authorId,
@@ -73,9 +59,6 @@ final class DoctrineChatGateway implements ChatGateway
         return (int)$this->connection->lastInsertId();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function messages(ChatId $chatId, string $authorId, int $offset, int $limit): array
     {
         // Directly format the date as \DateTime::ATOM, since we know that our server saves dates as UTC.
@@ -100,9 +83,6 @@ final class DoctrineChatGateway implements ChatGateway
             ->fetchAll();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function byId(ChatId $chatId): array
     {
         $chat = $this->connection->createQueryBuilder()

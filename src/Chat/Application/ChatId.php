@@ -11,16 +11,9 @@ use Ramsey\Uuid\UuidInterface;
 
 final class ChatId
 {
-    /**
-     * @var string
-     */
     private string $chatId;
 
     /**
-     * ChatId constructor.
-     *
-     * @param UuidInterface $uuid
-     *
      * @throws ChatNotFoundException
      */
     private function __construct(UuidInterface $uuid)
@@ -33,20 +26,12 @@ final class ChatId
         }
     }
 
-    /**
-     * @return ChatId
-     */
     public static function generate(): ChatId
     {
         return new self(Uuid::uuid1());
     }
 
     /**
-     * Create a ChatId from string.
-     *
-     * @param string $chatId
-     *
-     * @return ChatId
      * @throws ChatNotFoundException
      */
     public static function fromString(string $chatId): ChatId
@@ -60,17 +45,11 @@ final class ChatId
         }
     }
 
-    /**
-     * @return string
-     */
     public function toString(): string
     {
         return $this->chatId;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->toString();

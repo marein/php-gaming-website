@@ -12,22 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class ChatController
 {
-    /**
-     * @var Bus
-     */
     private Bus $commandBus;
 
-    /**
-     * @var Bus
-     */
     private Bus $queryBus;
 
-    /**
-     * ChatController constructor.
-     *
-     * @param Bus $commandBus
-     * @param Bus $queryBus
-     */
     public function __construct(
         Bus $commandBus,
         Bus $queryBus
@@ -36,11 +24,6 @@ final class ChatController
         $this->queryBus = $queryBus;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function writeMessageAction(Request $request): JsonResponse
     {
         $chatId = (string)$request->query->get('chatId');
@@ -60,11 +43,6 @@ final class ChatController
         );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function messagesAction(Request $request): JsonResponse
     {
         return new JsonResponse(

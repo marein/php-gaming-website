@@ -21,22 +21,10 @@ use Gaming\Common\EventStore\EventStore;
  */
 final class ChatService
 {
-    /**
-     * @var ChatGateway
-     */
     private ChatGateway $chatGateway;
 
-    /**
-     * @var EventStore
-     */
     private EventStore $eventStore;
 
-    /**
-     * ChatService constructor.
-     *
-     * @param ChatGateway $chatGateway
-     * @param EventStore $eventStore
-     */
     public function __construct(
         ChatGateway $chatGateway,
         EventStore $eventStore
@@ -45,13 +33,6 @@ final class ChatService
         $this->eventStore = $eventStore;
     }
 
-    /**
-     * Initiate a new chat.
-     *
-     * @param InitiateChatCommand $initiateChatCommand
-     *
-     * @return string
-     */
     public function initiateChat(InitiateChatCommand $initiateChatCommand): string
     {
         $chatId = $this->chatGateway->create($initiateChatCommand->ownerId(), $initiateChatCommand->authors());
@@ -64,10 +45,6 @@ final class ChatService
     }
 
     /**
-     * Write a message to the chat.
-     *
-     * @param WriteMessageCommand $writeMessageCommand
-     *
      * @throws ChatNotFoundException
      * @throws AuthorNotAllowedException
      * @throws EmptyMessageException
@@ -101,11 +78,8 @@ final class ChatService
     }
 
     /**
-     * Get messages by chat.
-     *
-     * @param MessagesQuery $messagesQuery
-     *
      * @return array<int, array<string, mixed>>
+     * @throws ChatNotFoundException
      */
     public function messages(MessagesQuery $messagesQuery): array
     {

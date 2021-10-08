@@ -13,24 +13,13 @@ use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
 
 final class CommandConsumer implements Consumer
 {
-    /**
-     * @var Bus
-     */
     private Bus $commandBus;
 
-    /**
-     * CommandConsumer constructor.
-     *
-     * @param Bus $commandBus
-     */
     public function __construct(Bus $commandBus)
     {
         $this->commandBus = $commandBus;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(Message $message): void
     {
         $payload = json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR);
@@ -43,9 +32,6 @@ final class CommandConsumer implements Consumer
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function subscriptions(): array
     {
         return [
@@ -53,9 +39,6 @@ final class CommandConsumer implements Consumer
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): Name
     {
         return new Name('Chat', 'CommandListener');
