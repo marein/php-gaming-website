@@ -32,7 +32,7 @@ final class CommandConsumer implements Consumer
      */
     public function handle(Message $message): void
     {
-        $payload = json_decode($message->body(), true);
+        $payload = json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->commandBus->handle(
             new InitiateChatCommand(

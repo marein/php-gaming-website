@@ -94,7 +94,7 @@ final class ChatServiceTest extends TestCase
         $this->expectException(AuthorNotAllowedException::class);
 
         $chatId = ChatId::generate();
-        $assignedAuthors = json_encode(['authorId1', 'authorId2']);
+        $assignedAuthors = json_encode(['authorId1', 'authorId2'], JSON_THROW_ON_ERROR);
 
         $chatGateway = $this->createMock(ChatGateway::class);
         $eventStore = $this->createMock(EventStore::class);

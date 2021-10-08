@@ -81,9 +81,7 @@ final class PlayerPool
     {
         $players = array_filter(
             $this->players,
-            static function (Player $current) use ($player) {
-                return $player->id() !== $current->id();
-            }
+            static fn(Player $current): bool => $player->id() !== $current->id()
         );
 
         if (count($players) === count($this->players)) {

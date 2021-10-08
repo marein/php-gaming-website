@@ -8,7 +8,7 @@ interface IdentityService
     /**
      * A new user arrives.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function arrive(): array;
 
@@ -19,7 +19,7 @@ interface IdentityService
      * @param string $username
      * @param string $password
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function signUp(string $userId, string $username, string $password): array;
 }

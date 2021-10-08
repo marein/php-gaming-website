@@ -42,13 +42,13 @@ final class ChatController
      */
     public function writeMessageAction(Request $request): JsonResponse
     {
-        $chatId = $request->query->get('chatId');
+        $chatId = (string)$request->query->get('chatId');
 
         $this->commandBus->handle(
             new WriteMessageCommand(
                 $chatId,
-                $request->request->get('authorId'),
-                $request->request->get('message')
+                (string)$request->request->get('authorId'),
+                (string)$request->request->get('message')
             )
         );
 
@@ -67,8 +67,8 @@ final class ChatController
         return new JsonResponse(
             $this->queryBus->handle(
                 new MessagesQuery(
-                    $request->query->get('chatId'),
-                    $request->query->get('authorId'),
+                    (string)$request->query->get('chatId'),
+                    (string)$request->query->get('authorId'),
                     (int)$request->query->get('offset'),
                     (int)$request->query->get('limit')
                 )

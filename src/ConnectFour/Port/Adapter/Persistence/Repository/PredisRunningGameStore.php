@@ -4,23 +4,23 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
 use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGameStore;
-use Predis\Client;
+use Predis\ClientInterface;
 
 final class PredisRunningGameStore implements RunningGameStore
 {
     private const STORAGE_KEY = 'running-games';
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
-    private Client $predis;
+    private ClientInterface $predis;
 
     /**
      * PredisRunningGameStore constructor.
      *
-     * @param Client $predis
+     * @param ClientInterface $predis
      */
-    public function __construct(Client $predis)
+    public function __construct(ClientInterface $predis)
     {
         $this->predis = $predis;
     }
@@ -46,6 +46,6 @@ final class PredisRunningGameStore implements RunningGameStore
      */
     public function count(): int
     {
-        return (int)$this->predis->scard(self::STORAGE_KEY);
+        return $this->predis->scard(self::STORAGE_KEY);
     }
 }

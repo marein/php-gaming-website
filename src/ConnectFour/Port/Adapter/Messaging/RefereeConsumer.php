@@ -47,9 +47,10 @@ final class RefereeConsumer implements Consumer
     public function handle(Message $message): void
     {
         $method = self::ROUTING_KEY_TO_METHOD[(string)$message->name()];
-        $payload = json_decode($message->body(), true);
 
-        $this->$method($payload);
+        $this->$method(
+            json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
@@ -74,7 +75,7 @@ final class RefereeConsumer implements Consumer
     /**
      * Assign chat to game.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handleChatInitiated(array $payload): void
     {
@@ -89,17 +90,20 @@ final class RefereeConsumer implements Consumer
     /**
      * Publish initiate chat command to other context.
      *
-     * @param array $payload
+     * @param array<string, mixed> $payload
      */
     private function handlePlayerJoined(array $payload): void
     {
         $this->messageBroker->publish(
             new Message(
                 new MessageName('Chat', 'InitiateChat'),
-                json_encode([
-                    'ownerId' => $payload['gameId'],
-                    'authors' => []
-                ])
+                json_encode(
+                    [
+                        'ownerId' => $payload['gameId'],
+                        'authors' => []
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
             )
         );
     }

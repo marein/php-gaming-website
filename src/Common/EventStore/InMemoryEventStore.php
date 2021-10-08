@@ -31,7 +31,7 @@ final class InMemoryEventStore implements EventStore
     {
         return array_filter(
             $this->storedEvents,
-            static function (StoredEvent $storedEvent) use ($aggregateId, $sinceId) {
+            static function (StoredEvent $storedEvent) use ($aggregateId, $sinceId): bool {
                 return $storedEvent->aggregateId() === $aggregateId && $storedEvent->id() > $sinceId;
             }
         );
@@ -46,7 +46,7 @@ final class InMemoryEventStore implements EventStore
             count($this->storedEvents) + 1,
             $domainEvent->name(),
             $domainEvent->aggregateId(),
-            json_encode($domainEvent->payload()),
+            json_encode($domainEvent->payload(), JSON_THROW_ON_ERROR),
             $domainEvent->occurredOn()
         );
     }

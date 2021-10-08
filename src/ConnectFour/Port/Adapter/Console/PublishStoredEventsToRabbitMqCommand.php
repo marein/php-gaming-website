@@ -13,7 +13,7 @@ use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
 use Gaming\ConnectFour\Port\Adapter\Messaging\PublishStoredEventsToRabbitMqSubscriber;
-use Predis\Client;
+use Predis\ClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,9 +26,9 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
     private EventStore $eventStore;
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
-    private Client $predis;
+    private ClientInterface $predis;
 
     /**
      * @var MessageBroker
@@ -38,11 +38,11 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
     /**
      * PublishStoredEventsToRabbitMqCommand constructor.
      *
-     * @param EventStore    $eventStore
-     * @param Client        $predis
-     * @param MessageBroker $messageBroker
+     * @param EventStore      $eventStore
+     * @param ClientInterface $predis
+     * @param MessageBroker   $messageBroker
      */
-    public function __construct(EventStore $eventStore, Client $predis, MessageBroker $messageBroker)
+    public function __construct(EventStore $eventStore, ClientInterface $predis, MessageBroker $messageBroker)
     {
         parent::__construct();
 
@@ -63,7 +63,7 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // The creation of FollowEventStoreDispatcher could be done via container.
         $debugSubscriber = new SymfonyConsoleDebugSubscriber($output);

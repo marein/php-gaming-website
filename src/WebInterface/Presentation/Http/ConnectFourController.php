@@ -45,7 +45,7 @@ final class ConnectFourController
     {
         return new JsonResponse(
             $this->connectFourService->open(
-                $request->getSession()->get('user')
+                (string)$request->getSession()->get('user')
             )
         );
     }
@@ -61,7 +61,7 @@ final class ConnectFourController
         return new JsonResponse(
             $this->connectFourService->join(
                 $gameId,
-                $request->getSession()->get('user')
+                (string)$request->getSession()->get('user')
             )
         );
     }
@@ -77,7 +77,7 @@ final class ConnectFourController
         return new JsonResponse(
             $this->connectFourService->abort(
                 $gameId,
-                $request->getSession()->get('user')
+                (string)$request->getSession()->get('user')
             )
         );
     }
@@ -93,7 +93,7 @@ final class ConnectFourController
         return new JsonResponse(
             $this->connectFourService->resign(
                 $gameId,
-                $request->getSession()->get('user')
+                (string)$request->getSession()->get('user')
             )
         );
     }
@@ -109,7 +109,7 @@ final class ConnectFourController
         return new JsonResponse(
             $this->connectFourService->move(
                 $gameId,
-                $request->getSession()->get('user'),
+                (string)$request->getSession()->get('user'),
                 (int)$request->request->get('column', -1)
             )
         );

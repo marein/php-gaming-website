@@ -13,7 +13,7 @@ final class ViolationParameter
     /**
      * @var bool|int|float|string
      */
-    private $value;
+    private bool|int|float|string $value;
 
     /**
      * ViolationParameter constructor.
@@ -21,7 +21,7 @@ final class ViolationParameter
      * @param string                $name
      * @param bool|int|float|string $value
      */
-    public function __construct(string $name, $value)
+    public function __construct(string $name, bool|int|float|string $value)
     {
         $this->name = $name;
         $this->value = $value;
@@ -38,7 +38,7 @@ final class ViolationParameter
     /**
      * @return bool|int|float|string
      */
-    public function value()
+    public function value(): bool|int|float|string
     {
         return $this->value;
     }

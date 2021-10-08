@@ -6,7 +6,7 @@ namespace Gaming\Common\Domain;
 final class ExtractPayloadForEventSubscriber implements DomainEventSubscriber
 {
     /**
-     * @var array|null
+     * @var array<string, mixed>|null
      */
     private ?array $payload;
 
@@ -43,7 +43,7 @@ final class ExtractPayloadForEventSubscriber implements DomainEventSubscriber
     }
 
     /**
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function payload(): ?array
     {

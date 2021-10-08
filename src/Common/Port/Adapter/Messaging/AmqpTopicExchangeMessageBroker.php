@@ -91,8 +91,8 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     /**
      * Create a durable queue and bind it to the topic exchange via the given routing keys.
      *
-     * @param string $name
-     * @param array  $routingKeys
+     * @param string   $name
+     * @param string[] $routingKeys
      *
      * @return AmqpQueue
      */
@@ -149,10 +149,11 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
 
         while (true) {
             $message = $enqueueConsumer->receive();
+            assert($message instanceof AmqpMessage);
 
             $consumer->handle(
                 new Message(
-                    Name::fromString($message->getRoutingKey()),
+                    Name::fromString((string)$message->getRoutingKey()),
                     $message->getBody()
                 )
             );

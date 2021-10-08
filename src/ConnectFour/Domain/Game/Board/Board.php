@@ -19,18 +19,18 @@ final class Board
     private array $fields;
 
     /**
-     * @var Field|null
+     * @var Field
      */
-    private ?Field $lastUsedField;
+    private Field $lastUsedField;
 
     /**
      * Board constructor.
      *
-     * @param Size       $size
-     * @param Field[]    $fields
-     * @param Field|null $lastUsedField
+     * @param Size    $size
+     * @param Field[] $fields
+     * @param Field   $lastUsedField
      */
-    private function __construct(Size $size, array $fields, Field $lastUsedField = null)
+    private function __construct(Size $size, array $fields, Field $lastUsedField)
     {
         $this->size = $size;
         $this->fields = $fields;
@@ -61,7 +61,7 @@ final class Board
             }
         }
 
-        return new self($size, $fields);
+        return new self($size, $fields, $fields[0]);
     }
 
     /*************************************************************
@@ -109,7 +109,6 @@ final class Board
             throw new OutOfSizeException();
         }
 
-        /** @var Field[] $reversedFields */
         $reversedFields = array_reverse($this->fields, true);
 
         foreach ($reversedFields as $position => $field) {
@@ -271,9 +270,9 @@ final class Board
     /**
      * Returns the last used [Field].
      *
-     * @return Field|null
+     * @return Field
      */
-    public function lastUsedField(): ?Field
+    public function lastUsedField(): Field
     {
         return $this->lastUsedField;
     }

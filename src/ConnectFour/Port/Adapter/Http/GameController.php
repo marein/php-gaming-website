@@ -55,16 +55,14 @@ class GameController
      */
     public function openGamesAction(Request $request): JsonResponse
     {
-        /** @var OpenGames $openGames */
         $openGames = $this->queryBus->handle(new OpenGamesQuery());
+        assert($openGames instanceof OpenGames);
 
         $games = array_map(
-            static function (OpenGame $openGame) {
-                return [
-                    'gameId'   => $openGame->gameId(),
-                    'playerId' => $openGame->playerId()
-                ];
-            },
+            static fn(OpenGame $openGame): array => [
+                'gameId'   => $openGame->gameId(),
+                'playerId' => $openGame->playerId()
+            ],
             $openGames->games()
         );
 
@@ -80,8 +78,8 @@ class GameController
      */
     public function runningGamesAction(Request $request): JsonResponse
     {
-        /** @var RunningGames $runningGames */
         $runningGames = $this->queryBus->handle(new RunningGamesQuery());
+        assert($runningGames instanceof RunningGames);
 
         return new JsonResponse([
             'count' => $runningGames->count()
@@ -95,17 +93,15 @@ class GameController
      */
     public function gamesByPlayerAction(Request $request): JsonResponse
     {
-        /** @var GamesByPlayer $gamesByPlayer */
         $gamesByPlayer = $this->queryBus->handle(
             new GamesByPlayerQuery(
-                $request->query->get('playerId')
+                (string)$request->query->get('playerId')
             )
         );
+        assert($gamesByPlayer instanceof GamesByPlayer);
 
         $games = array_map(
-            static function (GameByPlayer $openGame) {
-                return $openGame->gameId();
-            },
+            static fn(GameByPlayer $openGame): string => $openGame->gameId(),
             $gamesByPlayer->games()
         );
 
@@ -121,12 +117,12 @@ class GameController
      */
     public function gameAction(Request $request): JsonResponse
     {
-        /** @var Game $game */
         $game = $this->queryBus->handle(
             new GameQuery(
-                $request->query->get('gameId')
+                (string)$request->query->get('gameId')
             )
         );
+        assert($game instanceof Game);
 
         return new JsonResponse($game);
     }
@@ -140,7 +136,7 @@ class GameController
     {
         $gameId = $this->commandBus->handle(
             new OpenCommand(
-                $request->request->get('playerId')
+                (string)$request->request->get('playerId')
             )
         );
 
@@ -156,12 +152,12 @@ class GameController
      */
     public function joinAction(Request $request): JsonResponse
     {
-        $gameId = $request->query->get('gameId');
+        $gameId = (string)$request->query->get('gameId');
 
         $this->commandBus->handle(
             new JoinCommand(
                 $gameId,
-                $request->request->get('playerId')
+                (string)$request->request->get('playerId')
             )
         );
 
@@ -177,12 +173,12 @@ class GameController
      */
     public function abortAction(Request $request): JsonResponse
     {
-        $gameId = $request->query->get('gameId');
+        $gameId = (string)$request->query->get('gameId');
 
         $this->commandBus->handle(
             new AbortCommand(
                 $gameId,
-                $request->request->get('playerId')
+                (string)$request->request->get('playerId')
             )
         );
 
@@ -198,12 +194,12 @@ class GameController
      */
     public function resignAction(Request $request): JsonResponse
     {
-        $gameId = $request->query->get('gameId');
+        $gameId = (string)$request->query->get('gameId');
 
         $this->commandBus->handle(
             new ResignCommand(
                 $gameId,
-                $request->request->get('playerId')
+                (string)$request->request->get('playerId')
             )
         );
 
@@ -219,12 +215,12 @@ class GameController
      */
     public function moveAction(Request $request): JsonResponse
     {
-        $gameId = $request->query->get('gameId');
+        $gameId = (string)$request->query->get('gameId');
 
         $this->commandBus->handle(
             new MoveCommand(
                 $gameId,
-                $request->request->get('playerId'),
+                (string)$request->request->get('playerId'),
                 (int)$request->request->get('column')
             )
         );

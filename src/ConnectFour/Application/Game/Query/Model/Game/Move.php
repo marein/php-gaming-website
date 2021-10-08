@@ -42,10 +42,7 @@ final class Move implements JsonSerializable
         $this->color = $color;
     }
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
         return [
             'x'     => $this->x,

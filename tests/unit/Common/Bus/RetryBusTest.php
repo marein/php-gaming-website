@@ -31,7 +31,7 @@ final class RetryBusTest extends TestCase
      */
     public function itShouldRetry(): void
     {
-        $actionToCall = static function () {
+        $actionToCall = static function (): void {
             // No op
         };
 
@@ -100,7 +100,7 @@ final class RetryBusTest extends TestCase
         );
 
         $retryBus->handle(
-            static function () {
+            static function (): void {
                 // No op
             }
         );
@@ -136,7 +136,7 @@ final class RetryBusTest extends TestCase
         );
 
         $retryBus->handle(
-            static function () {
+            static function (): void {
                 // No op
             }
         );

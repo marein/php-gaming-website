@@ -47,13 +47,13 @@ final class UserController
      */
     public function signUpAction(Request $request): JsonResponse
     {
-        $userId = $request->query->get('userId');
+        $userId = (string)$request->query->get('userId');
 
         $this->commandBus->handle(
             new SignUpCommand(
                 $userId,
-                $request->request->get('username'),
-                $request->request->get('password')
+                (string)$request->request->get('username'),
+                (string)$request->request->get('password')
             )
         );
 

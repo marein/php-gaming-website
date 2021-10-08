@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Persistence;
 
-use Predis\Client;
+use Predis\ClientInterface;
 use SessionHandlerInterface;
 
 /**
@@ -14,9 +14,9 @@ use SessionHandlerInterface;
 final class PredisSessionHandler implements SessionHandlerInterface
 {
     /**
-     * @var Client
+     * @var ClientInterface
      */
-    private Client $predis;
+    private ClientInterface $predis;
 
     /**
      * @var string
@@ -31,11 +31,11 @@ final class PredisSessionHandler implements SessionHandlerInterface
     /**
      * PredisSessionHandler constructor.
      *
-     * @param Client $predis
-     * @param string $keyPrefix
-     * @param int    $lifetime
+     * @param ClientInterface $predis
+     * @param string          $keyPrefix
+     * @param int             $lifetime
      */
-    public function __construct(Client $predis, string $keyPrefix, int $lifetime)
+    public function __construct(ClientInterface $predis, string $keyPrefix, int $lifetime)
     {
         $this->predis = $predis;
         $this->keyPrefix = $keyPrefix;
@@ -55,9 +55,9 @@ final class PredisSessionHandler implements SessionHandlerInterface
      */
     public function destroy($sessionId): bool
     {
-        $this->predis->del([
+        $this->predis->del(
             $this->generateKey($sessionId)
-        ]);
+        );
 
         return true;
     }

@@ -149,22 +149,20 @@ final class DoctrineEventStore implements EventStore
     /**
      * Transform the sql rows to stored event instances.
      *
-     * @param array $rows
+     * @param array<int, array<string, mixed>> $rows
      *
      * @return StoredEvent[]
      */
     private function transformRowsToStoredEvents(array $rows): array
     {
         return array_map(
-            static function ($row) {
-                return new StoredEvent(
-                    (int)$row['id'],
-                    $row['name'],
-                    $row['aggregateId'],
-                    $row['payload'],
-                    new DateTimeImmutable($row['occurredOn'])
-                );
-            },
+            static fn(array $row): StoredEvent => new StoredEvent(
+                (int)$row['id'],
+                $row['name'],
+                $row['aggregateId'],
+                $row['payload'],
+                new DateTimeImmutable($row['occurredOn'])
+            ),
             $rows
         );
     }

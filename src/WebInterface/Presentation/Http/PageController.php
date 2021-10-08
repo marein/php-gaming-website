@@ -59,7 +59,7 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
                 'games' => $this->connectFourService->gamesByPlayer(
-                    $request->getSession()->get('user')
+                    (string)$request->getSession()->get('user')
                 )['games']
             ])
         );

@@ -37,7 +37,7 @@ final class GameProjection implements StoredEventSubscriber
         if ($storedEvent->name() === 'GameOpened') {
             $game = new Game();
         } else {
-            $payload = json_decode($storedEvent->payload(), true);
+            $payload = json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR);
             $game = $this->gameStore->find($payload['gameId']);
         }
 

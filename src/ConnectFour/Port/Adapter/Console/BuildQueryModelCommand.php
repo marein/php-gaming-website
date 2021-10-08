@@ -12,7 +12,7 @@ use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\EventStore\ThrottlingEventStore;
 use Gaming\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
-use Predis\Client;
+use Predis\ClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,9 +25,9 @@ final class BuildQueryModelCommand extends Command
     private EventStore $eventStore;
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
-    private Client $predis;
+    private ClientInterface $predis;
 
     /**
      * @var StoredEventSubscriber[]
@@ -38,12 +38,12 @@ final class BuildQueryModelCommand extends Command
      * BuildQueryModelCommand constructor.
      *
      * @param EventStore              $eventStore
-     * @param Client                  $predis
+     * @param ClientInterface         $predis
      * @param StoredEventSubscriber[] $storedEventSubscribers
      */
     public function __construct(
         EventStore $eventStore,
-        Client $predis,
+        ClientInterface $predis,
         array $storedEventSubscribers
     ) {
         parent::__construct('connect-four:build-query-model');
@@ -56,7 +56,7 @@ final class BuildQueryModelCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // The creation of FollowEventStoreDispatcher could be done via container.
         $eventStorePointer = new InMemoryCacheEventStorePointer(

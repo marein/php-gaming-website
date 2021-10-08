@@ -58,12 +58,13 @@ final class DoctrineUserRepository implements Users
     {
         $repository = $this->manager->getRepository(User::class);
 
-        /** @var User|null $user */
         $user = $repository->find($userId);
 
         if ($user === null) {
             throw new UserNotFoundException();
         }
+
+        assert($user instanceof User);
 
         return $user;
     }

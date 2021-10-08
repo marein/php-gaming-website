@@ -98,7 +98,7 @@ final class GamingExceptionListener
             (new ReflectionClass($throwable))->getShortName()
         );
 
-        $exceptionWords = preg_split(
+        $exceptionWords = (array)preg_split(
             '/(?=[A-Z])/',
             $exceptionName
         );
