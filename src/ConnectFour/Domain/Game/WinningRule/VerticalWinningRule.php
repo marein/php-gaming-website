@@ -11,16 +11,9 @@ final class VerticalWinningRule implements WinningRule
 {
     private const MINIMUM = 4;
 
-    /**
-     * @var int
-     */
     private int $numberOfRequiredMatches;
 
     /**
-     * VerticalWinningRule constructor.
-     *
-     * @param int $numberOfRequiredMatches
-     *
      * @throws InvalidNumberOfRequiredMatchesException
      */
     public function __construct(int $numberOfRequiredMatches)
@@ -32,9 +25,6 @@ final class VerticalWinningRule implements WinningRule
         $this->numberOfRequiredMatches = $numberOfRequiredMatches;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function calculate(Board $board): bool
     {
         if ($board->lastUsedField()->isEmpty()) {

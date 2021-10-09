@@ -20,35 +20,16 @@ final class PredisGameStore implements GameStore
 {
     private const STORAGE_KEY_PREFIX = 'game.';
 
-    /**
-     * The predis client.
-     *
-     * @var ClientInterface
-     */
     private ClientInterface $predis;
 
-    /**
-     * If no game is found, this store uses this fallback.
-     *
-     * @var GameFinder
-     */
     private GameFinder $fallbackGameFinder;
 
-    /**
-     * PredisGameStore constructor.
-     *
-     * @param ClientInterface $predis
-     * @param GameFinder $fallbackGameFinder
-     */
     public function __construct(ClientInterface $predis, GameFinder $fallbackGameFinder)
     {
         $this->predis = $predis;
         $this->fallbackGameFinder = $fallbackGameFinder;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function find(string $gameId): Game
     {
         $serializedGame = $this->predis->get(
@@ -63,9 +44,6 @@ final class PredisGameStore implements GameStore
         return unserialize($serializedGame);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function save(Game $game): void
     {
         $this->predis->set(

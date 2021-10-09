@@ -9,16 +9,8 @@ use Gaming\ConnectFour\Domain\Game\Games;
 
 final class AbortHandler
 {
-    /**
-     * @var Games
-     */
     private Games $games;
 
-    /**
-     * AbortHandler constructor.
-     *
-     * @param Games $games
-     */
     public function __construct(Games $games)
     {
         $this->games = $games;

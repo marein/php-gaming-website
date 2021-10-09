@@ -16,8 +16,5 @@ interface RunningGameStore
      */
     public function remove(string $gameId): void;
 
-    /**
-     * @return int
-     */
     public function count(): int;
 }

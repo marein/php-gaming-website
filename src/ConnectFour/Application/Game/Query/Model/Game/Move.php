@@ -8,34 +8,12 @@ use JsonSerializable;
 
 final class Move implements JsonSerializable
 {
-    /**
-     * The x coordinate.
-     *
-     * @var int
-     */
     private int $x;
 
-    /**
-     * The y coordinate.
-     *
-     * @var int
-     */
     private int $y;
 
-    /**
-     * The color. Can be 0, 1 or 2. 0 means empty.
-     *
-     * @var int
-     */
     private int $color;
 
-    /**
-     * Move constructor.
-     *
-     * @param int $x
-     * @param int $y
-     * @param int $color
-     */
     public function __construct(int $x, int $y, int $color)
     {
         $this->x = $x;

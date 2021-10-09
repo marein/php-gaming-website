@@ -10,27 +10,14 @@ use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
 
 final class GameHandler
 {
-    /**
-     * @var GameFinder
-     */
     private GameFinder $gameFinder;
 
-    /**
-     * GameHandler constructor.
-     *
-     * @param GameFinder $gameFinder
-     */
     public function __construct(GameFinder $gameFinder)
     {
         $this->gameFinder = $gameFinder;
     }
 
     /**
-     * Query the game finder.
-     *
-     * @param GameQuery $query
-     *
-     * @return Game
      * @throws GameNotFoundException
      */
     public function __invoke(GameQuery $query): Game

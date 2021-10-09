@@ -24,26 +24,13 @@ final class Game implements AggregateRoot
 {
     use IsAggregateRoot;
 
-    /**
-     * @var GameId
-     */
     private GameId $gameId;
 
-    /**
-     * @var State
-     */
     private State $state;
 
-    /**
-     * @var string
-     */
     private string $chatId;
 
     /**
-     * Game constructor.
-     *
-     * @param GameId $gameId
-     * @param State $state
      * @param DomainEvent[] $domainEvents
      */
     private function __construct(GameId $gameId, State $state, array $domainEvents)
@@ -54,20 +41,11 @@ final class Game implements AggregateRoot
         $this->chatId = '';
     }
 
-    /**
-     * @return GameId
-     */
     public function id(): GameId
     {
         return $this->gameId;
     }
 
-    /**
-     * @param Configuration $configuration
-     * @param string $playerId
-     *
-     * @return Game
-     */
     public static function open(Configuration $configuration, string $playerId): Game
     {
         $gameId = GameId::generate();
@@ -91,11 +69,6 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * The given player makes the move in the given column.
-     *
-     * @param string $playerId
-     * @param int $column
-     *
      * @throws GameException
      */
     public function move(string $playerId, int $column): void
@@ -106,10 +79,6 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * The given player joins the game.
-     *
-     * @param string $playerId
-     *
      * @throws GameException
      */
     public function join(string $playerId): void
@@ -120,10 +89,6 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * The given player aborts the game.
-     *
-     * @param string $playerId
-     *
      * @throws GameException
      */
     public function abort(string $playerId): void
@@ -134,10 +99,6 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * The given player resigns the game.
-     *
-     * @param string $playerId
-     *
      * @throws GameException
      */
     public function resign(string $playerId): void
@@ -147,11 +108,6 @@ final class Game implements AggregateRoot
         $this->applyTransition($transition);
     }
 
-    /**
-     * Assign the chat to the game.
-     *
-     * @param string $chatId
-     */
     public function assignChat(string $chatId): void
     {
         // This is an idempotent operation.
@@ -164,11 +120,6 @@ final class Game implements AggregateRoot
         }
     }
 
-    /**
-     * Apply a state transition.
-     *
-     * @param Transition $transition
-     */
     private function applyTransition(Transition $transition): void
     {
         $this->state = $transition->state();

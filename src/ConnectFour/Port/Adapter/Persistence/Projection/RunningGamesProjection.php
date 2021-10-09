@@ -10,24 +10,13 @@ use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGameStor
 
 final class RunningGamesProjection implements StoredEventSubscriber
 {
-    /**
-     * @var RunningGameStore
-     */
     private RunningGameStore $runningGameStore;
 
-    /**
-     * RunningGamesProjection constructor.
-     *
-     * @param RunningGameStore $runningGameStore
-     */
     public function __construct(RunningGameStore $runningGameStore)
     {
         $this->runningGameStore = $runningGameStore;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(StoredEvent $storedEvent): void
     {
         $this->{'handle' . $storedEvent->name()}(
@@ -35,9 +24,6 @@ final class RunningGamesProjection implements StoredEventSubscriber
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
         return in_array(

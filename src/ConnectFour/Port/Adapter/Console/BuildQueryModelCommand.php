@@ -20,14 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class BuildQueryModelCommand extends Command
 {
-    /**
-     * @var EventStore
-     */
     private EventStore $eventStore;
 
-    /**
-     * @var ClientInterface
-     */
     private ClientInterface $predis;
 
     /**
@@ -36,10 +30,6 @@ final class BuildQueryModelCommand extends Command
     private array $storedEventSubscribers;
 
     /**
-     * BuildQueryModelCommand constructor.
-     *
-     * @param EventStore $eventStore
-     * @param ClientInterface $predis
      * @param StoredEventSubscriber[] $storedEventSubscribers
      */
     public function __construct(
@@ -54,9 +44,6 @@ final class BuildQueryModelCommand extends Command
         $this->storedEventSubscribers = $storedEventSubscribers;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // The creation of FollowEventStoreDispatcher could be done via container.

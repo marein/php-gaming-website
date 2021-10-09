@@ -8,14 +8,8 @@ use Gaming\ConnectFour\Domain\Game\Board\Board;
 
 final class CommonWinningRule implements WinningRule
 {
-    /**
-     * @var WinningRule
-     */
     private WinningRule $winningRule;
 
-    /**
-     * CommonWinningRule constructor.
-     */
     public function __construct()
     {
         $this->winningRule = new MultipleWinningRule(
@@ -27,9 +21,6 @@ final class CommonWinningRule implements WinningRule
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function calculate(Board $board): bool
     {
         return $this->winningRule->calculate($board);

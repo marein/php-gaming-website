@@ -12,8 +12,6 @@ final class GamesByPlayer
     private array $games;
 
     /**
-     * GamesByPlayer constructor.
-     *
      * @param GameByPlayer[] $games
      */
     public function __construct(array $games)

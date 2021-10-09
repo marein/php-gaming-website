@@ -9,16 +9,8 @@ use Gaming\ConnectFour\Domain\Game\Games;
 
 final class AssignChatHandler
 {
-    /**
-     * @var Games
-     */
     private Games $games;
 
-    /**
-     * JoinHandler constructor.
-     *
-     * @param Games $games
-     */
     public function __construct(Games $games)
     {
         $this->games = $games;

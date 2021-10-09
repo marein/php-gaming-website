@@ -17,31 +17,16 @@ use Gaming\ConnectFour\Domain\Game\Players;
 
 final class Open implements State
 {
-    /**
-     * @var Configuration
-     */
     private Configuration $configuration;
 
-    /**
-     * @var Player
-     */
     private Player $player;
 
-    /**
-     * Open constructor.
-     *
-     * @param Configuration $configuration
-     * @param Player $player
-     */
     public function __construct(Configuration $configuration, Player $player)
     {
         $this->configuration = $configuration;
         $this->player = $player;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function join(GameId $gameId, string $playerId): Transition
     {
         $joinedPlayer = new Player($playerId, Stone::yellow());
@@ -62,9 +47,6 @@ final class Open implements State
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function abort(GameId $gameId, string $playerId): Transition
     {
         if ($this->player->id() !== $playerId) {
@@ -82,17 +64,11 @@ final class Open implements State
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function resign(GameId $gameId, string $playerId): Transition
     {
         throw new GameNotRunningException();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function move(GameId $gameId, string $playerId, int $column): Transition
     {
         throw new GameNotRunningException();

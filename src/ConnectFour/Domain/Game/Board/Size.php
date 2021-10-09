@@ -8,22 +8,11 @@ use Gaming\ConnectFour\Domain\Game\Exception\InvalidSizeException;
 
 final class Size
 {
-    /**
-     * @var int
-     */
     private int $width;
 
-    /**
-     * @var int
-     */
     private int $height;
 
     /**
-     * Size constructor.
-     *
-     * @param int $width
-     * @param int $height
-     *
      * @throws InvalidSizeException
      */
     public function __construct(int $width, int $height)
@@ -40,21 +29,11 @@ final class Size
         $this->width = $width;
     }
 
-    /**
-     * Returns the width of the [Size].
-     *
-     * @return int
-     */
     public function width(): int
     {
         return $this->width;
     }
 
-    /**
-     * Returns the height of the [Size].
-     *
-     * @return int
-     */
     public function height(): int
     {
         return $this->height;

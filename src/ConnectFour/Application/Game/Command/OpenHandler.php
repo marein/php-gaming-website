@@ -10,16 +10,8 @@ use Gaming\ConnectFour\Domain\Game\Games;
 
 final class OpenHandler
 {
-    /**
-     * @var Games
-     */
     private Games $games;
 
-    /**
-     * OpenHandler constructor.
-     *
-     * @param Games $games
-     */
     public function __construct(Games $games)
     {
         $this->games = $games;

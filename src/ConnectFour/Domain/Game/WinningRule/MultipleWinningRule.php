@@ -14,8 +14,6 @@ final class MultipleWinningRule implements WinningRule
     private array $winningRules;
 
     /**
-     * MultipleWinningRule constructor.
-     *
      * @param WinningRule[] $winningRules
      */
     public function __construct(array $winningRules)
@@ -23,9 +21,6 @@ final class MultipleWinningRule implements WinningRule
         $this->winningRules = $winningRules;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function calculate(Board $board): bool
     {
         foreach ($this->winningRules as $winningRule) {

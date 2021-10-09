@@ -9,16 +9,8 @@ use Gaming\ConnectFour\Domain\Game\Games;
 
 final class MoveHandler
 {
-    /**
-     * @var Games
-     */
     private Games $games;
 
-    /**
-     * MoveHandler constructor.
-     *
-     * @param Games $games
-     */
     public function __construct(Games $games)
     {
         $this->games = $games;

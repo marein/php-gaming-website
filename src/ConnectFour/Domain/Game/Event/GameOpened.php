@@ -13,33 +13,14 @@ use Gaming\ConnectFour\Domain\Game\Player;
 
 final class GameOpened implements DomainEvent
 {
-    /**
-     * @var GameId
-     */
     private GameId $gameId;
 
-    /**
-     * @var Size
-     */
     private Size $size;
 
-    /**
-     * @var Player
-     */
     private Player $player;
 
-    /**
-     * @var DateTimeImmutable
-     */
     private DateTimeImmutable $occurredOn;
 
-    /**
-     * GameOpened constructor.
-     *
-     * @param GameId $gameId
-     * @param Size $size
-     * @param Player $player
-     */
     public function __construct(GameId $gameId, Size $size, Player $player)
     {
         $this->gameId = $gameId;
@@ -48,17 +29,11 @@ final class GameOpened implements DomainEvent
         $this->occurredOn = Clock::instance()->now();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function aggregateId(): string
     {
         return $this->gameId->toString();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function payload(): array
     {
         return [
@@ -69,17 +44,11 @@ final class GameOpened implements DomainEvent
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): string
     {
         return 'GameOpened';

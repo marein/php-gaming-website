@@ -19,34 +19,14 @@ use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRule;
 
 final class Running implements State
 {
-    /**
-     * @var WinningRule
-     */
     private WinningRule $winningRule;
 
-    /**
-     * @var int
-     */
     private int $numberOfMovesUntilDraw;
 
-    /**
-     * @var Board
-     */
     private Board $board;
 
-    /**
-     * @var Players
-     */
     private Players $players;
 
-    /**
-     * Running constructor.
-     *
-     * @param WinningRule $winningRule
-     * @param int $numberOfMovesUntilDraw
-     * @param Board $board
-     * @param Players $players
-     */
     public function __construct(
         WinningRule $winningRule,
         int $numberOfMovesUntilDraw,
@@ -59,13 +39,6 @@ final class Running implements State
         $this->players = $players;
     }
 
-    /*************************************************************
-     *                        Behaviour
-     *************************************************************/
-
-    /**
-     * @inheritdoc
-     */
     public function move(GameId $gameId, string $playerId, int $column): Transition
     {
         $this->guardExpectedPlayer($playerId);
@@ -113,17 +86,11 @@ final class Running implements State
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function join(GameId $gameId, string $playerId): Transition
     {
         throw new GameRunningException();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function abort(GameId $gameId, string $playerId): Transition
     {
         if (!$this->isAbortable()) {
@@ -142,9 +109,6 @@ final class Running implements State
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function resign(GameId $gameId, string $playerId): Transition
     {
         if ($this->isAbortable()) {
@@ -165,8 +129,6 @@ final class Running implements State
 
     /**
      * The game is only abortable until the second move is done.
-     *
-     * @return bool
      */
     private function isAbortable(): bool
     {
@@ -175,15 +137,7 @@ final class Running implements State
         return $totalNumberOfMoves - $this->numberOfMovesUntilDraw < 2;
     }
 
-    /*************************************************************
-     *                          Guards
-     *************************************************************/
-
     /**
-     * Guard if the given player id is the expected one.
-     *
-     * @param string $playerId
-     *
      * @throws UnexpectedPlayerException
      */
     private function guardExpectedPlayer(string $playerId): void

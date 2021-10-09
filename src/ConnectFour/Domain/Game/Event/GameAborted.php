@@ -12,33 +12,14 @@ use Gaming\ConnectFour\Domain\Game\Player;
 
 final class GameAborted implements DomainEvent
 {
-    /**
-     * @var GameId
-     */
     private GameId $gameId;
 
-    /**
-     * @var Player
-     */
     private Player $abortedPlayer;
 
-    /**
-     * @var Player|null
-     */
     private ?Player $opponentPlayer;
 
-    /**
-     * @var DateTimeImmutable
-     */
     private DateTimeImmutable $occurredOn;
 
-    /**
-     * GameAborted constructor.
-     *
-     * @param GameId $gameId
-     * @param Player $abortedPlayer
-     * @param Player|null $opponentPlayer
-     */
     public function __construct(GameId $gameId, Player $abortedPlayer, Player $opponentPlayer = null)
     {
         $this->gameId = $gameId;
@@ -47,17 +28,11 @@ final class GameAborted implements DomainEvent
         $this->occurredOn = Clock::instance()->now();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function aggregateId(): string
     {
         return $this->gameId->toString();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function payload(): array
     {
         return [
@@ -67,17 +42,11 @@ final class GameAborted implements DomainEvent
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): string
     {
         return 'GameAborted';

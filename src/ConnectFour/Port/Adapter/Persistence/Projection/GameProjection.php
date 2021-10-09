@@ -12,16 +12,8 @@ use Gaming\ConnectFour\Port\Adapter\Persistence\Repository\InMemoryCacheGameStor
 
 final class GameProjection implements StoredEventSubscriber
 {
-    /**
-     * @var GameStore
-     */
     private GameStore $gameStore;
 
-    /**
-     * GameProjection constructor.
-     *
-     * @param GameStore $gameStore
-     */
     public function __construct(GameStore $gameStore)
     {
         $this->gameStore = new InMemoryCacheGameStore(
@@ -30,9 +22,6 @@ final class GameProjection implements StoredEventSubscriber
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(StoredEvent $storedEvent): void
     {
         if ($storedEvent->name() === 'GameOpened') {
@@ -47,9 +36,6 @@ final class GameProjection implements StoredEventSubscriber
         $this->gameStore->save($game);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
         return in_array(

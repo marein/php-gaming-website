@@ -11,24 +11,13 @@ use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGameStore;
 
 final class OpenGamesProjection implements StoredEventSubscriber
 {
-    /**
-     * @var OpenGameStore
-     */
     private OpenGameStore $openGameStore;
 
-    /**
-     * OpenGamesProjection constructor.
-     *
-     * @param OpenGameStore $openGameStore
-     */
     public function __construct(OpenGameStore $openGameStore)
     {
         $this->openGameStore = $openGameStore;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(StoredEvent $storedEvent): void
     {
         $this->{'handle' . $storedEvent->name()}(
@@ -36,9 +25,6 @@ final class OpenGamesProjection implements StoredEventSubscriber
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
         return in_array(

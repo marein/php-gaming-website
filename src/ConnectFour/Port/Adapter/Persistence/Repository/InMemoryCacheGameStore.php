@@ -9,14 +9,8 @@ use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
 
 final class InMemoryCacheGameStore implements GameStore
 {
-    /**
-     * @var GameStore
-     */
     private GameStore $gameStore;
 
-    /**
-     * @var int
-     */
     private int $cacheSize;
 
     /**
@@ -24,12 +18,6 @@ final class InMemoryCacheGameStore implements GameStore
      */
     private array $cachedGames;
 
-    /**
-     * InMemoryCacheGameStore constructor.
-     *
-     * @param GameStore $gameStore
-     * @param int $cacheSize
-     */
     public function __construct(GameStore $gameStore, int $cacheSize)
     {
         $this->gameStore = $gameStore;
@@ -37,9 +25,6 @@ final class InMemoryCacheGameStore implements GameStore
         $this->cachedGames = [];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function find(string $gameId): Game
     {
         if (array_key_exists($gameId, $this->cachedGames)) {
@@ -49,9 +34,6 @@ final class InMemoryCacheGameStore implements GameStore
         return $this->gameStore->find($gameId);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function save(Game $game): void
     {
         if ($game->finished()) {
@@ -65,9 +47,6 @@ final class InMemoryCacheGameStore implements GameStore
         $this->cachedGames[$game->id()] = $game;
     }
 
-    /**
-     * Removes the first cached game when the defined limit is exceeded.
-     */
     private function removeFirstElementIfLimitHasBeenExceeded(): void
     {
         if (count($this->cachedGames) > $this->cacheSize) {

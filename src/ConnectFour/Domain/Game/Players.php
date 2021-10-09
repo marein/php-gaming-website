@@ -9,22 +9,11 @@ use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 
 final class Players
 {
-    /**
-     * @var Player
-     */
     private Player $currentPlayer;
 
-    /**
-     * @var Player
-     */
     private Player $nextPlayer;
 
     /**
-     * Players constructor.
-     *
-     * @param Player $currentPlayer
-     * @param Player $nextPlayer
-     *
      * @throws PlayersNotUniqueException
      */
     public function __construct(Player $currentPlayer, Player $nextPlayer)
@@ -37,11 +26,6 @@ final class Players
         $this->nextPlayer = $nextPlayer;
     }
 
-    /**
-     * Returns the players in switched position.
-     *
-     * @return Players
-     */
     public function switch(): Players
     {
         return new self(
@@ -50,22 +34,12 @@ final class Players
         );
     }
 
-    /**
-     * Returns the current player.
-     *
-     * @return Player
-     */
     public function current(): Player
     {
         return $this->currentPlayer;
     }
 
     /**
-     * Returns the player with the given player id.
-     *
-     * @param string $playerId
-     *
-     * @return Player
      * @throws PlayerNotOwnerException
      */
     public function get(string $playerId): Player
@@ -82,11 +56,6 @@ final class Players
     }
 
     /**
-     * Returns the opponent of the player with the given player id.
-     *
-     * @param string $playerId
-     *
-     * @return Player
      * @throws PlayerNotOwnerException
      */
     public function opponentOf(string $playerId): Player

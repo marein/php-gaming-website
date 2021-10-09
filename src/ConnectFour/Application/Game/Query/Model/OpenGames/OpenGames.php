@@ -12,8 +12,6 @@ final class OpenGames
     private array $games;
 
     /**
-     * OpenGames constructor.
-     *
      * @param OpenGame[] $games
      */
     public function __construct(array $games)

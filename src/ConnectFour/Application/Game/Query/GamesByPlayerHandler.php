@@ -9,26 +9,13 @@ use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerS
 
 final class GamesByPlayerHandler
 {
-    /**
-     * @var GamesByPlayerStore
-     */
     private GamesByPlayerStore $gamesByPlayerFinder;
 
-    /**
-     * GamesByPlayerHandler constructor.
-     *
-     * @param GamesByPlayerStore $gamesByPlayerFinder
-     */
     public function __construct(GamesByPlayerStore $gamesByPlayerFinder)
     {
         $this->gamesByPlayerFinder = $gamesByPlayerFinder;
     }
 
-    /**
-     * @param GamesByPlayerQuery $query
-     *
-     * @return GamesByPlayer
-     */
     public function __invoke(GamesByPlayerQuery $query): GamesByPlayer
     {
         return $this->gamesByPlayerFinder->all(

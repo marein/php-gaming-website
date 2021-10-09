@@ -20,31 +20,16 @@ final class RefereeConsumer implements Consumer
         'ConnectFour.PlayerJoined' => 'handlePlayerJoined'
     ];
 
-    /**
-     * @var Bus
-     */
     private Bus $commandBus;
 
-    /**
-     * @var MessageBroker
-     */
     private MessageBroker $messageBroker;
 
-    /**
-     * RefereeConsumer constructor.
-     *
-     * @param Bus $commandBus
-     * @param MessageBroker $messageBroker
-     */
     public function __construct(Bus $commandBus, MessageBroker $messageBroker)
     {
         $this->commandBus = $commandBus;
         $this->messageBroker = $messageBroker;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(Message $message): void
     {
         $method = self::ROUTING_KEY_TO_METHOD[(string)$message->name()];
@@ -54,9 +39,6 @@ final class RefereeConsumer implements Consumer
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function subscriptions(): array
     {
         return [
@@ -65,17 +47,12 @@ final class RefereeConsumer implements Consumer
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): Name
     {
         return new Name('ConnectFour', 'Referee');
     }
 
     /**
-     * Assign chat to game.
-     *
      * @param array<string, mixed> $payload
      */
     private function handleChatInitiated(array $payload): void
@@ -89,8 +66,6 @@ final class RefereeConsumer implements Consumer
     }
 
     /**
-     * Publish initiate chat command to other context.
-     *
      * @param array<string, mixed> $payload
      */
     private function handlePlayerJoined(array $payload): void

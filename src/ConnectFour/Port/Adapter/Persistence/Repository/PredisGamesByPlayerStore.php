@@ -13,24 +13,13 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
 {
     private const STORAGE_KEY_PREFIX = 'games-by-player.';
 
-    /**
-     * @var ClientInterface
-     */
     private ClientInterface $predis;
 
-    /**
-     * PredisGamesByPlayerStore constructor.
-     *
-     * @param ClientInterface $predis
-     */
     public function __construct(ClientInterface $predis)
     {
         $this->predis = $predis;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function addToPlayer(string $playerId, string $gameId): void
     {
         $this->predis->lpush(
@@ -39,9 +28,6 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function removeFromPlayer(string $playerId, string $gameId): void
     {
         $this->predis->lrem(
@@ -51,9 +37,6 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function all(string $playerId): GamesByPlayer
     {
         return new GamesByPlayer(
@@ -64,13 +47,6 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
         );
     }
 
-    /**
-     * Returns the storage key for the given player id.
-     *
-     * @param string $playerId
-     *
-     * @return string
-     */
     private function storageKeyForPlayer(string $playerId): string
     {
         return self::STORAGE_KEY_PREFIX . $playerId;
