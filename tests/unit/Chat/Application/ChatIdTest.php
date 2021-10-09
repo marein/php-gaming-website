@@ -57,8 +57,6 @@ class ChatIdTest extends TestCase
 
     /**
      * Returns data for itShouldThrowChatNotFoundExceptionOnInvalidString
-     *
-     * @return array
      */
     public function invalidStringProvider(): array
     {

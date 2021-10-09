@@ -13,9 +13,6 @@ class SizeTest extends TestCase
     /**
      * @test
      * @dataProvider correctSizeProvider
-     *
-     * @param int $width
-     * @param int $height
      */
     public function itShouldBeCreatedSuccessfully(int $width, int $height): void
     {
@@ -25,9 +22,6 @@ class SizeTest extends TestCase
         $this->assertSame($height, $size->height());
     }
 
-    /**
-     * @return array
-     */
     public function correctSizeProvider(): array
     {
         return [
@@ -41,9 +35,6 @@ class SizeTest extends TestCase
     /**
      * @test
      * @dataProvider wrongSizeProvider
-     *
-     * @param int $width
-     * @param int $height
      */
     public function itShouldThrowAnExceptionOnInvalidSizes(int $width, int $height): void
     {
@@ -52,9 +43,6 @@ class SizeTest extends TestCase
         new Size($width, $height);
     }
 
-    /**
-     * @return array
-     */
     public function wrongSizeProvider(): array
     {
         return [

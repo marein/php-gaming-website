@@ -41,13 +41,6 @@ final class RoutingBusTest extends TestCase
         $this->assertSame('Hello World!', $response->value);
     }
 
-    /**
-     * Create a test double.
-     *
-     * @param string $value
-     *
-     * @return object
-     */
     private function createMessage(string $value): object
     {
         $message = new class () {

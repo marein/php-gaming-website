@@ -57,8 +57,6 @@ class UserIdTest extends TestCase
 
     /**
      * Returns data for itShouldThrowUserNotFoundExceptionOnInvalidString
-     *
-     * @return array
      */
     public function invalidStringProvider(): array
     {

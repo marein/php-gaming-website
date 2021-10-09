@@ -100,11 +100,6 @@ class PlayersTest extends TestCase
         $this->players()->opponentOf('eve');
     }
 
-    /**
-     * Fixture for valid players.
-     *
-     * @return Players
-     */
     private function players(): Players
     {
         return new Players(
@@ -113,21 +108,11 @@ class PlayersTest extends TestCase
         );
     }
 
-    /**
-     * Fixture for yellow player.
-     *
-     * @return Player
-     */
     private function yellowPlayer(): Player
     {
         return new Player('0', Stone::yellow());
     }
 
-    /**
-     * Fixture for red player.
-     *
-     * @return Player
-     */
     private function redPlayer(): Player
     {
         return new Player('1', Stone::red());

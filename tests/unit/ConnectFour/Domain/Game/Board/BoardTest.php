@@ -93,7 +93,6 @@ class BoardTest extends TestCase
      * @test
      * @dataProvider columnProvider
      *
-     * @param int $column
      * @param Field[] $expectedFields
      */
     public function itShouldFindFieldsByColumn(int $column, array $expectedFields): void
@@ -106,9 +105,6 @@ class BoardTest extends TestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function columnProvider(): array
     {
         return [
@@ -152,7 +148,6 @@ class BoardTest extends TestCase
      * @test
      * @dataProvider rowProvider
      *
-     * @param int $row
      * @param Field[] $expectedFields
      */
     public function itShouldFindFieldsByRow(int $row, array $expectedFields): void
@@ -165,9 +160,6 @@ class BoardTest extends TestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function rowProvider(): array
     {
         return [
@@ -214,7 +206,6 @@ class BoardTest extends TestCase
      * @test
      * @dataProvider mainDiagonalProvider
      *
-     * @param Point $point
      * @param Field[] $expectedFields
      */
     public function itShouldFindFieldsInMainDiagonal(Point $point, array $expectedFields): void
@@ -227,9 +218,6 @@ class BoardTest extends TestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function mainDiagonalProvider(): array
     {
         return [
@@ -272,7 +260,6 @@ class BoardTest extends TestCase
      * @test
      * @dataProvider counterDiagonalProvider
      *
-     * @param Point $point
      * @param Field[] $expectedFields
      */
     public function itShouldFindFieldsInCounterDiagonal(Point $point, array $expectedFields): void
@@ -285,9 +272,6 @@ class BoardTest extends TestCase
         );
     }
 
-    /**
-     * @return array
-     */
     public function counterDiagonalProvider(): array
     {
         return [
@@ -326,9 +310,6 @@ class BoardTest extends TestCase
         ];
     }
 
-    /**
-     * @return Board
-     */
     private function createBoard(): Board
     {
         $size = new Size(7, 6);

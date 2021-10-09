@@ -33,11 +33,6 @@ class WholeDomainTest extends TestCase
         new WholeDomain($domain);
     }
 
-    /**
-     * Returns invalid domains.
-     *
-     * @return array
-     */
     public function invalidDomainsProvider(): array
     {
         return [

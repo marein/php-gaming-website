@@ -137,8 +137,6 @@ class GameTest extends TestCase
     }
 
     /**
-     * Stored events which gets applied.
-     *
      * @return StoredEvent[]
      */
     private function storedEvents(): array

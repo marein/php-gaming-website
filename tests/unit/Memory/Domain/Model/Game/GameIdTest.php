@@ -57,8 +57,6 @@ class GameIdTest extends TestCase
 
     /**
      * Returns data for itShouldThrowGameNotFoundExceptionOnInvalidString
-     *
-     * @return array
      */
     public function invalidStringProvider(): array
     {
