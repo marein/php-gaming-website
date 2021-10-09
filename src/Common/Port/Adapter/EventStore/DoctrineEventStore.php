@@ -18,31 +18,16 @@ final class DoctrineEventStore implements EventStore
 {
     private const SELECT = 'e.id, e.name, BIN_TO_UUID(e.aggregateId) as aggregateId, e.payload, e.occurredOn';
 
-    /**
-     * @var Connection
-     */
     private Connection $connection;
 
-    /**
-     * @var string
-     */
     private string $table;
 
-    /**
-     * DoctrineEventStore constructor.
-     *
-     * @param Connection $connection
-     * @param string $table
-     */
     public function __construct(Connection $connection, string $table)
     {
         $this->connection = $connection;
         $this->table = $table;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function since(int $id, int $limit): array
     {
         try {
@@ -65,9 +50,6 @@ final class DoctrineEventStore implements EventStore
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
         try {
@@ -91,9 +73,6 @@ final class DoctrineEventStore implements EventStore
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function append(DomainEvent $domainEvent): void
     {
         try {
@@ -121,9 +100,6 @@ final class DoctrineEventStore implements EventStore
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function hasUncommittedStoredEventId(int $id): bool
     {
         try {
@@ -152,8 +128,6 @@ final class DoctrineEventStore implements EventStore
     }
 
     /**
-     * Transform the sql rows to stored event instances.
-     *
      * @param array<int, array<string, mixed>> $rows
      *
      * @return StoredEvent[]

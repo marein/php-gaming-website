@@ -19,9 +19,6 @@ use Throwable;
  */
 final class GamingExceptionListener
 {
-    /**
-     * @param ExceptionEvent $event
-     */
     public function onKernelException(ExceptionEvent $event): void
     {
         if ($event->getRequest()->getRequestFormat() === 'json') {
@@ -31,11 +28,6 @@ final class GamingExceptionListener
         }
     }
 
-    /**
-     * Set a new json response.
-     *
-     * @param ExceptionEvent $event
-     */
     private function handleJson(ExceptionEvent $event): void
     {
         $exceptionName = $this->exceptionName($event->getThrowable());
@@ -50,11 +42,6 @@ final class GamingExceptionListener
         );
     }
 
-    /**
-     * Set a new exception when 404 is detected.
-     *
-     * @param ExceptionEvent $event
-     */
     private function handleOther(ExceptionEvent $event): void
     {
         $exceptionName = $this->exceptionName($event->getThrowable());
@@ -69,13 +56,6 @@ final class GamingExceptionListener
         }
     }
 
-    /**
-     * Returns the status code based on exception name.
-     *
-     * @param string $exceptionName
-     *
-     * @return int
-     */
     private function statusCodeByExceptionName(string $exceptionName): int
     {
         return strpos(
@@ -84,13 +64,6 @@ final class GamingExceptionListener
         ) !== false ? Response::HTTP_NOT_FOUND : Response::HTTP_INTERNAL_SERVER_ERROR;
     }
 
-    /**
-     * Returns the name of the exception without namespace and trailing "Exception".
-     *
-     * @param Throwable $throwable
-     *
-     * @return string
-     */
     private function exceptionName(Throwable $throwable): string
     {
         $exceptionName = str_replace(

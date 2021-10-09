@@ -10,22 +10,11 @@ use Gaming\Common\MessageBroker\Model\NamingConvention;
 
 final class Name
 {
-    /**
-     * @var string
-     */
     private string $domain;
 
-    /**
-     * @var string
-     */
     private string $name;
 
     /**
-     * Name constructor.
-     *
-     * @param string $domain
-     * @param string $name
-     *
      * @throws InvalidDomainException
      * @throws InvalidNameException
      */
@@ -38,21 +27,11 @@ final class Name
         $this->name = $name;
     }
 
-    /**
-     * Returns the domain name.
-     *
-     * @return string
-     */
     public function domain(): string
     {
         return $this->domain;
     }
 
-    /**
-     * Returns the queue name.
-     *
-     * @return string
-     */
     public function name(): string
     {
         return $this->name;

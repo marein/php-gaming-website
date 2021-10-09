@@ -10,18 +10,11 @@ use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEvent
 interface EventStorePointer
 {
     /**
-     * Track the most recent published stored event id.
-     *
-     * @param int $id
-     *
      * @throws FailedTrackMostRecentPublishedStoredEventIdException
      */
     public function trackMostRecentPublishedStoredEventId(int $id): void;
 
     /**
-     * Retrieve the most recent published stored event id.
-     *
-     * @return int
      * @throws FailedRetrieveMostRecentPublishedStoredEventIdException
      */
     public function retrieveMostRecentPublishedStoredEventId(): int;

@@ -6,14 +6,8 @@ namespace Gaming\Common\Bus;
 
 final class Violation
 {
-    /**
-     * @var string
-     */
     private string $propertyPath;
 
-    /**
-     * @var string
-     */
     private string $identifier;
 
     /**
@@ -22,10 +16,6 @@ final class Violation
     private array $parameters;
 
     /**
-     * Violation constructor.
-     *
-     * @param string $propertyPath
-     * @param string $identifier
      * @param ViolationParameter[] $parameters
      */
     public function __construct(string $propertyPath, string $identifier, array $parameters)
@@ -35,17 +25,11 @@ final class Violation
         $this->parameters = $parameters;
     }
 
-    /**
-     * @return string
-     */
     public function propertyPath(): string
     {
         return $this->propertyPath;
     }
 
-    /**
-     * @return string
-     */
     public function identifier(): string
     {
         return $this->identifier;

@@ -12,8 +12,6 @@ trait IsAggregateRoot
     private array $domainEvents = [];
 
     /**
-     * Flush all stored domain events.
-     *
      * @return DomainEvent[]
      */
     public function flushDomainEvents(): array

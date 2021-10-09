@@ -13,9 +13,6 @@ final class InMemoryEventStore implements EventStore
      */
     private array $storedEvents = [];
 
-    /**
-     * @inheritdoc
-     */
     public function since(int $id, int $limit): array
     {
         return array_slice(
@@ -25,9 +22,6 @@ final class InMemoryEventStore implements EventStore
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
         return array_filter(
@@ -38,9 +32,6 @@ final class InMemoryEventStore implements EventStore
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function append(DomainEvent $domainEvent): void
     {
         $this->storedEvents[] = new StoredEvent(
@@ -52,9 +43,6 @@ final class InMemoryEventStore implements EventStore
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function hasUncommittedStoredEventId(int $id): bool
     {
         return array_key_exists($id - 1, $this->storedEvents);

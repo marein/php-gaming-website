@@ -20,8 +20,6 @@ final class SubscriptionsToRoutingKeysTranslator implements SubscriptionTranslat
     private array $routingKeys;
 
     /**
-     * SubscriptionsToRoutingKeysTranslator constructor.
-     *
      * @param Subscription[] $subscriptions
      */
     public function __construct(array $subscriptions)
@@ -41,17 +39,11 @@ final class SubscriptionsToRoutingKeysTranslator implements SubscriptionTranslat
         return $this->routingKeys;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handleWholeDomain(WholeDomain $wholeDomain): void
     {
         $this->routingKeys[] = $wholeDomain->domain() . '.#';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handleSpecificMessage(SpecificMessage $specificMessage): void
     {
         $this->routingKeys[] = $specificMessage->domain() . '.' . $specificMessage->name();

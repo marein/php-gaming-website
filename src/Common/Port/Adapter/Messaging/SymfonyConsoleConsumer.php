@@ -11,33 +11,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class SymfonyConsoleConsumer implements Consumer
 {
-    /**
-     * The real consumer.
-     *
-     * @var Consumer
-     */
     private Consumer $consumer;
 
-    /**
-     * @var OutputInterface
-     */
     private OutputInterface $output;
 
-    /**
-     * SymfonyConsoleConsumer constructor.
-     *
-     * @param Consumer $consumer
-     * @param OutputInterface $output
-     */
     public function __construct(Consumer $consumer, OutputInterface $output)
     {
         $this->consumer = $consumer;
         $this->output = $output;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(Message $message): void
     {
         $this->output->writeln(
@@ -51,17 +34,11 @@ final class SymfonyConsoleConsumer implements Consumer
         $this->consumer->handle($message);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function subscriptions(): array
     {
         return $this->consumer->subscriptions();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): Name
     {
         return $this->consumer->name();

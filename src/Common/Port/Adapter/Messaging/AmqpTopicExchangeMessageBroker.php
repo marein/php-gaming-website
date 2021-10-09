@@ -17,37 +17,16 @@ use Interop\Amqp\Impl\AmqpBind;
 
 final class AmqpTopicExchangeMessageBroker implements MessageBroker
 {
-    /**
-     * @var string
-     */
     private string $dsn;
 
-    /**
-     * @var string
-     */
     private string $exchangeName;
 
-    /**
-     * @var bool
-     */
     private bool $isAlreadyInitialized;
 
-    /**
-     * @var AmqpContext
-     */
     private AmqpContext $context;
 
-    /**
-     * @var AmqpTopic
-     */
     private AmqpTopic $topic;
 
-    /**
-     * AmqpTopicExchangeMessageBroker constructor.
-     *
-     * @param string $dsn
-     * @param string $exchangeName
-     */
     public function __construct(string $dsn, string $exchangeName)
     {
         $this->dsn = $dsn;
@@ -56,7 +35,7 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     }
 
     /**
-     * Used for lazy load the connection.
+     * Used to lazy load the connection.
      */
     private function initialize(): void
     {
@@ -73,10 +52,6 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
 
     /**
      * Create a durable topic exchange.
-     *
-     * @param string $name
-     *
-     * @return AmqpTopic
      */
     private function createTopic(string $name): AmqpTopic
     {
@@ -92,10 +67,7 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     /**
      * Create a durable queue and bind it to the topic exchange via the given routing keys.
      *
-     * @param string $name
      * @param string[] $routingKeys
-     *
-     * @return AmqpQueue
      */
     private function createQueue(string $name, array $routingKeys): AmqpQueue
     {
@@ -112,9 +84,6 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
         return $queue;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function publish(Message $message): void
     {
         $this->initialize();
@@ -128,9 +97,6 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
         $producer->send($this->topic, $amqpMessage);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function consume(Consumer $consumer): void
     {
         $this->initialize();

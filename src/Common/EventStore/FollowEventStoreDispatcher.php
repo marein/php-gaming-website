@@ -4,34 +4,19 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
+use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
 use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
 use InvalidArgumentException;
 
 final class FollowEventStoreDispatcher
 {
-    /**
-     * @var EventStorePointer
-     */
     private EventStorePointer $eventStorePointer;
 
-    /**
-     * @var EventStore
-     */
     private EventStore $eventStore;
 
-    /**
-     * @var StoredEventPublisher
-     */
     private StoredEventPublisher $storedEventPublisher;
 
-    /**
-     * FollowEventStoreDispatcher constructor.
-     *
-     * @param EventStorePointer $eventStorePointer
-     * @param EventStore $eventStore
-     * @param StoredEventPublisher $storedEventPublisher
-     */
     public function __construct(
         EventStorePointer $eventStorePointer,
         EventStore $eventStore,
@@ -43,14 +28,9 @@ final class FollowEventStoreDispatcher
     }
 
     /**
-     * Follow the store and publish stored events.
-     *
-     * @param int $batchSize The number of stored events which gets pulled out of the event store and
-     *                       published through the stored event publisher.
-     *
-     * @throws InvalidArgumentException
-     * @throws FailedTrackMostRecentPublishedStoredEventIdException
+     * @throws EventStoreException
      * @throws FailedRetrieveMostRecentPublishedStoredEventIdException
+     * @throws FailedTrackMostRecentPublishedStoredEventIdException
      */
     public function dispatch(int $batchSize): void
     {

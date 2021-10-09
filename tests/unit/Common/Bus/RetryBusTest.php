@@ -42,21 +42,12 @@ final class RetryBusTest extends TestCase
 
         // The first two times when "handle" is called, an exception is thrown.
         $bus
-            ->expects($this->at(0))
             ->method('handle')
-            ->willThrowException(
-                new RuntimeException()
+            ->willReturnOnConsecutiveCalls(
+                $this->throwException(new RuntimeException()),
+                $this->throwException(new RuntimeException()),
+                null
             );
-        $bus
-            ->expects($this->at(1))
-            ->method('handle')
-            ->willThrowException(
-                new RuntimeException()
-            );
-        $bus
-            ->expects($this->at(2))
-            ->method('handle')
-            ->with($actionToCall);
 
         // Expect that "handle" is called three times.
         $bus

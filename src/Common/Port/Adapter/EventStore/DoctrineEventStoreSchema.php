@@ -8,10 +8,6 @@ use Doctrine\DBAL\Schema\Schema;
 
 final class DoctrineEventStoreSchema
 {
-    /**
-     * @param Schema $schema
-     * @param string $tableName
-     */
     public static function up(Schema $schema, string $tableName): void
     {
         $table = $schema->createTable($tableName);
@@ -26,10 +22,6 @@ final class DoctrineEventStoreSchema
         $table->addIndex(['aggregateId']);
     }
 
-    /**
-     * @param Schema $schema
-     * @param string $tableName
-     */
     public static function down(Schema $schema, string $tableName): void
     {
         $schema->dropTable($tableName);

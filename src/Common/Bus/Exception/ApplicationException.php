@@ -23,8 +23,6 @@ final class ApplicationException extends BusException
     private array $violations;
 
     /**
-     * ValidationException constructor.
-     *
      * @param Violation[] $violations
      */
     public function __construct(array $violations)

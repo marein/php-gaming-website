@@ -6,21 +6,10 @@ namespace Gaming\Common\EventStore;
 
 final class InMemoryCacheEventStorePointer implements EventStorePointer
 {
-    /**
-     * @var EventStorePointer
-     */
     private EventStorePointer $eventStorePointer;
 
-    /**
-     * @var int
-     */
     private int $cachedId;
 
-    /**
-     * InMemoryCacheEventStorePointer constructor.
-     *
-     * @param EventStorePointer $eventStorePointer The persistent EventStorePointer.
-     */
     public function __construct(EventStorePointer $eventStorePointer)
     {
         $this->eventStorePointer = $eventStorePointer;
@@ -29,9 +18,6 @@ final class InMemoryCacheEventStorePointer implements EventStorePointer
         $this->cachedId = $this->eventStorePointer->retrieveMostRecentPublishedStoredEventId();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function trackMostRecentPublishedStoredEventId(int $id): void
     {
         // Delegate, so this operation becomes persistent.
@@ -40,9 +26,6 @@ final class InMemoryCacheEventStorePointer implements EventStorePointer
         $this->cachedId = $id;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function retrieveMostRecentPublishedStoredEventId(): int
     {
         return $this->cachedId;

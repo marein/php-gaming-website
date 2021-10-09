@@ -9,8 +9,6 @@ interface Subscription
     /**
      * The implementation must call a SubscriptionTranslator method
      * so that the SubscriptionTranslator knows what type the implementation has.
-     *
-     * @param SubscriptionTranslator $subscriptionTranslator
      */
     public function accept(SubscriptionTranslator $subscriptionTranslator): void;
 }
