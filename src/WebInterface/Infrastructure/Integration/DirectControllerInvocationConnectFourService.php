@@ -11,40 +11,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class DirectControllerInvocationConnectFourService implements ConnectFourService
 {
-    /**
-     * @var GameController
-     */
     private GameController $gameController;
 
-    /**
-     * DirectControllerInvocationConnectFourService constructor.
-     *
-     * @param GameController $gameController
-     */
     public function __construct(GameController $gameController)
     {
         $this->gameController = $gameController;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function openGames(): array
     {
         return $this->sendRequest('openGames');
     }
 
-    /**
-     * @inheritdoc
-     */
     public function runningGames(): array
     {
         return $this->sendRequest('runningGames');
     }
 
-    /**
-     * @inheritdoc
-     */
     public function gamesByPlayer(string $playerId): array
     {
         return $this->sendRequest(
@@ -55,9 +38,6 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function game(string $gameId): array
     {
         return $this->sendRequest(
@@ -68,9 +48,6 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function open(string $playerId): array
     {
         return $this->sendRequest(
@@ -82,9 +59,6 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function join(string $gameId, string $playerId): array
     {
         return $this->sendRequest(
@@ -98,9 +72,6 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function abort(string $gameId, string $playerId): array
     {
         return $this->sendRequest(
@@ -114,9 +85,6 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function resign(string $gameId, string $playerId): array
     {
         return $this->sendRequest(
@@ -130,9 +98,6 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function move(string $gameId, string $playerId, int $column): array
     {
         return $this->sendRequest(
@@ -148,9 +113,6 @@ final class DirectControllerInvocationConnectFourService implements ConnectFourS
     }
 
     /**
-     * Make a call to the controller.
-     *
-     * @param string $actionName
      * @param array<string, mixed> $queryParameter
      * @param array<string, mixed> $postParameter
      *

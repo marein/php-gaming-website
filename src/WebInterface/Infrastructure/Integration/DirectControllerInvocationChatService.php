@@ -11,24 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class DirectControllerInvocationChatService implements ChatService
 {
-    /**
-     * @var ChatController
-     */
     private ChatController $chatController;
 
-    /**
-     * DirectControllerInvocationChatService constructor.
-     *
-     * @param ChatController $chatController
-     */
     public function __construct(ChatController $chatController)
     {
         $this->chatController = $chatController;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function writeMessage(string $chatId, string $authorId, string $message): array
     {
         return $this->sendRequest(
@@ -43,9 +32,6 @@ final class DirectControllerInvocationChatService implements ChatService
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function messages(string $chatId, string $authorId, int $offset, int $limit): array
     {
         return $this->sendRequest(
@@ -60,9 +46,6 @@ final class DirectControllerInvocationChatService implements ChatService
     }
 
     /**
-     * Make a call to the controller.
-     *
-     * @param string $actionName
      * @param array<string, mixed> $queryParameter
      * @param array<string, mixed> $postParameter
      *

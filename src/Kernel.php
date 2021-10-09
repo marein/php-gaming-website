@@ -40,9 +40,6 @@ final class Kernel extends BaseKernel
         return $bundles;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load($this->getProjectDir() . '/config/config_' . $this->getEnvironment() . '.yml');

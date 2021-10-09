@@ -25,24 +25,13 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
         'Chat.MessageWritten' => 'handleMessageWritten'
     ];
 
-    /**
-     * @var BrowserNotifier
-     */
     private BrowserNotifier $browserNotifier;
 
-    /**
-     * PublishRabbitMqEventsToNchanConsumer constructor.
-     *
-     * @param BrowserNotifier $browserNotifier
-     */
     public function __construct(BrowserNotifier $browserNotifier)
     {
         $this->browserNotifier = $browserNotifier;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(Message $message): void
     {
         $name = (string)$message->name();
@@ -56,9 +45,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
         $this->$method($payload);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function subscriptions(): array
     {
         return [
@@ -67,17 +53,12 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): Name
     {
         return new Name('WebInterface', 'BrowserNotification');
     }
 
     /**
-     * Publish game opened.
-     *
      * @param array<string, mixed> $payload
      */
     private function handleGameOpened(array $payload): void
@@ -89,8 +70,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * Publish game aborted.
-     *
      * @param array<string, mixed> $payload
      */
     private function handleGameAborted(array $payload): void
@@ -102,8 +81,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * Publish game resigned.
-     *
      * @param array<string, mixed> $payload
      */
     private function handleGameResigned(array $payload): void
@@ -115,8 +92,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * Publish player joined.
-     *
      * @param array<string, mixed> $payload
      */
     private function handlePlayerJoined(array $payload): void
@@ -135,8 +110,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * Publish game won.
-     *
      * @param array<string, mixed> $payload
      */
     private function handleGameWon(array $payload): void
@@ -148,8 +121,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * Publish game drawn.
-     *
      * @param array<string, mixed> $payload
      */
     private function handleGameDrawn(array $payload): void
@@ -161,8 +132,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * Publish player moved.
-     *
      * @param array<string, mixed> $payload
      */
     private function handlePlayerMoved(array $payload): void
@@ -174,8 +143,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * Publish chat assigned.
-     *
      * @param array<string, mixed> $payload
      */
     private function handleChatAssigned(array $payload): void
@@ -187,8 +154,6 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * Publish message written.
-     *
      * @param array<string, mixed> $payload
      */
     private function handleMessageWritten(array $payload): void

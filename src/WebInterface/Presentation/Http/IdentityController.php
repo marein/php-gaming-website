@@ -10,26 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class IdentityController
 {
-    /**
-     * @var IdentityService
-     */
     private IdentityService $identityService;
 
-    /**
-     * IdentityController constructor.
-     *
-     * @param IdentityService $identityService
-     */
     public function __construct(IdentityService $identityService)
     {
         $this->identityService = $identityService;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function signUpAction(Request $request): JsonResponse
     {
         return new JsonResponse(

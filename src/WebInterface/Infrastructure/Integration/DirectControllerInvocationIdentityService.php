@@ -11,32 +11,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class DirectControllerInvocationIdentityService implements IdentityService
 {
-    /**
-     * @var UserController
-     */
     private UserController $userController;
 
-    /**
-     * DirectControllerInvocationIdentityService constructor.
-     *
-     * @param UserController $userController
-     */
     public function __construct(UserController $userController)
     {
         $this->userController = $userController;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function arrive(): array
     {
         return $this->sendRequest('arrive');
     }
 
-    /**
-     * @inheritdoc
-     */
     public function signUp(string $userId, string $username, string $password): array
     {
         return $this->sendRequest(
@@ -52,9 +38,6 @@ final class DirectControllerInvocationIdentityService implements IdentityService
     }
 
     /**
-     * Make a call to the controller.
-     *
-     * @param string $actionName
      * @param array<string, mixed> $queryParameter
      * @param array<string, mixed> $postParameter
      *

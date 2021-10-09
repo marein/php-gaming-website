@@ -11,22 +11,10 @@ use Twig\Environment;
 
 final class PageController
 {
-    /**
-     * @var Environment
-     */
     private Environment $twig;
 
-    /**
-     * @var ConnectFourService
-     */
     private ConnectFourService $connectFourService;
 
-    /**
-     * PageController constructor.
-     *
-     * @param Environment $twig
-     * @param ConnectFourService $connectFourService
-     */
     public function __construct(
         Environment $twig,
         ConnectFourService $connectFourService

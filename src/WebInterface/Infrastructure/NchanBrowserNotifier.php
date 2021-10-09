@@ -10,24 +10,13 @@ use Marein\Nchan\Nchan;
 
 final class NchanBrowserNotifier implements BrowserNotifier
 {
-    /**
-     * @var Nchan
-     */
     private Nchan $nchan;
 
-    /**
-     * NchanBrowserNotifier constructor.
-     *
-     * @param string $baseUrl
-     */
     public function __construct(string $baseUrl)
     {
         $this->nchan = new Nchan($baseUrl);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function publish(string $channel, string $message): void
     {
         $this->nchan->channel($channel)->publish(

@@ -9,24 +9,13 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 final class AssignUserIdOnKernelRequest
 {
-    /**
-     * @var IdentityService
-     */
     private IdentityService $identityService;
 
-    /**
-     * AssignUserIdOnKernelRequest constructor.
-     *
-     * @param IdentityService $identityService
-     */
     public function __construct(IdentityService $identityService)
     {
         $this->identityService = $identityService;
     }
 
-    /**
-     * @param RequestEvent $event
-     */
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMasterRequest()) {
