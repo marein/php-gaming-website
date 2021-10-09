@@ -11,27 +11,12 @@ use Gaming\Identity\Domain\Model\User\UserId;
 
 final class UserSignedUp implements DomainEvent
 {
-    /**
-     * @var UserId
-     */
     private UserId $userId;
 
-    /**
-     * @var string
-     */
     private string $username;
 
-    /**
-     * @var DateTimeImmutable
-     */
     private DateTimeImmutable $occurredOn;
 
-    /**
-     * UserSignedUp constructor.
-     *
-     * @param UserId $userId
-     * @param string $username
-     */
     public function __construct(UserId $userId, string $username)
     {
         $this->userId = $userId;
@@ -39,17 +24,11 @@ final class UserSignedUp implements DomainEvent
         $this->occurredOn = Clock::instance()->now();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function aggregateId(): string
     {
         return $this->userId->toString();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function payload(): array
     {
         return [
@@ -58,17 +37,11 @@ final class UserSignedUp implements DomainEvent
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): string
     {
         return 'UserSignedUp';

@@ -21,28 +21,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class PublishStoredEventsToRabbitMqCommand extends Command
 {
-    /**
-     * @var EventStore
-     */
     private EventStore $eventStore;
 
-    /**
-     * @var ClientInterface
-     */
     private ClientInterface $predis;
 
-    /**
-     * @var MessageBroker
-     */
     private MessageBroker $messageBroker;
 
-    /**
-     * PublishStoredEventsToRabbitMqCommand constructor.
-     *
-     * @param EventStore $eventStore
-     * @param ClientInterface $predis
-     * @param MessageBroker $messageBroker
-     */
     public function __construct(EventStore $eventStore, ClientInterface $predis, MessageBroker $messageBroker)
     {
         parent::__construct();
@@ -52,18 +36,12 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
         $this->messageBroker = $messageBroker;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function configure(): void
     {
         $this
             ->setName('identity:publish-stored-events-to-rabbit-mq');
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // The creation of FollowEventStoreDispatcher could be done via container.

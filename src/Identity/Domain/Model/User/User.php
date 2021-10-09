@@ -15,33 +15,17 @@ class User implements AggregateRoot
 {
     use IsAggregateRoot;
 
-    /**
-     * @var UserId
-     */
     private UserId $userId;
 
     /**
      * This version is for optimistic concurrency control.
-     *
-     * @var integer|null
      */
     private ?int $version;
 
-    /**
-     * @var bool
-     */
     private bool $isSignedUp;
 
-    /**
-     * @var Credentials|null
-     */
     private ?Credentials $credentials;
 
-    /**
-     * User constructor.
-     *
-     * @param UserId $userId
-     */
     private function __construct(UserId $userId)
     {
         $this->userId = $userId;
@@ -50,11 +34,6 @@ class User implements AggregateRoot
         $this->credentials = null;
     }
 
-    /**
-     * A new user arrives.
-     *
-     * @return User
-     */
     public static function arrive(): User
     {
         $user = new self(
@@ -69,10 +48,6 @@ class User implements AggregateRoot
     }
 
     /**
-     * The user signs up.
-     *
-     * @param Credentials $credentials
-     *
      * @throws UserAlreadySignedUpException
      */
     public function signUp(Credentials $credentials): void
@@ -91,14 +66,7 @@ class User implements AggregateRoot
     }
 
     /**
-     * Returns true if the user can authenticate.
-     *
      * todo: We can raise an UserAuthenticationAttempted event.
-     *
-     * @param string $password
-     * @param HashAlgorithm $hashAlgorithm
-     *
-     * @return bool
      */
     public function authenticate(string $password, HashAlgorithm $hashAlgorithm): bool
     {
@@ -109,9 +77,6 @@ class User implements AggregateRoot
         return $this->credentials->matches($password, $hashAlgorithm);
     }
 
-    /**
-     * @return UserId
-     */
     public function id(): UserId
     {
         return $this->userId;

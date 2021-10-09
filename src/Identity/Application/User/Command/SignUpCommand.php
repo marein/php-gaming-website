@@ -6,28 +6,12 @@ namespace Gaming\Identity\Application\User\Command;
 
 final class SignUpCommand
 {
-    /**
-     * @var string
-     */
     private string $userId;
 
-    /**
-     * @var string
-     */
     private string $username;
 
-    /**
-     * @var string
-     */
     private string $password;
 
-    /**
-     * SignUpCommand constructor.
-     *
-     * @param string $userId
-     * @param string $username
-     * @param string $password
-     */
     public function __construct(string $userId, string $username, string $password)
     {
         $this->userId = $userId;
@@ -35,25 +19,16 @@ final class SignUpCommand
         $this->password = $password;
     }
 
-    /**
-     * @return string
-     */
     public function userId(): string
     {
         return $this->userId;
     }
 
-    /**
-     * @return string
-     */
     public function username(): string
     {
         return $this->username;
     }
 
-    /**
-     * @return string
-     */
     public function password(): string
     {
         return $this->password;
