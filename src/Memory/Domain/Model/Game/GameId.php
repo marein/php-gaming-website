@@ -11,16 +11,9 @@ use Ramsey\Uuid\UuidInterface;
 
 final class GameId
 {
-    /**
-     * @var string
-     */
     private string $gameId;
 
     /**
-     * GameId constructor.
-     *
-     * @param UuidInterface $uuid
-     *
      * @throws GameNotFoundException
      */
     private function __construct(UuidInterface $uuid)
@@ -33,20 +26,12 @@ final class GameId
         }
     }
 
-    /**
-     * @return GameId
-     */
     public static function generate(): GameId
     {
         return new self(Uuid::uuid4());
     }
 
     /**
-     * Create a GameId from string.
-     *
-     * @param string $gameId
-     *
-     * @return GameId
      * @throws GameNotFoundException
      */
     public static function fromString(string $gameId): GameId
@@ -60,17 +45,11 @@ final class GameId
         }
     }
 
-    /**
-     * @return string
-     */
     public function toString(): string
     {
         return $this->gameId;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->toString();

@@ -13,27 +13,12 @@ use Gaming\Memory\Domain\Model\Game\PlayerPool;
 
 final class GameStarted implements DomainEvent
 {
-    /**
-     * @var GameId
-     */
     private GameId $gameId;
 
-    /**
-     * @var PlayerPool
-     */
     private PlayerPool $playerPool;
 
-    /**
-     * @var DateTimeImmutable
-     */
     private DateTimeImmutable $occurredOn;
 
-    /**
-     * GameStarted constructor.
-     *
-     * @param GameId $gameId
-     * @param PlayerPool $playerPool
-     */
     public function __construct(GameId $gameId, PlayerPool $playerPool)
     {
         $this->gameId = $gameId;
@@ -41,17 +26,11 @@ final class GameStarted implements DomainEvent
         $this->occurredOn = Clock::instance()->now();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function aggregateId(): string
     {
         return $this->gameId->toString();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function payload(): array
     {
         return [
@@ -63,17 +42,11 @@ final class GameStarted implements DomainEvent
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): string
     {
         return 'GameStarted';
