@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
@@ -11,10 +12,5 @@ namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
  */
 interface GameStore extends GameFinder
 {
-    /**
-     * Store the game.
-     *
-     * @param Game $game
-     */
     public function save(Game $game): void;
 }

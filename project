@@ -75,7 +75,7 @@ unit() {
 }
 
 sniffer() {
-    docker-compose run php vendor/bin/phpcs src tests/unit --standard=PSR2 -v
+    docker-compose run php vendor/bin/phpcs
 }
 
 analyzer() {

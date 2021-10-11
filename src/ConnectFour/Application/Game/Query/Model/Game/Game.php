@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
@@ -16,70 +17,31 @@ use JsonSerializable;
  */
 final class Game implements JsonSerializable
 {
-    /**
-     * The game id of the game.
-     *
-     * @var string
-     */
     private string $gameId = '';
 
-    /**
-     * The assigned chat id of the game.
-     *
-     * @var string
-     */
     private string $chatId = '';
 
     /**
-     * The players of the game.
-     *
      * @var string[]
      */
     private array $players = [];
 
-    /**
-     * The width of the game.
-     *
-     * @var int
-     */
     private int $width = 0;
 
-    /**
-     * The height of the game.
-     *
-     * @var int
-     */
     private int $height = 0;
 
-    /**
-     * Tell if the game is finished.
-     *
-     * @var bool
-     */
     private bool $finished = false;
 
     /**
-     * The moves of the game.
-     *
      * @var Move[]
      */
     private array $moves = [];
 
-    /**
-     * Returns the id.
-     *
-     * @return string
-     */
     public function id(): string
     {
         return $this->gameId;
     }
 
-    /**
-     * Returns true if the game is finished.
-     *
-     * @return bool
-     */
     public function finished(): bool
     {
         return $this->finished;
@@ -88,21 +50,19 @@ final class Game implements JsonSerializable
     public function jsonSerialize(): mixed
     {
         return [
-            'gameId'   => $this->gameId,
-            'chatId'   => $this->chatId,
-            'players'  => $this->players,
+            'gameId' => $this->gameId,
+            'chatId' => $this->chatId,
+            'players' => $this->players,
             'finished' => $this->finished,
-            'height'   => $this->height,
-            'width'    => $this->width,
-            'moves'    => $this->moves
+            'height' => $this->height,
+            'width' => $this->width,
+            'moves' => $this->moves
         ];
     }
 
     /**
      * Apply a stored event. The game can project this to its state.
      * The order of events must be the same as the sequence added to the event store.
-     *
-     * @param StoredEvent $storedEvent
      */
     public function apply(StoredEvent $storedEvent): void
     {
@@ -116,8 +76,6 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Open the game.
-     *
      * @param array<string, mixed> $payload
      */
     private function whenGameOpened(array $payload): void
@@ -129,8 +87,6 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Assign the joined player.
-     *
      * @param array<string, mixed> $payload
      */
     private function whenPlayerJoined(array $payload): void
@@ -139,8 +95,6 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Project a player movement.
-     *
      * @param array<string, mixed> $payload
      */
     private function whenPlayerMoved(array $payload): void
@@ -157,8 +111,6 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Mark the game as finished.
-     *
      * @param array<string, mixed> $payload
      */
     private function whenGameAborted(array $payload): void
@@ -167,8 +119,6 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Mark the game as finished.
-     *
      * @param array<string, mixed> $payload
      */
     private function whenGameResigned(array $payload): void
@@ -177,8 +127,6 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Mark the game as finished.
-     *
      * @param array<string, mixed> $payload
      */
     private function whenGameWon(array $payload): void
@@ -187,8 +135,6 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Mark the game as finished.
-     *
      * @param array<string, mixed> $payload
      */
     private function whenGameDrawn(array $payload): void
@@ -197,8 +143,6 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Assign the chat id.
-     *
      * @param array<string, mixed> $payload
      */
     private function whenChatAssigned(array $payload): void
@@ -206,11 +150,6 @@ final class Game implements JsonSerializable
         $this->chatId = $payload['chatId'];
     }
 
-    /**
-     * This is an idempotent operation. If an event occurs twice, it's ignored.
-     *
-     * @param string $playerId
-     */
     private function addPlayer(string $playerId): void
     {
         if (!in_array($playerId, $this->players)) {

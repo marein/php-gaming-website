@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
@@ -9,24 +10,13 @@ use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerS
 
 final class GamesByPlayerProjection implements StoredEventSubscriber
 {
-    /**
-     * @var GamesByPlayerStore
-     */
     private GamesByPlayerStore $gamesByPlayerStore;
 
-    /**
-     * GamesByPlayerProjection constructor.
-     *
-     * @param GamesByPlayerStore $gamesByPlayerStore
-     */
     public function __construct(GamesByPlayerStore $gamesByPlayerStore)
     {
         $this->gamesByPlayerStore = $gamesByPlayerStore;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(StoredEvent $storedEvent): void
     {
         $this->{'handle' . $storedEvent->name()}(
@@ -34,9 +24,6 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
         return in_array(

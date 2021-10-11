@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Memory\Domain\Model\Game\Event;
@@ -21,7 +22,7 @@ final class PlayerJoinedTest extends TestCase
         $gameId = GameId::generate();
         $playerId = 'playerId';
         $payload = [
-            'gameId'   => $gameId->toString(),
+            'gameId' => $gameId->toString(),
             'playerId' => $playerId
         ];
 

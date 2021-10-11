@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User;
@@ -10,16 +11,9 @@ use Ramsey\Uuid\UuidInterface;
 
 final class UserId
 {
-    /**
-     * @var UuidInterface
-     */
     private UuidInterface $userId;
 
     /**
-     * UserId constructor.
-     *
-     * @param UuidInterface $uuid
-     *
      * @throws UserNotFoundException
      */
     private function __construct(UuidInterface $uuid)
@@ -32,20 +26,12 @@ final class UserId
         }
     }
 
-    /**
-     * @return UserId
-     */
     public static function generate(): UserId
     {
         return new self(Uuid::uuid1());
     }
 
     /**
-     * Create an UserId from string.
-     *
-     * @param string $userId
-     *
-     * @return UserId
      * @throws UserNotFoundException
      */
     public static function fromString(string $userId): UserId
@@ -59,17 +45,11 @@ final class UserId
         }
     }
 
-    /**
-     * @return string
-     */
     public function toString(): string
     {
         return $this->userId->toString();
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->toString();

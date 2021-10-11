@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Identity\Domain\Model\User;
@@ -56,8 +57,6 @@ class UserIdTest extends TestCase
 
     /**
      * Returns data for itShouldThrowUserNotFoundExceptionOnInvalidString
-     *
-     * @return array
      */
     public function invalidStringProvider(): array
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Bus;
@@ -8,28 +9,13 @@ use InvalidArgumentException;
 
 final class RetryBus implements Bus
 {
-    /**
-     * @var Bus
-     */
     private Bus $bus;
 
-    /**
-     * @var int
-     */
     private int $numberOfRetries;
 
-    /**
-     * @var string
-     */
     private string $retryOnException;
 
     /**
-     * RetryBus constructor.
-     *
-     * @param Bus    $bus
-     * @param int    $numberOfRetries
-     * @param string $retryOnException FQCN of the exception which trigger the retries.
-     *
      * @throws InvalidArgumentException
      */
     public function __construct(
@@ -46,25 +32,15 @@ final class RetryBus implements Bus
         $this->retryOnException = $retryOnException;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function handle(object $message)
+    public function handle(object $message): mixed
     {
         return $this->handleOrThrow($message);
     }
 
     /**
-     * Handle the given message.
-     * Retry if the configured exception occur and the number of retries isn't reached.
-     *
-     * @param object $message
-     * @param int    $currentTry
-     *
-     * @return mixed
      * @throws Exception
      */
-    private function handleOrThrow(object $message, int $currentTry = 1)
+    private function handleOrThrow(object $message, int $currentTry = 1): mixed
     {
         try {
             return $this->bus->handle($message);

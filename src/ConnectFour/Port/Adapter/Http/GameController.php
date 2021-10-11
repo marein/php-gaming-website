@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Http;
@@ -24,22 +25,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GameController
 {
-    /**
-     * @var Bus
-     */
     private Bus $commandBus;
 
-    /**
-     * @var Bus
-     */
     private Bus $queryBus;
 
-    /**
-     * GameController constructor.
-     *
-     * @param Bus $commandBus
-     * @param Bus $queryBus
-     */
     public function __construct(
         Bus $commandBus,
         Bus $queryBus
@@ -48,11 +37,6 @@ class GameController
         $this->queryBus = $queryBus;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function openGamesAction(Request $request): JsonResponse
     {
         $openGames = $this->queryBus->handle(new OpenGamesQuery());
@@ -60,37 +44,31 @@ class GameController
 
         $games = array_map(
             static fn(OpenGame $openGame): array => [
-                'gameId'   => $openGame->gameId(),
+                'gameId' => $openGame->gameId(),
                 'playerId' => $openGame->playerId()
             ],
             $openGames->games()
         );
 
-        return new JsonResponse([
-            'games' => $games
-        ]);
+        return new JsonResponse(
+            [
+                'games' => $games
+            ]
+        );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function runningGamesAction(Request $request): JsonResponse
     {
         $runningGames = $this->queryBus->handle(new RunningGamesQuery());
         assert($runningGames instanceof RunningGames);
 
-        return new JsonResponse([
-            'count' => $runningGames->count()
-        ]);
+        return new JsonResponse(
+            [
+                'count' => $runningGames->count()
+            ]
+        );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function gamesByPlayerAction(Request $request): JsonResponse
     {
         $gamesByPlayer = $this->queryBus->handle(
@@ -105,16 +83,13 @@ class GameController
             $gamesByPlayer->games()
         );
 
-        return new JsonResponse([
-            'games' => $games
-        ]);
+        return new JsonResponse(
+            [
+                'games' => $games
+            ]
+        );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function gameAction(Request $request): JsonResponse
     {
         $game = $this->queryBus->handle(
@@ -127,11 +102,6 @@ class GameController
         return new JsonResponse($game);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function openAction(Request $request): JsonResponse
     {
         $gameId = $this->commandBus->handle(
@@ -140,16 +110,13 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function joinAction(Request $request): JsonResponse
     {
         $gameId = (string)$request->query->get('gameId');
@@ -161,16 +128,13 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function abortAction(Request $request): JsonResponse
     {
         $gameId = (string)$request->query->get('gameId');
@@ -182,16 +146,13 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function resignAction(Request $request): JsonResponse
     {
         $gameId = (string)$request->query->get('gameId');
@@ -203,16 +164,13 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function moveAction(Request $request): JsonResponse
     {
         $gameId = (string)$request->query->get('gameId');
@@ -225,8 +183,10 @@ class GameController
             )
         );
 
-        return new JsonResponse([
-            'gameId' => $gameId
-        ]);
+        return new JsonResponse(
+            [
+                'gameId' => $gameId
+            ]
+        );
     }
 }

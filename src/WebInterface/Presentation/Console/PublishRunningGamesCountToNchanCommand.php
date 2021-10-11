@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Console;
@@ -11,22 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class PublishRunningGamesCountToNchanCommand extends Command
 {
-    /**
-     * @var ConnectFourService
-     */
     private ConnectFourService $connectFourService;
 
-    /**
-     * @var BrowserNotifier
-     */
     private BrowserNotifier $browserNotifier;
 
-    /**
-     * PublishRunningGamesCountToNchanCommand constructor.
-     *
-     * @param ConnectFourService $connectFourService
-     * @param BrowserNotifier    $browserNotifier
-     */
     public function __construct(ConnectFourService $connectFourService, BrowserNotifier $browserNotifier)
     {
         parent::__construct();
@@ -35,18 +24,12 @@ final class PublishRunningGamesCountToNchanCommand extends Command
         $this->browserNotifier = $browserNotifier;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function configure(): void
     {
         $this
             ->setName('web-interface:publish-running-games-count-to-nchan');
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $lastRunningGamesCount = -1;
@@ -61,7 +44,7 @@ final class PublishRunningGamesCountToNchanCommand extends Command
                     json_encode(
                         [
                             'eventName' => 'ConnectFour.RunningGamesUpdated',
-                            'count'     => $currentRunningGamesCount
+                            'count' => $currentRunningGamesCount
                         ],
                         JSON_THROW_ON_ERROR
                     )

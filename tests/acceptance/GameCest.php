@@ -1,5 +1,9 @@
 <?php
+
 declare(strict_types=1);
+
+use Codeception\Lib\Friend;
+use Facebook\WebDriver\WebDriverKeys;
 
 class GameCest
 {
@@ -17,7 +21,6 @@ class GameCest
         $this->prepareRunningGameScenario($I, $jane);
 
         $I->click('#abort-game');
-
         // todo: Add missing assertion. Currently not possible because the user interface is not updated.
     }
 
@@ -32,13 +35,13 @@ class GameCest
         );
 
         $I->fillField('message', 'Hi Jane.');
-        $I->pressKey('[name="message"]', \Facebook\WebDriver\WebDriverKeys::ENTER);
+        $I->pressKey('[name="message"]', WebDriverKeys::ENTER);
 
         $jane->does(
             static function (AcceptanceTester $I): void {
                 $I->waitForText('Hi Jane.', 3, '#chat');
                 $I->fillField('message', 'Hi.');
-                $I->pressKey('[name="message"]', \Facebook\WebDriver\WebDriverKeys::ENTER);
+                $I->pressKey('[name="message"]', WebDriverKeys::ENTER);
             }
         );
 
@@ -54,7 +57,7 @@ class GameCest
         return $I->grabAttributeFrom('.game-list__game--user-game', 'data-game-id');
     }
 
-    private function prepareRunningGameScenario(AcceptanceTester $I, \Codeception\Lib\Friend $friend): string
+    private function prepareRunningGameScenario(AcceptanceTester $I, Friend $friend): string
     {
         $gameId = $this->prepareOpenGameScenario($I);
 

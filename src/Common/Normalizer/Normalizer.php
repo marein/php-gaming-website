@@ -20,6 +20,7 @@ interface Normalizer
 
     /**
      * @param mixed $value A scalar or a nestable array of scalars.
+     *
      * @throws NormalizerException
      */
     public function denormalize(mixed $value, string $typeName): mixed;

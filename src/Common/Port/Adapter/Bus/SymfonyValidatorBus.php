@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Bus;
@@ -13,32 +14,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class SymfonyValidatorBus implements Bus
 {
-    /**
-     * @var Bus
-     */
     private Bus $bus;
 
-    /**
-     * @var ValidatorInterface
-     */
     private ValidatorInterface $validator;
 
-    /**
-     * SymfonyValidatorBus constructor.
-     *
-     * @param Bus                $bus
-     * @param ValidatorInterface $validator
-     */
     public function __construct(Bus $bus, ValidatorInterface $validator)
     {
         $this->bus = $bus;
         $this->validator = $validator;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function handle(object $message)
+    public function handle(object $message): mixed
     {
         $symfonyViolations = $this->validator->validate($message);
 
@@ -52,8 +38,6 @@ final class SymfonyValidatorBus implements Bus
     }
 
     /**
-     * Maps from symfony validation objects.
-     *
      * @param ConstraintViolationListInterface<ConstraintViolationInterface> $symfonyViolations
      *
      * @return Violation[]
@@ -71,7 +55,7 @@ final class SymfonyValidatorBus implements Bus
     }
 
     /**
-     * Remove template characters from parameter names.
+     * Removes template characters from parameter names.
      *
      * @param array<string, bool|int|float|string> $symfonyParameters
      *

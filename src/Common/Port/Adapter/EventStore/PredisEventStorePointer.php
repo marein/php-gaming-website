@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\EventStore;
@@ -11,31 +12,16 @@ use Predis\ClientInterface;
 
 final class PredisEventStorePointer implements EventStorePointer
 {
-    /**
-     * @var ClientInterface
-     */
     private ClientInterface $predis;
 
-    /**
-     * @var string
-     */
     private string $key;
 
-    /**
-     * PredisEventStorePointer constructor.
-     *
-     * @param ClientInterface $predis The predis instance which handles the connection.
-     * @param string          $key    The key where the id is stored
-     */
     public function __construct(ClientInterface $predis, string $key)
     {
         $this->predis = $predis;
         $this->key = $key;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function trackMostRecentPublishedStoredEventId(int $id): void
     {
         try {
@@ -49,9 +35,6 @@ final class PredisEventStorePointer implements EventStorePointer
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function retrieveMostRecentPublishedStoredEventId(): int
     {
         try {

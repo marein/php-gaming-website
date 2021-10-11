@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Model;
@@ -22,10 +23,6 @@ final class NamingConvention
     ';
 
     /**
-     * Throws if the specified string is not a valid consumer name.
-     *
-     * @param string $name
-     *
      * @throws InvalidNameException
      */
     public static function verifyConsumerName(string $name): void
@@ -41,10 +38,6 @@ final class NamingConvention
     }
 
     /**
-     * Throws if the specified string is not a valid domain name.
-     *
-     * @param string $domain
-     *
      * @throws InvalidDomainException
      */
     public static function verifyDomainName(string $domain): void
@@ -60,10 +53,6 @@ final class NamingConvention
     }
 
     /**
-     * Throws if the specified string is not a valid message name.
-     *
-     * @param string $name
-     *
      * @throws InvalidNameException
      */
     public static function verifyMessageName(string $name): void

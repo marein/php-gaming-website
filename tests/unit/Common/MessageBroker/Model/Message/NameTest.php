@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\MessageBroker\Model\Message;
@@ -92,11 +93,6 @@ class NameTest extends TestCase
         Name::fromString(self::VALID_DOMAIN . '.' . $name);
     }
 
-    /**
-     * Returns invalid domains.
-     *
-     * @return array
-     */
     public function invalidDomainsProvider(): array
     {
         return [
@@ -107,11 +103,6 @@ class NameTest extends TestCase
         ];
     }
 
-    /**
-     * Returns invalid names.
-     *
-     * @return array
-     */
     public function invalidNamesProvider(): array
     {
         return [

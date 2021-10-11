@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
@@ -8,16 +9,8 @@ use Gaming\ConnectFour\Domain\Game\Games;
 
 final class ResignHandler
 {
-    /**
-     * @var Games
-     */
     private Games $games;
 
-    /**
-     * ResignHandler constructor.
-     *
-     * @param Games $games
-     */
     public function __construct(Games $games)
     {
         $this->games = $games;

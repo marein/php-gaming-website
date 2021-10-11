@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Http;
@@ -11,40 +12,26 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class UserController
 {
-    /**
-     * @var Bus
-     */
     private Bus $commandBus;
 
-    /**
-     * UserController constructor.
-     *
-     * @param Bus $commandBus
-     */
     public function __construct(Bus $commandBus)
     {
         $this->commandBus = $commandBus;
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function arriveAction(): JsonResponse
     {
         $userId = $this->commandBus->handle(
             new ArriveCommand()
         );
 
-        return new JsonResponse([
-            'userId' => $userId
-        ]);
+        return new JsonResponse(
+            [
+                'userId' => $userId
+            ]
+        );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function signUpAction(Request $request): JsonResponse
     {
         $userId = (string)$request->query->get('userId');
@@ -57,8 +44,10 @@ final class UserController
             )
         );
 
-        return new JsonResponse([
-            'userId' => $userId
-        ]);
+        return new JsonResponse(
+            [
+                'userId' => $userId
+            ]
+        );
     }
 }

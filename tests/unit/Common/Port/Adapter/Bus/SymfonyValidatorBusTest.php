@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\Port\Adapter\Bus;
@@ -115,17 +116,9 @@ class SymfonyValidatorBusTest extends TestCase
         }
     }
 
-    /**
-     * Create a test double.
-     *
-     * @param string $value
-     *
-     * @return object
-     */
     private function createMessage(string $value): object
     {
-        $message = new class()
-        {
+        $message = new class () {
             public $value;
         };
 
@@ -135,11 +128,7 @@ class SymfonyValidatorBusTest extends TestCase
     }
 
     /**
-     * Create constraint violation list.
-     *
      * @param ConstraintViolationInterface[] $constraintViolations
-     *
-     * @return ConstraintViolationListInterface
      */
     private function createConstraintViolationList(
         ConstraintViolationInterface ...$constraintViolations
@@ -147,15 +136,6 @@ class SymfonyValidatorBusTest extends TestCase
         return new ConstraintViolationList($constraintViolations);
     }
 
-    /**
-     * Create constraint violation.
-     *
-     * @param string  $propertyPath
-     * @param string  $message
-     * @param mixed[] $context
-     *
-     * @return ConstraintViolationInterface
-     */
     private function createConstraintViolation(
         string $propertyPath,
         string $message,

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Identity\Domain\Model\User\Event;
@@ -20,7 +21,7 @@ final class UserSignedUpTest extends TestCase
         $userId = UserId::generate();
         $username = 'luke';
         $payload = [
-            'userId'   => $userId->toString(),
+            'userId' => $userId->toString(),
             'username' => $username
         ];
 

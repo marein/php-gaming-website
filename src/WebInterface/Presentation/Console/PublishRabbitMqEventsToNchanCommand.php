@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Console;
@@ -13,22 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class PublishRabbitMqEventsToNchanCommand extends Command
 {
-    /**
-     * @var MessageBroker
-     */
     private MessageBroker $messageBroker;
 
-    /**
-     * @var BrowserNotifier
-     */
     private BrowserNotifier $browserNotifier;
 
-    /**
-     * PublishRabbitMqEventsToNchanCommand constructor.
-     *
-     * @param MessageBroker   $messageBroker
-     * @param BrowserNotifier $browserNotifier
-     */
     public function __construct(MessageBroker $messageBroker, BrowserNotifier $browserNotifier)
     {
         parent::__construct();
@@ -37,18 +26,12 @@ final class PublishRabbitMqEventsToNchanCommand extends Command
         $this->browserNotifier = $browserNotifier;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function configure(): void
     {
         $this
             ->setName('web-interface:publish-rabbit-mq-events-to-nchan');
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->messageBroker->consume(

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Memory\Domain\Model\Game;
@@ -165,11 +166,6 @@ class GameTest extends TestCase
         $game->start('playerId1');
     }
 
-    /**
-     * Returns an open game ready for testing.
-     *
-     * @return Game
-     */
     private function createOpenGame(): Game
     {
         $game = Game::open(
@@ -182,11 +178,6 @@ class GameTest extends TestCase
         return $game;
     }
 
-    /**
-     * Returns an open game with four players ready for testing.
-     *
-     * @return Game
-     */
     public function createOpenGameWithFourPlayers(): Game
     {
         $game = $this->createOpenGame();

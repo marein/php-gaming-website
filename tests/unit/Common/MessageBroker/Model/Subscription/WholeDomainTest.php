@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\MessageBroker\Model\Subscription;
@@ -32,11 +33,6 @@ class WholeDomainTest extends TestCase
         new WholeDomain($domain);
     }
 
-    /**
-     * Returns invalid domains.
-     *
-     * @return array
-     */
     public function invalidDomainsProvider(): array
     {
         return [

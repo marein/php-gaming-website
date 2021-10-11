@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer;
@@ -11,8 +12,6 @@ final class GamesByPlayer
     private array $games;
 
     /**
-     * GamesByPlayer constructor.
-     *
      * @param GameByPlayer[] $games
      */
     public function __construct(array $games)

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Persistence\Repository;
@@ -14,31 +15,16 @@ use Gaming\Identity\Domain\Model\User\Users;
 
 final class DoctrineUserRepository implements Users
 {
-    /**
-     * @var EntityManager
-     */
     private EntityManager $manager;
 
-    /**
-     * @var DomainEventPublisher
-     */
     private DomainEventPublisher $domainEventPublisher;
 
-    /**
-     * DoctrineUserRepository constructor.
-     *
-     * @param EntityManager        $manager
-     * @param DomainEventPublisher $domainEventPublisher
-     */
     public function __construct(EntityManager $manager, DomainEventPublisher $domainEventPublisher)
     {
         $this->manager = $manager;
         $this->domainEventPublisher = $domainEventPublisher;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function save(User $user): void
     {
         $this->domainEventPublisher->publish($user->flushDomainEvents());
@@ -51,9 +37,6 @@ final class DoctrineUserRepository implements Users
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function get(UserId $userId): User
     {
         $repository = $this->manager->getRepository(User::class);

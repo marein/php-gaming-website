@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
@@ -12,24 +13,13 @@ final class PredisOpenGameStore implements OpenGameStore
 {
     private const STORAGE_KEY = 'open-games';
 
-    /**
-     * @var ClientInterface
-     */
     private ClientInterface $predis;
 
-    /**
-     * PredisOpenGameStore constructor.
-     *
-     * @param ClientInterface $predis
-     */
     public function __construct(ClientInterface $predis)
     {
         $this->predis = $predis;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function save(OpenGame $openGame): void
     {
         $this->predis->hset(
@@ -37,7 +27,7 @@ final class PredisOpenGameStore implements OpenGameStore
             $openGame->gameId(),
             json_encode(
                 [
-                    'gameId'   => $openGame->gameId(),
+                    'gameId' => $openGame->gameId(),
                     'playerId' => $openGame->playerId()
                 ],
                 JSON_THROW_ON_ERROR
@@ -45,17 +35,11 @@ final class PredisOpenGameStore implements OpenGameStore
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function remove(string $gameId): void
     {
         $this->predis->hdel(self::STORAGE_KEY, [$gameId]);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function all(): OpenGames
     {
         return new OpenGames(

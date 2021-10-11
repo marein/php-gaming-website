@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Event;
@@ -22,7 +23,7 @@ final class GameWonTest extends TestCase
         $gameId = GameId::generate();
         $winnerPlayerId = 'winnerPlayerId';
         $payload = [
-            'gameId'         => $gameId->toString(),
+            'gameId' => $gameId->toString(),
             'winnerPlayerId' => $winnerPlayerId
         ];
 

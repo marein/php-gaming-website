@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Board;
@@ -8,9 +9,6 @@ use Gaming\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 
 final class Board
 {
-    /**
-     * @var Size
-     */
     private Size $size;
 
     /**
@@ -18,17 +16,10 @@ final class Board
      */
     private array $fields;
 
-    /**
-     * @var Field
-     */
     private Field $lastUsedField;
 
     /**
-     * Board constructor.
-     *
-     * @param Size    $size
      * @param Field[] $fields
-     * @param Field   $lastUsedField
      */
     private function __construct(Size $size, array $fields, Field $lastUsedField)
     {
@@ -37,17 +28,6 @@ final class Board
         $this->lastUsedField = $lastUsedField;
     }
 
-    /*************************************************************
-     *                         Factory
-     *************************************************************/
-
-    /**
-     * Create an empty [Board].
-     *
-     * @param Size $size
-     *
-     * @return Board
-     */
     public static function empty(Size $size): Board
     {
         $fields = [];
@@ -64,17 +44,7 @@ final class Board
         return new self($size, $fields, $fields[0]);
     }
 
-    /*************************************************************
-     *                        Behaviour
-     *************************************************************/
-
     /**
-     * Drops a [Stone] in the given column.
-     *
-     * @param Stone $stone
-     * @param int   $column
-     *
-     * @return Board
      * @throws ColumnAlreadyFilledException
      * @throws OutOfSizeException
      */
@@ -90,16 +60,7 @@ final class Board
         return new self($this->size, $fields, $field);
     }
 
-    /*************************************************************
-     *                     Finder for [Field]
-     *************************************************************/
-
     /**
-     * Find position of first empty [Field] in column.
-     *
-     * @param int $column
-     *
-     * @return int
      * @throws ColumnAlreadyFilledException
      * @throws OutOfSizeException
      */
@@ -121,10 +82,6 @@ final class Board
     }
 
     /**
-     * Find [Field]s by column.
-     *
-     * @param int $column
-     *
      * @return Field[]
      */
     public function findFieldsByColumn(int $column): array
@@ -141,10 +98,6 @@ final class Board
     }
 
     /**
-     * Find [Field]s by row.
-     *
-     * @param int $row
-     *
      * @return Field[]
      */
     public function findFieldsByRow(int $row): array
@@ -165,9 +118,6 @@ final class Board
      *  \
      *   \
      *    \
-     * Find [Field]s in main diagonal.
-     *
-     * @param Point $fromPoint
      *
      * @return Field[]
      */
@@ -194,9 +144,6 @@ final class Board
      *   /
      *  /
      * /
-     * Find [Field]s in counter diagonal.
-     *
-     * @param Point $fromPoint
      *
      * @return Field[]
      */
@@ -217,12 +164,10 @@ final class Board
             $points[] = new Point($x, $y);
         }
 
-        return  $this->findFieldsByPoints($points);
+        return $this->findFieldsByPoints($points);
     }
 
     /**
-     * Find [Field]s by [Point]s.
-     *
      * @param Point[] $points
      *
      * @return Field[]
@@ -243,23 +188,12 @@ final class Board
         return $fields;
     }
 
-    /*************************************************************
-     *                          Getter
-     *************************************************************/
-
-    /**
-     * Returns the [Size] of the [Board].
-     *
-     * @return Size
-     */
     public function size(): Size
     {
         return $this->size;
     }
 
     /**
-     * Returns the [Field]s of the [Board].
-     *
      * @return Field[]
      */
     public function fields(): array
@@ -267,11 +201,6 @@ final class Board
         return $this->fields;
     }
 
-    /**
-     * Returns the last used [Field].
-     *
-     * @return Field
-     */
     public function lastUsedField(): Field
     {
         return $this->lastUsedField;
