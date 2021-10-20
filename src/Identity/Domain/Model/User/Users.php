@@ -9,6 +9,8 @@ use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 
 interface Users
 {
+    public function nextIdentity(): UserId;
+
     /**
      * @throws ConcurrencyException
      */
