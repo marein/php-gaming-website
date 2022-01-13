@@ -8,4 +8,5 @@ use Exception;
 
 class ChatException extends Exception
 {
+
 }

@@ -6,4 +6,5 @@ namespace Gaming\Chat\Application\Exception;
 
 final class EmptyMessageException extends ChatException
 {
+
 }

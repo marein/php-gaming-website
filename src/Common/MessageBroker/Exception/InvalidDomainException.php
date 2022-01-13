@@ -6,4 +6,5 @@ namespace Gaming\Common\MessageBroker\Exception;
 
 final class InvalidDomainException extends MessageBrokerException
 {
+
 }

@@ -6,4 +6,5 @@ namespace Gaming\Common\Bus\Exception;
 
 final class MissingHandlerException extends BusException
 {
+
 }

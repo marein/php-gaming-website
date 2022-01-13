@@ -8,4 +8,5 @@ use Exception;
 
 class MessageBrokerException extends Exception
 {
+
 }
