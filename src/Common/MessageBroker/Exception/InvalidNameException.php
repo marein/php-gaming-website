@@ -6,5 +6,4 @@ namespace Gaming\Common\MessageBroker\Exception;
 
 final class InvalidNameException extends MessageBrokerException
 {
-
 }
