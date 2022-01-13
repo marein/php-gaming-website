@@ -6,5 +6,4 @@ namespace Gaming\Common\MessageBroker\Exception;
 
 final class InvalidFormatException extends MessageBrokerException
 {
-
 }

@@ -6,5 +6,4 @@ namespace Gaming\Memory\Domain\Model\Game\Exception;
 
 final class PlayerNotJoinedException extends GameException
 {
-
 }
