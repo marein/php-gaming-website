@@ -3,7 +3,7 @@ parameters:
     # See https://github.com/marein/php-gaming-website/issues/52.
     kernel.root_dir: '%kernel.project_dir%/src'
     # Workaround for doctrine/doctrine-migrations-bundle:^3.0
-    # To be able to use multiple connections, the bundle requires a default connection.
+    # To be able to use multiple connections, we need to set a default connection.
     # See https://github.com/marein/php-gaming-website/issues/62.
     doctrine.migrations.preferred_connection: default
 
