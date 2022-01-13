@@ -6,4 +6,5 @@ namespace Gaming\Identity\Domain\Model\User\Exception;
 
 class UserAlreadySignedUpException extends UserException
 {
+
 }

@@ -6,4 +6,5 @@ namespace Gaming\Chat\Application\Exception;
 
 final class AuthorNotAllowedException extends ChatException
 {
+
 }

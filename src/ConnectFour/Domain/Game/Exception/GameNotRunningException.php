@@ -6,4 +6,5 @@ namespace Gaming\ConnectFour\Domain\Game\Exception;
 
 final class GameNotRunningException extends GameException
 {
+
 }

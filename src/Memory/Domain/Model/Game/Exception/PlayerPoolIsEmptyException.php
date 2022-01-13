@@ -6,4 +6,5 @@ namespace Gaming\Memory\Domain\Model\Game\Exception;
 
 final class PlayerPoolIsEmptyException extends GameException
 {
+
 }

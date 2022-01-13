@@ -6,4 +6,5 @@ namespace Gaming\Common\EventStore\Exception;
 
 final class FailedTrackMostRecentPublishedStoredEventIdException extends EventStoreException
 {
+
 }
