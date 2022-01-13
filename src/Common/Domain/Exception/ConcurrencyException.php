@@ -8,5 +8,4 @@ use Exception;
 
 final class ConcurrencyException extends Exception
 {
-
 }
