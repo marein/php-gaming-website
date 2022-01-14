@@ -39,6 +39,7 @@ final class PredisSessionHandler implements SessionHandlerInterface
         return true;
     }
 
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime): bool
     {
         return true;
