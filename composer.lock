@@ -1975,26 +1975,27 @@
         },
         {
             "name": "marein/php-nchan-client",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marein/php-nchan-client.git",
-                "reference": "d9238bc84f02166dd84cbb66fe351cbb4cede0fc"
+                "reference": "f08c56d5d9c373362a94b23c633ff244f2229bc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marein/php-nchan-client/zipball/d9238bc84f02166dd84cbb66fe351cbb4cede0fc",
-                "reference": "d9238bc84f02166dd84cbb66fe351cbb4cede0fc",
+                "url": "https://api.github.com/repos/marein/php-nchan-client/zipball/f08c56d5d9c373362a94b23c633ff244f2229bc7",
+                "reference": "f08c56d5d9c373362a94b23c633ff244f2229bc7",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.54",
-                "phpunit/phpunit": "^9.4",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symfony/process": "^5.1"
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.6",
+                "symfony/process": "^5.4"
             },
             "type": "library",
             "autoload": {
@@ -2015,36 +2016,37 @@
             "description": "A PHP https://nchan.io client.",
             "support": {
                 "issues": "https://github.com/marein/php-nchan-client/issues",
-                "source": "https://github.com/marein/php-nchan-client/tree/3.0.0"
+                "source": "https://github.com/marein/php-nchan-client/tree/3.0.1"
             },
-            "time": "2020-11-09T20:45:23+00:00"
+            "time": "2022-01-13T19:13:34+00:00"
         },
         {
             "name": "marein/symfony-standard-headers-csrf-bundle",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marein/symfony-standard-headers-csrf-bundle.git",
-                "reference": "877dee44e1e096d050775eefa237d78cdd101451"
+                "reference": "d13e7334b2a5cd6ff7d36105bf11c714f64bdafc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marein/symfony-standard-headers-csrf-bundle/zipball/877dee44e1e096d050775eefa237d78cdd101451",
-                "reference": "877dee44e1e096d050775eefa237d78cdd101451",
+                "url": "https://api.github.com/repos/marein/symfony-standard-headers-csrf-bundle/zipball/d13e7334b2a5cd6ff7d36105bf11c714f64bdafc",
+                "reference": "d13e7334b2a5cd6ff7d36105bf11c714f64bdafc",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0",
-                "symfony/config": "^5.1",
-                "symfony/dependency-injection": "^5.1",
-                "symfony/http-foundation": "^5.1"
+                "symfony/config": "^5.1 || ^6.0",
+                "symfony/dependency-injection": "^5.1 || ^6.0",
+                "symfony/http-foundation": "^5.1 || ^6.0",
+                "symfony/http-kernel": "^5.1 || ^6.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.55",
-                "phpunit/phpunit": "^9.4",
-                "squizlabs/php_codesniffer": "^3.5",
-                "symfony/browser-kit": "^5.1",
-                "symfony/framework-bundle": "^5.1"
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.6",
+                "symfony/browser-kit": "^5.1 || ^6.0",
+                "symfony/framework-bundle": "^5.1 || ^6.0"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -2065,9 +2067,9 @@
             "description": "Protect symfony applications against CSRF attacks with the help of standard headers.",
             "support": {
                 "issues": "https://github.com/marein/symfony-standard-headers-csrf-bundle/issues",
-                "source": "https://github.com/marein/symfony-standard-headers-csrf-bundle/tree/1.0.1"
+                "source": "https://github.com/marein/symfony-standard-headers-csrf-bundle/tree/1.0.2"
             },
-            "time": "2021-03-04T20:20:33+00:00"
+            "time": "2022-01-13T19:27:20+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3553,41 +3555,40 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v5.4.2",
+            "version": "v6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "ba94559be9738d77cd29e24b5d81cf3b89b7d628"
+                "reference": "a9346ef44ea8a7b60f1f1edc8d802ffb91baa6a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/ba94559be9738d77cd29e24b5d81cf3b89b7d628",
-                "reference": "ba94559be9738d77cd29e24b5d81cf3b89b7d628",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/a9346ef44ea8a7b60f1f1edc8d802ffb91baa6a8",
+                "reference": "a9346ef44ea8a7b60f1f1edc8d802ffb91baa6a8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5",
-                "psr/container": "^1.1.1",
+                "php": ">=8.0.2",
+                "psr/container": "^1.1|^2.0",
                 "symfony/deprecation-contracts": "^2.1|^3",
-                "symfony/polyfill-php80": "^1.16",
                 "symfony/polyfill-php81": "^1.22",
-                "symfony/service-contracts": "^1.1.6|^2"
+                "symfony/service-contracts": "^1.1.6|^2.0|^3.0"
             },
             "conflict": {
                 "ext-psr": "<1.1|>=2",
-                "symfony/config": "<5.3",
-                "symfony/finder": "<4.4",
-                "symfony/proxy-manager-bridge": "<4.4",
-                "symfony/yaml": "<4.4"
+                "symfony/config": "<5.4",
+                "symfony/finder": "<5.4",
+                "symfony/proxy-manager-bridge": "<5.4",
+                "symfony/yaml": "<5.4"
             },
             "provide": {
-                "psr/container-implementation": "1.0",
-                "symfony/service-implementation": "1.0|2.0"
+                "psr/container-implementation": "1.1|2.0",
+                "symfony/service-implementation": "1.1|2.0|3.0"
             },
             "require-dev": {
-                "symfony/config": "^5.3|^6.0",
-                "symfony/expression-language": "^4.4|^5.0|^6.0",
-                "symfony/yaml": "^4.4|^5.0|^6.0"
+                "symfony/config": "^5.4|^6.0",
+                "symfony/expression-language": "^5.4|^6.0",
+                "symfony/yaml": "^5.4|^6.0"
             },
             "suggest": {
                 "symfony/config": "",
@@ -3622,7 +3623,7 @@
             "description": "Allows you to standardize and centralize the way objects are constructed in your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dependency-injection/tree/v5.4.2"
+                "source": "https://github.com/symfony/dependency-injection/tree/v6.0.2"
             },
             "funding": [
                 {
@@ -3638,7 +3639,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-29T10:10:35+00:00"
+            "time": "2021-12-29T10:14:09+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -7523,16 +7524,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.3.3",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "151a51f6149855785fbd883e79768c0abc96b75f"
+                "reference": "72b04d97b5e6e60a081f17c416fef35bd521120b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/151a51f6149855785fbd883e79768c0abc96b75f",
-                "reference": "151a51f6149855785fbd883e79768c0abc96b75f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/72b04d97b5e6e60a081f17c416fef35bd521120b",
+                "reference": "72b04d97b5e6e60a081f17c416fef35bd521120b",
                 "shasum": ""
             },
             "require": {
@@ -7548,7 +7549,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -7563,7 +7564,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.3.3"
+                "source": "https://github.com/phpstan/phpstan/tree/1.4.0"
             },
             "funding": [
                 {
@@ -7583,25 +7584,25 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-07T09:49:03+00:00"
+            "time": "2022-01-14T15:58:47+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-doctrine.git",
-                "reference": "8805ca71119c736606be39ad6284a0cfddb89127"
+                "reference": "820606a0e6116c4566871e44e22949815a3e36a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/8805ca71119c736606be39ad6284a0cfddb89127",
-                "reference": "8805ca71119c736606be39ad6284a0cfddb89127",
+                "url": "https://api.github.com/repos/phpstan/phpstan-doctrine/zipball/820606a0e6116c4566871e44e22949815a3e36a8",
+                "reference": "820606a0e6116c4566871e44e22949815a3e36a8",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0",
-                "phpstan/phpstan": "^1.0"
+                "phpstan/phpstan": "^1.3"
             },
             "conflict": {
                 "doctrine/collections": "<1.0",
@@ -7614,17 +7615,19 @@
                 "doctrine/annotations": "^1.11.0",
                 "doctrine/collections": "^1.6",
                 "doctrine/common": "^2.7 || ^3.0",
-                "doctrine/dbal": "^2.13.1",
+                "doctrine/dbal": "^2.13.7",
+                "doctrine/lexer": "^1.2.1",
                 "doctrine/mongodb-odm": "^1.3 || ^2.1",
-                "doctrine/orm": "^2.9.1",
+                "doctrine/orm": "^2.11.0",
                 "doctrine/persistence": "^1.1 || ^2.0",
                 "nesbot/carbon": "^2.49",
-                "nikic/php-parser": "^4.13.0",
+                "nikic/php-parser": "^4.13.2",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpstan/phpstan-phpunit": "^1.0",
                 "phpstan/phpstan-strict-rules": "^1.0",
-                "phpunit/phpunit": "^9.5",
-                "ramsey/uuid-doctrine": "^1.5.0"
+                "phpunit/phpunit": "^9.5.10",
+                "ramsey/uuid-doctrine": "^1.5.0",
+                "symfony/cache": "^4.4.35"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -7650,9 +7653,9 @@
             "description": "Doctrine extensions for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-doctrine/issues",
-                "source": "https://github.com/phpstan/phpstan-doctrine/tree/1.0.2"
+                "source": "https://github.com/phpstan/phpstan-doctrine/tree/1.0.3"
             },
-            "time": "2021-11-24T08:26:25+00:00"
+            "time": "2022-01-14T19:51:02+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
