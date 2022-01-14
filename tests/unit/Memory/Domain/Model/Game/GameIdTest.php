@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Memory\Domain\Model\Game;
@@ -56,8 +57,6 @@ class GameIdTest extends TestCase
 
     /**
      * Returns data for itShouldThrowGameNotFoundExceptionOnInvalidString
-     *
-     * @return array
      */
     public function invalidStringProvider(): array
     {

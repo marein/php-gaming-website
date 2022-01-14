@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\WinningRule;
@@ -12,6 +13,7 @@ use Gaming\ConnectFour\Domain\Game\WinningRule\HorizontalWinningRule;
 use Gaming\ConnectFour\Domain\Game\WinningRule\MultipleWinningRule;
 use Gaming\ConnectFour\Domain\Game\WinningRule\VerticalWinningRule;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 
 class CommonWinningRuleTest extends TestCase
 {
@@ -21,9 +23,9 @@ class CommonWinningRuleTest extends TestCase
     public function itShouldHaveTheRightRules(): void
     {
         // Test for the right rules directly at property level.
-        $commonReflectionProperty = new \ReflectionProperty(CommonWinningRule::class, 'winningRule');
+        $commonReflectionProperty = new ReflectionProperty(CommonWinningRule::class, 'winningRule');
         $commonReflectionProperty->setAccessible(true);
-        $multipleReflectionProperty = new \ReflectionProperty(MultipleWinningRule::class, 'winningRules');
+        $multipleReflectionProperty = new ReflectionProperty(MultipleWinningRule::class, 'winningRules');
         $multipleReflectionProperty->setAccessible(true);
 
         $common = new CommonWinningRule();

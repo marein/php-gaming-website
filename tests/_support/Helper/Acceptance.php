@@ -1,9 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Helper;
 
-class Acceptance extends \Codeception\Module
+use Codeception\Module;
+
+class Acceptance extends Module
 {
 
 }

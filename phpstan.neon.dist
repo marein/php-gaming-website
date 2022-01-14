@@ -1,0 +1,17 @@
+parameters:
+  paths:
+    - src
+  level: 8
+  ignoreErrors:
+    -
+      message: '#^While loop condition is always true\.$#'
+      path: **/*.php
+      count: 6
+    -
+      message: "#^Property Gaming\\\\Identity\\\\Domain\\\\Model\\\\User\\\\User\\:\\:\\$version is never read, only written\\.$#"
+      count: 1
+      path: src/Identity/Domain/Model/User/User.php
+    -
+      message: "#^Property Gaming\\\\Memory\\\\Domain\\\\Model\\\\Game\\\\Game\\:\\:\\$cards is never read, only written\\.$#"
+      count: 1
+      path: src/Memory/Domain/Model/Game/Game.php

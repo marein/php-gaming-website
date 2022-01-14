@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Event;
@@ -23,8 +24,8 @@ final class GameAbortedTest extends TestCase
         $abortedPlayerId = 'abortedPlayerId';
         $opponentPlayerId = 'opponentPlayerId';
         $payload = [
-            'gameId'           => $gameId->toString(),
-            'abortedPlayerId'  => $abortedPlayerId,
+            'gameId' => $gameId->toString(),
+            'abortedPlayerId' => $abortedPlayerId,
             'opponentPlayerId' => $opponentPlayerId
         ];
 
@@ -53,8 +54,8 @@ final class GameAbortedTest extends TestCase
         $abortedPlayerId = 'abortedPlayerId';
         $opponentPlayerId = '';
         $payload = [
-            'gameId'           => $gameId->toString(),
-            'abortedPlayerId'  => $abortedPlayerId,
+            'gameId' => $gameId->toString(),
+            'abortedPlayerId' => $abortedPlayerId,
             'opponentPlayerId' => $opponentPlayerId
         ];
 

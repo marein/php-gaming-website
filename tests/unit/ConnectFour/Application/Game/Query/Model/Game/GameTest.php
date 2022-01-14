@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Application\Game\Query\Model\Game;
 
+use DateTimeImmutable;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use PHPUnit\Framework\TestCase;
@@ -16,28 +18,32 @@ class GameTest extends TestCase
     {
         $expectedGameId = 'gameId';
         $expectedFinished = false;
-        $expectedSerializedGame = json_encode([
-            'gameId'   => $expectedGameId,
-            'chatId'   => 'chatId',
-            'players'   => [
-                'player1', 'player2'
-            ],
-            'finished' => $expectedFinished,
-            'height'   => 6,
-            'width'    => 7,
-            'moves'    => [
-                [
-                    'x'     => 1,
-                    'y'     => 1,
-                    'color' => 1
+        $expectedSerializedGame = json_encode(
+            [
+                'gameId' => $expectedGameId,
+                'chatId' => 'chatId',
+                'players' => [
+                    'player1',
+                    'player2'
                 ],
-                [
-                    'x'     => 1,
-                    'y'     => 2,
-                    'color' => 2
+                'finished' => $expectedFinished,
+                'height' => 6,
+                'width' => 7,
+                'moves' => [
+                    [
+                        'x' => 1,
+                        'y' => 1,
+                        'color' => 1
+                    ],
+                    [
+                        'x' => 1,
+                        'y' => 2,
+                        'color' => 2
+                    ]
                 ]
-            ]
-        ]);
+            ],
+            JSON_THROW_ON_ERROR
+        );
 
         $game = new Game();
         foreach ($this->storedEvents() as $storedEvent) {
@@ -47,7 +53,7 @@ class GameTest extends TestCase
         $this->assertEquals($expectedGameId, $game->id());
         $this->assertEquals($expectedFinished, $game->finished());
         // Implicitly test if it's serializable.
-        $this->assertEquals($expectedSerializedGame, json_encode($game));
+        $this->assertEquals($expectedSerializedGame, json_encode($game, JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -62,7 +68,7 @@ class GameTest extends TestCase
                 'GameAborted',
                 'gameId',
                 '{}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         );
 
@@ -82,7 +88,7 @@ class GameTest extends TestCase
                 'GameResigned',
                 'gameId',
                 '{}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         );
 
@@ -102,7 +108,7 @@ class GameTest extends TestCase
                 'GameWon',
                 'gameId',
                 '{}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         );
 
@@ -122,7 +128,7 @@ class GameTest extends TestCase
                 'GameDrawn',
                 'gameId',
                 '{}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         );
 
@@ -131,8 +137,6 @@ class GameTest extends TestCase
     }
 
     /**
-     * Stored events which gets applied.
-     *
      * @return StoredEvent[]
      */
     private function storedEvents(): array
@@ -143,21 +147,21 @@ class GameTest extends TestCase
                 'GameOpened',
                 'gameId',
                 '{"gameId": "gameId", "width": 7, "height": 6, "playerId": "player1"}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             new StoredEvent(
                 2,
                 'ChatAssigned',
                 'gameId',
                 '{"gameId": "gameId", "chatId": "chatId"}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             new StoredEvent(
                 3,
                 'PlayerJoined',
                 'gameId',
                 '{"gameId": "gameId", "opponentPlayerId": "player1", "joinedPlayerId": "player2"}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             // Apply this event twice, so immutability gets tested.
             new StoredEvent(
@@ -165,21 +169,21 @@ class GameTest extends TestCase
                 'PlayerJoined',
                 'gameId',
                 '{"gameId": "gameId", "opponentPlayerId": "player1", "joinedPlayerId": "player2"}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             new StoredEvent(
                 4,
                 'PlayerMoved',
                 'gameId',
                 '{"gameId": "gameId", "x": 1, "y": 1, "color": 1}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             new StoredEvent(
                 5,
                 'PlayerMoved',
                 'gameId',
                 '{"gameId": "gameId", "x": 1, "y": 2, "color": 2}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             ),
             // Apply this event twice, so immutability gets tested.
             new StoredEvent(
@@ -187,7 +191,7 @@ class GameTest extends TestCase
                 'PlayerMoved',
                 'gameId',
                 '{"gameId": "gameId", "x": 1, "y": 2, "color": 2}',
-                new \DateTimeImmutable()
+                new DateTimeImmutable()
             )
         ];
     }

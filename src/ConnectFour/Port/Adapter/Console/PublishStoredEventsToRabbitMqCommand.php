@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Console;
@@ -13,36 +14,20 @@ use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\Port\Adapter\EventStore\PredisEventStorePointer;
 use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
 use Gaming\ConnectFour\Port\Adapter\Messaging\PublishStoredEventsToRabbitMqSubscriber;
-use Predis\Client;
+use Predis\ClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class PublishStoredEventsToRabbitMqCommand extends Command
 {
-    /**
-     * @var EventStore
-     */
     private EventStore $eventStore;
 
-    /**
-     * @var Client
-     */
-    private Client $predis;
+    private ClientInterface $predis;
 
-    /**
-     * @var MessageBroker
-     */
     private MessageBroker $messageBroker;
 
-    /**
-     * PublishStoredEventsToRabbitMqCommand constructor.
-     *
-     * @param EventStore    $eventStore
-     * @param Client        $predis
-     * @param MessageBroker $messageBroker
-     */
-    public function __construct(EventStore $eventStore, Client $predis, MessageBroker $messageBroker)
+    public function __construct(EventStore $eventStore, ClientInterface $predis, MessageBroker $messageBroker)
     {
         parent::__construct();
 
@@ -51,19 +36,13 @@ final class PublishStoredEventsToRabbitMqCommand extends Command
         $this->messageBroker = $messageBroker;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function configure(): void
     {
         $this
             ->setName('connect-four:publish-stored-events-to-rabbit-mq');
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // The creation of FollowEventStoreDispatcher could be done via container.
         $debugSubscriber = new SymfonyConsoleDebugSubscriber($output);

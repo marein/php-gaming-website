@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\Bus;
@@ -30,11 +31,9 @@ final class RoutingBusTest extends TestCase
 
         $bus = new RoutingBus(
             [
-                get_class($requestMessage) => function (object $message) {
-                    return $this->createMessage(
-                        $message->value . ' World!'
-                    );
-                }
+                get_class($requestMessage) => fn(object $message): object => $this->createMessage(
+                    $message->value . ' World!'
+                )
             ]
         );
         $response = $bus->handle($requestMessage);
@@ -42,17 +41,9 @@ final class RoutingBusTest extends TestCase
         $this->assertSame('Hello World!', $response->value);
     }
 
-    /**
-     * Create a test double.
-     *
-     * @param string $value
-     *
-     * @return object
-     */
     private function createMessage(string $value): object
     {
-        $message = new class()
-        {
+        $message = new class () {
             public $value;
         };
 

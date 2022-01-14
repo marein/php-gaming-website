@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\WinningRule;
@@ -10,16 +11,9 @@ final class HorizontalWinningRule implements WinningRule
 {
     private const MINIMUM = 4;
 
-    /**
-     * @var int
-     */
     private int $numberOfRequiredMatches;
 
     /**
-     * HorizontalWinningRule constructor.
-     *
-     * @param int $numberOfRequiredMatches
-     *
      * @throws InvalidNumberOfRequiredMatchesException
      */
     public function __construct(int $numberOfRequiredMatches)
@@ -31,12 +25,9 @@ final class HorizontalWinningRule implements WinningRule
         $this->numberOfRequiredMatches = $numberOfRequiredMatches;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function calculate(Board $board): bool
     {
-        if ($board->lastUsedField() === null) {
+        if ($board->lastUsedField()->isEmpty()) {
             return false;
         }
 

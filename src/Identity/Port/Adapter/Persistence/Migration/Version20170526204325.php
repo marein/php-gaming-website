@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Persistence\Migration;
@@ -8,9 +9,6 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20170526204325 extends AbstractMigration
 {
-    /**
-     * @param Schema $schema
-     */
     public function up(Schema $schema): void
     {
         $table = $schema->createTable('user');
@@ -25,9 +23,6 @@ final class Version20170526204325 extends AbstractMigration
         $table->addUniqueIndex(['credentials_username']);
     }
 
-    /**
-     * @param Schema $schema
-     */
     public function down(Schema $schema): void
     {
         $schema->dropTable('user');

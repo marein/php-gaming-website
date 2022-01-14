@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Http;
@@ -10,22 +11,10 @@ use Twig\Environment;
 
 final class PageController
 {
-    /**
-     * @var Environment
-     */
     private Environment $twig;
 
-    /**
-     * @var ConnectFourService
-     */
     private ConnectFourService $connectFourService;
 
-    /**
-     * PageController constructor.
-     *
-     * @param Environment        $twig
-     * @param ConnectFourService $connectFourService
-     */
     public function __construct(
         Environment $twig,
         ConnectFourService $connectFourService
@@ -39,8 +28,8 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/lobby.html.twig', [
                 'maximumNumberOfGamesInList' => 10,
-                'openGames'                  => $this->connectFourService->openGames()['games'],
-                'runningGames'               => $this->connectFourService->runningGames()
+                'openGames' => $this->connectFourService->openGames()['games'],
+                'runningGames' => $this->connectFourService->runningGames()
             ])
         );
     }
@@ -59,7 +48,7 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
                 'games' => $this->connectFourService->gamesByPlayer(
-                    $request->getSession()->get('user')
+                    (string)$request->getSession()->get('user')
                 )['games']
             ])
         );

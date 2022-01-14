@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Bus;
@@ -13,8 +14,6 @@ final class RoutingBus implements Bus
     private array $messageClassToHandlerMap;
 
     /**
-     * RoutingBus constructor.
-     *
      * @param callable[] $messageClassToHandlerMap
      */
     public function __construct(array $messageClassToHandlerMap)
@@ -22,10 +21,7 @@ final class RoutingBus implements Bus
         $this->messageClassToHandlerMap = $messageClassToHandlerMap;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function handle(object $message)
+    public function handle(object $message): mixed
     {
         $messageClass = get_class($message);
 

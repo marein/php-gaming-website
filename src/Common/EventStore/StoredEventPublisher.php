@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
@@ -10,27 +11,17 @@ final class StoredEventPublisher
      */
     private array $subscribers;
 
-    /**
-     * StoredEventPublisher constructor.
-     */
     public function __construct()
     {
         $this->subscribers = [];
     }
 
-    /**
-     * Add subscriber.
-     *
-     * @param StoredEventSubscriber $subscriber
-     */
     public function subscribe(StoredEventSubscriber $subscriber): void
     {
         $this->subscribers[] = $subscriber;
     }
 
     /**
-     * Publish the given stored events.
-     *
      * @param StoredEvent[] $storedEvents
      */
     public function publish(array $storedEvents): void
@@ -40,11 +31,6 @@ final class StoredEventPublisher
         }
     }
 
-    /**
-     * Publish the given stored event.
-     *
-     * @param StoredEvent $storedEvent
-     */
     private function publishSingle(StoredEvent $storedEvent): void
     {
         foreach ($this->subscribers as $subscriber) {

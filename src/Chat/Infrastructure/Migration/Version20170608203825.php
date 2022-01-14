@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Infrastructure\Migration;
@@ -8,9 +9,6 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20170608203825 extends AbstractMigration
 {
-    /**
-     * @param Schema $schema
-     */
     public function up(Schema $schema): void
     {
         $table = $schema->createTable('message');
@@ -29,9 +27,6 @@ final class Version20170608203825 extends AbstractMigration
         );
     }
 
-    /**
-     * @param Schema $schema
-     */
     public function down(Schema $schema): void
     {
         $schema->dropTable('message');

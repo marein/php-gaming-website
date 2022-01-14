@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
@@ -551,11 +552,6 @@ class GameTest extends TestCase
             ->abort('playerId1');
     }
 
-    /**
-     * Returns an open game ready for testing.
-     *
-     * @return Game
-     */
     private function createOpenGame(): Game
     {
         $game = Game::open(
@@ -568,11 +564,6 @@ class GameTest extends TestCase
         return $game;
     }
 
-    /**
-     * Returns a running game ready for testing.
-     *
-     * @return Game
-     */
     private function createRunningGame(): Game
     {
         $game = Game::open(
@@ -587,11 +578,6 @@ class GameTest extends TestCase
         return $game;
     }
 
-    /**
-     * Returns an aborted game ready for testing.
-     *
-     * @return Game
-     */
     private function createAbortedGame(): Game
     {
         $game = $this->createOpenGame();
@@ -603,11 +589,6 @@ class GameTest extends TestCase
         return $game;
     }
 
-    /**
-     * Returns a resigned game ready for testing.
-     *
-     * @return Game
-     */
     private function createResignedGame(): Game
     {
         $game = $this->createOpenGame();
@@ -622,11 +603,6 @@ class GameTest extends TestCase
         return $game;
     }
 
-    /**
-     * Returns a won game ready for testing.
-     *
-     * @return Game
-     */
     private function createWonGame(): Game
     {
         $game = $this->createOpenGame();
@@ -645,11 +621,6 @@ class GameTest extends TestCase
         return $game;
     }
 
-    /**
-     * Returns a drawn game ready for testing.
-     *
-     * @return Game
-     */
     private function createDrawnGame(): Game
     {
         $game = Game::open(

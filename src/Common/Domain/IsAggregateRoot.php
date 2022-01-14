@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Domain;
@@ -11,8 +12,6 @@ trait IsAggregateRoot
     private array $domainEvents = [];
 
     /**
-     * Flush all stored domain events.
-     *
      * @return DomainEvent[]
      */
     public function flushDomainEvents(): array

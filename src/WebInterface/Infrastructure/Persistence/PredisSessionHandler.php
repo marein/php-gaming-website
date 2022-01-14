@@ -1,97 +1,62 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Persistence;
 
-use Predis\Client;
+use Predis\ClientInterface;
 use SessionHandlerInterface;
 
 /**
- * Class PredisSessionHandler
- *
- * There is no locking mechanism implemented. Currently, no locking mechanism is needed.
+ * There is no locking mechanism implemented.
  */
 final class PredisSessionHandler implements SessionHandlerInterface
 {
-    /**
-     * @var Client
-     */
-    private Client $predis;
+    private ClientInterface $predis;
 
-    /**
-     * @var string
-     */
     private string $keyPrefix;
 
-    /**
-     * @var int
-     */
     private int $lifetime;
 
-    /**
-     * PredisSessionHandler constructor.
-     *
-     * @param Client $predis
-     * @param string $keyPrefix
-     * @param int    $lifetime
-     */
-    public function __construct(Client $predis, string $keyPrefix, int $lifetime)
+    public function __construct(ClientInterface $predis, string $keyPrefix, int $lifetime)
     {
         $this->predis = $predis;
         $this->keyPrefix = $keyPrefix;
         $this->lifetime = $lifetime;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function close(): bool
     {
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function destroy($sessionId): bool
+    public function destroy(string $sessionId): bool
     {
-        $this->predis->del([
+        $this->predis->del(
             $this->generateKey($sessionId)
-        ]);
+        );
 
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function gc($maxlifetime): bool
+    public function gc(int $maxlifetime): int|false
+    {
+        return 0;
+    }
+
+    public function open(string $savePath, string $name): bool
     {
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function open($savePath, $name): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function read($sessionId): string
+    public function read(string $sessionId): string|false
     {
         return (string)$this->predis->get(
             $this->generateKey($sessionId)
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function write($sessionId, $sessionData): bool
+    public function write(string $sessionId, string $sessionData): bool
     {
         $this->predis->setex(
             $this->generateKey($sessionId),
@@ -102,13 +67,6 @@ final class PredisSessionHandler implements SessionHandlerInterface
         return true;
     }
 
-    /**
-     * Combine prefix with current key.
-     *
-     * @param string $key
-     *
-     * @return string
-     */
     private function generateKey(string $key): string
     {
         return $this->keyPrefix . $key;

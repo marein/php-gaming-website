@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
@@ -13,24 +14,13 @@ use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class EventStoreGameFinder implements GameFinder
 {
-    /**
-     * @var EventStore
-     */
     private EventStore $eventStore;
 
-    /**
-     * EventStoreGameFinder constructor.
-     *
-     * @param EventStore $eventStore
-     */
     public function __construct(EventStore $eventStore)
     {
         $this->eventStore = $eventStore;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function find(string $gameId): Game
     {
         $this->throwExceptionOnInvalidGameId($gameId);
@@ -47,11 +37,7 @@ final class EventStoreGameFinder implements GameFinder
     }
 
     /**
-     * Reconstitutes the Game from the given stored events.
-     *
      * @param StoredEvent[] $storedEvents
-     *
-     * @return Game
      */
     private function reconstituteGameFromStoredEvents(array $storedEvents): Game
     {
@@ -65,10 +51,6 @@ final class EventStoreGameFinder implements GameFinder
     }
 
     /**
-     * Try to convert the given game id to GameId.
-     *
-     * @param string $gameId
-     *
      * @throws GameNotFoundException
      */
     private function throwExceptionOnInvalidGameId(string $gameId): void

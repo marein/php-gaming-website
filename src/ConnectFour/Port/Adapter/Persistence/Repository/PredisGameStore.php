@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
@@ -6,7 +7,7 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
-use Predis\Client;
+use Predis\ClientInterface;
 
 /**
  * This class stores the game with serialize() and retrieves it with unserialize().
@@ -19,35 +20,16 @@ final class PredisGameStore implements GameStore
 {
     private const STORAGE_KEY_PREFIX = 'game.';
 
-    /**
-     * The predis client.
-     *
-     * @var Client
-     */
-    private Client $predis;
+    private ClientInterface $predis;
 
-    /**
-     * If no game is found, this store uses this fallback.
-     *
-     * @var GameFinder
-     */
     private GameFinder $fallbackGameFinder;
 
-    /**
-     * PredisGameStore constructor.
-     *
-     * @param Client     $predis
-     * @param GameFinder $fallbackGameFinder
-     */
-    public function __construct(Client $predis, GameFinder $fallbackGameFinder)
+    public function __construct(ClientInterface $predis, GameFinder $fallbackGameFinder)
     {
         $this->predis = $predis;
         $this->fallbackGameFinder = $fallbackGameFinder;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function find(string $gameId): Game
     {
         $serializedGame = $this->predis->get(
@@ -62,9 +44,6 @@ final class PredisGameStore implements GameStore
         return unserialize($serializedGame);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function save(Game $game): void
     {
         $this->predis->set(

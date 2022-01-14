@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Bus;
@@ -16,33 +17,15 @@ use InvalidArgumentException;
  */
 final class DoctrineReconnectBus implements Bus
 {
-    /**
-     * @var Bus
-     */
     private Bus $bus;
 
-    /**
-     * @var Connection
-     */
     private Connection $connection;
 
-    /**
-     * @var int
-     */
     private int $idleBetweenHandlesInSeconds;
 
-    /**
-     * @var int
-     */
     private int $timeOfLastHandle;
 
     /**
-     * DoctrineReconnectBus constructor.
-     *
-     * @param Bus        $bus
-     * @param Connection $connection
-     * @param int        $idleBetweenHandlesInSeconds
-     *
      * @throws InvalidArgumentException
      */
     public function __construct(
@@ -62,10 +45,7 @@ final class DoctrineReconnectBus implements Bus
         $this->timeOfLastHandle = time();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function handle(object $message)
+    public function handle(object $message): mixed
     {
         $this->reconnectIfTimedOut();
 
@@ -76,9 +56,6 @@ final class DoctrineReconnectBus implements Bus
         return $return;
     }
 
-    /**
-     * Reconnecting the connection if the last handle is too long ago.
-     */
     private function reconnectIfTimedOut(): void
     {
         if (time() - $this->timeOfLastHandle > $this->idleBetweenHandlesInSeconds) {

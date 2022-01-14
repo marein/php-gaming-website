@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Event;
@@ -23,7 +24,7 @@ final class GameResignedTest extends TestCase
         $resignedPlayerId = 'resignedPlayerId';
         $opponentPlayerId = 'opponentPlayerId';
         $payload = [
-            'gameId'           => $gameId->toString(),
+            'gameId' => $gameId->toString(),
             'resignedPlayerId' => $resignedPlayerId,
             'opponentPlayerId' => $opponentPlayerId
         ];

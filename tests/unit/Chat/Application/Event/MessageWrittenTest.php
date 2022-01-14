@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Chat\Application\Event;
 
+use DateTime;
+use DateTimeImmutable;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Common\Clock\Clock;
@@ -22,14 +25,14 @@ final class MessageWrittenTest extends TestCase
         $ownerId = 'ownerId';
         $authorId = 'authorId';
         $message = 'message';
-        $writtenAt = new \DateTimeImmutable();
+        $writtenAt = new DateTimeImmutable();
         $payload = [
-            'chatId'    => $chatId->toString(),
+            'chatId' => $chatId->toString(),
             'messageId' => $messageId,
-            'ownerId'   => $ownerId,
-            'authorId'  => $authorId,
-            'message'   => $message,
-            'writtenAt' => $writtenAt->format(\DateTime::ATOM)
+            'ownerId' => $ownerId,
+            'authorId' => $authorId,
+            'message' => $message,
+            'writtenAt' => $writtenAt->format(DateTime::ATOM)
         ];
 
         $messageWritten = new MessageWritten(

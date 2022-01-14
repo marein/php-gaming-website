@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Chat\Application;
@@ -56,8 +57,6 @@ class ChatIdTest extends TestCase
 
     /**
      * Returns data for itShouldThrowChatNotFoundExceptionOnInvalidString
-     *
-     * @return array
      */
     public function invalidStringProvider(): array
     {

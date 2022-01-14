@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
@@ -10,9 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
-/**
- * This class transforms an ApplicationException to a json response.
- */
 final class TransformApplicationExceptionListener
 {
     /**
@@ -21,8 +19,6 @@ final class TransformApplicationExceptionListener
     private array $identifierToStatusCode;
 
     /**
-     * TransformApplicationExceptionListener constructor.
-     *
      * @param array<string, int> $identifierToStatusCode
      */
     public function __construct(array $identifierToStatusCode)
@@ -30,11 +26,6 @@ final class TransformApplicationExceptionListener
         $this->identifierToStatusCode = $identifierToStatusCode;
     }
 
-    /**
-     * Sets the json representation of violations as a response.
-     *
-     * @param ExceptionEvent $event
-     */
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
@@ -56,41 +47,26 @@ final class TransformApplicationExceptionListener
     }
 
     /**
-     * Transforms the violations from an ApplicationException to a serializable array.
-     *
-     * @param ApplicationException $applicationException
-     *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     private function transformViolationsToArray(ApplicationException $applicationException): array
     {
         return array_map(
-            static function (Violation $violation) {
-                return [
-                    'propertyPath' => $violation->propertyPath(),
-                    'identifier'   => $violation->identifier(),
-                    'parameters'   => array_map(
-                        static function (ViolationParameter $parameter) {
-                            return [
-                                'name'  => $parameter->name(),
-                                'value' => $parameter->value()
-                            ];
-                        },
-                        $violation->parameters()
-                    )
-                ];
-            },
+            static fn(Violation $violation): array => [
+                'propertyPath' => $violation->propertyPath(),
+                'identifier' => $violation->identifier(),
+                'parameters' => array_map(
+                    static fn(ViolationParameter $parameter): array => [
+                        'name' => $parameter->name(),
+                        'value' => $parameter->value()
+                    ],
+                    $violation->parameters()
+                )
+            ],
             $applicationException->violations()
         );
     }
 
-    /**
-     * Finds the status code that matches the map, otherwise 400.
-     *
-     * @param ApplicationException $exception
-     *
-     * @return int
-     */
     private function statusCodeFromFirstMatchingViolationName(ApplicationException $exception): int
     {
         foreach ($exception->violations() as $violation) {

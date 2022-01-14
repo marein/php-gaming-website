@@ -1,0 +1,9 @@
+Gaming\ConnectFour\Domain\Game\WinningRule\WinningRule:
+  discriminator:
+    field_name: type
+    map:
+      common: Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule
+      horizontal: Gaming\ConnectFour\Domain\Game\WinningRule\HorizontalWinningRule
+      vertical: Gaming\ConnectFour\Domain\Game\WinningRule\VerticalWinningRule
+      diagonal: Gaming\ConnectFour\Domain\Game\WinningRule\DiagonalWinningRule
+      multiple: Gaming\ConnectFour\Domain\Game\WinningRule\MultipleWinningRule

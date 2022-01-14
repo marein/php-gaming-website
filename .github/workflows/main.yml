@@ -19,8 +19,8 @@ jobs:
       - name: Testsuite
         run: |
           docker-compose -f docker-compose.ci.yml run php vendor/bin/codecept run unit
-          docker-compose -f docker-compose.ci.yml run php vendor/bin/phpcs src tests/unit --standard=PSR2 -v
-          docker-compose -f docker-compose.ci.yml run php vendor/bin/phpstan analyse -l 1 src
+          docker-compose -f docker-compose.ci.yml run php vendor/bin/phpcs
+          docker-compose -f docker-compose.ci.yml run php vendor/bin/phpstan analyse
           docker-compose -f docker-compose.ci.yml up -d
           docker-compose -f docker-compose.ci.yml run php bash -c 'wait-for-tcp-server php-fpm:9000 120 && vendor/bin/codecept run acceptance'
           docker-compose -f docker-compose.ci.yml down -v

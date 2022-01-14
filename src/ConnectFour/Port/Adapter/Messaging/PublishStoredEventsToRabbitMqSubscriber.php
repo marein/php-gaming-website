@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Messaging;
@@ -11,24 +12,13 @@ use Gaming\Common\MessageBroker\Model\Message\Name;
 
 final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
 {
-    /**
-     * @var MessageBroker
-     */
     private MessageBroker $messageBroker;
 
-    /**
-     * PublishStoredEventsToRabbitMqSubscriber constructor.
-     *
-     * @param MessageBroker $messageBroker
-     */
     public function __construct(MessageBroker $messageBroker)
     {
         $this->messageBroker = $messageBroker;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(StoredEvent $storedEvent): void
     {
         // We should definitely filter the events we are going to publish,
@@ -46,9 +36,6 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
         return true;

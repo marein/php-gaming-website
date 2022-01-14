@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Bus;
@@ -7,37 +8,23 @@ use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Violation;
 use Gaming\Common\Bus\ViolationParameter;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class SymfonyValidatorBus implements Bus
 {
-    /**
-     * @var Bus
-     */
     private Bus $bus;
 
-    /**
-     * @var ValidatorInterface
-     */
     private ValidatorInterface $validator;
 
-    /**
-     * SymfonyValidatorBus constructor.
-     *
-     * @param Bus                $bus
-     * @param ValidatorInterface $validator
-     */
     public function __construct(Bus $bus, ValidatorInterface $validator)
     {
         $this->bus = $bus;
         $this->validator = $validator;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function handle(object $message)
+    public function handle(object $message): mixed
     {
         $symfonyViolations = $this->validator->validate($message);
 
@@ -50,52 +37,39 @@ final class SymfonyValidatorBus implements Bus
         return $this->bus->handle($message);
     }
 
-    /**+
-     * Maps from symfony validation objects.
-     *
-     * @param ConstraintViolationListInterface $symfonyViolations
+    /**
+     * @param ConstraintViolationListInterface<ConstraintViolationInterface> $symfonyViolations
      *
      * @return Violation[]
      */
     private function mapFromSymfonyViolations(ConstraintViolationListInterface $symfonyViolations): array
     {
-        $violations = [];
-
-        foreach ($symfonyViolations as $symfonyViolation) {
-            $violations[] = new Violation(
-                $symfonyViolation->getPropertyPath(),
-                $symfonyViolation->getMessageTemplate(),
-                $this->mapFromSymfonyParameters($symfonyViolation->getParameters())
-            );
-        }
-
-        return $violations;
+        return array_map(
+            fn(ConstraintViolationInterface $constraintViolation): Violation => new Violation(
+                $constraintViolation->getPropertyPath(),
+                $constraintViolation->getMessageTemplate(),
+                $this->mapFromSymfonyParameters($constraintViolation->getParameters())
+            ),
+            iterator_to_array($symfonyViolations)
+        );
     }
 
     /**
-     * Remove template characters from parameter names.
+     * Removes template characters from parameter names.
      *
-     * @param mixed[] $symfonyParameters
+     * @param array<string, bool|int|float|string> $symfonyParameters
      *
-     * @return mixed[]
+     * @return ViolationParameter[]
      */
     private function mapFromSymfonyParameters(array $symfonyParameters): array
     {
-        $parameters = [];
-
-        foreach ($symfonyParameters as $name => $value) {
-            $nameWithoutTemplateCode = str_replace(
-                ['{{ ', ' }}'],
-                '',
-                $name
-            );
-
-            $parameters[] = new ViolationParameter(
-                $nameWithoutTemplateCode,
+        return array_map(
+            fn(string $name, bool|int|float|string $value): ViolationParameter => new ViolationParameter(
+                str_replace(['{{ ', ' }}'], '', $name),
                 $value
-            );
-        }
-
-        return $parameters;
+            ),
+            array_keys($symfonyParameters),
+            $symfonyParameters
+        );
     }
 }

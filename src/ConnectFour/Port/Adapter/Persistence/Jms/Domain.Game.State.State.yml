@@ -1,0 +1,10 @@
+Gaming\ConnectFour\Domain\Game\State\State:
+  discriminator:
+    field_name: type
+    map:
+      aborted: Gaming\ConnectFour\Domain\Game\State\Aborted
+      drawn: Gaming\ConnectFour\Domain\Game\State\Drawn
+      open: Gaming\ConnectFour\Domain\Game\State\Open
+      resigned: Gaming\ConnectFour\Domain\Game\State\Resigned
+      running: Gaming\ConnectFour\Domain\Game\State\Running
+      won: Gaming\ConnectFour\Domain\Game\State\Won

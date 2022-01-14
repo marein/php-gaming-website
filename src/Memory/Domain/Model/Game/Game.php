@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game;
@@ -23,14 +24,8 @@ final class Game implements AggregateRoot
 {
     use IsAggregateRoot;
 
-    /**
-     * @var GameId
-     */
     private GameId $gameId;
 
-    /**
-     * @var PlayerPool
-     */
     private PlayerPool $playerPool;
 
     /**
@@ -38,24 +33,13 @@ final class Game implements AggregateRoot
      */
     private array $cards;
 
-    /**
-     * This is used to determine the state of the game.
-     * It's not that complex like in the connect four context,
-     * so we leave out the polymorphism and additional mapping stuff.
-     *
-     * @var int
-     */
     private int $state;
     private const STATE_OPEN = 1;
     private const STATE_RUNNING = 2;
     private const STATE_CLOSED = 3;
 
     /**
-     * Game constructor.
-     *
-     * @param GameId        $gameId
-     * @param PlayerPool    $playerPool
-     * @param int[]         $cards
+     * @param int[] $cards
      * @param DomainEvent[] $domainEvents
      */
     private function __construct(GameId $gameId, PlayerPool $playerPool, array $cards, array $domainEvents)
@@ -67,14 +51,6 @@ final class Game implements AggregateRoot
         $this->domainEvents = $domainEvents;
     }
 
-    /**
-     * Open a new game.
-     *
-     * @param Dealer $dealer
-     * @param string $playerId
-     *
-     * @return Game
-     */
     public static function open(Dealer $dealer, string $playerId): Game
     {
         $gameId = GameId::generate();
@@ -96,10 +72,6 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * A player joins in the game.
-     *
-     * @param string $playerId
-     *
      * @throws GameNotOpenException
      * @throws PlayerAlreadyJoinedException
      */
@@ -122,11 +94,6 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * A player leaves the game.
-     * If the player is the last player, the game gets closed.
-     *
-     * @param string $playerId
-     *
      * @throws Exception\PlayerNotJoinedException
      * @throws GameNotOpenException
      */
@@ -154,10 +121,6 @@ final class Game implements AggregateRoot
     }
 
     /**
-     * The player wants to start the game.
-     *
-     * @param string $playerId
-     *
      * @throws GameNotOpenException
      * @throws PlayerNotAllowedToStartGameException
      */
@@ -178,9 +141,6 @@ final class Game implements AggregateRoot
         );
     }
 
-    /**
-     * @return GameId
-     */
     public function id(): GameId
     {
         return $this->gameId;

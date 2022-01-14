@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Chat\Presentation\Console;
@@ -13,22 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class RabbitMqCommandListenerCommand extends Command
 {
-    /**
-     * @var MessageBroker
-     */
     private MessageBroker $messageBroker;
 
-    /**
-     * @var Bus
-     */
     private Bus $commandBus;
 
-    /**
-     * RabbitMqCommandListenerCommand constructor.
-     *
-     * @param MessageBroker $messageBroker
-     * @param Bus           $commandBus
-     */
     public function __construct(MessageBroker $messageBroker, Bus $commandBus)
     {
         parent::__construct();
@@ -37,19 +26,13 @@ final class RabbitMqCommandListenerCommand extends Command
         $this->commandBus = $commandBus;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function configure(): void
     {
         $this
             ->setName('chat:command-listener');
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->messageBroker->consume(
             new SymfonyConsoleConsumer(

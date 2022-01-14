@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\Domain;
@@ -6,44 +7,30 @@ namespace Gaming\Common\Domain;
 final class ExtractPayloadForEventSubscriber implements DomainEventSubscriber
 {
     /**
-     * @var array|null
+     * @var array<string, mixed>|null
      */
     private ?array $payload;
 
-    /**
-     * @var string
-     */
     private string $eventName;
 
-    /**
-     * ExtractPayloadForEventSubscriber constructor.
-     *
-     * @param string $eventName
-     */
     public function __construct(string $eventName)
     {
         $this->payload = null;
         $this->eventName = $eventName;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(DomainEvent $domainEvent): void
     {
         $this->payload = $domainEvent->payload();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isSubscribedTo(DomainEvent $domainEvent): bool
     {
         return $domainEvent->name() === $this->eventName;
     }
 
     /**
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function payload(): ?array
     {

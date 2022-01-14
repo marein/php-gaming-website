@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game;
@@ -14,16 +15,10 @@ final class PlayerPool
      */
     private array $players;
 
-    /**
-     * @var int
-     */
     private int $currentPlayerPosition;
 
     /**
-     * PlayerPool constructor.
-     *
      * @param Player[] $players
-     * @param int      $currentPlayerPosition
      */
     private function __construct(array $players, int $currentPlayerPosition)
     {
@@ -31,13 +26,6 @@ final class PlayerPool
         $this->currentPlayerPosition = $currentPlayerPosition;
     }
 
-    /**
-     * Create a pool of players.
-     *
-     * @param Player $player
-     *
-     * @return PlayerPool
-     */
     public static function beginWith(Player $player): PlayerPool
     {
         return new self(
@@ -47,12 +35,8 @@ final class PlayerPool
     }
 
     /**
-     * A player joins the pool.
      * This function resets the current player position.
      *
-     * @param Player $player
-     *
-     * @return PlayerPool
      * @throws PlayerAlreadyJoinedException
      */
     public function join(Player $player): PlayerPool
@@ -69,21 +53,15 @@ final class PlayerPool
     }
 
     /**
-     * A player leaves the pool.
      * This function resets the current player position.
      *
-     * @param Player $player
-     *
-     * @return PlayerPool
      * @throws PlayerNotJoinedException
      */
     public function leave(Player $player): PlayerPool
     {
         $players = array_filter(
             $this->players,
-            static function (Player $current) use ($player) {
-                return $player->id() !== $current->id();
-            }
+            static fn(Player $current): bool => $player->id() !== $current->id()
         );
 
         if (count($players) === count($this->players)) {
@@ -97,9 +75,6 @@ final class PlayerPool
     }
 
     /**
-     * Returns the players in switched position.
-     *
-     * @return PlayerPool
      * @throws PlayerPoolIsEmptyException
      */
     public function switch(): PlayerPool
@@ -115,9 +90,6 @@ final class PlayerPool
     }
 
     /**
-     * Returns the current player.
-     *
-     * @return Player
      * @throws PlayerPoolIsEmptyException
      */
     public function current(): Player
@@ -128,8 +100,6 @@ final class PlayerPool
     }
 
     /**
-     * Returns the players of the pool.
-     *
      * @return Player[]
      */
     public function players(): array
@@ -137,19 +107,12 @@ final class PlayerPool
         return $this->players;
     }
 
-    /**
-     * Returns true if the pool is empty.
-     *
-     * @return bool
-     */
     public function isEmpty(): bool
     {
         return count($this->players) === 0;
     }
 
     /**
-     * Throw an exception if the pool is empty.
-     *
      * @throws PlayerPoolIsEmptyException
      */
     private function throwExceptionIfPoolIsEmpty(): void
@@ -160,10 +123,6 @@ final class PlayerPool
     }
 
     /**
-     * Throw an exception if player already joined the pool.
-     *
-     * @param Player $player
-     *
      * @throws PlayerAlreadyJoinedException
      */
     private function throwExceptionIfPlayerAlreadyJoined(Player $player): void

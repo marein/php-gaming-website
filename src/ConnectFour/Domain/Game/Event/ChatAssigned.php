@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
@@ -10,27 +11,12 @@ use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class ChatAssigned implements DomainEvent
 {
-    /**
-     * @var GameId
-     */
     private GameId $gameId;
 
-    /**
-     * @var string
-     */
     private string $chatId;
 
-    /**
-     * @var DateTimeImmutable
-     */
     private DateTimeImmutable $occurredOn;
 
-    /**
-     * ChatAssigned constructor.
-     *
-     * @param GameId $gameId
-     * @param string $chatId
-     */
     public function __construct(GameId $gameId, string $chatId)
     {
         $this->gameId = $gameId;
@@ -38,17 +24,11 @@ final class ChatAssigned implements DomainEvent
         $this->occurredOn = Clock::instance()->now();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function aggregateId(): string
     {
         return $this->gameId->toString();
     }
 
-    /**
-     * @inheritdoc
-     */
     public function payload(): array
     {
         return [
@@ -57,17 +37,11 @@ final class ChatAssigned implements DomainEvent
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function occurredOn(): DateTimeImmutable
     {
         return $this->occurredOn;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function name(): string
     {
         return 'ChatAssigned';

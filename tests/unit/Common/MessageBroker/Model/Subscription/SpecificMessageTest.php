@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\MessageBroker\Model\Subscription;
@@ -46,11 +47,6 @@ class SpecificMessageTest extends TestCase
         new SpecificMessage(self::VALID_DOMAIN, $name);
     }
 
-    /**
-     * Returns invalid domains.
-     *
-     * @return array
-     */
     public function invalidDomainsProvider(): array
     {
         return [
@@ -61,11 +57,6 @@ class SpecificMessageTest extends TestCase
         ];
     }
 
-    /**
-     * Returns invalid names.
-     *
-     * @return array
-     */
     public function invalidNamesProvider(): array
     {
         return [

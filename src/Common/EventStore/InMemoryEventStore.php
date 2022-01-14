@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
@@ -12,9 +13,6 @@ final class InMemoryEventStore implements EventStore
      */
     private array $storedEvents = [];
 
-    /**
-     * @inheritdoc
-     */
     public function since(int $id, int $limit): array
     {
         return array_slice(
@@ -24,36 +22,27 @@ final class InMemoryEventStore implements EventStore
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
         return array_filter(
             $this->storedEvents,
-            static function (StoredEvent $storedEvent) use ($aggregateId, $sinceId) {
+            static function (StoredEvent $storedEvent) use ($aggregateId, $sinceId): bool {
                 return $storedEvent->aggregateId() === $aggregateId && $storedEvent->id() > $sinceId;
             }
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function append(DomainEvent $domainEvent): void
     {
         $this->storedEvents[] = new StoredEvent(
             count($this->storedEvents) + 1,
             $domainEvent->name(),
             $domainEvent->aggregateId(),
-            json_encode($domainEvent->payload()),
+            json_encode($domainEvent->payload(), JSON_THROW_ON_ERROR),
             $domainEvent->occurredOn()
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function hasUncommittedStoredEventId(int $id): bool
     {
         return array_key_exists($id - 1, $this->storedEvents);

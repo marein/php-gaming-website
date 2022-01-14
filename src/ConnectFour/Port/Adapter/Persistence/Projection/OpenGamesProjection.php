@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
@@ -10,32 +11,20 @@ use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGameStore;
 
 final class OpenGamesProjection implements StoredEventSubscriber
 {
-    /**
-     * @var OpenGameStore
-     */
     private OpenGameStore $openGameStore;
 
-    /**
-     * OpenGamesProjection constructor.
-     *
-     * @param OpenGameStore $openGameStore
-     */
     public function __construct(OpenGameStore $openGameStore)
     {
         $this->openGameStore = $openGameStore;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function handle(StoredEvent $storedEvent): void
     {
-        $this->{'handle' . $storedEvent->name()}($storedEvent);
+        $this->{'handle' . $storedEvent->name()}(
+            json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR)
+        );
     }
 
-    /**
-     * @inheritdoc
-     */
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
         return in_array(
@@ -49,34 +38,28 @@ final class OpenGamesProjection implements StoredEventSubscriber
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameOpened(StoredEvent $storedEvent): void
+    private function handleGameOpened(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->openGameStore->save(
             new OpenGame($payload['gameId'], $payload['playerId'])
         );
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handleGameAborted(StoredEvent $storedEvent): void
+    private function handleGameAborted(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->openGameStore->remove($payload['gameId']);
     }
 
     /**
-     * @param StoredEvent $storedEvent
+     * @param array<string, mixed> $payload
      */
-    private function handlePlayerJoined(StoredEvent $storedEvent): void
+    private function handlePlayerJoined(array $payload): void
     {
-        $payload = json_decode($storedEvent->payload(), true);
-
         $this->openGameStore->remove($payload['gameId']);
     }
 }

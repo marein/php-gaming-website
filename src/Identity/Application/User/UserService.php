@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Identity\Application\User;
@@ -15,35 +16,16 @@ use Gaming\Identity\Domain\Model\User\Users;
 
 final class UserService
 {
-    /**
-     * @var Users
-     */
     private Users $users;
 
-    /**
-     * @var HashAlgorithm
-     */
     private HashAlgorithm $hashAlgorithm;
 
-    /**
-     * UserService constructor.
-     *
-     * @param Users         $users
-     * @param HashAlgorithm $hashAlgorithm
-     */
     public function __construct(Users $users, HashAlgorithm $hashAlgorithm)
     {
         $this->users = $users;
         $this->hashAlgorithm = $hashAlgorithm;
     }
 
-    /**
-     * A new user arrives.
-     *
-     * @param ArriveCommand $command
-     *
-     * @return string
-     */
     public function arrive(ArriveCommand $command): string
     {
         $user = User::arrive();
@@ -54,10 +36,6 @@ final class UserService
     }
 
     /**
-     * Sign up the user.
-     *
-     * @param SignUpCommand $command
-     *
      * @throws UserAlreadySignedUpException
      * @throws UserNotFoundException
      */

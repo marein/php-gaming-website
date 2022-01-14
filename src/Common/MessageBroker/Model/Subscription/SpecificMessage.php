@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Model\Subscription;
@@ -9,22 +10,11 @@ use Gaming\Common\MessageBroker\Model\NamingConvention;
 
 final class SpecificMessage implements Subscription
 {
-    /**
-     * @var string
-     */
     private string $domain;
 
-    /**
-     * @var string
-     */
     private string $name;
 
     /**
-     * SpecificMessage constructor.
-     *
-     * @param string $domain
-     * @param string $name
-     *
      * @throws InvalidDomainException
      * @throws InvalidNameException
      */
@@ -37,29 +27,16 @@ final class SpecificMessage implements Subscription
         $this->name = $name;
     }
 
-    /**
-     * Returns the domain name.
-     *
-     * @return string
-     */
     public function domain(): string
     {
         return $this->domain;
     }
 
-    /**
-     * Returns the message name.
-     *
-     * @return string
-     */
     public function name(): string
     {
         return $this->name;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function accept(SubscriptionTranslator $subscriptionTranslator): void
     {
         $subscriptionTranslator->handleSpecificMessage($this);
