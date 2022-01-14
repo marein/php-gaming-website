@@ -2,6 +2,10 @@ parameters:
     # Workaround for symfony 5: Some bundles still depend on kernel.root_dir.
     # See https://github.com/marein/php-gaming-website/issues/52.
     kernel.root_dir: '%kernel.project_dir%/src'
+    # Workaround for doctrine/doctrine-migrations-bundle:^3.0
+    # To be able to use multiple connections, the bundle requires a default connection.
+    # See https://github.com/marein/php-gaming-website/issues/62.
+    doctrine.migrations.preferred_connection: default
 
 imports:
     - { resource: chat/config.yml }
@@ -53,14 +57,3 @@ services:
             - []
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: -99 }
-
-    # Workaround for doctrine/doctrine-migrations-bundle:^3.0
-    # It uses Doctrine\Migrations\Configuration\Connection\ExistingConnection by default.
-    # Although the connection is configurable via a separate config file or cli argument,
-    # this will not work because the ExistingConnection behaviour prevents overriding.
-    # See https://github.com/marein/php-gaming-website/issues/62.
-    gaming.doctrine_migations.connection_loader:
-        class: Doctrine\Migrations\Configuration\Connection\ConnectionRegistryConnection
-        decorates: doctrine.migrations.connection_loader
-        factory: ['Doctrine\Migrations\Configuration\Connection\ConnectionRegistryConnection', 'withSimpleDefault']
-        arguments: ['@doctrine']

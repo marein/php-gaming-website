@@ -30,7 +30,7 @@ final class PredisSessionHandler implements SessionHandlerInterface
         return true;
     }
 
-    public function destroy($sessionId): bool
+    public function destroy(string $sessionId): bool
     {
         $this->predis->del(
             $this->generateKey($sessionId)
@@ -39,24 +39,24 @@ final class PredisSessionHandler implements SessionHandlerInterface
         return true;
     }
 
-    public function gc($maxlifetime): bool
+    public function gc(int $maxlifetime): int|false
+    {
+        return 0;
+    }
+
+    public function open(string $savePath, string $name): bool
     {
         return true;
     }
 
-    public function open($savePath, $name): bool
-    {
-        return true;
-    }
-
-    public function read($sessionId): string
+    public function read(string $sessionId): string|false
     {
         return (string)$this->predis->get(
             $this->generateKey($sessionId)
         );
     }
 
-    public function write($sessionId, $sessionData): bool
+    public function write(string $sessionId, string $sessionData): bool
     {
         $this->predis->setex(
             $this->generateKey($sessionId),
