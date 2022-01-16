@@ -6,5 +6,4 @@ namespace Gaming\Identity\Application\User\Command;
 
 final class ArriveCommand
 {
-
 }

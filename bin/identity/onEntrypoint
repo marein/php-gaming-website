@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "$RUN_IDENTITY_MIGRATIONS" = "1" ]
+then
+    bin/console doctrine:database:create \
+        --connection=identity \
+        --if-not-exists
+    bin/console doctrine:migrations:migrate \
+        --configuration=config/identity/migrations.yml \
+        --conn=identity \
+        --allow-no-migration \
+        --no-interaction
+fi

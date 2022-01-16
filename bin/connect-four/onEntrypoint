@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "$RUN_CONNECT_FOUR_MIGRATIONS" = "1" ]
+then
+    bin/console doctrine:database:create \
+        --connection=connect_four \
+        --if-not-exists
+    bin/console doctrine:migrations:migrate \
+        --configuration=config/connect-four/migrations.yml \
+        --conn=connect_four \
+        --allow-no-migration \
+        --no-interaction
+fi

@@ -6,5 +6,4 @@ namespace Gaming\Chat\Application\Exception;
 
 final class ChatNotFoundException extends ChatException
 {
-
 }

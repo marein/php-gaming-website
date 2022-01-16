@@ -6,5 +6,4 @@ namespace Gaming\ConnectFour\Application\Game\Query;
 
 final class RunningGamesQuery
 {
-
 }
