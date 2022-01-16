@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "$RUN_CHAT_MIGRATIONS" = "1" ]
+then
+    bin/console doctrine:database:create \
+        --connection=chat \
+        --if-not-exists
+    bin/console doctrine:migrations:migrate \
+        --configuration=config/chat/migrations.yml \
+        --conn=chat \
+        --allow-no-migration \
+        --no-interaction
+fi
