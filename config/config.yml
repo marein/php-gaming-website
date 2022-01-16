@@ -1,7 +1,4 @@
 parameters:
-    # Workaround for symfony 5: Some bundles still depend on kernel.root_dir.
-    # See https://github.com/marein/php-gaming-website/issues/52.
-    kernel.root_dir: '%kernel.project_dir%/src'
     # Workaround for doctrine/doctrine-migrations-bundle:^3.0
     # To be able to use multiple connections, the bundle requires a default connection.
     # See https://github.com/marein/php-gaming-website/issues/62.
