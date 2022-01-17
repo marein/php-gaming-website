@@ -79,8 +79,8 @@ final class DoctrineChatGateway implements ChatGateway
             ->setMaxResults($limit)
             ->setParameter('chatId', $chatId->toString(), 'uuid_binary_ordered_time')
             ->setParameter('authorId', $authorId, 'json')
-            ->execute()
-            ->fetchAll();
+            ->executeQuery()
+            ->fetchAllAssociative();
     }
 
     public function byId(ChatId $chatId): array
@@ -90,8 +90,8 @@ final class DoctrineChatGateway implements ChatGateway
             ->from(self::TABLE_CHAT, 'c')
             ->where('c.id = :id')
             ->setParameter('id', $chatId->toString(), 'uuid_binary_ordered_time')
-            ->execute()
-            ->fetch();
+            ->executeQuery()
+            ->fetchAssociative();
 
         if (!$chat) {
             throw new ChatNotFoundException();

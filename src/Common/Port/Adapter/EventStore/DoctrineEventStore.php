@@ -35,10 +35,10 @@ final class DoctrineEventStore implements EventStore
                 ->select(self::SELECT)
                 ->from($this->table, 'e')
                 ->where('e.id > :id')
-                ->setParameter(':id', $id)
+                ->setParameter('id', $id)
                 ->setMaxResults($limit)
-                ->execute()
-                ->fetchAll();
+                ->executeQuery()
+                ->fetchAllAssociative();
 
             return $this->transformRowsToStoredEvents($rows);
         } catch (Exception $e) {
@@ -58,10 +58,10 @@ final class DoctrineEventStore implements EventStore
                 ->from($this->table, 'e')
                 ->where('e.aggregateId = :aggregateId')
                 ->andWhere('e.id > :id')
-                ->setParameter(':aggregateId', $aggregateId, 'uuid_binary')
-                ->setParameter(':id', $sinceId)
-                ->execute()
-                ->fetchAll();
+                ->setParameter('aggregateId', $aggregateId, 'uuid_binary')
+                ->setParameter('id', $sinceId)
+                ->executeQuery()
+                ->fetchAllAssociative();
 
             return $this->transformRowsToStoredEvents($rows);
         } catch (Exception $e) {
@@ -111,9 +111,9 @@ final class DoctrineEventStore implements EventStore
                     ->select('COUNT(id)')
                     ->from($this->table, 'e')
                     ->andWhere('e.id = :id')
-                    ->setParameter(':id', $id)
-                    ->execute()
-                    ->fetchColumn() > 0;
+                    ->setParameter('id', $id)
+                    ->executeQuery()
+                    ->fetchOne() > 0;
 
             $this->connection->setTransactionIsolation($currentIsolationLevel);
 

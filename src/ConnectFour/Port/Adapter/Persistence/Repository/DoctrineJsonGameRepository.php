@@ -70,8 +70,8 @@ final class DoctrineJsonGameRepository implements Games
             ->from($this->tableName, 't')
             ->where('t.id = :id')
             ->setParameter('id', $id->toString(), 'uuid_binary_ordered_time')
-            ->execute()
-            ->fetch();
+            ->executeQuery()
+            ->fetchAssociative();
 
         if ($row === false) {
             throw new GameNotFoundException();

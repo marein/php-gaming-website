@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Bus;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Exception;
 use Gaming\Common\Bus\Bus;
 
