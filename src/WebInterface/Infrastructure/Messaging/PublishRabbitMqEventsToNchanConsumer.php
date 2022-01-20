@@ -6,6 +6,7 @@ namespace Gaming\WebInterface\Infrastructure\Messaging;
 
 use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
 use Gaming\Common\MessageBroker\Model\Consumer\Name;
+use Gaming\Common\MessageBroker\Model\Context\Context;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
 use Gaming\Common\MessageBroker\Model\Subscription\WholeDomain;
@@ -13,7 +14,7 @@ use Gaming\WebInterface\Application\BrowserNotifier;
 
 final class PublishRabbitMqEventsToNchanConsumer implements Consumer
 {
-    private const ROUTING_KEY_TO_METHOD = [
+    private const MESSAGE_NAME_TO_METHOD = [
         'ConnectFour.GameOpened' => 'handleGameOpened',
         'ConnectFour.GameAborted' => 'handleGameAborted',
         'ConnectFour.GameResigned' => 'handleGameResigned',
@@ -32,11 +33,11 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
         $this->browserNotifier = $browserNotifier;
     }
 
-    public function handle(Message $message): void
+    public function handle(Message $message, Context $context): void
     {
         $name = (string)$message->name();
 
-        $method = self::ROUTING_KEY_TO_METHOD[$name];
+        $method = self::MESSAGE_NAME_TO_METHOD[$name];
         $payload = array_merge(
             json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR),
             ['eventName' => $name]

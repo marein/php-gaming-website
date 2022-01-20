@@ -37,8 +37,7 @@ final class RefereeCommand extends Command
         $this->messageBroker->consume(
             new SymfonyConsoleConsumer(
                 new RefereeConsumer(
-                    $this->commandBus,
-                    $this->messageBroker
+                    $this->commandBus
                 ),
                 $output
             )

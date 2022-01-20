@@ -14,6 +14,8 @@ use Interop\Amqp\AmqpMessage;
 use Interop\Amqp\AmqpQueue;
 use Interop\Amqp\AmqpTopic;
 use Interop\Amqp\Impl\AmqpBind;
+use Interop\Amqp\Impl\AmqpQueue as AmqpQueueImpl;
+use Interop\Queue\Destination;
 
 final class AmqpTopicExchangeMessageBroker implements MessageBroker
 {
@@ -88,13 +90,7 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     {
         $this->initialize();
 
-        $amqpMessage = $this->context->createMessage($message->body());
-        $amqpMessage->addFlag(AmqpMessage::FLAG_MANDATORY);
-        $amqpMessage->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
-        $amqpMessage->setRoutingKey((string)$message->name());
-
-        $producer = $this->context->createProducer();
-        $producer->send($this->topic, $amqpMessage);
+        $this->sendMessage($this->topic, $message);
     }
 
     public function consume(Consumer $consumer): void
@@ -118,14 +114,55 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
             $message = $enqueueConsumer->receive();
             assert($message instanceof AmqpMessage);
 
+            [$name, $body] = json_decode($message->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
             $consumer->handle(
                 new Message(
-                    Name::fromString((string)$message->getRoutingKey()),
-                    $message->getBody()
-                )
+                    Name::fromString($name),
+                    $body
+                ),
+                $this->createContext($message)
             );
 
             $enqueueConsumer->acknowledge($message);
         }
+    }
+
+    private function createContext(AmqpMessage $amqpMessage): ClosureContext
+    {
+        return new ClosureContext(
+            fn(Message $message) => $this->sendMessage($this->topic, $message),
+            $amqpMessage->getReplyTo() === null ?
+                function (Message $message) {
+                } :
+                fn(Message $message) => $this->sendMessage(
+                    new AmqpQueueImpl($amqpMessage->getReplyTo()),
+                    $message
+                )
+        );
+    }
+
+    private function sendMessage(Destination $destination, Message $message): void
+    {
+        $amqpMessage = $this->context->createMessage(
+            json_encode(
+                [(string)$message->name(), $message->body()],
+                JSON_THROW_ON_ERROR
+            )
+        );
+        $amqpMessage->addFlag(AmqpMessage::FLAG_MANDATORY);
+        $amqpMessage->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
+        $amqpMessage->setRoutingKey((string)$message->name());
+
+        if ($message->replyTo() !== null) {
+            $amqpMessage->setReplyTo(
+                $message->replyTo()->domain() . '.' . $message->replyTo()->name()
+            );
+        }
+
+        $this->context->createProducer()->send(
+            $destination,
+            $amqpMessage
+        );
     }
 }

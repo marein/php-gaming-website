@@ -8,7 +8,9 @@ use Gaming\Chat\Application\Command\InitiateChatCommand;
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
 use Gaming\Common\MessageBroker\Model\Consumer\Name;
+use Gaming\Common\MessageBroker\Model\Context\Context;
 use Gaming\Common\MessageBroker\Model\Message\Message;
+use Gaming\Common\MessageBroker\Model\Message\Name as MessageName;
 use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
 
 final class CommandConsumer implements Consumer
@@ -20,14 +22,27 @@ final class CommandConsumer implements Consumer
         $this->commandBus = $commandBus;
     }
 
-    public function handle(Message $message): void
+    public function handle(Message $message, Context $context): void
     {
         $payload = json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->commandBus->handle(
+        $chatId = $this->commandBus->handle(
             new InitiateChatCommand(
                 $payload['ownerId'],
                 $payload['authors']
+            )
+        );
+
+        $context->reply(
+            new Message(
+                new MessageName('Chat', 'ChatInitiated'),
+                json_encode(
+                    [
+                        'chatId' => $chatId,
+                        'ownerId' => $payload['ownerId']
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
             )
         );
     }

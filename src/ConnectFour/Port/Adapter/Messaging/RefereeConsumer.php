@@ -8,6 +8,7 @@ use Gaming\Common\Bus\Bus;
 use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
 use Gaming\Common\MessageBroker\Model\Consumer\Name;
+use Gaming\Common\MessageBroker\Model\Context\Context;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Message\Name as MessageName;
 use Gaming\Common\MessageBroker\Model\Subscription\SpecificMessage;
@@ -15,34 +16,31 @@ use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
 
 final class RefereeConsumer implements Consumer
 {
-    private const ROUTING_KEY_TO_METHOD = [
+    private const MESSAGE_NAME_TO_METHOD = [
         'Chat.ChatInitiated' => 'handleChatInitiated',
         'ConnectFour.PlayerJoined' => 'handlePlayerJoined'
     ];
 
     private Bus $commandBus;
 
-    private MessageBroker $messageBroker;
-
-    public function __construct(Bus $commandBus, MessageBroker $messageBroker)
+    public function __construct(Bus $commandBus)
     {
         $this->commandBus = $commandBus;
-        $this->messageBroker = $messageBroker;
     }
 
-    public function handle(Message $message): void
+    public function handle(Message $message, Context $context): void
     {
-        $method = self::ROUTING_KEY_TO_METHOD[(string)$message->name()];
+        $method = self::MESSAGE_NAME_TO_METHOD[(string)$message->name()];
 
         $this->$method(
-            json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR)
+            json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR),
+            $context
         );
     }
 
     public function subscriptions(): array
     {
         return [
-            new SpecificMessage('Chat', 'ChatInitiated'),
             new SpecificMessage('ConnectFour', 'PlayerJoined')
         ];
     }
@@ -68,9 +66,9 @@ final class RefereeConsumer implements Consumer
     /**
      * @param array<string, mixed> $payload
      */
-    private function handlePlayerJoined(array $payload): void
+    private function handlePlayerJoined(array $payload, Context $context): void
     {
-        $this->messageBroker->publish(
+        $context->publish(
             new Message(
                 new MessageName('Chat', 'InitiateChat'),
                 json_encode(
@@ -79,7 +77,8 @@ final class RefereeConsumer implements Consumer
                         'authors' => []
                     ],
                     JSON_THROW_ON_ERROR
-                )
+                ),
+                $this->name()
             )
         );
     }
