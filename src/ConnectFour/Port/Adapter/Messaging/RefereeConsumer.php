@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
 use Gaming\Common\Bus\Bus;
-use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
 use Gaming\Common\MessageBroker\Model\Consumer\Name;
 use Gaming\Common\MessageBroker\Model\Context\Context;
@@ -17,7 +16,7 @@ use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
 final class RefereeConsumer implements Consumer
 {
     private const MESSAGE_NAME_TO_METHOD = [
-        'Chat.ChatInitiated' => 'handleChatInitiated',
+        'Chat.InitiateChatResponse' => 'handleInitiateChatResponse',
         'ConnectFour.PlayerJoined' => 'handlePlayerJoined'
     ];
 
@@ -53,7 +52,7 @@ final class RefereeConsumer implements Consumer
     /**
      * @param array<string, mixed> $payload
      */
-    private function handleChatInitiated(array $payload): void
+    private function handleInitiateChatResponse(array $payload): void
     {
         $this->commandBus->handle(
             new AssignChatCommand(

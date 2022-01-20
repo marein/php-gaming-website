@@ -35,7 +35,7 @@ final class CommandConsumer implements Consumer
 
         $context->reply(
             new Message(
-                new MessageName('Chat', 'ChatInitiated'),
+                new MessageName('Chat', 'InitiateChatResponse'),
                 json_encode(
                     [
                         'chatId' => $chatId,
