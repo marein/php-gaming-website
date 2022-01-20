@@ -15,11 +15,6 @@ use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
 
 final class RefereeConsumer implements Consumer
 {
-    private const MESSAGE_NAME_TO_METHOD = [
-        'Chat.InitiateChatResponse' => 'handleInitiateChatResponse',
-        'ConnectFour.PlayerJoined' => 'handlePlayerJoined'
-    ];
-
     private Bus $commandBus;
 
     public function __construct(Bus $commandBus)
@@ -29,12 +24,13 @@ final class RefereeConsumer implements Consumer
 
     public function handle(Message $message, Context $context): void
     {
-        $method = self::MESSAGE_NAME_TO_METHOD[(string)$message->name()];
+        $payload = json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->$method(
-            json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR),
-            $context
-        );
+        match ((string)$message->name()) {
+            'Chat.InitiateChatResponse' => $this->handleInitiateChatResponse($payload),
+            'ConnectFour.PlayerJoined' => $this->handlePlayerJoined($payload, $context),
+            default => true
+        };
     }
 
     public function subscriptions(): array

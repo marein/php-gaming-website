@@ -14,18 +14,6 @@ use Gaming\WebInterface\Application\BrowserNotifier;
 
 final class PublishRabbitMqEventsToNchanConsumer implements Consumer
 {
-    private const MESSAGE_NAME_TO_METHOD = [
-        'ConnectFour.GameOpened' => 'handleGameOpened',
-        'ConnectFour.GameAborted' => 'handleGameAborted',
-        'ConnectFour.GameResigned' => 'handleGameResigned',
-        'ConnectFour.GameWon' => 'handleGameWon',
-        'ConnectFour.GameDrawn' => 'handleGameDrawn',
-        'ConnectFour.PlayerMoved' => 'handlePlayerMoved',
-        'ConnectFour.PlayerJoined' => 'handlePlayerJoined',
-        'ConnectFour.ChatAssigned' => 'handleChatAssigned',
-        'Chat.MessageWritten' => 'handleMessageWritten'
-    ];
-
     private BrowserNotifier $browserNotifier;
 
     public function __construct(BrowserNotifier $browserNotifier)
@@ -36,14 +24,32 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     public function handle(Message $message, Context $context): void
     {
         $name = (string)$message->name();
-
-        $method = self::MESSAGE_NAME_TO_METHOD[$name];
         $payload = array_merge(
             json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR),
             ['eventName' => $name]
         );
+        $json = json_encode($payload, JSON_THROW_ON_ERROR);
 
-        $this->$method($payload);
+        match ($name) {
+            'ConnectFour.GameOpened', 'ConnectFour.GameAborted' => $this->publishToBrowser(
+                $json,
+                ['lobby']
+            ),
+            'ConnectFour.GameResigned',
+            'ConnectFour.GameWon',
+            'ConnectFour.GameDrawn',
+            'ConnectFour.PlayerMoved',
+            'ConnectFour.ChatAssigned' => $this->publishToBrowser(
+                $json,
+                ['game-' . $payload['gameId']]
+            ),
+            'ConnectFour.PlayerJoined' => $this->publishToBrowser(
+                $json,
+                ['lobby', 'game-' . $payload['gameId']]
+            ),
+            'Chat.MessageWritten' => $this->publishToBrowser($json, ['game-' . $payload['ownerId']]),
+            default => true
+        };
     }
 
     public function subscriptions(): array
@@ -60,108 +66,12 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param string[] $channels
      */
-    private function handleGameOpened(array $payload): void
+    private function publishToBrowser(string $body, array $channels): void
     {
-        $this->browserNotifier->publish(
-            '/pub?id=lobby',
-            json_encode($payload, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleGameAborted(array $payload): void
-    {
-        $this->browserNotifier->publish(
-            '/pub?id=lobby',
-            json_encode($payload, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleGameResigned(array $payload): void
-    {
-        $this->browserNotifier->publish(
-            '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handlePlayerJoined(array $payload): void
-    {
-        $payloadAsJson = json_encode($payload, JSON_THROW_ON_ERROR);
-
-        $this->browserNotifier->publish(
-            '/pub?id=lobby',
-            $payloadAsJson
-        );
-
-        $this->browserNotifier->publish(
-            '/pub?id=game-' . $payload['gameId'],
-            $payloadAsJson
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleGameWon(array $payload): void
-    {
-        $this->browserNotifier->publish(
-            '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleGameDrawn(array $payload): void
-    {
-        $this->browserNotifier->publish(
-            '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handlePlayerMoved(array $payload): void
-    {
-        $this->browserNotifier->publish(
-            '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleChatAssigned(array $payload): void
-    {
-        $this->browserNotifier->publish(
-            '/pub?id=game-' . $payload['gameId'],
-            json_encode($payload, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleMessageWritten(array $payload): void
-    {
-        $this->browserNotifier->publish(
-            '/pub?id=game-' . $payload['ownerId'],
-            json_encode($payload, JSON_THROW_ON_ERROR)
-        );
+        foreach ($channels as $channel) {
+            $this->browserNotifier->publish('/pub?id=' . $channel, $body);
+        }
     }
 }
