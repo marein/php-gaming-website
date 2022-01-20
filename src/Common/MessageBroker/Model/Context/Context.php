@@ -8,7 +8,7 @@ use Gaming\Common\MessageBroker\Model\Message\Message;
 
 interface Context
 {
-    public function publish(Message $message): void;
+    public function request(Message $message): void;
 
     public function reply(Message $message): void;
 }

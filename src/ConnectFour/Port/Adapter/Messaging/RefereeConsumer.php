@@ -68,7 +68,7 @@ final class RefereeConsumer implements Consumer
      */
     private function handlePlayerJoined(array $payload, Context $context): void
     {
-        $context->publish(
+        $context->request(
             new Message(
                 new MessageName('Chat', 'InitiateChat'),
                 json_encode(
@@ -77,8 +77,7 @@ final class RefereeConsumer implements Consumer
                         'authors' => []
                     ],
                     JSON_THROW_ON_ERROR
-                ),
-                $this->name()
+                )
             )
         );
     }

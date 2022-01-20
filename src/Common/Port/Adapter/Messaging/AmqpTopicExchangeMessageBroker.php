@@ -7,6 +7,7 @@ namespace Gaming\Common\Port\Adapter\Messaging;
 use Enqueue\AmqpLib\AmqpConnectionFactory;
 use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
+use Gaming\Common\MessageBroker\Model\Context\Context;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Message\Name;
 use Interop\Amqp\AmqpContext;
@@ -90,19 +91,17 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     {
         $this->initialize();
 
-        $this->sendMessage($this->topic, $message);
+        $this->sendMessage($this->topic, $message, null);
     }
 
     public function consume(Consumer $consumer): void
     {
         $this->initialize();
 
+        $queueName = $consumer->name()->domain() . '.' . $consumer->name()->name();
+
         $queue = $this->createQueue(
-            sprintf(
-                '%s.%s',
-                $consumer->name()->domain(),
-                $consumer->name()->name()
-            ),
+            $queueName,
             (new SubscriptionsToRoutingKeysTranslator($consumer->subscriptions()))->routingKeys()
         );
 
@@ -121,28 +120,33 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
                     Name::fromString($name),
                     $body
                 ),
-                $this->createContext($message)
+                $this->createContext($queueName, $message)
             );
 
             $enqueueConsumer->acknowledge($message);
         }
     }
 
-    private function createContext(AmqpMessage $amqpMessage): ClosureContext
+    private function createContext(string $queueName, AmqpMessage $amqpMessage): Context
     {
         return new ClosureContext(
-            fn(Message $message) => $this->sendMessage($this->topic, $message),
+            fn(Message $message) => $this->sendMessage(
+                $this->topic,
+                $message,
+                $queueName
+            ),
             $amqpMessage->getReplyTo() === null ?
                 function (Message $message) {
                 } :
                 fn(Message $message) => $this->sendMessage(
                     new AmqpQueueImpl($amqpMessage->getReplyTo()),
-                    $message
+                    $message,
+                    null
                 )
         );
     }
 
-    private function sendMessage(Destination $destination, Message $message): void
+    private function sendMessage(Destination $destination, Message $message, ?string $replyTo): void
     {
         $amqpMessage = $this->context->createMessage(
             json_encode(
@@ -153,12 +157,7 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
         $amqpMessage->addFlag(AmqpMessage::FLAG_MANDATORY);
         $amqpMessage->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
         $amqpMessage->setRoutingKey((string)$message->name());
-
-        if ($message->replyTo() !== null) {
-            $amqpMessage->setReplyTo(
-                $message->replyTo()->domain() . '.' . $message->replyTo()->name()
-            );
-        }
+        $amqpMessage->setReplyTo($replyTo);
 
         $this->context->createProducer()->send(
             $destination,

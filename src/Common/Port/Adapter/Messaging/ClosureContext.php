@@ -13,7 +13,7 @@ final class ClosureContext implements Context
     /**
      * @var Closure(Message): void
      */
-    private Closure $publish;
+    private Closure $request;
 
     /**
      * @var Closure(Message): void
@@ -21,18 +21,18 @@ final class ClosureContext implements Context
     private Closure $reply;
 
     /**
-     * @param Closure(Message): void $publish
+     * @param Closure(Message): void $request
      * @param Closure(Message): void $reply
      */
-    public function __construct(Closure $publish, Closure $reply)
+    public function __construct(Closure $request, Closure $reply)
     {
-        $this->publish = $publish;
+        $this->request = $request;
         $this->reply = $reply;
     }
 
-    public function publish(Message $message): void
+    public function request(Message $message): void
     {
-        ($this->publish)($message);
+        ($this->request)($message);
     }
 
     public function reply(Message $message): void
