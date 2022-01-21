@@ -54,27 +54,3 @@ services:
         public: false
         arguments:
             - '@connect-four.predis'
-
-    connect-four.game-projection:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\GameProjection
-        public: false
-        arguments:
-            - '@connect-four.game-store'
-
-    connect-four.open-games-projection:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\OpenGamesProjection
-        public: false
-        arguments:
-            - '@connect-four.open-game-store'
-
-    connect-four.running-games-projection:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\RunningGamesProjection
-        public: false
-        arguments:
-            - '@connect-four.running-games-store'
-
-    connect-four.games-by-player-projection:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\GamesByPlayerProjection
-        public: false
-        arguments:
-            - '@connect-four.games-by-player-store'

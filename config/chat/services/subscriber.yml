@@ -1,0 +1,9 @@
+services:
+
+    chat.publish-stored-events-subscriber:
+        class: Gaming\Chat\Infrastructure\Messaging\PublishStoredEventsToRabbitMqSubscriber
+        public: false
+        arguments:
+            - '@chat.message-broker'
+        tags:
+            - { name: 'chat.stored-event-subscriber', key: 'publish-to-message-broker' }
