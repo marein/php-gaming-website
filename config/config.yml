@@ -37,6 +37,23 @@ twig:
     strict_variables: '%kernel.debug%'
 
 services:
+
+    gaming.message-broker:
+        class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
+        public: false
+        arguments:
+            - '%env(APPLICATION_CHAT_RABBIT_MQ_DSN)%'
+            - 'gaming'
+
+    gaming.consume-messages-command:
+        class: Gaming\Common\Port\Adapter\Symfony\ConsumeMessagesCommand
+        public: false
+        arguments:
+            - '@gaming.message-broker'
+            - !tagged { tag: 'gaming.consumer', index_by: 'key' }
+        tags:
+            - { name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }
+
     # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.
     # todo: This can be removed as soon as https://github.com/marein/php-gaming-website/issues/34 is done.

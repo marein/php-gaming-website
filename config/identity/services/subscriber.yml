@@ -10,6 +10,6 @@ services:
         class: Gaming\Identity\Port\Adapter\Messaging\PublishStoredEventsToRabbitMqSubscriber
         public: false
         arguments:
-            - '@identity.message-broker'
+            - '@gaming.message-broker'
         tags:
             - { name: 'identity.stored-event-subscriber', key: 'publish-to-message-broker' }

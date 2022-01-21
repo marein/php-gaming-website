@@ -14,6 +14,7 @@ use Interop\Amqp\AmqpMessage;
 use Interop\Amqp\AmqpQueue;
 use Interop\Amqp\AmqpTopic;
 use Interop\Amqp\Impl\AmqpBind;
+use Interop\Queue\SubscriptionConsumer;
 
 final class AmqpTopicExchangeMessageBroker implements MessageBroker
 {
@@ -97,35 +98,36 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
         $producer->send($this->topic, $amqpMessage);
     }
 
-    public function consume(Consumer $consumer): void
+    public function consume(iterable $consumers): void
     {
         $this->initialize();
 
-        $queue = $this->createQueue(
-            sprintf(
-                '%s.%s',
-                $consumer->name()->domain(),
-                $consumer->name()->name()
-            ),
-            (new SubscriptionsToRoutingKeysTranslator($consumer->subscriptions()))->routingKeys()
-        );
-
-        $enqueueConsumer = $this->context->createConsumer(
-            $queue
-        );
-
-        while (true) {
-            $message = $enqueueConsumer->receive();
-            assert($message instanceof AmqpMessage);
-
-            $consumer->handle(
-                new Message(
-                    Name::fromString((string)$message->getRoutingKey()),
-                    $message->getBody()
-                )
-            );
-
-            $enqueueConsumer->acknowledge($message);
+        $subscriptionConsumer = $this->context->createSubscriptionConsumer();
+        foreach ($consumers as $consumer) {
+            $this->addConsumerToSubscription($subscriptionConsumer, $consumer);
         }
+        $subscriptionConsumer->consume();
+    }
+
+    private function addConsumerToSubscription(SubscriptionConsumer $subscriptionConsumer, Consumer $consumer): void
+    {
+        $subscriptionConsumer->subscribe(
+            $this->context->createConsumer(
+                $this->createQueue(
+                    $consumer->name()->domain() . '.' . $consumer->name()->name(),
+                    (new SubscriptionsToRoutingKeysTranslator($consumer->subscriptions()))->routingKeys()
+                )
+            ),
+            function (AmqpMessage $message, \Interop\Queue\Consumer $interopConsumer) use ($consumer): void {
+                $consumer->handle(
+                    new Message(
+                        Name::fromString((string)$message->getRoutingKey()),
+                        $message->getBody()
+                    )
+                );
+
+                $interopConsumer->acknowledge($message);
+            }
+        );
     }
 }

@@ -1,12 +1,5 @@
 services:
 
-    web-interface.message-broker:
-        class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
-        public: false
-        arguments:
-            - '%env(APPLICATION_WEB_INTERFACE_RABBIT_MQ_DSN)%'
-            - 'gaming'
-
     web-interface.predis:
         class: Predis\Client
         public: false
