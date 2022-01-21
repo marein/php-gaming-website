@@ -57,7 +57,7 @@ final class FollowEventStoreCommand extends Command
                 'throttle',
                 't',
                 InputOption::VALUE_OPTIONAL,
-                'Throttle time between empty runs in milliseconds.',
+                'Throttle time after an empty run in milliseconds.',
                 200
             )
             ->addOption(
