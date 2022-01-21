@@ -30,7 +30,7 @@ final class ConsumeMessagesCommand extends Command
         $this
             ->addOption(
                 'consumer',
-                's',
+                'c',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'List of consumers.'
             )
