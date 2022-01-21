@@ -11,7 +11,7 @@ services:
                     - '@chat.predis'
             - !tagged { tag: 'chat.stored-event-subscriber', index_by: 'key' }
         tags:
-            - { name: console.command, command: chat:follow-event-store, description: 'Run event store subscribers.' }
+            - { name: console.command, command: chat:follow-event-store, description: 'Follow event store and run subscribers.' }
 
     chat.rabbit-mq-command-listener-command:
         class: Gaming\Chat\Presentation\Console\RabbitMqCommandListenerCommand

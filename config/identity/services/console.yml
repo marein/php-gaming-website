@@ -11,4 +11,4 @@ services:
                     - '@identity.predis'
             - !tagged { tag: 'identity.stored-event-subscriber', index_by: 'key' }
         tags:
-            - { name: console.command, command: identity:follow-event-store, description: 'Run event store subscribers.' }
+            - { name: console.command, command: identity:follow-event-store, description: 'Follow event store and run subscribers.' }
