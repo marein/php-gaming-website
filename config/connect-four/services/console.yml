@@ -11,7 +11,7 @@ services:
                     - '@connect-four.predis'
             - !tagged { tag: 'connect-four.stored-event-subscriber', index_by: 'key' }
         tags:
-            - { name: console.command, command: connect-four:follow-event-store, description: 'Follow event store and run subscribers.' }
+            - { name: console.command, command: connect-four:follow-event-store, description: 'Publish events to subscribers.' }
 
     connect-four.referee-command:
         class: Gaming\ConnectFour\Port\Adapter\Console\RefereeCommand
