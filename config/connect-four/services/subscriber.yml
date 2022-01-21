@@ -42,6 +42,6 @@ services:
         class: Gaming\ConnectFour\Port\Adapter\Messaging\PublishStoredEventsToRabbitMqSubscriber
         public: false
         arguments:
-            - '@connect-four.message-broker'
+            - '@gaming.message-broker'
         tags:
             - { name: 'connect-four.stored-event-subscriber', key: 'publish-to-message-broker' }

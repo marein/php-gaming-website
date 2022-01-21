@@ -1,0 +1,9 @@
+services:
+
+    web-interface.publish-to-browser-consumer:
+        class: Gaming\WebInterface\Infrastructure\Messaging\PublishRabbitMqEventsToNchanConsumer
+        public: false
+        arguments:
+            - '@web-interface.browser-notifier'
+        tags:
+            - { name: 'gaming.consumer', key: 'web-interface.publish-to-browser' }

@@ -1,5 +1,6 @@
 imports:
     - { resource: services/console.yml }
+    - { resource: services/consumer.yml }
     - { resource: services/controller.yml }
     - { resource: services/event_listener.yml }
     - { resource: services/integration.yml }

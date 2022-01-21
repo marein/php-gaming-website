@@ -6,7 +6,7 @@ parameters:
     -
       message: '#^While loop condition is always true\.$#'
       path: **/*.php
-      count: 3
+      count: 2
     -
       message: "#^Property Gaming\\\\Identity\\\\Domain\\\\Model\\\\User\\\\User\\:\\:\\$version is never read, only written\\.$#"
       count: 1
