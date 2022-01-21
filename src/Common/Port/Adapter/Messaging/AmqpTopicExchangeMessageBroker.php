@@ -16,7 +16,9 @@ use Interop\Amqp\AmqpQueue;
 use Interop\Amqp\AmqpTopic;
 use Interop\Amqp\Impl\AmqpBind;
 use Interop\Amqp\Impl\AmqpQueue as AmqpQueueImpl;
+use Interop\Queue\Consumer as InteropConsumer;
 use Interop\Queue\Destination;
+use Interop\Queue\SubscriptionConsumer;
 
 final class AmqpTopicExchangeMessageBroker implements MessageBroker
 {
@@ -94,37 +96,42 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
         $this->sendMessage($this->topic, $message, null);
     }
 
-    public function consume(Consumer $consumer): void
+    public function consume(iterable $consumers): void
     {
         $this->initialize();
 
+        $subscriptionConsumer = $this->context->createSubscriptionConsumer();
+        foreach ($consumers as $consumer) {
+            $this->addConsumerToSubscription($subscriptionConsumer, $consumer);
+        }
+        $subscriptionConsumer->consume();
+    }
+
+    private function addConsumerToSubscription(SubscriptionConsumer $subscriptionConsumer, Consumer $consumer): void
+    {
         $queueName = $consumer->name()->domain() . '.' . $consumer->name()->name();
 
-        $queue = $this->createQueue(
-            $queueName,
-            (new SubscriptionsToRoutingKeysTranslator($consumer->subscriptions()))->routingKeys()
+        $subscriptionConsumer->subscribe(
+            $this->context->createConsumer(
+                $this->createQueue(
+                    $queueName,
+                    (new SubscriptionsToRoutingKeysTranslator($consumer->subscriptions()))->routingKeys()
+                )
+            ),
+            function (AmqpMessage $message, InteropConsumer $interopConsumer) use ($consumer, $queueName): void {
+                [$name, $body] = json_decode($message->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+                $consumer->handle(
+                    new Message(
+                        Name::fromString($name),
+                        $body
+                    ),
+                    $this->createContext($queueName, $message)
+                );
+
+                $interopConsumer->acknowledge($message);
+            }
         );
-
-        $enqueueConsumer = $this->context->createConsumer(
-            $queue
-        );
-
-        while (true) {
-            $message = $enqueueConsumer->receive();
-            assert($message instanceof AmqpMessage);
-
-            [$name, $body] = json_decode($message->getBody(), true, 512, JSON_THROW_ON_ERROR);
-
-            $consumer->handle(
-                new Message(
-                    Name::fromString($name),
-                    $body
-                ),
-                $this->createContext($queueName, $message)
-            );
-
-            $enqueueConsumer->acknowledge($message);
-        }
     }
 
     private function createContext(string $queueName, AmqpMessage $amqpMessage): Context

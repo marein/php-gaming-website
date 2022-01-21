@@ -11,13 +11,6 @@ services:
     chat.doctrine-dbal:
         alias: 'doctrine.dbal.chat_connection'
 
-    chat.message-broker:
-        class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
-        public: false
-        arguments:
-            - '%env(APPLICATION_CHAT_RABBIT_MQ_DSN)%'
-            - 'gaming'
-
     chat.event-store:
         class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false

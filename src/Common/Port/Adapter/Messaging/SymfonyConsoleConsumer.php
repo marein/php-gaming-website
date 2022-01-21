@@ -26,7 +26,8 @@ final class SymfonyConsoleConsumer implements Consumer
     {
         $this->output->writeln(
             sprintf(
-                'Received "%s" with "%s"',
+                '"%s" received "%s" with "%s"',
+                $this->name()->domain() . '.' . $this->name()->name(),
                 $message->name(),
                 $message->body()
             )
