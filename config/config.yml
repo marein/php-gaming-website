@@ -42,7 +42,7 @@ services:
         class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
         public: false
         arguments:
-            - '%env(APPLICATION_CHAT_RABBIT_MQ_DSN)%'
+            - '%env(APPLICATION_RABBIT_MQ_DSN)%'
             - 'gaming'
 
     gaming.consume-messages-command:
