@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Port\Adapter\Persistence\Jms\ConnectFour;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Jms;
 
 use Gaming\ConnectFour\Domain\Game\GameId;
 use JMS\Serializer\Context;

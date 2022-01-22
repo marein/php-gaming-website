@@ -6,7 +6,7 @@ services:
         arguments:
             - '%kernel.debug%'
             - '%kernel.cache_dir%/identity/jms'
-            - { 'Gaming\Common': '%kernel.project_dir%/src/Identity/Port/Adapter/Persistence/Jms/Common' }
+            - { 'Gaming': '%kernel.project_dir%/src/Identity/Port/Adapter/Persistence/Jms' }
             - !tagged_iterator identity.jms.subscriber
 
     identity.normalizer:

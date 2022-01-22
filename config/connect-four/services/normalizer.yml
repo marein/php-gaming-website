@@ -6,18 +6,15 @@ services:
         arguments:
             - '%kernel.debug%'
             - '%kernel.cache_dir%/connect-four/jms'
-            - {
-                'Gaming\ConnectFour': '%kernel.project_dir%/src/ConnectFour/Port/Adapter/Persistence/Jms/ConnectFour',
-                'Gaming\Common': '%kernel.project_dir%/src/ConnectFour/Port/Adapter/Persistence/Jms/Common'
-            }
+            - { 'Gaming': '%kernel.project_dir%/src/ConnectFour/Port/Adapter/Persistence/Jms' }
             - !tagged_iterator connect-four.jms.subscriber
 
     connect-four.jms.subscriber.game-id:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\ConnectFour\GameIdSubscriber
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\GameIdSubscriber
         tags: ['connect-four.jms.subscriber']
 
     connect-four.jms.subscriber.field:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\ConnectFour\FieldSubscriber
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\FieldSubscriber
         tags: ['connect-four.jms.subscriber']
 
     connect-four.normalizer:

@@ -6,7 +6,7 @@ services:
         arguments:
             - '%kernel.debug%'
             - '%kernel.cache_dir%/chat/jms'
-            - { 'Gaming\Common': '%kernel.project_dir%/src/Chat/Infrastructure/Jms/Common' }
+            - { 'Gaming': '%kernel.project_dir%/src/Chat/Infrastructure/Jms' }
             - !tagged_iterator chat.jms.subscriber
 
     chat.normalizer:
