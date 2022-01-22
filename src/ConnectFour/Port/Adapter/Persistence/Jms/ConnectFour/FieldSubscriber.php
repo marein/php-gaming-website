@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Port\Adapter\Persistence\Jms;
+namespace Gaming\ConnectFour\Port\Adapter\Persistence\Jms\ConnectFour;
 
 use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;

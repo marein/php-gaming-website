@@ -13,34 +13,37 @@ use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class PlayerMoved implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Point $point;
+    private int $x;
 
-    private Stone $stone;
+    private int $y;
+
+    private int $color;
 
     private DateTimeImmutable $occurredOn;
 
     public function __construct(GameId $gameId, Point $point, Stone $stone)
     {
-        $this->gameId = $gameId;
-        $this->point = $point;
-        $this->stone = $stone;
+        $this->gameId = $gameId->toString();
+        $this->x = $point->x();
+        $this->y = $point->y();
+        $this->color = $stone->color();
         $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
-            'x' => $this->point->x(),
-            'y' => $this->point->y(),
-            'color' => $this->stone->color()
+            'gameId' => $this->gameId,
+            'x' => $this->x,
+            'y' => $this->y,
+            'color' => $this->color
         ];
     }
 

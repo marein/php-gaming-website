@@ -11,25 +11,25 @@ use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class GameDrawn implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
     private DateTimeImmutable $occurredOn;
 
     public function __construct(GameId $gameId)
     {
-        $this->gameId = $gameId;
+        $this->gameId = $gameId->toString();
         $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString()
+            'gameId' => $this->gameId
         ];
     }
 

@@ -12,33 +12,33 @@ use Gaming\ConnectFour\Domain\Game\Player;
 
 final class GameAborted implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Player $abortedPlayer;
+    private string $abortedPlayerId;
 
-    private ?Player $opponentPlayer;
+    private string $opponentPlayerId;
 
     private DateTimeImmutable $occurredOn;
 
     public function __construct(GameId $gameId, Player $abortedPlayer, Player $opponentPlayer = null)
     {
-        $this->gameId = $gameId;
-        $this->abortedPlayer = $abortedPlayer;
-        $this->opponentPlayer = $opponentPlayer;
+        $this->gameId = $gameId->toString();
+        $this->abortedPlayerId = $abortedPlayer->id();
+        $this->opponentPlayerId = $opponentPlayer ? $opponentPlayer->id() : '';
         $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
-            'abortedPlayerId' => $this->abortedPlayer->id(),
-            'opponentPlayerId' => $this->opponentPlayer ? $this->opponentPlayer->id() : ''
+            'gameId' => $this->gameId,
+            'abortedPlayerId' => $this->abortedPlayerId,
+            'opponentPlayerId' => $this->opponentPlayerId
         ];
     }
 

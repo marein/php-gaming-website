@@ -20,3 +20,4 @@ services:
         arguments:
             - '@identity.doctrine-dbal'
             - 'event_store'
+            - '@identity.normalizer'

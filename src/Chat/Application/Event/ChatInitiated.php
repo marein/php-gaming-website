@@ -11,7 +11,7 @@ use Gaming\Common\Domain\DomainEvent;
 
 final class ChatInitiated implements DomainEvent
 {
-    private ChatId $chatId;
+    private string $chatId;
 
     private string $ownerId;
 
@@ -19,7 +19,7 @@ final class ChatInitiated implements DomainEvent
 
     public function __construct(ChatId $chatId, string $ownerId)
     {
-        $this->chatId = $chatId;
+        $this->chatId = $chatId->toString();
         $this->ownerId = $ownerId;
         $this->occurredOn = Clock::instance()->now();
     }
@@ -36,13 +36,13 @@ final class ChatInitiated implements DomainEvent
 
     public function aggregateId(): string
     {
-        return $this->chatId->toString();
+        return $this->chatId;
     }
 
     public function payload(): array
     {
         return [
-            'chatId' => $this->chatId->toString(),
+            'chatId' => $this->chatId,
             'ownerId' => $this->ownerId
         ];
     }

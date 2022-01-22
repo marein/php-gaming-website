@@ -5,31 +5,14 @@ declare(strict_types=1);
 namespace Gaming\Common\EventStore;
 
 use DateTimeImmutable;
+use Gaming\Common\Domain\DomainEvent;
 
 final class StoredEvent
 {
-    private int $id;
-
-    private string $name;
-
-    private string $aggregateId;
-
-    private string $payload;
-
-    private DateTimeImmutable $occurredOn;
-
     public function __construct(
-        int $id,
-        string $name,
-        string $aggregateId,
-        string $payload,
-        DateTimeImmutable $occurredOn
+        private readonly int $id,
+        private readonly DomainEvent $domainEvent
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->aggregateId = $aggregateId;
-        $this->payload = $payload;
-        $this->occurredOn = $occurredOn;
     }
 
     public function id(): int
@@ -37,23 +20,35 @@ final class StoredEvent
         return $this->id;
     }
 
+    /**
+     * @deprecated Use StoredEvent::domainEvent()->name() instead.
+     */
     public function name(): string
     {
-        return $this->name;
+        return $this->domainEvent->name();
     }
 
+    /**
+     * @deprecated Use StoredEvent::domainEvent()->aggregateId() instead.
+     */
     public function aggregateId(): string
     {
-        return $this->aggregateId;
+        return $this->domainEvent->aggregateId();
     }
 
+    /**
+     * @deprecated Use StoredEvent::domainEvent()->payload() instead.
+     */
     public function payload(): string
     {
-        return $this->payload;
+        return json_encode($this->domainEvent->payload(), JSON_THROW_ON_ERROR);
     }
 
+    /**
+     * @deprecated Use StoredEvent::domainEvent()->occurredOn() instead.
+     */
     public function occurredOn(): DateTimeImmutable
     {
-        return $this->occurredOn;
+        return $this->domainEvent->occurredOn();
     }
 }

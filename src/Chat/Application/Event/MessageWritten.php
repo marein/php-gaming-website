@@ -12,7 +12,7 @@ use Gaming\Common\Domain\DomainEvent;
 
 final class MessageWritten implements DomainEvent
 {
-    private ChatId $chatId;
+    private string $chatId;
 
     private int $messageId;
 
@@ -34,7 +34,7 @@ final class MessageWritten implements DomainEvent
         string $message,
         DateTimeImmutable $writtenAt
     ) {
-        $this->chatId = $chatId;
+        $this->chatId = $chatId->toString();
         $this->messageId = $messageId;
         $this->ownerId = $ownerId;
         $this->authorId = $authorId;
@@ -55,13 +55,13 @@ final class MessageWritten implements DomainEvent
 
     public function aggregateId(): string
     {
-        return $this->chatId->toString();
+        return $this->chatId;
     }
 
     public function payload(): array
     {
         return [
-            'chatId' => $this->chatId->toString(),
+            'chatId' => $this->chatId,
             'messageId' => $this->messageId,
             'ownerId' => $this->ownerId,
             'authorId' => $this->authorId,

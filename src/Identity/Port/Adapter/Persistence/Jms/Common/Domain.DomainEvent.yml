@@ -1,0 +1,6 @@
+Gaming\Common\Domain\DomainEvent:
+  discriminator:
+    field_name: '#'
+    map:
+      UserArrived: Gaming\Identity\Domain\Model\User\Event\UserArrived
+      UserSignedUp: Gaming\Identity\Domain\Model\User\Event\UserSignedUp
