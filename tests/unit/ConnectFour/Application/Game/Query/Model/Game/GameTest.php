@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Application\Game\Query\Model\Game;
 
-use DateTimeImmutable;
-use Gaming\Common\Domain\DomainEvent;
-use Gaming\Common\EventStore\StoredEvent;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
-use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
-use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Game as DomainGame;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use PHPUnit\Framework\TestCase;
@@ -130,10 +125,7 @@ class GameTest extends TestCase
     {
         $game = new Game();
         $game->apply(
-            new StoredEvent(
-                1,
-                new GameDrawn(GameId::generate())
-            )
+            new GameDrawn(GameId::generate())
         );
 
         $this->assertEquals(true, $game->finished());
@@ -143,10 +135,9 @@ class GameTest extends TestCase
     private function applyFromDomainGame(Game $game, DomainGame $domainGame): void
     {
         foreach ($domainGame->flushDomainEvents() as $key => $domainEvent) {
-            $storedEvent = new StoredEvent($key + 1, $domainEvent);
             // Apply twice to test idempotency.
-            $game->apply($storedEvent);
-            $game->apply($storedEvent);
+            $game->apply($domainEvent);
+            $game->apply($domainEvent);
         }
     }
 }

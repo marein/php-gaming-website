@@ -20,6 +20,11 @@ final class StoredEvent
         return $this->id;
     }
 
+    public function domainEvent(): DomainEvent
+    {
+        return $this->domainEvent;
+    }
+
     /**
      * @deprecated Use StoredEvent::domainEvent()->name() instead.
      */
