@@ -32,6 +32,7 @@ final class CommandConsumer implements Consumer
                 $payload['authors']
             )
         );
+        assert(is_string($chatId));
 
         $context->reply(
             new Message(
