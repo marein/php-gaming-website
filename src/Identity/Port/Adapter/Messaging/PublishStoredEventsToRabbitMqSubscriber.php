@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Messaging;
 
+use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Message\Name;
 use Gaming\Common\Normalizer\Normalizer;
+use Gaming\Identity\Domain\Model\User\Event\UserArrived;
+use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
+use RuntimeException;
 
 final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
 {
@@ -35,7 +39,7 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
         // a clearly defined interface with other domains.
         $this->messageBroker->publish(
             new Message(
-                new Name('Identity', $domainEvent->name()),
+                new Name('Identity', $this->nameFromDomainEvent($domainEvent)),
                 json_encode(
                     $this->normalizer->normalize($domainEvent, $domainEvent::class),
                     JSON_THROW_ON_ERROR
@@ -47,5 +51,14 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
         return true;
+    }
+
+    private function nameFromDomainEvent(DomainEvent $domainEvent): string
+    {
+        return match ($domainEvent::class) {
+            UserArrived::class => 'UserArrived',
+            UserSignedUp::class => 'UserSignedUp',
+            default => throw new RuntimeException($domainEvent::class . ' must be handled.')
+        };
     }
 }
