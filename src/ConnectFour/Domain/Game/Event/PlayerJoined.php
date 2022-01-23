@@ -12,33 +12,33 @@ use Gaming\ConnectFour\Domain\Game\Player;
 
 final class PlayerJoined implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Player $joinedPlayer;
+    private string $joinedPlayerId;
 
-    private Player $opponentPlayer;
+    private string $opponentPlayerId;
 
     private DateTimeImmutable $occurredOn;
 
     public function __construct(GameId $gameId, Player $joinedPlayer, Player $opponentPlayer)
     {
-        $this->gameId = $gameId;
-        $this->joinedPlayer = $joinedPlayer;
-        $this->opponentPlayer = $opponentPlayer;
+        $this->gameId = $gameId->toString();
+        $this->joinedPlayerId = $joinedPlayer->id();
+        $this->opponentPlayerId = $opponentPlayer->id();
         $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
-            'opponentPlayerId' => $this->opponentPlayer->id(),
-            'joinedPlayerId' => $this->joinedPlayer->id()
+            'gameId' => $this->gameId,
+            'opponentPlayerId' => $this->opponentPlayerId,
+            'joinedPlayerId' => $this->joinedPlayerId
         ];
     }
 

@@ -12,33 +12,33 @@ use Gaming\ConnectFour\Domain\Game\Player;
 
 final class GameResigned implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Player $resignedPlayer;
+    private string $resignedPlayerId;
 
-    private Player $opponentPlayer;
+    private string $opponentPlayerId;
 
     private DateTimeImmutable $occurredOn;
 
     public function __construct(GameId $gameId, Player $resignedPlayer, Player $opponentPlayer)
     {
-        $this->gameId = $gameId;
-        $this->resignedPlayer = $resignedPlayer;
-        $this->opponentPlayer = $opponentPlayer;
+        $this->gameId = $gameId->toString();
+        $this->resignedPlayerId = $resignedPlayer->id();
+        $this->opponentPlayerId = $opponentPlayer->id();
         $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
-            'resignedPlayerId' => $this->resignedPlayer->id(),
-            'opponentPlayerId' => $this->opponentPlayer->id()
+            'gameId' => $this->gameId,
+            'resignedPlayerId' => $this->resignedPlayerId,
+            'opponentPlayerId' => $this->opponentPlayerId
         ];
     }
 

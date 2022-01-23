@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-use Gaming\Common\EventStore\StoredEvent;
+use Gaming\Common\Domain\DomainEvent;
 use JsonSerializable;
 
 /**
@@ -61,16 +61,16 @@ final class Game implements JsonSerializable
     }
 
     /**
-     * Apply a stored event. The game can project this to its state.
+     * Apply a domain event. The game can project this to its state.
      * The order of events must be the same as the sequence added to the event store.
      */
-    public function apply(StoredEvent $storedEvent): void
+    public function apply(DomainEvent $domainEvent): void
     {
-        $method = 'when' . $storedEvent->name();
+        $method = 'when' . $domainEvent->name();
 
         if (method_exists($this, $method)) {
             $this->$method(
-                json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR)
+                $domainEvent->payload()
             );
         }
     }

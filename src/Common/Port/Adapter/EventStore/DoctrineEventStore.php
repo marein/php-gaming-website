@@ -13,19 +13,17 @@ use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\Exception\UnrecoverableException;
 use Gaming\Common\EventStore\StoredEvent;
+use Gaming\Common\Normalizer\Normalizer;
 
 final class DoctrineEventStore implements EventStore
 {
-    private const SELECT = 'e.id, e.name, BIN_TO_UUID(e.aggregateId) as aggregateId, e.payload, e.occurredOn';
+    private const SELECT = 'e.id, e.name, BIN_TO_UUID(e.aggregateId) as aggregateId, e.event, e.occurredOn';
 
-    private Connection $connection;
-
-    private string $table;
-
-    public function __construct(Connection $connection, string $table)
-    {
-        $this->connection = $connection;
-        $this->table = $table;
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly string $table,
+        private readonly Normalizer $normalizer
+    ) {
     }
 
     public function since(int $id, int $limit): array
@@ -81,7 +79,7 @@ final class DoctrineEventStore implements EventStore
                 [
                     'name' => $domainEvent->name(),
                     'aggregateId' => $domainEvent->aggregateId(),
-                    'payload' => $domainEvent->payload(),
+                    'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
                     'occurredOn' => $domainEvent->occurredOn()
                 ],
                 [
@@ -135,12 +133,17 @@ final class DoctrineEventStore implements EventStore
     private function transformRowsToStoredEvents(array $rows): array
     {
         return array_map(
-            static fn(array $row): StoredEvent => new StoredEvent(
+            fn(array $row): StoredEvent => new StoredEvent(
                 (int)$row['id'],
-                $row['name'],
-                $row['aggregateId'],
-                $row['payload'],
-                new DateTimeImmutable($row['occurredOn'])
+                $this->normalizer->denormalize(
+                    json_decode(
+                        $row['event'],
+                        true,
+                        512,
+                        JSON_THROW_ON_ERROR
+                    ),
+                    DomainEvent::class
+                )
             ),
             $rows
         );

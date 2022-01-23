@@ -24,31 +24,20 @@ final class GameProjection implements StoredEventSubscriber
 
     public function handle(StoredEvent $storedEvent): void
     {
-        if ($storedEvent->name() === 'GameOpened') {
-            $game = new Game();
-        } else {
-            $payload = json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR);
-            $game = $this->gameStore->find($payload['gameId']);
-        }
+        $domainEvent = $storedEvent->domainEvent();
 
-        $game->apply($storedEvent);
+        $game = match ($domainEvent->name()) {
+            'GameOpened' => new Game(),
+            default => $this->gameStore->find($domainEvent->payload()['gameId'])
+        };
+
+        $game->apply($domainEvent);
 
         $this->gameStore->save($game);
     }
 
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
-        return in_array(
-            $storedEvent->name(),
-            [
-                'GameOpened',
-                'PlayerJoined',
-                'PlayerMoved',
-                'GameWon',
-                'GameDrawn',
-                'GameAborted',
-                'ChatAssigned'
-            ]
-        );
+        return true;
     }
 }

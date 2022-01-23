@@ -11,25 +11,25 @@ use Gaming\Identity\Domain\Model\User\UserId;
 
 final class UserArrived implements DomainEvent
 {
-    private UserId $userId;
+    private string $userId;
 
     private DateTimeImmutable $occurredOn;
 
     public function __construct(UserId $userId)
     {
-        $this->userId = $userId;
+        $this->userId = $userId->toString();
         $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
     {
-        return $this->userId->toString();
+        return $this->userId;
     }
 
     public function payload(): array
     {
         return [
-            'userId' => $this->userId->toString()
+            'userId' => $this->userId
         ];
     }
 

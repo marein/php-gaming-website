@@ -36,10 +36,7 @@ final class InMemoryEventStore implements EventStore
     {
         $this->storedEvents[] = new StoredEvent(
             count($this->storedEvents) + 1,
-            $domainEvent->name(),
-            $domainEvent->aggregateId(),
-            json_encode($domainEvent->payload(), JSON_THROW_ON_ERROR),
-            $domainEvent->occurredOn()
+            $domainEvent
         );
     }
 
