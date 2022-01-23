@@ -11,6 +11,7 @@ use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
 use Gaming\Common\EventStore\StoredEventPublisher;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\EventStore\ThrottlingEventStore;
+use Gaming\Common\Normalizer\Normalizer;
 use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use Symfony\Component\Console\Command\Command;
@@ -28,7 +29,8 @@ final class FollowEventStoreCommand extends Command
     public function __construct(
         private readonly EventStore $eventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
-        private readonly iterable $storedEventSubscribers
+        private readonly iterable $storedEventSubscribers,
+        private readonly Normalizer $normalizer
     ) {
         parent::__construct();
     }
@@ -86,7 +88,7 @@ final class FollowEventStoreCommand extends Command
             }
             $storedEventPublisher->subscribe($availableStoredEventSubscribers[$selectedSubscriberName]);
         }
-        $storedEventPublisher->subscribe(new SymfonyConsoleDebugSubscriber($output));
+        $storedEventPublisher->subscribe(new SymfonyConsoleDebugSubscriber($output, $this->normalizer));
 
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
             new InMemoryCacheEventStorePointer(

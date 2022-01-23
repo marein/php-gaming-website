@@ -17,3 +17,4 @@ services:
         arguments:
             - '@connect-four.doctrine-dbal'
             - 'event_store'
+            - '@connect-four.normalizer'

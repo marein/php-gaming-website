@@ -10,5 +10,6 @@ services:
                 arguments:
                     - '@chat.predis'
             - !tagged { tag: 'chat.stored-event-subscriber', index_by: 'key' }
+            - '@chat.normalizer'
         tags:
             - { name: console.command, command: chat:follow-event-store, description: 'Publish events to subscribers.' }

@@ -7,4 +7,8 @@ services:
             - '@web-interface.connect-four-service'
             - '@web-interface.browser-notifier'
         tags:
-            -  { name: console.command }
+            - {
+                name: console.command,
+                command: web-interface:publish-running-games-count-to-nchan,
+                description: 'Publish number of running games to the browser.'
+            }

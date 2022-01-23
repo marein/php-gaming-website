@@ -11,7 +11,7 @@ use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class ChatAssigned implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
     private string $chatId;
 
@@ -19,20 +19,25 @@ final class ChatAssigned implements DomainEvent
 
     public function __construct(GameId $gameId, string $chatId)
     {
-        $this->gameId = $gameId;
+        $this->gameId = $gameId->toString();
         $this->chatId = $chatId;
         $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
+    }
+
+    public function chatId(): string
+    {
+        return $this->chatId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
+            'gameId' => $this->gameId,
             'chatId' => $this->chatId
         ];
     }

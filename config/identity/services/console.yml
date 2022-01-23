@@ -10,5 +10,6 @@ services:
                 arguments:
                     - '@identity.predis'
             - !tagged { tag: 'identity.stored-event-subscriber', index_by: 'key' }
+            - '@identity.normalizer'
         tags:
             - { name: console.command, command: identity:follow-event-store, description: 'Publish events to subscribers.' }

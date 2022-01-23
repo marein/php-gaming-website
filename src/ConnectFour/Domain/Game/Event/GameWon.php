@@ -12,29 +12,29 @@ use Gaming\ConnectFour\Domain\Game\Player;
 
 final class GameWon implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Player $winnerPlayer;
+    private string $winnerPlayerId;
 
     private DateTimeImmutable $occurredOn;
 
     public function __construct(GameId $gameId, Player $winnerPlayer)
     {
-        $this->gameId = $gameId;
-        $this->winnerPlayer = $winnerPlayer;
+        $this->gameId = $gameId->toString();
+        $this->winnerPlayerId = $winnerPlayer->id();
         $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
-            'winnerPlayerId' => $this->winnerPlayer->id()
+            'gameId' => $this->gameId,
+            'winnerPlayerId' => $this->winnerPlayerId
         ];
     }
 

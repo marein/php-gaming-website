@@ -1,0 +1,12 @@
+Gaming\Common\Domain\DomainEvent:
+  discriminator:
+    field_name: '#'
+    map:
+      ChatAssigned: Gaming\ConnectFour\Domain\Game\Event\ChatAssigned
+      GameAborted: Gaming\ConnectFour\Domain\Game\Event\GameAborted
+      GameDrawn: Gaming\ConnectFour\Domain\Game\Event\GameDrawn
+      GameOpened: Gaming\ConnectFour\Domain\Game\Event\GameOpened
+      GameResigned: Gaming\ConnectFour\Domain\Game\Event\GameResigned
+      GameWon: Gaming\ConnectFour\Domain\Game\Event\GameWon
+      PlayerJoined: Gaming\ConnectFour\Domain\Game\Event\PlayerJoined
+      PlayerMoved: Gaming\ConnectFour\Domain\Game\Event\PlayerMoved

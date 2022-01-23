@@ -8,58 +8,43 @@ use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGameStore;
+use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
+use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 
 final class OpenGamesProjection implements StoredEventSubscriber
 {
-    private OpenGameStore $openGameStore;
-
-    public function __construct(OpenGameStore $openGameStore)
-    {
-        $this->openGameStore = $openGameStore;
+    public function __construct(
+        private readonly OpenGameStore $openGameStore
+    ) {
     }
 
     public function handle(StoredEvent $storedEvent): void
     {
-        $this->{'handle' . $storedEvent->name()}(
-            json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR)
-        );
+        $domainEvent = $storedEvent->domainEvent();
+
+        match ($domainEvent::class) {
+            GameOpened::class => $this->saveGame($domainEvent->aggregateId(), $domainEvent->playerId()),
+            GameAborted::class,
+            PlayerJoined::class => $this->removeGame($domainEvent->aggregateId()),
+            default => true
+        };
     }
 
     public function isSubscribedTo(StoredEvent $storedEvent): bool
     {
-        return in_array(
-            $storedEvent->name(),
-            [
-                'GameOpened',
-                'GameAborted',
-                'PlayerJoined'
-            ]
-        );
+        return true;
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleGameOpened(array $payload): void
+    private function saveGame(string $gameId, string $playerId): void
     {
         $this->openGameStore->save(
-            new OpenGame($payload['gameId'], $payload['playerId'])
+            new OpenGame($gameId, $playerId)
         );
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleGameAborted(array $payload): void
+    private function removeGame(string $gameId): void
     {
-        $this->openGameStore->remove($payload['gameId']);
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handlePlayerJoined(array $payload): void
-    {
-        $this->openGameStore->remove($payload['gameId']);
+        $this->openGameStore->remove($gameId);
     }
 }
