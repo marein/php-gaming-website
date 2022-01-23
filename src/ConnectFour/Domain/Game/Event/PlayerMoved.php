@@ -37,6 +37,21 @@ final class PlayerMoved implements DomainEvent
         return $this->gameId;
     }
 
+    public function x(): int
+    {
+        return $this->x;
+    }
+
+    public function y(): int
+    {
+        return $this->y;
+    }
+
+    public function color(): int
+    {
+        return $this->color;
+    }
+
     public function payload(): array
     {
         return [

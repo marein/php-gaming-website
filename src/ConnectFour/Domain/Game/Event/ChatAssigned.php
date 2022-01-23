@@ -29,6 +29,11 @@ final class ChatAssigned implements DomainEvent
         return $this->gameId;
     }
 
+    public function chatId(): string
+    {
+        return $this->chatId;
+    }
+
     public function payload(): array
     {
         return [

@@ -43,5 +43,6 @@ services:
         public: false
         arguments:
             - '@gaming.message-broker'
+            - '@connect-four.normalizer'
         tags:
             - { name: 'connect-four.stored-event-subscriber', key: 'publish-to-message-broker' }
