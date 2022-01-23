@@ -10,5 +10,6 @@ services:
                 arguments:
                     - '@connect-four.predis'
             - !tagged { tag: 'connect-four.stored-event-subscriber', index_by: 'key' }
+            - '@connect-four.normalizer'
         tags:
             - { name: console.command, command: connect-four:follow-event-store, description: 'Publish events to subscribers.' }

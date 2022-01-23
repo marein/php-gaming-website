@@ -5,7 +5,16 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
 use Gaming\Common\Domain\DomainEvent;
+use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
+use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
+use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
+use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameWon;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use JsonSerializable;
+use RuntimeException;
 
 /**
  * This class takes events from the event store and project these to itself.
@@ -66,43 +75,38 @@ final class Game implements JsonSerializable
      */
     public function apply(DomainEvent $domainEvent): void
     {
-        $method = 'when' . $domainEvent->name();
-
-        if (method_exists($this, $method)) {
-            $this->$method(
-                $domainEvent->payload()
-            );
-        }
+        match ($domainEvent::class) {
+            GameOpened::class => $this->handleGameOpened($domainEvent),
+            PlayerJoined::class => $this->handlePlayerJoined($domainEvent),
+            PlayerMoved::class => $this->handlePlayerMoved($domainEvent),
+            GameAborted::class,
+            GameDrawn::class,
+            GameWon::class,
+            GameResigned::class => $this->markAsFinished(),
+            ChatAssigned::class => $this->handleChatAssigned($domainEvent),
+            default => throw new RuntimeException($domainEvent::class . ' must be handled.')
+        };
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function whenGameOpened(array $payload): void
+    private function handleGameOpened(GameOpened $gameOpened): void
     {
-        $this->gameId = $payload['gameId'];
-        $this->width = $payload['width'];
-        $this->height = $payload['height'];
-        $this->addPlayer($payload['playerId']);
+        $this->gameId = $gameOpened->aggregateId();
+        $this->width = $gameOpened->width();
+        $this->height = $gameOpened->height();
+        $this->addPlayer($gameOpened->playerId());
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function whenPlayerJoined(array $payload): void
+    private function handlePlayerJoined(PlayerJoined $playerJoined): void
     {
-        $this->addPlayer($payload['joinedPlayerId']);
+        $this->addPlayer($playerJoined->joinedPlayerId());
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function whenPlayerMoved(array $payload): void
+    private function handlePlayerMoved(PlayerMoved $playerMoved): void
     {
         $move = new Move(
-            $payload['x'],
-            $payload['y'],
-            $payload['color']
+            $playerMoved->x(),
+            $playerMoved->y(),
+            $playerMoved->color()
         );
 
         if (!in_array($move, $this->moves)) {
@@ -110,44 +114,14 @@ final class Game implements JsonSerializable
         }
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function whenGameAborted(array $payload): void
+    private function handleChatAssigned(ChatAssigned $chatAssigned): void
     {
-        $this->finished = true;
+        $this->chatId = $chatAssigned->chatId();
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function whenGameResigned(array $payload): void
+    private function markAsFinished(): void
     {
         $this->finished = true;
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function whenGameWon(array $payload): void
-    {
-        $this->finished = true;
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function whenGameDrawn(array $payload): void
-    {
-        $this->finished = true;
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function whenChatAssigned(array $payload): void
-    {
-        $this->chatId = $payload['chatId'];
     }
 
     private function addPlayer(string $playerId): void

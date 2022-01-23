@@ -37,6 +37,21 @@ final class GameOpened implements DomainEvent
         return $this->gameId;
     }
 
+    public function width(): int
+    {
+        return $this->width;
+    }
+
+    public function height(): int
+    {
+        return $this->height;
+    }
+
+    public function playerId(): string
+    {
+        return $this->playerId;
+    }
+
     public function payload(): array
     {
         return [
