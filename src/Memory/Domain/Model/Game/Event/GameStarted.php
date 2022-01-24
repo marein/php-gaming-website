@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game\Event;
 
-use DateTimeImmutable;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Memory\Domain\Model\Game\GameId;
 use Gaming\Memory\Domain\Model\Game\Player;
@@ -17,13 +15,10 @@ final class GameStarted implements DomainEvent
 
     private PlayerPool $playerPool;
 
-    private DateTimeImmutable $occurredOn;
-
     public function __construct(GameId $gameId, PlayerPool $playerPool)
     {
         $this->gameId = $gameId;
         $this->playerPool = $playerPool;
-        $this->occurredOn = Clock::instance()->now();
     }
 
     public function aggregateId(): string
@@ -40,11 +35,6 @@ final class GameStarted implements DomainEvent
                 $this->playerPool->players()
             )
         ];
-    }
-
-    public function occurredOn(): DateTimeImmutable
-    {
-        return $this->occurredOn;
     }
 
     public function name(): string

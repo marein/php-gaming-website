@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
+use DateTimeImmutable;
+use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 
 final class InMemoryEventStore implements EventStore
@@ -36,6 +38,7 @@ final class InMemoryEventStore implements EventStore
     {
         $this->storedEvents[] = new StoredEvent(
             count($this->storedEvents) + 1,
+            Clock::instance()->now(),
             $domainEvent
         );
     }
