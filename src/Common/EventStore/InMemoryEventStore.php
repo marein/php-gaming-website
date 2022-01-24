@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-use DateTimeImmutable;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 
