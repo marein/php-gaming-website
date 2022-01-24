@@ -20,44 +20,6 @@ class GameTest extends TestCase
     /**
      * @test
      */
-    public function aGameCanBeOpened(): void
-    {
-        $game = Game::open(
-            new LazyDealer(5),
-            'playerId1'
-        );
-
-        $domainEvents = $game->flushDomainEvents();
-        $gameOpened = $domainEvents[0];
-
-        $this->assertCount(1, $domainEvents);
-        $this->assertInstanceOf(GameOpened::class, $gameOpened);
-        $this->assertSame($game->id()->toString(), $gameOpened->aggregateId());
-        $this->assertSame(10, $gameOpened->payload()['numberOfCards']);
-        $this->assertSame('playerId1', $gameOpened->payload()['playerId']);
-    }
-
-    /**
-     * @test
-     */
-    public function aPlayerCanJoinAnOpenGame(): void
-    {
-        $game = $this->createOpenGame();
-
-        $game->join('playerId2');
-
-        $domainEvents = $game->flushDomainEvents();
-        $playerJoined = $domainEvents[0];
-
-        $this->assertCount(1, $domainEvents);
-        $this->assertInstanceOf(PlayerJoined::class, $playerJoined);
-        $this->assertSame($game->id()->toString(), $playerJoined->aggregateId());
-        $this->assertSame('playerId2', $playerJoined->payload()['playerId']);
-    }
-
-    /**
-     * @test
-     */
     public function playerCanNotJoinAlreadyRunningGame(): void
     {
         $this->expectException(GameNotOpenException::class);
@@ -78,12 +40,11 @@ class GameTest extends TestCase
         $game->leave('playerId1');
 
         $domainEvents = $game->flushDomainEvents();
-        $playerLeft = $domainEvents[0];
+        self::assertCount(1, $domainEvents);
 
-        $this->assertCount(1, $domainEvents);
-        $this->assertInstanceOf(PlayerLeft::class, $playerLeft);
-        $this->assertSame($game->id()->toString(), $playerLeft->aggregateId());
-        $this->assertSame('playerId1', $playerLeft->payload()['playerId']);
+        assert($domainEvents[0] instanceof PlayerLeft);
+        self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
+        self::assertEquals('playerId1', $domainEvents[0]->playerId());
     }
 
     /**
@@ -96,17 +57,14 @@ class GameTest extends TestCase
         $game->leave('playerId1');
 
         $domainEvents = $game->flushDomainEvents();
-        $playerLeft = $domainEvents[0];
-        $gameClosed = $domainEvents[1];
+        self::assertCount(2, $domainEvents);
 
-        $this->assertCount(2, $domainEvents);
+        assert($domainEvents[0] instanceof PlayerLeft);
+        self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
+        self::assertEquals('playerId1', $domainEvents[0]->playerId());
 
-        $this->assertInstanceOf(PlayerLeft::class, $playerLeft);
-        $this->assertSame($game->id()->toString(), $playerLeft->aggregateId());
-        $this->assertSame('playerId1', $playerLeft->payload()['playerId']);
-
-        $this->assertInstanceOf(GameClosed::class, $gameClosed);
-        $this->assertSame($game->id()->toString(), $gameClosed->aggregateId());
+        assert($domainEvents[1] instanceof GameClosed);
+        self::assertEquals($game->id()->toString(), $domainEvents[1]->aggregateId());
     }
 
     /**
@@ -132,13 +90,11 @@ class GameTest extends TestCase
         $game->start('playerId1');
 
         $domainEvents = $game->flushDomainEvents();
-        $gameStarted = $domainEvents[0];
+        self::assertCount(1, $domainEvents);
 
-        $this->assertCount(1, $domainEvents);
-        $this->assertInstanceOf(GameStarted::class, $gameStarted);
-        $this->assertSame($game->id()->toString(), $gameStarted->aggregateId());
-        $this->assertSame($game->id()->toString(), $gameStarted->payload()['gameId']);
-        $this->assertSame(['playerId1', 'playerId2', 'playerId3', 'playerId4'], $gameStarted->payload()['playerIds']);
+        assert($domainEvents[0] instanceof GameStarted);
+        self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
+        self::assertEquals(['playerId1', 'playerId2', 'playerId3', 'playerId4'], $domainEvents[0]->playerIds());
     }
 
     /**
@@ -173,7 +129,13 @@ class GameTest extends TestCase
             'playerId1'
         );
 
-        $game->flushDomainEvents();
+        $domainEvents = $game->flushDomainEvents();
+        self::assertCount(1, $domainEvents);
+
+        assert($domainEvents[0] instanceof GameOpened);
+        self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
+        self::assertEquals(10, $domainEvents[0]->numberOfCards());
+        self::assertEquals('playerId1', $domainEvents[0]->playerId());
 
         return $game;
     }
@@ -185,7 +147,20 @@ class GameTest extends TestCase
         $game->join('playerId3');
         $game->join('playerId4');
 
-        $game->flushDomainEvents();
+        $domainEvents = $game->flushDomainEvents();
+        self::assertCount(3, $domainEvents);
+
+        assert($domainEvents[0] instanceof PlayerJoined);
+        self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
+        self::assertEquals('playerId2', $domainEvents[0]->playerId());
+
+        assert($domainEvents[1] instanceof PlayerJoined);
+        self::assertEquals($game->id()->toString(), $domainEvents[1]->aggregateId());
+        self::assertEquals('playerId3', $domainEvents[1]->playerId());
+
+        assert($domainEvents[2] instanceof PlayerJoined);
+        self::assertEquals($game->id()->toString(), $domainEvents[2]->aggregateId());
+        self::assertEquals('playerId4', $domainEvents[2]->playerId());
 
         return $game;
     }

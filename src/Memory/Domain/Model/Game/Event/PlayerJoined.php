@@ -10,26 +10,31 @@ use Gaming\Memory\Domain\Model\Game\Player;
 
 final class PlayerJoined implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Player $player;
+    private string $playerId;
 
     public function __construct(GameId $gameId, Player $player)
     {
-        $this->gameId = $gameId;
-        $this->player = $player;
+        $this->gameId = $gameId->toString();
+        $this->playerId = $player->id();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
+    }
+
+    public function playerId(): string
+    {
+        return $this->playerId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
-            'playerId' => $this->player->id()
+            'gameId' => $this->gameId,
+            'playerId' => $this->playerId
         ];
     }
 

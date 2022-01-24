@@ -11,29 +11,40 @@ use Gaming\Memory\Domain\Model\Game\PlayerPool;
 
 final class GameStarted implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private PlayerPool $playerPool;
+    /**
+     * @var string[]
+     */
+    private array $playerIds;
 
     public function __construct(GameId $gameId, PlayerPool $playerPool)
     {
-        $this->gameId = $gameId;
-        $this->playerPool = $playerPool;
+        $this->gameId = $gameId->toString();
+        $this->playerIds = array_map(
+            static fn(Player $player): string => $player->id(),
+            $playerPool->players()
+        );
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function playerIds(): array
+    {
+        return $this->playerIds;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
-            'playerIds' => array_map(
-                static fn(Player $player): string => $player->id(),
-                $this->playerPool->players()
-            )
+            'gameId' => $this->gameId,
+            'playerIds' => $this->playerIds
         ];
     }
 

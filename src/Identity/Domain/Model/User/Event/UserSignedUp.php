@@ -24,6 +24,11 @@ final class UserSignedUp implements DomainEvent
         return $this->userId;
     }
 
+    public function username(): string
+    {
+        return $this->username;
+    }
+
     public function payload(): array
     {
         return [

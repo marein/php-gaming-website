@@ -28,6 +28,16 @@ final class GameResigned implements DomainEvent
         return $this->gameId;
     }
 
+    public function resignedPlayerId(): string
+    {
+        return $this->resignedPlayerId;
+    }
+
+    public function opponentPlayerId(): string
+    {
+        return $this->opponentPlayerId;
+    }
+
     public function payload(): array
     {
         return [

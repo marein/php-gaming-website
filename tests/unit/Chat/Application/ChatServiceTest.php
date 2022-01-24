@@ -16,6 +16,7 @@ use Gaming\Chat\Application\Exception\EmptyMessageException;
 use Gaming\Chat\Application\Query\MessagesQuery;
 use Gaming\Common\Clock\Clock;
 use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\InMemoryEventStore;
 use PHPUnit\Framework\TestCase;
 
 final class ChatServiceTest extends TestCase
@@ -31,22 +32,17 @@ final class ChatServiceTest extends TestCase
         $ownerId = 'ownerId';
         $authors = ['authorId1', 'authorId2'];
 
+
         $chatGateway = $this->createMock(ChatGateway::class);
-        $eventStore = $this->createMock(EventStore::class);
-
-        $eventStore
-            ->expects($this->once())
-            ->method('append')
-            ->with(new ChatInitiated($generatedChatId, $ownerId));
-
         $chatGateway
             ->expects($this->once())
             ->method('create')
             ->with($ownerId, $authors)
             ->willReturn($generatedChatId);
 
+        $eventStore = new InMemoryEventStore();
+
         /** @var ChatGateway $chatGateway */
-        /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $chatGateway,
             $eventStore
@@ -56,6 +52,13 @@ final class ChatServiceTest extends TestCase
             new InitiateChatCommand($ownerId, $authors)
         );
         $this->assertSame($generatedChatId->toString(), $chatId);
+
+        $storedEvents = $eventStore->byAggregateId($generatedChatId->toString());
+        self::assertCount(1, $storedEvents);
+
+        assert($storedEvents[0]->domainEvent() instanceof ChatInitiated);
+        self::assertEquals($generatedChatId->toString(), $storedEvents[0]->domainEvent()->aggregateId());
+        self::assertEquals('ownerId', $storedEvents[0]->domainEvent()->ownerId());
 
         Clock::instance()->resume();
     }
@@ -137,27 +140,20 @@ final class ChatServiceTest extends TestCase
         $messageId = 7;
 
         $chatGateway = $this->createMock(ChatGateway::class);
-        $eventStore = $this->createMock(EventStore::class);
-
-        $eventStore
-            ->expects($this->once())
-            ->method('append')
-            ->with(new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message, $writtenAt));
-
         $chatGateway
             ->expects($this->once())
             ->method('byId')
             ->with($chatId)
             ->willReturn(['chatId' => $chatId, 'authors' => '[]', 'ownerId' => $ownerId]);
-
         $chatGateway
             ->expects($this->once())
             ->method('createMessage')
             ->with($chatId, $authorId, $message)
             ->willReturn($messageId);
 
+        $eventStore = new InMemoryEventStore();
+
         /** @var ChatGateway $chatGateway */
-        /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $chatGateway,
             $eventStore
@@ -170,6 +166,17 @@ final class ChatServiceTest extends TestCase
                 $message
             )
         );
+
+        $storedEvents = $eventStore->byAggregateId($chatId->toString());
+        self::assertCount(1, $storedEvents);
+
+        assert($storedEvents[0]->domainEvent() instanceof MessageWritten);
+        self::assertEquals($chatId->toString(), $storedEvents[0]->domainEvent()->aggregateId());
+        self::assertEquals($messageId, $storedEvents[0]->domainEvent()->messageId());
+        self::assertEquals($ownerId, $storedEvents[0]->domainEvent()->ownerId());
+        self::assertEquals($authorId, $storedEvents[0]->domainEvent()->authorId());
+        self::assertEquals($message, $storedEvents[0]->domainEvent()->message());
+        self::assertEquals($writtenAt, $storedEvents[0]->domainEvent()->writtenAt());
 
         Clock::instance()->resume();
     }

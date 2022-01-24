@@ -10,30 +10,40 @@ use Gaming\Memory\Domain\Model\Game\Player;
 
 final class GameOpened implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
     private int $numberOfCards;
 
-    private Player $player;
+    private string $playerId;
 
     public function __construct(GameId $gameId, int $numberOfCards, Player $player)
     {
-        $this->gameId = $gameId;
+        $this->gameId = $gameId->toString();
         $this->numberOfCards = $numberOfCards;
-        $this->player = $player;
+        $this->playerId = $player->id();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
+    }
+
+    public function numberOfCards(): int
+    {
+        return $this->numberOfCards;
+    }
+
+    public function playerId(): string
+    {
+        return $this->playerId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
+            'gameId' => $this->gameId,
             'numberOfCards' => $this->numberOfCards,
-            'playerId' => $this->player->id()
+            'playerId' => $this->playerId
         ];
     }
 

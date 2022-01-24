@@ -49,6 +49,31 @@ final class MessageWritten implements DomainEvent
         return $this->chatId;
     }
 
+    public function messageId(): int
+    {
+        return $this->messageId;
+    }
+
+    public function ownerId(): string
+    {
+        return $this->ownerId;
+    }
+
+    public function authorId(): string
+    {
+        return $this->authorId;
+    }
+
+    public function message(): string
+    {
+        return $this->message;
+    }
+
+    public function writtenAt(): DateTimeImmutable
+    {
+        return $this->writtenAt;
+    }
+
     public function payload(): array
     {
         return [

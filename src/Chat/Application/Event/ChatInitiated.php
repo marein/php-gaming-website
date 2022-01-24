@@ -29,6 +29,11 @@ final class ChatInitiated implements DomainEvent
         return $this->chatId;
     }
 
+    public function ownerId(): string
+    {
+        return $this->ownerId;
+    }
+
     public function payload(): array
     {
         return [
