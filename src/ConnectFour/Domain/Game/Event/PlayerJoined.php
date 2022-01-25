@@ -37,18 +37,4 @@ final class PlayerJoined implements DomainEvent
     {
         return $this->opponentPlayerId;
     }
-
-    public function payload(): array
-    {
-        return [
-            'gameId' => $this->gameId,
-            'opponentPlayerId' => $this->opponentPlayerId,
-            'joinedPlayerId' => $this->joinedPlayerId
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'PlayerJoined';
-    }
 }

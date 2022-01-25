@@ -39,17 +39,4 @@ final class GameStarted implements DomainEvent
     {
         return $this->playerIds;
     }
-
-    public function payload(): array
-    {
-        return [
-            'gameId' => $this->gameId,
-            'playerIds' => $this->playerIds
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'GameStarted';
-    }
 }

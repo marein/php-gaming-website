@@ -20,16 +20,4 @@ final class GameClosed implements DomainEvent
     {
         return $this->gameId;
     }
-
-    public function payload(): array
-    {
-        return [
-            'gameId' => $this->gameId
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'GameClosed';
-    }
 }

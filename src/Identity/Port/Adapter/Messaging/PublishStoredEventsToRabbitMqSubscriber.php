@@ -48,11 +48,6 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
         );
     }
 
-    public function isSubscribedTo(StoredEvent $storedEvent): bool
-    {
-        return true;
-    }
-
     private function nameFromDomainEvent(DomainEvent $domainEvent): string
     {
         return match ($domainEvent::class) {

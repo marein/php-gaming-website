@@ -37,18 +37,4 @@ final class GameAborted implements DomainEvent
     {
         return $this->opponentPlayerId;
     }
-
-    public function payload(): array
-    {
-        return [
-            'gameId' => $this->gameId,
-            'abortedPlayerId' => $this->abortedPlayerId,
-            'opponentPlayerId' => $this->opponentPlayerId
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'GameAborted';
-    }
 }

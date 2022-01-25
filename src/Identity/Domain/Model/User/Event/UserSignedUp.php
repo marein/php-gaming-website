@@ -28,17 +28,4 @@ final class UserSignedUp implements DomainEvent
     {
         return $this->username;
     }
-
-    public function payload(): array
-    {
-        return [
-            'userId' => $this->userId,
-            'username' => $this->username
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'UserSignedUp';
-    }
 }

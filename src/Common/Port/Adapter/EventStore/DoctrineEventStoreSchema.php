@@ -13,7 +13,6 @@ final class DoctrineEventStoreSchema
         $table = $schema->createTable($tableName);
 
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
-        $table->addColumn('name', 'string');
         $table->addColumn('aggregateId', 'uuid_binary');
         $table->addColumn('event', 'json');
         $table->addColumn('occurredOn', 'datetime_immutable');

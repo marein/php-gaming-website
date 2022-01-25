@@ -28,11 +28,6 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
         };
     }
 
-    public function isSubscribedTo(StoredEvent $storedEvent): bool
-    {
-        return true;
-    }
-
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
     {
         $this->gamesByPlayerStore->addToPlayer(

@@ -19,11 +19,6 @@ final class ChatInitiated implements DomainEvent
         $this->ownerId = $ownerId;
     }
 
-    public function name(): string
-    {
-        return 'ChatInitiated';
-    }
-
     public function aggregateId(): string
     {
         return $this->chatId;
@@ -32,13 +27,5 @@ final class ChatInitiated implements DomainEvent
     public function ownerId(): string
     {
         return $this->ownerId;
-    }
-
-    public function payload(): array
-    {
-        return [
-            'chatId' => $this->chatId,
-            'ownerId' => $this->ownerId
-        ];
     }
 }

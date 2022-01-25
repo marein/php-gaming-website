@@ -20,16 +20,4 @@ final class UserArrived implements DomainEvent
     {
         return $this->userId;
     }
-
-    public function payload(): array
-    {
-        return [
-            'userId' => $this->userId
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'UserArrived';
-    }
 }
