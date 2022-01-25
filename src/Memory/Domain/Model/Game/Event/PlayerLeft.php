@@ -29,17 +29,4 @@ final class PlayerLeft implements DomainEvent
     {
         return $this->playerId;
     }
-
-    public function payload(): array
-    {
-        return [
-            'gameId' => $this->gameId,
-            'playerId' => $this->playerId
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'PlayerLeft';
-    }
 }

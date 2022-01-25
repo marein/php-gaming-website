@@ -18,7 +18,7 @@ use Gaming\Common\Normalizer\Normalizer;
 
 final class DoctrineEventStore implements EventStore
 {
-    private const SELECT = 'e.id, e.name, BIN_TO_UUID(e.aggregateId) as aggregateId, e.event, e.occurredOn';
+    private const SELECT = 'e.id, BIN_TO_UUID(e.aggregateId) as aggregateId, e.event, e.occurredOn';
 
     public function __construct(
         private readonly Connection $connection,
@@ -78,13 +78,11 @@ final class DoctrineEventStore implements EventStore
             $this->connection->insert(
                 $this->table,
                 [
-                    'name' => $domainEvent->name(),
                     'aggregateId' => $domainEvent->aggregateId(),
                     'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
                     'occurredOn' => Clock::instance()->now()
                 ],
                 [
-                    'string',
                     'uuid_binary',
                     'json',
                     'datetime_immutable'

@@ -34,9 +34,4 @@ final class SymfonyConsoleDebugSubscriber implements StoredEventSubscriber
             )
         );
     }
-
-    public function isSubscribedTo(StoredEvent $storedEvent): bool
-    {
-        return true;
-    }
 }

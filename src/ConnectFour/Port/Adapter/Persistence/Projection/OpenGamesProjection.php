@@ -31,11 +31,6 @@ final class OpenGamesProjection implements StoredEventSubscriber
         };
     }
 
-    public function isSubscribedTo(StoredEvent $storedEvent): bool
-    {
-        return true;
-    }
-
     private function saveGame(string $gameId, string $playerId): void
     {
         $this->openGameStore->save(

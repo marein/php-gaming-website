@@ -34,11 +34,6 @@ final class RunningGamesProjection implements StoredEventSubscriber
         };
     }
 
-    public function isSubscribedTo(StoredEvent $storedEvent): bool
-    {
-        return true;
-    }
-
     private function addGame(string $gameId): void
     {
         $this->runningGameStore->add($gameId);

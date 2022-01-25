@@ -39,11 +39,6 @@ final class MessageWritten implements DomainEvent
         $this->writtenAt = $writtenAt;
     }
 
-    public function name(): string
-    {
-        return 'MessageWritten';
-    }
-
     public function aggregateId(): string
     {
         return $this->chatId;
@@ -72,17 +67,5 @@ final class MessageWritten implements DomainEvent
     public function writtenAt(): DateTimeImmutable
     {
         return $this->writtenAt;
-    }
-
-    public function payload(): array
-    {
-        return [
-            'chatId' => $this->chatId,
-            'messageId' => $this->messageId,
-            'ownerId' => $this->ownerId,
-            'authorId' => $this->authorId,
-            'message' => $this->message,
-            'writtenAt' => $this->writtenAt->format(DateTimeInterface::ATOM)
-        ];
     }
 }

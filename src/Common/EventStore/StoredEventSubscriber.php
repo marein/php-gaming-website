@@ -7,6 +7,4 @@ namespace Gaming\Common\EventStore;
 interface StoredEventSubscriber
 {
     public function handle(StoredEvent $storedEvent): void;
-
-    public function isSubscribedTo(StoredEvent $storedEvent): bool;
 }

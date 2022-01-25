@@ -36,9 +36,4 @@ final class GameProjection implements StoredEventSubscriber
 
         $this->gameStore->save($game);
     }
-
-    public function isSubscribedTo(StoredEvent $storedEvent): bool
-    {
-        return true;
-    }
 }

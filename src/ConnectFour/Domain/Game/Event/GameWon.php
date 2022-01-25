@@ -29,17 +29,4 @@ final class GameWon implements DomainEvent
     {
         return $this->winnerPlayerId;
     }
-
-    public function payload(): array
-    {
-        return [
-            'gameId' => $this->gameId,
-            'winnerPlayerId' => $this->winnerPlayerId
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'GameWon';
-    }
 }

@@ -37,18 +37,4 @@ final class GameResigned implements DomainEvent
     {
         return $this->opponentPlayerId;
     }
-
-    public function payload(): array
-    {
-        return [
-            'gameId' => $this->gameId,
-            'resignedPlayerId' => $this->resignedPlayerId,
-            'opponentPlayerId' => $this->opponentPlayerId
-        ];
-    }
-
-    public function name(): string
-    {
-        return 'GameResigned';
-    }
 }

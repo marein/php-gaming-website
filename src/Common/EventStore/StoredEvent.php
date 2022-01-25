@@ -30,28 +30,4 @@ final class StoredEvent
     {
         return $this->domainEvent;
     }
-
-    /**
-     * @deprecated Use StoredEvent::domainEvent()->name() instead.
-     */
-    public function name(): string
-    {
-        return $this->domainEvent->name();
-    }
-
-    /**
-     * @deprecated Use StoredEvent::domainEvent()->aggregateId() instead.
-     */
-    public function aggregateId(): string
-    {
-        return $this->domainEvent->aggregateId();
-    }
-
-    /**
-     * @deprecated Use StoredEvent::domainEvent()->payload() instead.
-     */
-    public function payload(): string
-    {
-        return json_encode($this->domainEvent->payload(), JSON_THROW_ON_ERROR);
-    }
 }
