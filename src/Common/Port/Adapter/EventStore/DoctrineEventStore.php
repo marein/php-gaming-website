@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Exception;
+use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
@@ -80,7 +81,7 @@ final class DoctrineEventStore implements EventStore
                     'name' => $domainEvent->name(),
                     'aggregateId' => $domainEvent->aggregateId(),
                     'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
-                    'occurredOn' => $domainEvent->occurredOn()
+                    'occurredOn' => Clock::instance()->now()
                 ],
                 [
                     'string',
@@ -135,6 +136,7 @@ final class DoctrineEventStore implements EventStore
         return array_map(
             fn(array $row): StoredEvent => new StoredEvent(
                 (int)$row['id'],
+                new DateTimeImmutable($row['occurredOn']),
                 $this->normalizer->denormalize(
                     json_decode(
                         $row['event'],

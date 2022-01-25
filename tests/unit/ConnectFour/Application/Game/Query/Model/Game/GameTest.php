@@ -134,7 +134,7 @@ class GameTest extends TestCase
 
     private function applyFromDomainGame(Game $game, DomainGame $domainGame): void
     {
-        foreach ($domainGame->flushDomainEvents() as $key => $domainEvent) {
+        foreach ($domainGame->flushDomainEvents() as $domainEvent) {
             // Apply twice to test idempotency.
             $game->apply($domainEvent);
             $game->apply($domainEvent);

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Event;
 
-use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Gaming\Chat\Application\ChatId;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 
 final class MessageWritten implements DomainEvent
@@ -24,8 +23,6 @@ final class MessageWritten implements DomainEvent
 
     private DateTimeImmutable $writtenAt;
 
-    private DateTimeImmutable $occurredOn;
-
     public function __construct(
         ChatId $chatId,
         int $messageId,
@@ -40,7 +37,6 @@ final class MessageWritten implements DomainEvent
         $this->authorId = $authorId;
         $this->message = $message;
         $this->writtenAt = $writtenAt;
-        $this->occurredOn = Clock::instance()->now();
     }
 
     public function name(): string
@@ -48,14 +44,34 @@ final class MessageWritten implements DomainEvent
         return 'MessageWritten';
     }
 
-    public function occurredOn(): DateTimeImmutable
-    {
-        return $this->occurredOn;
-    }
-
     public function aggregateId(): string
     {
         return $this->chatId;
+    }
+
+    public function messageId(): int
+    {
+        return $this->messageId;
+    }
+
+    public function ownerId(): string
+    {
+        return $this->ownerId;
+    }
+
+    public function authorId(): string
+    {
+        return $this->authorId;
+    }
+
+    public function message(): string
+    {
+        return $this->message;
+    }
+
+    public function writtenAt(): DateTimeImmutable
+    {
+        return $this->writtenAt;
     }
 
     public function payload(): array
@@ -66,7 +82,7 @@ final class MessageWritten implements DomainEvent
             'ownerId' => $this->ownerId,
             'authorId' => $this->authorId,
             'message' => $this->message,
-            'writtenAt' => $this->writtenAt->format(DateTime::ATOM)
+            'writtenAt' => $this->writtenAt->format(DateTimeInterface::ATOM)
         ];
     }
 }

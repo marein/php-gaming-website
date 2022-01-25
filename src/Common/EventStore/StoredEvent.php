@@ -11,6 +11,7 @@ final class StoredEvent
 {
     public function __construct(
         private readonly int $id,
+        private readonly DateTimeImmutable $occurredOn,
         private readonly DomainEvent $domainEvent
     ) {
     }
@@ -18,6 +19,11 @@ final class StoredEvent
     public function id(): int
     {
         return $this->id;
+    }
+
+    public function occurredOn(): DateTimeImmutable
+    {
+        return $this->occurredOn;
     }
 
     public function domainEvent(): DomainEvent
@@ -47,13 +53,5 @@ final class StoredEvent
     public function payload(): string
     {
         return json_encode($this->domainEvent->payload(), JSON_THROW_ON_ERROR);
-    }
-
-    /**
-     * @deprecated Use StoredEvent::domainEvent()->occurredOn() instead.
-     */
-    public function occurredOn(): DateTimeImmutable
-    {
-        return $this->domainEvent->occurredOn();
     }
 }

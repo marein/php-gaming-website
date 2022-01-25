@@ -4,43 +4,38 @@ declare(strict_types=1);
 
 namespace Gaming\Memory\Domain\Model\Game\Event;
 
-use DateTimeImmutable;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Memory\Domain\Model\Game\GameId;
 use Gaming\Memory\Domain\Model\Game\Player;
 
 final class PlayerJoined implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Player $player;
-
-    private DateTimeImmutable $occurredOn;
+    private string $playerId;
 
     public function __construct(GameId $gameId, Player $player)
     {
-        $this->gameId = $gameId;
-        $this->player = $player;
-        $this->occurredOn = Clock::instance()->now();
+        $this->gameId = $gameId->toString();
+        $this->playerId = $player->id();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
+    }
+
+    public function playerId(): string
+    {
+        return $this->playerId;
     }
 
     public function payload(): array
     {
         return [
-            'gameId' => $this->gameId->toString(),
-            'playerId' => $this->player->id()
+            'gameId' => $this->gameId,
+            'playerId' => $this->playerId
         ];
-    }
-
-    public function occurredOn(): DateTimeImmutable
-    {
-        return $this->occurredOn;
     }
 
     public function name(): string
