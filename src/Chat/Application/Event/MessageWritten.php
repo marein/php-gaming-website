@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gaming\Chat\Application\Event;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Common\Domain\DomainEvent;
 
