@@ -7,6 +7,7 @@ namespace Gaming\Common\Port\Adapter\Messaging;
 use Enqueue\AmqpLib\AmqpConnectionFactory;
 use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
+use Gaming\Common\MessageBroker\Model\Context\Context;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Message\Name;
 use Interop\Amqp\AmqpContext;
@@ -14,6 +15,9 @@ use Interop\Amqp\AmqpMessage;
 use Interop\Amqp\AmqpQueue;
 use Interop\Amqp\AmqpTopic;
 use Interop\Amqp\Impl\AmqpBind;
+use Interop\Amqp\Impl\AmqpQueue as AmqpQueueImpl;
+use Interop\Queue\Consumer as InteropConsumer;
+use Interop\Queue\Destination;
 use Interop\Queue\SubscriptionConsumer;
 
 final class AmqpTopicExchangeMessageBroker implements MessageBroker
@@ -89,13 +93,7 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
     {
         $this->initialize();
 
-        $amqpMessage = $this->context->createMessage($message->body());
-        $amqpMessage->addFlag(AmqpMessage::FLAG_MANDATORY);
-        $amqpMessage->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
-        $amqpMessage->setRoutingKey((string)$message->name());
-
-        $producer = $this->context->createProducer();
-        $producer->send($this->topic, $amqpMessage);
+        $this->sendMessage($this->topic, $message, null);
     }
 
     public function consume(iterable $consumers): void
@@ -111,23 +109,66 @@ final class AmqpTopicExchangeMessageBroker implements MessageBroker
 
     private function addConsumerToSubscription(SubscriptionConsumer $subscriptionConsumer, Consumer $consumer): void
     {
+        $queueName = $consumer->name()->domain() . '.' . $consumer->name()->name();
+
         $subscriptionConsumer->subscribe(
             $this->context->createConsumer(
                 $this->createQueue(
-                    $consumer->name()->domain() . '.' . $consumer->name()->name(),
+                    $queueName,
                     (new SubscriptionsToRoutingKeysTranslator($consumer->subscriptions()))->routingKeys()
                 )
             ),
-            function (AmqpMessage $message, \Interop\Queue\Consumer $interopConsumer) use ($consumer): void {
+            function (AmqpMessage $message, InteropConsumer $interopConsumer) use ($consumer, $queueName): void {
+                [$name, $body] = json_decode($message->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
                 $consumer->handle(
                     new Message(
-                        Name::fromString((string)$message->getRoutingKey()),
-                        $message->getBody()
-                    )
+                        Name::fromString($name),
+                        $body
+                    ),
+                    $this->createContext($queueName, $message)
                 );
 
                 $interopConsumer->acknowledge($message);
             }
+        );
+    }
+
+    private function createContext(string $queueName, AmqpMessage $amqpMessage): Context
+    {
+        return new ClosureContext(
+            fn(Message $message) => $this->sendMessage(
+                $this->topic,
+                $message,
+                $queueName
+            ),
+            $amqpMessage->getReplyTo() === null ?
+                function (Message $message) {
+                } :
+                fn(Message $message) => $this->sendMessage(
+                    new AmqpQueueImpl($amqpMessage->getReplyTo()),
+                    $message,
+                    null
+                )
+        );
+    }
+
+    private function sendMessage(Destination $destination, Message $message, ?string $replyTo): void
+    {
+        $amqpMessage = $this->context->createMessage(
+            json_encode(
+                [(string)$message->name(), $message->body()],
+                JSON_THROW_ON_ERROR
+            )
+        );
+        $amqpMessage->addFlag(AmqpMessage::FLAG_MANDATORY);
+        $amqpMessage->setDeliveryMode(AmqpMessage::DELIVERY_MODE_PERSISTENT);
+        $amqpMessage->setRoutingKey((string)$message->name());
+        $amqpMessage->setReplyTo($replyTo);
+
+        $this->context->createProducer()->send(
+            $destination,
+            $amqpMessage
         );
     }
 }

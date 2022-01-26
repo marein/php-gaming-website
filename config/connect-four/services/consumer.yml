@@ -5,6 +5,5 @@ services:
         public: false
         arguments:
             - '@connect-four.command-bus'
-            - '@gaming.message-broker'
         tags:
             - { name: 'gaming.consumer', key: 'connect-four.referee' }
