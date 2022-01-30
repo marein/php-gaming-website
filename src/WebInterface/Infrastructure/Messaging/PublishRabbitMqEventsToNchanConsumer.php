@@ -49,7 +49,7 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
             ),
             'Chat.MessageWritten' => $this->publishToBrowser(
                 $json,
-                ['game-' . $payload['ownerId']]
+                ['chat-' . $payload['chatId']]
             ),
             default => true
         };

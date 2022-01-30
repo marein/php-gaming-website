@@ -22,7 +22,7 @@ final class DoctrineChatGateway implements ChatGateway
         $this->connection = $connection;
     }
 
-    public function create(string $ownerId, array $authors): ChatId
+    public function create(array $authors): ChatId
     {
         $chatId = ChatId::generate();
 
@@ -30,10 +30,9 @@ final class DoctrineChatGateway implements ChatGateway
             self::TABLE_CHAT,
             [
                 'id' => $chatId->toString(),
-                'ownerId' => $ownerId,
                 'authors' => $authors
             ],
-            ['uuid_binary_ordered_time', 'string', 'json']
+            ['uuid_binary_ordered_time', 'json']
         );
 
         return $chatId;
@@ -86,7 +85,7 @@ final class DoctrineChatGateway implements ChatGateway
     public function byId(ChatId $chatId): array
     {
         $chat = $this->connection->createQueryBuilder()
-            ->select('BIN_TO_UUID(c.id, 1) as id, c.ownerId, c.authors')
+            ->select('BIN_TO_UUID(c.id, 1) as id, c.authors')
             ->from(self::TABLE_CHAT, 'c')
             ->where('c.id = :id')
             ->setParameter('id', $chatId->toString(), 'uuid_binary_ordered_time')

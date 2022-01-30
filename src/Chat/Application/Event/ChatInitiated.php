@@ -11,21 +11,13 @@ final class ChatInitiated implements DomainEvent
 {
     private string $chatId;
 
-    private string $ownerId;
-
-    public function __construct(ChatId $chatId, string $ownerId)
+    public function __construct(ChatId $chatId)
     {
         $this->chatId = $chatId->toString();
-        $this->ownerId = $ownerId;
     }
 
     public function aggregateId(): string
     {
         return $this->chatId;
-    }
-
-    public function ownerId(): string
-    {
-        return $this->ownerId;
     }
 }

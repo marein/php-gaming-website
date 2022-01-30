@@ -44,7 +44,7 @@
                      seconds-before-retry="3">
         </chat-widget>
     </div>
-    <event-source url="/sse/sub?id=game-{{ game.gameId }}"
-        {% if app.environment == 'dev' %}verbose{% endif %}>
+    <event-source subscriptions="game-{{ game.gameId }}{% if game.chatId %},chat-{{ game.chatId }}{% endif %}"
+                  {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>
 {% endblock %}
