@@ -17,9 +17,9 @@ final class NchanBrowserNotifier implements BrowserNotifier
         $this->nchan = new Nchan($baseUrl);
     }
 
-    public function publish(string $channel, string $message): void
+    public function publish(array $channels, string $message): void
     {
-        $this->nchan->channel($channel)->publish(
+        $this->nchan->channel('/pub?id=' . implode(',', $channels))->publish(
             new JsonMessage(
                 '',
                 $message

@@ -29,7 +29,7 @@ final class PublishRunningGamesCountToNchanCommand extends Command
             // Publish only if count has changed.
             if ($lastRunningGamesCount !== $currentRunningGamesCount) {
                 $this->browserNotifier->publish(
-                    '/pub?id=lobby',
+                    ['lobby'],
                     json_encode(
                         [
                             'eventName' => 'ConnectFour.RunningGamesUpdated',
