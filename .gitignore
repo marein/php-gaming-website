@@ -1,2 +1,7 @@
-/vendor
+/codeception.yml
 /config/environment.env
+/phpcs.xml
+/phpstan.neon
+/tests/acceptance.suite.yml
+/tests/unit.suite.yml
+/vendor
