@@ -40,11 +40,11 @@ final class PublishRabbitMqEventsToNchanConsumer implements Consumer
             'ConnectFour.GameDrawn',
             'ConnectFour.PlayerMoved',
             'ConnectFour.ChatAssigned' => $this->browserNotifier->publish(
-                ['game-' . $payload['gameId']],
+                ['connect-four-' . $payload['gameId']],
                 $json
             ),
             'ConnectFour.PlayerJoined' => $this->browserNotifier->publish(
-                ['lobby', 'game-' . $payload['gameId']],
+                ['lobby', 'connect-four-' . $payload['gameId']],
                 $json
             ),
             'Chat.MessageWritten' => $this->browserNotifier->publish(
