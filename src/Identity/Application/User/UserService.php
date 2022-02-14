@@ -28,11 +28,13 @@ final class UserService
 
     public function arrive(ArriveCommand $command): string
     {
-        $user = User::arrive();
+        $userId = $this->users->nextIdentity();
 
-        $this->users->save($user);
+        $this->users->save(
+            User::arrive($userId)
+        );
 
-        return $user->id()->toString();
+        return $userId->toString();
     }
 
     /**

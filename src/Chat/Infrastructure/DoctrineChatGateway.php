@@ -32,7 +32,7 @@ final class DoctrineChatGateway implements ChatGateway
                 'id' => $chatId->toString(),
                 'authors' => $authors
             ],
-            ['uuid_binary_ordered_time', 'json']
+            ['uuid', 'json']
         );
 
         return $chatId;
@@ -52,7 +52,7 @@ final class DoctrineChatGateway implements ChatGateway
                 'message' => $message,
                 'writtenAt' => $writtenAt
             ],
-            ['uuid_binary_ordered_time', 'string', 'string', 'datetime_immutable']
+            ['uuid', 'string', 'string', 'datetime_immutable']
         );
 
         return (int)$this->connection->lastInsertId();
@@ -76,7 +76,7 @@ final class DoctrineChatGateway implements ChatGateway
             )
             ->setFirstResult($offset)
             ->setMaxResults($limit)
-            ->setParameter('chatId', $chatId->toString(), 'uuid_binary_ordered_time')
+            ->setParameter('chatId', $chatId->toString(), 'uuid')
             ->setParameter('authorId', $authorId, 'json')
             ->executeQuery()
             ->fetchAllAssociative();
@@ -85,10 +85,10 @@ final class DoctrineChatGateway implements ChatGateway
     public function byId(ChatId $chatId): array
     {
         $chat = $this->connection->createQueryBuilder()
-            ->select('BIN_TO_UUID(c.id, 1) as id, c.authors')
+            ->select('BIN_TO_UUID(c.id) as id, c.authors')
             ->from(self::TABLE_CHAT, 'c')
             ->where('c.id = :id')
-            ->setParameter('id', $chatId->toString(), 'uuid_binary_ordered_time')
+            ->setParameter('id', $chatId->toString(), 'uuid')
             ->executeQuery()
             ->fetchAssociative();
 

@@ -6,6 +6,6 @@
     <embeddable name="Gaming\Identity\Domain\Model\User\UserId">
         <id name="userId"
             column="id"
-            type="uuid_binary_ordered_time"/>
+            type="uuid"/>
     </embeddable>
 </doctrine-mapping>

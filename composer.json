@@ -34,8 +34,6 @@
     "predis/predis": "^1.1",
     "psr/log": "^1.1",
     "queue-interop/amqp-interop": "^0.8.2",
-    "ramsey/uuid": "^4.1",
-    "ramsey/uuid-doctrine": "^1.6",
     "symfony/asset": "^5.4",
     "symfony/config": "^5.4",
     "symfony/console": "^5.4",
@@ -46,6 +44,7 @@
     "symfony/http-kernel": "^5.4",
     "symfony/monolog-bundle": "^3.6",
     "symfony/twig-bundle": "^5.4",
+    "symfony/uid": "^6.0",
     "symfony/validator": "^5.4",
     "symfony/yaml": "^5.4",
     "twig/twig": "^3.3"

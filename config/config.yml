@@ -2,7 +2,7 @@ parameters:
     # Workaround for doctrine/doctrine-migrations-bundle:^3.0
     # To be able to use multiple connections, the bundle requires a default connection.
     # See https://github.com/marein/php-gaming-website/issues/62.
-    doctrine.migrations.preferred_connection: default
+    doctrine.migrations.preferred_connection: identity
 
 imports:
     - { resource: chat/config.yml }
@@ -16,15 +16,6 @@ framework:
         enabled: true
     router:
         resource: "%kernel.project_dir%/config/routing.yml"
-
-doctrine:
-    dbal:
-        types:
-            uuid_binary_ordered_time: Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType
-            uuid_binary: Ramsey\Uuid\Doctrine\UuidBinaryType
-        mapping_types:
-            uuid_binary_ordered_time: binary
-            uuid_binary: binary
 
 monolog:
     handlers:

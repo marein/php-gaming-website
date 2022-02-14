@@ -6,29 +6,20 @@ namespace Gaming\Chat\Application;
 
 use Exception;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Uid\Uuid;
 
 final class ChatId
 {
     private string $chatId;
 
-    /**
-     * @throws ChatNotFoundException
-     */
-    private function __construct(UuidInterface $uuid)
+    private function __construct(Uuid $uuid)
     {
-        $this->chatId = $uuid->toString();
-
-        // Only Uuid version 1 is a valid ChatId.
-        if ($uuid->getVersion() !== 1) {
-            throw new ChatNotFoundException();
-        }
+        $this->chatId = $uuid->toRfc4122();
     }
 
     public static function generate(): ChatId
     {
-        return new self(Uuid::uuid1());
+        return new self(Uuid::v6());
     }
 
     /**
@@ -37,7 +28,7 @@ final class ChatId
     public static function fromString(string $chatId): ChatId
     {
         try {
-            return new self(Uuid::fromString($chatId));
+            return new self(Uuid::fromRfc4122($chatId));
         } catch (Exception $exception) {
             // This occurs if the given string is an invalid Uuid, hence an invalid ChatId.
             // Throw exception, that the chat can't be found.
