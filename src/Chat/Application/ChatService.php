@@ -35,10 +35,10 @@ final class ChatService
 
     public function initiateChat(InitiateChatCommand $initiateChatCommand): string
     {
-        $chatId = $this->chatGateway->create($initiateChatCommand->ownerId(), $initiateChatCommand->authors());
+        $chatId = $this->chatGateway->create($initiateChatCommand->authors());
 
         $this->eventStore->append(
-            new ChatInitiated($chatId, $initiateChatCommand->ownerId())
+            new ChatInitiated($chatId)
         );
 
         return $chatId->toString();
@@ -67,13 +67,12 @@ final class ChatService
             throw new AuthorNotAllowedException();
         }
 
-        $ownerId = $chat['ownerId'];
         $writtenAt = Clock::instance()->now();
 
         $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
 
         $this->eventStore->append(
-            new MessageWritten($chatId, $messageId, $ownerId, $authorId, $message, $writtenAt)
+            new MessageWritten($chatId, $messageId, $authorId, $message, $writtenAt)
         );
     }
 

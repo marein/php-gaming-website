@@ -12,7 +12,7 @@ interface ChatGateway
     /**
      * @param string[] $authors
      */
-    public function create(string $ownerId, array $authors): ChatId;
+    public function create(array $authors): ChatId;
 
     public function createMessage(
         ChatId $chatId,

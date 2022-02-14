@@ -159,6 +159,18 @@ class WidgetElement extends HTMLElement
 
     _onChatAssigned(event)
     {
+        this.dispatchEvent(
+            new CustomEvent(
+                'AddSubscription',
+                {
+                    bubbles: true,
+                    detail: {
+                        name: 'chat-' + event.detail.chatId
+                    }
+                }
+            )
+        );
+
         this._initialize(event.detail.chatId);
     }
 

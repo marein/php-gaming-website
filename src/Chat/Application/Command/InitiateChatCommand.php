@@ -6,8 +6,6 @@ namespace Gaming\Chat\Application\Command;
 
 final class InitiateChatCommand
 {
-    private string $ownerId;
-
     /**
      * @var string[]
      */
@@ -16,15 +14,9 @@ final class InitiateChatCommand
     /**
      * @param string[] $authors
      */
-    public function __construct(string $ownerId, array $authors)
+    public function __construct(array $authors)
     {
-        $this->ownerId = $ownerId;
         $this->authors = $authors;
-    }
-
-    public function ownerId(): string
-    {
-        return $this->ownerId;
     }
 
     /**

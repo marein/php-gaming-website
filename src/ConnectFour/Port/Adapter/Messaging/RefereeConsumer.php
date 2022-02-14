@@ -52,7 +52,7 @@ final class RefereeConsumer implements Consumer
     {
         $this->commandBus->handle(
             new AssignChatCommand(
-                $payload['ownerId'],
+                $payload['correlationId'],
                 $payload['chatId']
             )
         );
@@ -68,7 +68,7 @@ final class RefereeConsumer implements Consumer
                 new MessageName('Chat', 'InitiateChat'),
                 json_encode(
                     [
-                        'ownerId' => $payload['gameId'],
+                        'correlationId' => $payload['gameId'],
                         'authors' => []
                     ],
                     JSON_THROW_ON_ERROR

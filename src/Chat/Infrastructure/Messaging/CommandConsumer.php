@@ -28,7 +28,6 @@ final class CommandConsumer implements Consumer
 
         $chatId = $this->commandBus->handle(
             new InitiateChatCommand(
-                $payload['ownerId'],
                 $payload['authors']
             )
         );
@@ -40,7 +39,7 @@ final class CommandConsumer implements Consumer
                 json_encode(
                     [
                         'chatId' => $chatId,
-                        'ownerId' => $payload['ownerId']
+                        'correlationId' => $payload['correlationId']
                     ],
                     JSON_THROW_ON_ERROR
                 )

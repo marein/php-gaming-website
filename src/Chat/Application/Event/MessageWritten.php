@@ -14,8 +14,6 @@ final class MessageWritten implements DomainEvent
 
     private int $messageId;
 
-    private string $ownerId;
-
     private string $authorId;
 
     private string $message;
@@ -25,14 +23,12 @@ final class MessageWritten implements DomainEvent
     public function __construct(
         ChatId $chatId,
         int $messageId,
-        string $ownerId,
         string $authorId,
         string $message,
         DateTimeImmutable $writtenAt
     ) {
         $this->chatId = $chatId->toString();
         $this->messageId = $messageId;
-        $this->ownerId = $ownerId;
         $this->authorId = $authorId;
         $this->message = $message;
         $this->writtenAt = $writtenAt;
@@ -46,11 +42,6 @@ final class MessageWritten implements DomainEvent
     public function messageId(): int
     {
         return $this->messageId;
-    }
-
-    public function ownerId(): string
-    {
-        return $this->ownerId;
     }
 
     public function authorId(): string
