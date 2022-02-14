@@ -20,6 +20,7 @@ final class OpenHandler
     public function __invoke(OpenCommand $command): string
     {
         $game = Game::open(
+            $this->games->nextIdentity(),
             Configuration::common(),
             $command->playerId()
         );

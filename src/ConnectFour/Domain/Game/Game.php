@@ -46,9 +46,8 @@ final class Game implements AggregateRoot
         return $this->gameId;
     }
 
-    public static function open(Configuration $configuration, string $playerId): Game
+    public static function open(GameId $gameId, Configuration $configuration, string $playerId): Game
     {
-        $gameId = GameId::generate();
         $size = $configuration->size();
         $player = new Player($playerId, Stone::red());
 

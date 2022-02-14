@@ -9,6 +9,8 @@ use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 
 interface Games
 {
+    public function nextIdentity(): GameId;
+
     /**
      * @throws ConcurrencyException
      */
