@@ -44,6 +44,11 @@ final class DoctrineJsonGameRepository implements Games
         $this->tableName = 'game';
     }
 
+    public function nextIdentity(): GameId
+    {
+        return GameId::generate();
+    }
+
     /**
      * @throw ConcurrencyException
      */

@@ -18,7 +18,7 @@ class GameTest extends TestCase
      */
     public function itShouldProjectEvents(): void
     {
-        $domainGame = DomainGame::open(Configuration::common(), 'player1');
+        $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
 
         $expectedGameId = $domainGame->id()->toString();
         $expectedFinished = false;
@@ -68,7 +68,7 @@ class GameTest extends TestCase
      */
     public function itShouldBeMarkedAsFinishedWhenGameAborted(): void
     {
-        $domainGame = DomainGame::open(Configuration::common(), 'player1');
+        $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
         $domainGame->abort('player1');
 
         $game = new Game();
@@ -83,7 +83,7 @@ class GameTest extends TestCase
      */
     public function itShouldBeMarkedAsFinishedWhenGameResigned(): void
     {
-        $domainGame = DomainGame::open(Configuration::common(), 'player1');
+        $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
         $domainGame->join('player2');
         $domainGame->move('player1', 1);
         $domainGame->move('player2', 1);
@@ -101,7 +101,7 @@ class GameTest extends TestCase
      */
     public function itShouldBeMarkedAsFinishedWhenGameWon(): void
     {
-        $domainGame = DomainGame::open(Configuration::common(), 'player1');
+        $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
         $domainGame->join('player2');
         $domainGame->move('player1', 1);
         $domainGame->move('player2', 2);

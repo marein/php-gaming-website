@@ -34,11 +34,9 @@ class User implements AggregateRoot
         $this->credentials = null;
     }
 
-    public static function arrive(): User
+    public static function arrive(UserId $userId): User
     {
-        $user = new self(
-            UserId::generate()
-        );
+        $user = new self($userId);
 
         $user->domainEvents[] = new UserArrived(
             $user->userId
@@ -75,10 +73,5 @@ class User implements AggregateRoot
         }
 
         return $this->credentials->matches($password, $hashAlgorithm);
-    }
-
-    public function id(): UserId
-    {
-        return $this->userId;
     }
 }

@@ -22,6 +22,7 @@ use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Gaming\ConnectFour\Domain\Game\Game;
+use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
 use PHPUnit\Framework\TestCase;
 
@@ -430,6 +431,7 @@ class GameTest extends TestCase
     private function createOpenGame(): Game
     {
         $game = Game::open(
+            GameId::generate(),
             Configuration::common(),
             'playerId1'
         );
@@ -533,6 +535,7 @@ class GameTest extends TestCase
     private function createDrawnGame(): Game
     {
         $game = Game::open(
+            GameId::generate(),
             Configuration::custom(
                 new Size(2, 2),
                 new CommonWinningRule()
