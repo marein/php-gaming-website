@@ -9,9 +9,8 @@ services:
                 prefix: 'web-interface.'
 
     web-interface.session-handler:
-        class: Gaming\WebInterface\Infrastructure\Persistence\PredisSessionHandler
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
         public: false
         arguments:
             - '@web-interface.predis'
-            - 'session_'
-            - 86400
+            - { prefix: 'session_', ttl: 86400 }
