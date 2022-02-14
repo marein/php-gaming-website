@@ -1,35 +1,15 @@
 services:
 
-    connect-four.build-query-model-command:
-        class: Gaming\ConnectFour\Port\Adapter\Console\BuildQueryModelCommand
+    connect-four.follow-event-store-command:
+        class: Gaming\Common\Port\Adapter\Symfony\FollowEventStoreCommand
         public: false
         arguments:
             - '@connect-four.event-store'
-            - '@connect-four.predis'
-            - [
-                '@connect-four.game-projection',
-                '@connect-four.open-games-projection',
-                '@connect-four.running-games-projection',
-                '@connect-four.games-by-player-projection'
-              ]
+            - !service
+                class: Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\PredisEventStorePointerFactory
+                arguments:
+                    - '@connect-four.predis'
+            - !tagged { tag: 'connect-four.stored-event-subscriber', index_by: 'key' }
+            - '@connect-four.normalizer'
         tags:
-            -  { name: console.command }
-
-    connect-four.publish-stored-events-to-rabbit-mq-command:
-        class: Gaming\ConnectFour\Port\Adapter\Console\PublishStoredEventsToRabbitMqCommand
-        public: false
-        arguments:
-            - '@connect-four.event-store'
-            - '@connect-four.predis'
-            - '@connect-four.message-broker'
-        tags:
-            -  { name: console.command }
-
-    connect-four.referee-command:
-        class: Gaming\ConnectFour\Port\Adapter\Console\RefereeCommand
-        public: false
-        arguments:
-            - '@connect-four.message-broker'
-            - '@connect-four.command-bus'
-        tags:
-            -  { name: console.command }
+            - { name: console.command, command: connect-four:follow-event-store, description: 'Publish events to subscribers.' }

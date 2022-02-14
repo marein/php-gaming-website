@@ -1,0 +1,6 @@
+Gaming\Common\Domain\DomainEvent:
+  discriminator:
+    field_name: '#'
+    map:
+      ChatInitiated: Gaming\Chat\Application\Event\ChatInitiated
+      MessageWritten: Gaming\Chat\Application\Event\MessageWritten

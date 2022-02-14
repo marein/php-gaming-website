@@ -11,16 +11,10 @@ services:
     connect-four.doctrine-dbal:
         alias: 'doctrine.dbal.connect_four_connection'
 
-    connect-four.message-broker:
-        class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
-        public: false
-        arguments:
-            - '%env(APPLICATION_CONNECT_FOUR_RABBIT_MQ_DSN)%'
-            - 'gaming'
-
     connect-four.event-store:
         class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
         arguments:
             - '@connect-four.doctrine-dbal'
             - 'event_store'
+            - '@connect-four.normalizer'

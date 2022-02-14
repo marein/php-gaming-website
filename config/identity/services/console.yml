@@ -1,11 +1,15 @@
 services:
 
-    identity.publish-stored-events-to-rabbit-mq-command:
-        class: Gaming\Identity\Port\Adapter\Console\PublishStoredEventsToRabbitMqCommand
+    identity.follow-event-store-command:
+        class: Gaming\Common\Port\Adapter\Symfony\FollowEventStoreCommand
         public: false
         arguments:
             - '@identity.event-store'
-            - '@identity.predis'
-            - '@identity.message-broker'
+            - !service
+                class: Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\PredisEventStorePointerFactory
+                arguments:
+                    - '@identity.predis'
+            - !tagged { tag: 'identity.stored-event-subscriber', index_by: 'key' }
+            - '@identity.normalizer'
         tags:
-            -  { name: console.command }
+            - { name: console.command, command: identity:follow-event-store, description: 'Publish events to subscribers.' }

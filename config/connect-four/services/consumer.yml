@@ -1,0 +1,9 @@
+services:
+
+    connect-four.referee-consumer:
+        class: Gaming\ConnectFour\Port\Adapter\Messaging\RefereeConsumer
+        public: false
+        arguments:
+            - '@connect-four.command-bus'
+        tags:
+            - { name: 'gaming.consumer', key: 'connect-four.referee' }

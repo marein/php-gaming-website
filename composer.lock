@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68486590fd948d93198ddb8296215e8d",
+    "content-hash": "e082955da77a01ddf1d62ed56bcf31ba",
     "packages": [
         {
             "name": "brick/math",
@@ -471,34 +471,37 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "2.13.7",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "6e22f6012b42d7932674857989fcf184e9e9b1c3"
+                "reference": "4caf37acf14b513a91dd4f087f7eda424fa25542"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/6e22f6012b42d7932674857989fcf184e9e9b1c3",
-                "reference": "6e22f6012b42d7932674857989fcf184e9e9b1c3",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/4caf37acf14b513a91dd4f087f7eda424fa25542",
+                "reference": "4caf37acf14b513a91dd4f087f7eda424fa25542",
                 "shasum": ""
             },
             "require": {
-                "doctrine/cache": "^1.0|^2.0",
+                "composer/package-versions-deprecated": "^1.11.99",
+                "doctrine/cache": "^1.11|^2.0",
                 "doctrine/deprecations": "^0.5.3",
                 "doctrine/event-manager": "^1.0",
-                "ext-pdo": "*",
-                "php": "^7.1 || ^8"
+                "php": "^7.3 || ^8.0",
+                "psr/cache": "^1|^2|^3",
+                "psr/log": "^1|^2|^3"
             },
             "require-dev": {
                 "doctrine/coding-standard": "9.0.0",
                 "jetbrains/phpstorm-stubs": "2021.1",
                 "phpstan/phpstan": "1.3.0",
-                "phpunit/phpunit": "^7.5.20|^8.5|9.5.11",
+                "phpstan/phpstan-strict-rules": "^1.1",
+                "phpunit/phpunit": "9.5.11",
                 "psalm/plugin-phpunit": "0.16.1",
                 "squizlabs/php_codesniffer": "3.6.2",
-                "symfony/cache": "^4.4",
-                "symfony/console": "^2.0.5|^3.0|^4.0|^5.0",
+                "symfony/cache": "^5.2|^6.0",
+                "symfony/console": "^2.0.5|^3.0|^4.0|^5.0|^6.0",
                 "vimeo/psalm": "4.16.1"
             },
             "suggest": {
@@ -510,7 +513,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Doctrine\\DBAL\\": "lib/Doctrine/DBAL"
+                    "Doctrine\\DBAL\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -553,14 +556,13 @@
                 "queryobject",
                 "sasql",
                 "sql",
-                "sqlanywhere",
                 "sqlite",
                 "sqlserver",
                 "sqlsrv"
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/2.13.7"
+                "source": "https://github.com/doctrine/dbal/tree/3.2.1"
             },
             "funding": [
                 {
@@ -576,7 +578,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-06T09:08:04+00:00"
+            "time": "2022-01-05T08:52:06+00:00"
         },
         {
             "name": "doctrine/deprecations",

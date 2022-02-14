@@ -4,51 +4,37 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
 
-use DateTimeImmutable;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Player;
 
 final class GameAborted implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Player $abortedPlayer;
+    private string $abortedPlayerId;
 
-    private ?Player $opponentPlayer;
-
-    private DateTimeImmutable $occurredOn;
+    private string $opponentPlayerId;
 
     public function __construct(GameId $gameId, Player $abortedPlayer, Player $opponentPlayer = null)
     {
-        $this->gameId = $gameId;
-        $this->abortedPlayer = $abortedPlayer;
-        $this->opponentPlayer = $opponentPlayer;
-        $this->occurredOn = Clock::instance()->now();
+        $this->gameId = $gameId->toString();
+        $this->abortedPlayerId = $abortedPlayer->id();
+        $this->opponentPlayerId = $opponentPlayer ? $opponentPlayer->id() : '';
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
     }
 
-    public function payload(): array
+    public function abortedPlayerId(): string
     {
-        return [
-            'gameId' => $this->gameId->toString(),
-            'abortedPlayerId' => $this->abortedPlayer->id(),
-            'opponentPlayerId' => $this->opponentPlayer ? $this->opponentPlayer->id() : ''
-        ];
+        return $this->abortedPlayerId;
     }
 
-    public function occurredOn(): DateTimeImmutable
+    public function opponentPlayerId(): string
     {
-        return $this->occurredOn;
-    }
-
-    public function name(): string
-    {
-        return 'GameAborted';
+        return $this->opponentPlayerId;
     }
 }

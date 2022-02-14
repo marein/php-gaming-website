@@ -1,0 +1,9 @@
+services:
+
+    chat.command-consumer:
+        class: Gaming\Chat\Infrastructure\Messaging\CommandConsumer
+        public: false
+        arguments:
+            - '@chat.command-bus'
+        tags:
+            - { name: 'gaming.consumer', key: 'chat.command' }

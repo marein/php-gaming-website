@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Application\Game\Query\Model\Game;
 
-use DateTimeImmutable;
-use Gaming\Common\EventStore\StoredEvent;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
+use Gaming\ConnectFour\Domain\Game\Configuration;
+use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
+use Gaming\ConnectFour\Domain\Game\Game as DomainGame;
+use Gaming\ConnectFour\Domain\Game\GameId;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase
@@ -16,7 +18,9 @@ class GameTest extends TestCase
      */
     public function itShouldProjectEvents(): void
     {
-        $expectedGameId = 'gameId';
+        $domainGame = DomainGame::open(Configuration::common(), 'player1');
+
+        $expectedGameId = $domainGame->id()->toString();
         $expectedFinished = false;
         $expectedSerializedGame = json_encode(
             [
@@ -32,12 +36,12 @@ class GameTest extends TestCase
                 'moves' => [
                     [
                         'x' => 1,
-                        'y' => 1,
+                        'y' => 6,
                         'color' => 1
                     ],
                     [
                         'x' => 1,
-                        'y' => 2,
+                        'y' => 5,
                         'color' => 2
                     ]
                 ]
@@ -45,10 +49,13 @@ class GameTest extends TestCase
             JSON_THROW_ON_ERROR
         );
 
+        $domainGame->assignChat('chatId');
+        $domainGame->join('player2');
+        $domainGame->move('player1', 1);
+        $domainGame->move('player2', 1);
+
         $game = new Game();
-        foreach ($this->storedEvents() as $storedEvent) {
-            $game->apply($storedEvent);
-        }
+        $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals($expectedGameId, $game->id());
         $this->assertEquals($expectedFinished, $game->finished());
@@ -61,16 +68,11 @@ class GameTest extends TestCase
      */
     public function itShouldBeMarkedAsFinishedWhenGameAborted(): void
     {
+        $domainGame = DomainGame::open(Configuration::common(), 'player1');
+        $domainGame->abort('player1');
+
         $game = new Game();
-        $game->apply(
-            new StoredEvent(
-                1,
-                'GameAborted',
-                'gameId',
-                '{}',
-                new DateTimeImmutable()
-            )
-        );
+        $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
         $this->assertEquals(true, $game->jsonSerialize()['finished']);
@@ -81,16 +83,14 @@ class GameTest extends TestCase
      */
     public function itShouldBeMarkedAsFinishedWhenGameResigned(): void
     {
+        $domainGame = DomainGame::open(Configuration::common(), 'player1');
+        $domainGame->join('player2');
+        $domainGame->move('player1', 1);
+        $domainGame->move('player2', 1);
+        $domainGame->resign('player1');
+
         $game = new Game();
-        $game->apply(
-            new StoredEvent(
-                1,
-                'GameResigned',
-                'gameId',
-                '{}',
-                new DateTimeImmutable()
-            )
-        );
+        $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
         $this->assertEquals(true, $game->jsonSerialize()['finished']);
@@ -101,16 +101,18 @@ class GameTest extends TestCase
      */
     public function itShouldBeMarkedAsFinishedWhenGameWon(): void
     {
+        $domainGame = DomainGame::open(Configuration::common(), 'player1');
+        $domainGame->join('player2');
+        $domainGame->move('player1', 1);
+        $domainGame->move('player2', 2);
+        $domainGame->move('player1', 1);
+        $domainGame->move('player2', 2);
+        $domainGame->move('player1', 1);
+        $domainGame->move('player2', 2);
+        $domainGame->move('player1', 1);
+
         $game = new Game();
-        $game->apply(
-            new StoredEvent(
-                1,
-                'GameWon',
-                'gameId',
-                '{}',
-                new DateTimeImmutable()
-            )
-        );
+        $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
         $this->assertEquals(true, $game->jsonSerialize()['finished']);
@@ -123,76 +125,19 @@ class GameTest extends TestCase
     {
         $game = new Game();
         $game->apply(
-            new StoredEvent(
-                1,
-                'GameDrawn',
-                'gameId',
-                '{}',
-                new DateTimeImmutable()
-            )
+            new GameDrawn(GameId::generate())
         );
 
         $this->assertEquals(true, $game->finished());
         $this->assertEquals(true, $game->jsonSerialize()['finished']);
     }
 
-    /**
-     * @return StoredEvent[]
-     */
-    private function storedEvents(): array
+    private function applyFromDomainGame(Game $game, DomainGame $domainGame): void
     {
-        return [
-            new StoredEvent(
-                1,
-                'GameOpened',
-                'gameId',
-                '{"gameId": "gameId", "width": 7, "height": 6, "playerId": "player1"}',
-                new DateTimeImmutable()
-            ),
-            new StoredEvent(
-                2,
-                'ChatAssigned',
-                'gameId',
-                '{"gameId": "gameId", "chatId": "chatId"}',
-                new DateTimeImmutable()
-            ),
-            new StoredEvent(
-                3,
-                'PlayerJoined',
-                'gameId',
-                '{"gameId": "gameId", "opponentPlayerId": "player1", "joinedPlayerId": "player2"}',
-                new DateTimeImmutable()
-            ),
-            // Apply this event twice, so immutability gets tested.
-            new StoredEvent(
-                3,
-                'PlayerJoined',
-                'gameId',
-                '{"gameId": "gameId", "opponentPlayerId": "player1", "joinedPlayerId": "player2"}',
-                new DateTimeImmutable()
-            ),
-            new StoredEvent(
-                4,
-                'PlayerMoved',
-                'gameId',
-                '{"gameId": "gameId", "x": 1, "y": 1, "color": 1}',
-                new DateTimeImmutable()
-            ),
-            new StoredEvent(
-                5,
-                'PlayerMoved',
-                'gameId',
-                '{"gameId": "gameId", "x": 1, "y": 2, "color": 2}',
-                new DateTimeImmutable()
-            ),
-            // Apply this event twice, so immutability gets tested.
-            new StoredEvent(
-                5,
-                'PlayerMoved',
-                'gameId',
-                '{"gameId": "gameId", "x": 1, "y": 2, "color": 2}',
-                new DateTimeImmutable()
-            )
-        ];
+        foreach ($domainGame->flushDomainEvents() as $domainEvent) {
+            // Apply twice to test idempotency.
+            $game->apply($domainEvent);
+            $game->apply($domainEvent);
+        }
     }
 }

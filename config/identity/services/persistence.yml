@@ -14,16 +14,10 @@ services:
     identity.doctrine-orm:
         alias: 'doctrine.orm.identity_entity_manager'
 
-    identity.message-broker:
-        class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
-        public: false
-        arguments:
-            - '%env(APPLICATION_IDENTITY_RABBIT_MQ_DSN)%'
-            - 'gaming'
-
     identity.event-store:
         class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
         public: false
         arguments:
             - '@identity.doctrine-dbal'
             - 'event_store'
+            - '@identity.normalizer'

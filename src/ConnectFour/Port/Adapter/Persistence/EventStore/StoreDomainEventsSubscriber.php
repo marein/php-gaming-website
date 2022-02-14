@@ -21,9 +21,4 @@ final class StoreDomainEventsSubscriber implements DomainEventSubscriber
     {
         $this->eventStore->append($domainEvent);
     }
-
-    public function isSubscribedTo(DomainEvent $domainEvent): bool
-    {
-        return true;
-    }
 }

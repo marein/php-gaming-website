@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
+use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 
 final class InMemoryEventStore implements EventStore
@@ -27,7 +28,7 @@ final class InMemoryEventStore implements EventStore
         return array_filter(
             $this->storedEvents,
             static function (StoredEvent $storedEvent) use ($aggregateId, $sinceId): bool {
-                return $storedEvent->aggregateId() === $aggregateId && $storedEvent->id() > $sinceId;
+                return $storedEvent->domainEvent()->aggregateId() === $aggregateId && $storedEvent->id() > $sinceId;
             }
         );
     }
@@ -36,10 +37,8 @@ final class InMemoryEventStore implements EventStore
     {
         $this->storedEvents[] = new StoredEvent(
             count($this->storedEvents) + 1,
-            $domainEvent->name(),
-            $domainEvent->aggregateId(),
-            json_encode($domainEvent->payload(), JSON_THROW_ON_ERROR),
-            $domainEvent->occurredOn()
+            Clock::instance()->now(),
+            $domainEvent
         );
     }
 

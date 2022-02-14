@@ -44,7 +44,7 @@ final class EventStoreGameFinder implements GameFinder
         $game = new Game();
 
         foreach ($storedEvents as $storedEvent) {
-            $game->apply($storedEvent);
+            $game->apply($storedEvent->domainEvent());
         }
 
         return $game;

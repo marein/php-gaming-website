@@ -12,22 +12,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class PublishRunningGamesCountToNchanCommand extends Command
 {
-    private ConnectFourService $connectFourService;
-
-    private BrowserNotifier $browserNotifier;
-
-    public function __construct(ConnectFourService $connectFourService, BrowserNotifier $browserNotifier)
-    {
+    public function __construct(
+        private readonly ConnectFourService $connectFourService,
+        private readonly BrowserNotifier $browserNotifier
+    ) {
         parent::__construct();
-
-        $this->connectFourService = $connectFourService;
-        $this->browserNotifier = $browserNotifier;
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setName('web-interface:publish-running-games-count-to-nchan');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -40,7 +29,7 @@ final class PublishRunningGamesCountToNchanCommand extends Command
             // Publish only if count has changed.
             if ($lastRunningGamesCount !== $currentRunningGamesCount) {
                 $this->browserNotifier->publish(
-                    '/pub?id=lobby',
+                    ['lobby'],
                     json_encode(
                         [
                             'eventName' => 'ConnectFour.RunningGamesUpdated',

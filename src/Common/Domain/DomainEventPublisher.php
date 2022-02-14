@@ -34,9 +34,7 @@ final class DomainEventPublisher
     private function publishSingle(DomainEvent $domainEvent): void
     {
         foreach ($this->subscribers as $subscriber) {
-            if ($subscriber->isSubscribedTo($domainEvent)) {
-                $subscriber->handle($domainEvent);
-            }
+            $subscriber->handle($domainEvent);
         }
     }
 }
