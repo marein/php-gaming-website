@@ -13,7 +13,7 @@ final class Version20170526204325 extends AbstractMigration
     {
         $table = $schema->createTable('user');
 
-        $table->addColumn('id', 'uuid_binary_ordered_time');
+        $table->addColumn('id', 'uuid');
         $table->addColumn('version', 'integer', ['default' => 1]);
         $table->addColumn('is_signed_up', 'boolean');
         $table->addColumn('credentials_username', 'string', ['notNull' => false]);

@@ -7,7 +7,7 @@ namespace Gaming\Tests\Unit\Chat\Application;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class ChatIdTest extends TestCase
 {
@@ -26,7 +26,7 @@ class ChatIdTest extends TestCase
      */
     public function itCanBeCreatedFromString(): void
     {
-        $expected = Uuid::uuid1()->toString();
+        $expected = Uuid::v6()->toRfc4122();
 
         $chatId = ChatId::fromString($expected);
 
@@ -63,8 +63,7 @@ class ChatIdTest extends TestCase
         return [
             ['invalid id'],
             ['another-invalid-id'],
-            [uniqid()],
-            [Uuid::uuid4()->toString()]
+            [uniqid()]
         ];
     }
 }

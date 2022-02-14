@@ -69,7 +69,7 @@ final class DoctrineJsonGameRepository implements Games
             ->select('*')
             ->from($this->tableName, 't')
             ->where('t.id = :id')
-            ->setParameter('id', $id->toString(), 'uuid_binary_ordered_time')
+            ->setParameter('id', $id->toString(), 'uuid')
             ->executeQuery()
             ->fetchAssociative();
 
@@ -99,7 +99,7 @@ final class DoctrineJsonGameRepository implements Games
             ],
             ['id' => $id, 'version' => $version],
             [
-                'id' => 'uuid_binary_ordered_time',
+                'id' => 'uuid',
                 'aggregate' => 'json',
                 'version' => 'integer'
             ]
@@ -122,7 +122,7 @@ final class DoctrineJsonGameRepository implements Games
                 'version' => 1
             ],
             [
-                'id' => 'uuid_binary_ordered_time',
+                'id' => 'uuid',
                 'aggregate' => 'json',
                 'version' => 'integer'
             ]

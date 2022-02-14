@@ -7,7 +7,7 @@ namespace Gaming\Tests\Unit\Identity\Domain\Model\User;
 use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use Gaming\Identity\Domain\Model\User\UserId;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class UserIdTest extends TestCase
 {
@@ -26,7 +26,7 @@ class UserIdTest extends TestCase
      */
     public function itCanBeCreatedFromString(): void
     {
-        $expected = Uuid::uuid1()->toString();
+        $expected = Uuid::v6()->toRfc4122();
 
         $userId = UserId::fromString($expected);
 
@@ -63,8 +63,7 @@ class UserIdTest extends TestCase
         return [
             ['invalid id'],
             ['another-invalid-id'],
-            [uniqid()],
-            [Uuid::uuid4()->toString()]
+            [uniqid()]
         ];
     }
 }
