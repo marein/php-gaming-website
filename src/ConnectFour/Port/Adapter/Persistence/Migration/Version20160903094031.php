@@ -13,7 +13,7 @@ final class Version20160903094031 extends AbstractMigration
     {
         $table = $schema->createTable('game');
 
-        $table->addColumn('id', 'uuid_binary_ordered_time');
+        $table->addColumn('id', 'uuid');
         $table->addColumn('version', 'integer');
         $table->addColumn('aggregate', 'json');
 

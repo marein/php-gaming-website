@@ -18,7 +18,7 @@ use Gaming\Common\Normalizer\Normalizer;
 
 final class DoctrineEventStore implements EventStore
 {
-    private const SELECT = 'e.id, BIN_TO_UUID(e.aggregateId) as aggregateId, e.event, e.occurredOn';
+    private const SELECT = 'e.id, e.event, e.occurredOn';
 
     public function __construct(
         private readonly Connection $connection,
@@ -57,7 +57,7 @@ final class DoctrineEventStore implements EventStore
                 ->from($this->table, 'e')
                 ->where('e.aggregateId = :aggregateId')
                 ->andWhere('e.id > :id')
-                ->setParameter('aggregateId', $aggregateId, 'uuid_binary')
+                ->setParameter('aggregateId', $aggregateId, 'uuid')
                 ->setParameter('id', $sinceId)
                 ->executeQuery()
                 ->fetchAllAssociative();
@@ -83,7 +83,7 @@ final class DoctrineEventStore implements EventStore
                     'occurredOn' => Clock::instance()->now()
                 ],
                 [
-                    'uuid_binary',
+                    'uuid',
                     'json',
                     'datetime_immutable'
                 ]

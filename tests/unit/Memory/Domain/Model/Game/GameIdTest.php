@@ -7,7 +7,7 @@ namespace Gaming\Tests\Unit\Memory\Domain\Model\Game;
 use Gaming\Memory\Domain\Model\Game\Exception\GameNotFoundException;
 use Gaming\Memory\Domain\Model\Game\GameId;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class GameIdTest extends TestCase
 {
@@ -26,7 +26,7 @@ class GameIdTest extends TestCase
      */
     public function itCanBeCreatedFromString(): void
     {
-        $expected = Uuid::uuid4()->toString();
+        $expected = Uuid::v6()->toRfc4122();
 
         $gameId = GameId::fromString($expected);
 
@@ -63,8 +63,7 @@ class GameIdTest extends TestCase
         return [
             ['invalid id'],
             ['another-invalid-id'],
-            [uniqid()],
-            [Uuid::uuid1()->toString()]
+            [uniqid()]
         ];
     }
 }
