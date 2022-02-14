@@ -25,6 +25,11 @@ final class DoctrineUserRepository implements Users
         $this->domainEventPublisher = $domainEventPublisher;
     }
 
+    public function nextIdentity(): UserId
+    {
+        return UserId::generate();
+    }
+
     public function save(User $user): void
     {
         $this->domainEventPublisher->publish($user->flushDomainEvents());
