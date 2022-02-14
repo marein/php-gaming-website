@@ -1,0 +1,15 @@
+services:
+
+    chat.jms:
+        class: JMS\Serializer\Serializer
+        factory: ['Gaming\Common\Port\Adapter\Jms\JmsSerializerFactory', 'create']
+        arguments:
+            - '%kernel.debug%'
+            - '%kernel.cache_dir%/chat/jms'
+            - { 'Gaming': '%kernel.project_dir%/src/Chat/Infrastructure/Jms' }
+            - !tagged_iterator chat.jms.subscriber
+
+    chat.normalizer:
+        class: Gaming\Common\Port\Adapter\Normalizer\JmsSerializerNormalizer
+        arguments:
+            - '@chat.jms'

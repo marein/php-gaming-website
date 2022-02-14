@@ -67,30 +67,21 @@ services:
     ##############################
     #   Long running processes   #
     ##############################
-    php-connect-four-build-query-model:
+    php-connect-four-follow-event-store:
         <<: *php-container
-        command: bin/console connect-four:build-query-model
-    php-connect-four-publish-stored-events-to-rabbit-mq:
+        command: bin/console connect-four:follow-event-store pointer --select-all-subscribers
+    php-chat-follow-event-store:
         <<: *php-container
-        command: bin/console connect-four:publish-stored-events-to-rabbit-mq
-    php-chat-publish-stored-events-to-rabbit-mq:
+        command: bin/console chat:follow-event-store pointer --select-all-subscribers
+    php-identity-follow-event-store:
         <<: *php-container
-        command: bin/console chat:publish-stored-events-to-rabbit-mq
-    php-identity-publish-stored-events-to-rabbit-mq:
+        command: bin/console identity:follow-event-store pointer --select-all-subscribers
+    php-consume-messages:
         <<: *php-container
-        command: bin/console identity:publish-stored-events-to-rabbit-mq
+        command: bin/console gaming:consume-messages --select-all-consumers
     php-web-interface-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/console web-interface:publish-running-games-count-to-nchan
-    php-web-interface-publish-rabbit-mq-events-to-nchan:
-        <<: *php-container
-        command: bin/console web-interface:publish-rabbit-mq-events-to-nchan
-    php-chat-command-listener:
-        <<: *php-container
-        command: bin/console chat:command-listener
-    php-connect-four-referee:
-        <<: *php-container
-        command: bin/console connect-four:referee
 
     ##############################
     #          CI helper         #

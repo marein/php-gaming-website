@@ -6,5 +6,8 @@ namespace Gaming\WebInterface\Application;
 
 interface BrowserNotifier
 {
-    public function publish(string $channel, string $message): void;
+    /**
+     * @param string[] $channels
+     */
+    public function publish(array $channels, string $message): void;
 }

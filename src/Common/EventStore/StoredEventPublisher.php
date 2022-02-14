@@ -34,9 +34,7 @@ final class StoredEventPublisher
     private function publishSingle(StoredEvent $storedEvent): void
     {
         foreach ($this->subscribers as $subscriber) {
-            if ($subscriber->isSubscribedTo($storedEvent)) {
-                $subscriber->handle($storedEvent);
-            }
+            $subscriber->handle($storedEvent);
         }
     }
 }

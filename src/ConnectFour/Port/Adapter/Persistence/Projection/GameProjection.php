@@ -8,11 +8,12 @@ use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
+use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
 use Gaming\ConnectFour\Port\Adapter\Persistence\Repository\InMemoryCacheGameStore;
 
 final class GameProjection implements StoredEventSubscriber
 {
-    private GameStore $gameStore;
+    private readonly GameStore $gameStore;
 
     public function __construct(GameStore $gameStore)
     {
@@ -24,31 +25,15 @@ final class GameProjection implements StoredEventSubscriber
 
     public function handle(StoredEvent $storedEvent): void
     {
-        if ($storedEvent->name() === 'GameOpened') {
-            $game = new Game();
-        } else {
-            $payload = json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR);
-            $game = $this->gameStore->find($payload['gameId']);
-        }
+        $domainEvent = $storedEvent->domainEvent();
 
-        $game->apply($storedEvent);
+        $game = match ($domainEvent::class) {
+            GameOpened::class => new Game(),
+            default => $this->gameStore->find($domainEvent->aggregateId())
+        };
+
+        $game->apply($domainEvent);
 
         $this->gameStore->save($game);
-    }
-
-    public function isSubscribedTo(StoredEvent $storedEvent): bool
-    {
-        return in_array(
-            $storedEvent->name(),
-            [
-                'GameOpened',
-                'PlayerJoined',
-                'PlayerMoved',
-                'GameWon',
-                'GameDrawn',
-                'GameAborted',
-                'ChatAssigned'
-            ]
-        );
     }
 }

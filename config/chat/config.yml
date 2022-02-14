@@ -2,8 +2,11 @@ imports:
     - { resource: services/chat.yml }
     - { resource: services/command_bus.yml }
     - { resource: services/console.yml }
+    - { resource: services/consumer.yml }
+    - { resource: services/normalizer.yml }
     - { resource: services/persistence.yml }
     - { resource: services/query_bus.yml }
+    - { resource: services/subscriber.yml }
 
 doctrine:
     dbal:

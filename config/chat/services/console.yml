@@ -1,20 +1,15 @@
 services:
 
-    chat.publish-stored-events-to-rabbit-mq-command:
-        class: Gaming\Chat\Presentation\Console\PublishStoredEventsToRabbitMqCommand
+    chat.follow-event-store-command:
+        class: Gaming\Common\Port\Adapter\Symfony\FollowEventStoreCommand
         public: false
         arguments:
             - '@chat.event-store'
-            - '@chat.predis'
-            - '@chat.message-broker'
+            - !service
+                class: Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\PredisEventStorePointerFactory
+                arguments:
+                    - '@chat.predis'
+            - !tagged { tag: 'chat.stored-event-subscriber', index_by: 'key' }
+            - '@chat.normalizer'
         tags:
-            -  { name: console.command }
-
-    chat.rabbit-mq-command-listener-command:
-        class: Gaming\Chat\Presentation\Console\RabbitMqCommandListenerCommand
-        public: false
-        arguments:
-            - '@chat.message-broker'
-            - '@chat.command-bus'
-        tags:
-            -  { name: console.command }
+            - { name: console.command, command: chat:follow-event-store, description: 'Publish events to subscribers.' }

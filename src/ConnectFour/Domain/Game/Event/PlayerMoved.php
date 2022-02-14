@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
 
-use DateTimeImmutable;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
@@ -13,44 +11,39 @@ use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class PlayerMoved implements DomainEvent
 {
-    private GameId $gameId;
+    private string $gameId;
 
-    private Point $point;
+    private int $x;
 
-    private Stone $stone;
+    private int $y;
 
-    private DateTimeImmutable $occurredOn;
+    private int $color;
 
     public function __construct(GameId $gameId, Point $point, Stone $stone)
     {
-        $this->gameId = $gameId;
-        $this->point = $point;
-        $this->stone = $stone;
-        $this->occurredOn = Clock::instance()->now();
+        $this->gameId = $gameId->toString();
+        $this->x = $point->x();
+        $this->y = $point->y();
+        $this->color = $stone->color();
     }
 
     public function aggregateId(): string
     {
-        return $this->gameId->toString();
+        return $this->gameId;
     }
 
-    public function payload(): array
+    public function x(): int
     {
-        return [
-            'gameId' => $this->gameId->toString(),
-            'x' => $this->point->x(),
-            'y' => $this->point->y(),
-            'color' => $this->stone->color()
-        ];
+        return $this->x;
     }
 
-    public function occurredOn(): DateTimeImmutable
+    public function y(): int
     {
-        return $this->occurredOn;
+        return $this->y;
     }
 
-    public function name(): string
+    public function color(): int
     {
-        return 'PlayerMoved';
+        return $this->color;
     }
 }

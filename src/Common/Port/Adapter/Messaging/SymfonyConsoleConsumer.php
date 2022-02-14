@@ -6,6 +6,7 @@ namespace Gaming\Common\Port\Adapter\Messaging;
 
 use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
 use Gaming\Common\MessageBroker\Model\Consumer\Name;
+use Gaming\Common\MessageBroker\Model\Context\Context;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,17 +22,18 @@ final class SymfonyConsoleConsumer implements Consumer
         $this->output = $output;
     }
 
-    public function handle(Message $message): void
+    public function handle(Message $message, Context $context): void
     {
         $this->output->writeln(
             sprintf(
-                'Received "%s" with "%s"',
+                '"%s" received "%s" with "%s"',
+                $this->name()->domain() . '.' . $this->name()->name(),
                 $message->name(),
                 $message->body()
             )
         );
 
-        $this->consumer->handle($message);
+        $this->consumer->handle($message, $context);
     }
 
     public function subscriptions(): array

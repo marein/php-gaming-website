@@ -7,68 +7,55 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerStore;
+use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 
 final class GamesByPlayerProjection implements StoredEventSubscriber
 {
-    private GamesByPlayerStore $gamesByPlayerStore;
-
-    public function __construct(GamesByPlayerStore $gamesByPlayerStore)
-    {
-        $this->gamesByPlayerStore = $gamesByPlayerStore;
+    public function __construct(
+        private readonly GamesByPlayerStore $gamesByPlayerStore
+    ) {
     }
 
     public function handle(StoredEvent $storedEvent): void
     {
-        $this->{'handle' . $storedEvent->name()}(
-            json_decode($storedEvent->payload(), true, 512, JSON_THROW_ON_ERROR)
-        );
+        $domainEvent = $storedEvent->domainEvent();
+
+        match ($domainEvent::class) {
+            PlayerJoined::class => $this->handlePlayerJoined($domainEvent),
+            GameAborted::class => $this->handleGameAborted($domainEvent),
+            default => true
+        };
     }
 
-    public function isSubscribedTo(StoredEvent $storedEvent): bool
-    {
-        return in_array(
-            $storedEvent->name(),
-            [
-                'GameAborted',
-                'PlayerJoined'
-            ]
-        );
-    }
-
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handlePlayerJoined(array $payload): void
+    private function handlePlayerJoined(PlayerJoined $playerJoined): void
     {
         $this->gamesByPlayerStore->addToPlayer(
-            $payload['joinedPlayerId'],
-            $payload['gameId']
+            $playerJoined->joinedPlayerId(),
+            $playerJoined->aggregateId()
         );
 
         $this->gamesByPlayerStore->addToPlayer(
-            $payload['opponentPlayerId'],
-            $payload['gameId']
+            $playerJoined->opponentPlayerId(),
+            $playerJoined->aggregateId()
         );
     }
 
-    /**
-     * @param array<string, mixed> $payload
-     */
-    private function handleGameAborted(array $payload): void
+    private function handleGameAborted(GameAborted $gameAborted): void
     {
         // We're only interested in running games.
-        if ($payload['opponentPlayerId'] === '') {
+        if ($gameAborted->opponentPlayerId() === '') {
             return;
         }
 
         $this->gamesByPlayerStore->removeFromPlayer(
-            $payload['abortedPlayerId'],
-            $payload['gameId']
+            $gameAborted->abortedPlayerId(),
+            $gameAborted->aggregateId()
         );
 
         $this->gamesByPlayerStore->removeFromPlayer(
-            $payload['opponentPlayerId'],
-            $payload['gameId']
+            $gameAborted->opponentPlayerId(),
+            $gameAborted->aggregateId()
         );
     }
 }

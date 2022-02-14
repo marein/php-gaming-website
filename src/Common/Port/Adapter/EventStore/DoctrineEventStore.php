@@ -8,24 +8,23 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Exception;
+use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\Exception\UnrecoverableException;
 use Gaming\Common\EventStore\StoredEvent;
+use Gaming\Common\Normalizer\Normalizer;
 
 final class DoctrineEventStore implements EventStore
 {
-    private const SELECT = 'e.id, e.name, BIN_TO_UUID(e.aggregateId) as aggregateId, e.payload, e.occurredOn';
+    private const SELECT = 'e.id, BIN_TO_UUID(e.aggregateId) as aggregateId, e.event, e.occurredOn';
 
-    private Connection $connection;
-
-    private string $table;
-
-    public function __construct(Connection $connection, string $table)
-    {
-        $this->connection = $connection;
-        $this->table = $table;
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly string $table,
+        private readonly Normalizer $normalizer
+    ) {
     }
 
     public function since(int $id, int $limit): array
@@ -35,10 +34,10 @@ final class DoctrineEventStore implements EventStore
                 ->select(self::SELECT)
                 ->from($this->table, 'e')
                 ->where('e.id > :id')
-                ->setParameter(':id', $id)
+                ->setParameter('id', $id)
                 ->setMaxResults($limit)
-                ->execute()
-                ->fetchAll();
+                ->executeQuery()
+                ->fetchAllAssociative();
 
             return $this->transformRowsToStoredEvents($rows);
         } catch (Exception $e) {
@@ -58,10 +57,10 @@ final class DoctrineEventStore implements EventStore
                 ->from($this->table, 'e')
                 ->where('e.aggregateId = :aggregateId')
                 ->andWhere('e.id > :id')
-                ->setParameter(':aggregateId', $aggregateId, 'uuid_binary')
-                ->setParameter(':id', $sinceId)
-                ->execute()
-                ->fetchAll();
+                ->setParameter('aggregateId', $aggregateId, 'uuid_binary')
+                ->setParameter('id', $sinceId)
+                ->executeQuery()
+                ->fetchAllAssociative();
 
             return $this->transformRowsToStoredEvents($rows);
         } catch (Exception $e) {
@@ -79,13 +78,11 @@ final class DoctrineEventStore implements EventStore
             $this->connection->insert(
                 $this->table,
                 [
-                    'name' => $domainEvent->name(),
                     'aggregateId' => $domainEvent->aggregateId(),
-                    'payload' => $domainEvent->payload(),
-                    'occurredOn' => $domainEvent->occurredOn()
+                    'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
+                    'occurredOn' => Clock::instance()->now()
                 ],
                 [
-                    'string',
                     'uuid_binary',
                     'json',
                     'datetime_immutable'
@@ -111,9 +108,9 @@ final class DoctrineEventStore implements EventStore
                     ->select('COUNT(id)')
                     ->from($this->table, 'e')
                     ->andWhere('e.id = :id')
-                    ->setParameter(':id', $id)
-                    ->execute()
-                    ->fetchColumn() > 0;
+                    ->setParameter('id', $id)
+                    ->executeQuery()
+                    ->fetchOne() > 0;
 
             $this->connection->setTransactionIsolation($currentIsolationLevel);
 
@@ -135,12 +132,18 @@ final class DoctrineEventStore implements EventStore
     private function transformRowsToStoredEvents(array $rows): array
     {
         return array_map(
-            static fn(array $row): StoredEvent => new StoredEvent(
+            fn(array $row): StoredEvent => new StoredEvent(
                 (int)$row['id'],
-                $row['name'],
-                $row['aggregateId'],
-                $row['payload'],
-                new DateTimeImmutable($row['occurredOn'])
+                new DateTimeImmutable($row['occurredOn']),
+                $this->normalizer->denormalize(
+                    json_decode(
+                        $row['event'],
+                        true,
+                        512,
+                        JSON_THROW_ON_ERROR
+                    ),
+                    DomainEvent::class
+                )
             ),
             $rows
         );

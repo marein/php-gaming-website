@@ -6,7 +6,7 @@ services:
         arguments:
             - '%kernel.debug%'
             - '%kernel.cache_dir%/connect-four/jms'
-            - { 'Gaming\ConnectFour': '%kernel.project_dir%/src/ConnectFour/Port/Adapter/Persistence/Jms' }
+            - { 'Gaming': '%kernel.project_dir%/src/ConnectFour/Port/Adapter/Persistence/Jms' }
             - !tagged_iterator connect-four.jms.subscriber
 
     connect-four.jms.subscriber.game-id:

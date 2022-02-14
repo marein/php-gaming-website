@@ -12,7 +12,7 @@ interface MessageBroker
     public function publish(Message $message): void;
 
     /**
-     * @return never
+     * @param iterable<Consumer> $consumers
      */
-    public function consume(Consumer $consumer): void;
+    public function consume(iterable $consumers): void;
 }

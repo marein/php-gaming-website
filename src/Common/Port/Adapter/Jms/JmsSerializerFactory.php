@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Jms;
 
+use DateTimeInterface;
+use JMS\Serializer\Handler\DateHandler;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
@@ -40,6 +42,10 @@ final class JmsSerializerFactory
             ->setDocBlockTypeResolver(true)
             ->configureHandlers(
                 static function (HandlerRegistry $registry) use ($subscribingHandlers) {
+                    $registry->registerSubscribingHandler(
+                        new DateHandler(DateTimeInterface::ATOM)
+                    );
+
                     foreach ($subscribingHandlers as $subscribingHandler) {
                         $registry->registerSubscribingHandler($subscribingHandler);
                     }
