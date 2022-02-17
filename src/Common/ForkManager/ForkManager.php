@@ -26,6 +26,10 @@ final class ForkManager
         $streamPair = StreamPair::create();
 
         $parentPid = getmypid();
+        if ($parentPid === false) {
+            throw new ForkManagerException('Unable to get the process id.');
+        }
+
         $forkPid = pcntl_fork();
 
         return match ($forkPid) {
