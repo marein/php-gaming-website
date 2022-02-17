@@ -7,31 +7,14 @@ namespace Gaming\Common\EventStore;
 final class StoredEventPublisher
 {
     /**
-     * @var StoredEventSubscriber[]
+     * @param StoredEventSubscriber[] $subscribers
      */
-    private array $subscribers;
-
-    public function __construct()
-    {
-        $this->subscribers = [];
+    public function __construct(
+        private readonly array $subscribers
+    ) {
     }
 
-    public function subscribe(StoredEventSubscriber $subscriber): void
-    {
-        $this->subscribers[] = $subscriber;
-    }
-
-    /**
-     * @param StoredEvent[] $storedEvents
-     */
-    public function publish(array $storedEvents): void
-    {
-        foreach ($storedEvents as $storedEvent) {
-            $this->publishSingle($storedEvent);
-        }
-    }
-
-    private function publishSingle(StoredEvent $storedEvent): void
+    public function publish(StoredEvent $storedEvent): void
     {
         foreach ($this->subscribers as $subscriber) {
             $subscriber->handle($storedEvent);

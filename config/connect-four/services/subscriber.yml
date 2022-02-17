@@ -46,3 +46,11 @@ services:
             - '@connect-four.normalizer'
         tags:
             - { name: 'connect-four.stored-event-subscriber', key: 'publish-to-message-broker' }
+
+    connect-four.echo-subscriber:
+        class: Gaming\Common\Port\Adapter\EventStore\Subscriber\EchoSubscriber
+        public: false
+        arguments:
+            - '@connect-four.normalizer'
+        tags:
+            - { name: 'connect-four.stored-event-subscriber', key: 'echo' }

@@ -8,3 +8,11 @@ services:
             - '@chat.normalizer'
         tags:
             - { name: 'chat.stored-event-subscriber', key: 'publish-to-message-broker' }
+
+    chat.echo-subscriber:
+        class: Gaming\Common\Port\Adapter\EventStore\Subscriber\EchoSubscriber
+        public: false
+        arguments:
+            - '@chat.normalizer'
+        tags:
+            - { name: 'chat.stored-event-subscriber', key: 'echo' }

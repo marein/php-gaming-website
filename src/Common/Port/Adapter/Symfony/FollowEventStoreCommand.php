@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
-use Gaming\Common\EventStore\ConsistentOrderEventStore;
 use Gaming\Common\EventStore\EventStore;
-use Gaming\Common\EventStore\FollowEventStoreDispatcher;
-use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
 use Gaming\Common\EventStore\StoredEventPublisher;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\EventStore\ThrottlingEventStore;
-use Gaming\Common\Normalizer\Normalizer;
-use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
+use Gaming\Common\ForkManager\ForkManager;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -29,8 +24,7 @@ final class FollowEventStoreCommand extends Command
     public function __construct(
         private readonly EventStore $eventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
-        private readonly iterable $storedEventSubscribers,
-        private readonly Normalizer $normalizer
+        private readonly iterable $storedEventSubscribers
     ) {
         parent::__construct();
     }
@@ -68,43 +62,101 @@ final class FollowEventStoreCommand extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Batch size per run.',
                 1000
+            )
+            ->addOption(
+                'worker',
+                'w',
+                InputOption::VALUE_OPTIONAL,
+                'Number of workers.',
+                3
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $availableStoredEventSubscribers = iterator_to_array($this->storedEventSubscribers);
-
-        $selectedSubscriberNames = $input->getOption('subscriber');
-        if ($input->getOption('select-all-subscribers')) {
-            $selectedSubscriberNames = array_keys($availableStoredEventSubscribers);
-        }
-
-        $storedEventPublisher = new StoredEventPublisher();
-        foreach ($selectedSubscriberNames as $selectedSubscriberName) {
-            if (!array_key_exists($selectedSubscriberName, $availableStoredEventSubscribers)) {
-                $output->writeln('Subscriber "' . $selectedSubscriberName . '" not known.');
-                return Command::FAILURE;
-            }
-            $storedEventPublisher->subscribe($availableStoredEventSubscribers[$selectedSubscriberName]);
-        }
-        $storedEventPublisher->subscribe(new SymfonyConsoleDebugSubscriber($output, $this->normalizer));
-
-        $followEventStoreDispatcher = new FollowEventStoreDispatcher(
-            new InMemoryCacheEventStorePointer(
-                $this->eventStorePointerFactory->withName(
-                    (string)$input->getArgument('pointer')
+        $selectedSubscribers = $this->selectedSubscriberNames($input);
+        if (count($selectedSubscribers) === 0) {
+            $output->writeln(
+                sprintf(
+                    'Please select one of the following subscribers:%s* %s',
+                    PHP_EOL,
+                    implode(PHP_EOL . '* ', $this->availableSubscriberNames())
                 )
-            ),
-            new ThrottlingEventStore(
-                new ConsistentOrderEventStore($this->eventStore),
-                (int)$input->getOption('throttle')
-            ),
-            $storedEventPublisher
-        );
-
-        while (true) {
-            $followEventStoreDispatcher->dispatch((int)$input->getOption('batch'));
+            );
+            return Command::FAILURE;
         }
+
+        $missingSubscriberNames = $this->missingSubscriberNames($input);
+        if (count($missingSubscriberNames) !== 0) {
+            $output->writeln(
+                sprintf(
+                    'The following subscribers are unkown:%s* %s',
+                    PHP_EOL,
+                    implode(PHP_EOL . '* ', $missingSubscriberNames)
+                )
+            );
+            return Command::FAILURE;
+        }
+
+        $forkManager = new ForkManager();
+        $forkManager->fork(
+            new Publisher(
+                $this->eventStore,
+                $this->eventStorePointerFactory,
+                array_map(
+                    fn() => $forkManager->fork(
+                        new Worker($this->createStoredEventPublisher($input))
+                    ),
+                    range(1, max(1, (int)$input->getOption('worker')))
+                ),
+                (string)$input->getArgument('pointer'),
+                (int)$input->getOption('throttle'),
+                (int)$input->getOption('batch')
+            )
+        );
+        $forkManager->wait();
+
+        return Command::SUCCESS;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function selectedSubscriberNames(InputInterface $input): array
+    {
+        return $input->getOption('select-all-subscribers') ?
+            $this->availableSubscriberNames() :
+            $input->getOption('subscriber');
+    }
+
+    /**
+     * @return string[]
+     */
+    private function availableSubscriberNames(): array
+    {
+        return array_keys(iterator_to_array($this->storedEventSubscribers));
+    }
+
+    /**
+     * @return string[]
+     */
+    private function missingSubscriberNames(InputInterface $input): array
+    {
+        return array_keys(
+            array_diff_key(
+                array_flip($this->selectedSubscriberNames($input)),
+                iterator_to_array($this->storedEventSubscribers)
+            )
+        );
+    }
+
+    private function createStoredEventPublisher(InputInterface $input): StoredEventPublisher
+    {
+        return new StoredEventPublisher(
+            array_intersect_key(
+                iterator_to_array($this->storedEventSubscribers),
+                array_flip($this->selectedSubscriberNames($input))
+            )
+        );
     }
 }
