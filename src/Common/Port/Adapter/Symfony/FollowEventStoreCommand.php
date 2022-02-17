@@ -86,13 +86,13 @@ final class FollowEventStoreCommand extends Command
             return Command::FAILURE;
         }
 
-        $missingSubscriberNames = $this->missingSubscriberNames($input);
-        if (count($missingSubscriberNames) !== 0) {
+        $unknownSubscriberNames = $this->unknownSubscriberNames($input);
+        if (count($unknownSubscriberNames) !== 0) {
             $output->writeln(
                 sprintf(
-                    'The following subscribers are unkown:%s* %s',
+                    'The following subscribers are unknown:%s* %s',
                     PHP_EOL,
-                    implode(PHP_EOL . '* ', $missingSubscriberNames)
+                    implode(PHP_EOL . '* ', $unknownSubscriberNames)
                 )
             );
             return Command::FAILURE;
@@ -140,7 +140,7 @@ final class FollowEventStoreCommand extends Command
     /**
      * @return string[]
      */
-    private function missingSubscriberNames(InputInterface $input): array
+    private function unknownSubscriberNames(InputInterface $input): array
     {
         return array_keys(
             array_diff_key(
