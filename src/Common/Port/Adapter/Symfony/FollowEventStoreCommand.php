@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
+use Gaming\Common\EventStore\CompositeStoredEventSubscriber;
 use Gaming\Common\EventStore\EventStore;
-use Gaming\Common\EventStore\StoredEventPublisher;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkManager\ForkManager;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
@@ -101,16 +101,16 @@ final class FollowEventStoreCommand extends Command
         $forkManager = new ForkManager();
         $forkManager->fork(
             new Publisher(
-                $this->eventStore,
-                $this->eventStorePointerFactory,
                 array_map(
                     fn() => $forkManager->fork(
-                        new Worker($this->createStoredEventPublisher($input))
+                        new Worker($this->storedEventSubscriber($input))
                     ),
                     range(1, max(1, (int)$input->getOption('worker')))
                 ),
+                $this->eventStore,
+                $this->eventStorePointerFactory,
                 (string)$input->getArgument('pointer'),
-                (int)$input->getOption('throttle'),
+                max(1, (int)$input->getOption('throttle')) * 1000,
                 (int)$input->getOption('batch')
             )
         );
@@ -150,9 +150,9 @@ final class FollowEventStoreCommand extends Command
         );
     }
 
-    private function createStoredEventPublisher(InputInterface $input): StoredEventPublisher
+    private function storedEventSubscriber(InputInterface $input): StoredEventSubscriber
     {
-        return new StoredEventPublisher(
+        return new CompositeStoredEventSubscriber(
             array_intersect_key(
                 iterator_to_array($this->storedEventSubscribers),
                 array_flip($this->selectedSubscriberNames($input))

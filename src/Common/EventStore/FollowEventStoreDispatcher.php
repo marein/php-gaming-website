@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
+use Closure;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
 use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
-use Gaming\Common\ForkManager\Process;
 use InvalidArgumentException;
 
 final class FollowEventStoreDispatcher
 {
-    /**
-     * @param Process[] $workers
-     */
     public function __construct(
-        private readonly array $workers,
+        private readonly StoredEventSubscriber $storedEventSubscriber,
         private readonly EventStorePointer $eventStorePointer,
-        private readonly EventStore $eventStore
+        private readonly EventStore $eventStore,
+        private readonly Closure $afterHandlingStoredEvents
     ) {
     }
 
@@ -27,7 +25,7 @@ final class FollowEventStoreDispatcher
      * @throws FailedRetrieveMostRecentPublishedStoredEventIdException
      * @throws FailedTrackMostRecentPublishedStoredEventIdException
      */
-    public function dispatch(int $batchSize): void
+    public function dispatch(int $batchSize): int
     {
         if ($batchSize < 1) {
             throw new InvalidArgumentException('batchSize must be greater than 0');
@@ -41,31 +39,18 @@ final class FollowEventStoreDispatcher
         );
 
         if (count($storedEvents) === 0) {
-            $this->synchronize();
-            return;
+            return 0;
         }
 
         foreach ($storedEvents as $storedEvent) {
-            $workerId = crc32($storedEvent->domainEvent()->aggregateId()) % count($this->workers);
-            $this->workers[$workerId]->send($storedEvent);
+            $this->storedEventSubscriber->handle($storedEvent);
         }
 
-        $this->synchronize();
+        ($this->afterHandlingStoredEvents)();
 
         $lastStoredEventId = end($storedEvents)->id();
         $this->eventStorePointer->trackMostRecentPublishedStoredEventId($lastStoredEventId);
-    }
 
-    private function synchronize(): void
-    {
-        foreach ($this->workers as $worker) {
-            $worker->send('SYN');
-        }
-
-        foreach ($this->workers as $worker) {
-            if ($worker->receive() !== 'ACK') {
-                throw new EventStoreException('No ack from worker');
-            }
-        }
+        return count($storedEvents);
     }
 }

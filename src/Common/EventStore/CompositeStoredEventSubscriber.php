@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-final class StoredEventPublisher
+final class CompositeStoredEventSubscriber implements StoredEventSubscriber
 {
     /**
      * @param StoredEventSubscriber[] $subscribers
@@ -14,7 +14,7 @@ final class StoredEventPublisher
     ) {
     }
 
-    public function publish(StoredEvent $storedEvent): void
+    public function handle(StoredEvent $storedEvent): void
     {
         foreach ($this->subscribers as $subscriber) {
             $subscriber->handle($storedEvent);

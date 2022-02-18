@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
-use Gaming\Common\EventStore\StoredEventPublisher;
+use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkManager\Process;
 use Gaming\Common\ForkManager\Task;
 
 final class Worker implements Task
 {
     public function __construct(
-        private readonly StoredEventPublisher $storedEventPublisher
+        private readonly StoredEventSubscriber $storedEventSubscriber
     ) {
     }
 
@@ -20,7 +20,7 @@ final class Worker implements Task
         while ($data = $parent->receive()) {
             match ($data) {
                 'SYN' => $parent->send('ACK'),
-                default => $this->storedEventPublisher->publish($data)
+                default => $this->storedEventSubscriber->handle($data)
             };
         }
 
