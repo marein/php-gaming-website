@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkManager;
+namespace Gaming\Common\ForkControl;
 
 interface Task
 {

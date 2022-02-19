@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkManager;
+namespace Gaming\Common\ForkControl;
 
-use Gaming\Common\ForkManager\Exception\ForkManagerException;
+use Gaming\Common\ForkControl\Exception\ForkControlException;
 
 final class StreamPair
 {
@@ -15,13 +15,13 @@ final class StreamPair
     }
 
     /**
-     * @throws ForkManagerException
+     * @throws ForkControlException
      */
     public static function create(): StreamPair
     {
         $streamSocketPair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
         if ($streamSocketPair === false) {
-            throw new ForkManagerException(
+            throw new ForkControlException(
                 error_get_last()['message'] ?? 'Cannot create stream pair.'
             );
         }

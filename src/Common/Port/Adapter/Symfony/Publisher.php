@@ -9,8 +9,8 @@ use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\FollowEventStoreDispatcher;
 use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
-use Gaming\Common\ForkManager\Process;
-use Gaming\Common\ForkManager\Task;
+use Gaming\Common\ForkControl\Process;
+use Gaming\Common\ForkControl\Task;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use InvalidArgumentException;
 

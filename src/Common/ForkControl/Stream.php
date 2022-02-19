@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkManager;
+namespace Gaming\Common\ForkControl;
 
-use Gaming\Common\ForkManager\Exception\ForkManagerException;
+use Gaming\Common\ForkControl\Exception\ForkControlException;
 
 final class Stream
 {
@@ -20,7 +20,7 @@ final class Stream
     {
         $data = @stream_get_line($this->resource, 2048, PHP_EOL);
         if ($data === false) {
-            throw new ForkManagerException(
+            throw new ForkControlException(
                 error_get_last()['message'] ?? 'Cannot read data.'
             );
         }
@@ -29,7 +29,7 @@ final class Stream
     }
 
     /**
-     * @throws ForkManagerException
+     * @throws ForkControlException
      */
     public function write(string $data): void
     {
@@ -37,19 +37,19 @@ final class Stream
 
         $numberOfWrittenBytes = @fwrite($this->resource, $data, strlen($data));
         if ($numberOfWrittenBytes === false) {
-            throw new ForkManagerException(
+            throw new ForkControlException(
                 error_get_last()['message'] ?? 'Cannot write data.'
             );
         }
     }
 
     /**
-     * @throws ForkManagerException
+     * @throws ForkControlException
      */
     public function close(): void
     {
         if (!fclose($this->resource)) {
-            throw new ForkManagerException(
+            throw new ForkControlException(
                 error_get_last()['message'] ?? 'Cannot close stream.'
             );
         }

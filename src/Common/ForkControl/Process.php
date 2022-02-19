@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkManager;
+namespace Gaming\Common\ForkControl;
 
-use Gaming\Common\ForkManager\Exception\ForkManagerException;
+use Gaming\Common\ForkControl\Exception\ForkControlException;
 
 final class Process
 {
@@ -20,7 +20,7 @@ final class Process
     }
 
     /**
-     * @throws ForkManagerException
+     * @throws ForkControlException
      */
     public function send(mixed $data): void
     {
@@ -28,7 +28,7 @@ final class Process
     }
 
     /**
-     * @throws ForkManagerException
+     * @throws ForkControlException
      */
     public function receive(): mixed
     {

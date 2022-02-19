@@ -6,7 +6,7 @@ namespace Gaming\Common\Port\Adapter\Symfony;
 
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\ForkManager\Process;
+use Gaming\Common\ForkControl\Process;
 use InvalidArgumentException;
 
 final class ForwardToProcessStoredEventSubscriber implements StoredEventSubscriber

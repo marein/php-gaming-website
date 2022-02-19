@@ -7,7 +7,7 @@ namespace Gaming\Common\Port\Adapter\Symfony;
 use Gaming\Common\EventStore\CompositeStoredEventSubscriber;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\ForkManager\ForkManager;
+use Gaming\Common\ForkControl\ForkControl;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -98,11 +98,11 @@ final class FollowEventStoreCommand extends Command
             return Command::FAILURE;
         }
 
-        $forkManager = new ForkManager();
-        $forkManager->fork(
+        $forkControl = new ForkControl();
+        $forkControl->fork(
             new Publisher(
                 array_map(
-                    fn() => $forkManager->fork(
+                    fn() => $forkControl->fork(
                         new Worker($this->storedEventSubscriber($input))
                     ),
                     range(1, max(1, (int)$input->getOption('worker')))
@@ -114,7 +114,7 @@ final class FollowEventStoreCommand extends Command
                 (int)$input->getOption('batch')
             )
         );
-        $forkManager->wait();
+        $forkControl->wait();
 
         return Command::SUCCESS;
     }

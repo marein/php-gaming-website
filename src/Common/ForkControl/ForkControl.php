@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkManager;
+namespace Gaming\Common\ForkControl;
 
-use Gaming\Common\ForkManager\Exception\ForkManagerException;
+use Gaming\Common\ForkControl\Exception\ForkControlException;
 
-final class ForkManager
+final class ForkControl
 {
     /**
      * @var Process[]
@@ -19,7 +19,7 @@ final class ForkManager
     }
 
     /**
-     * @throws ForkManagerException
+     * @throws ForkControlException
      */
     public function fork(Task $task): Process
     {
@@ -27,13 +27,13 @@ final class ForkManager
 
         $parentPid = getmypid();
         if ($parentPid === false) {
-            throw new ForkManagerException('Unable to get the process id.');
+            throw new ForkControlException('Unable to get the process id.');
         }
 
         $forkPid = pcntl_fork();
 
         return match ($forkPid) {
-            -1 => throw new ForkManagerException('Unable to fork.'),
+            -1 => throw new ForkControlException('Unable to fork.'),
             0 => $this->runTaskAndExit($parentPid, $task, $streamPair),
             default => $this->registerFork($forkPid, $streamPair)
         };
@@ -55,7 +55,7 @@ final class ForkManager
     }
 
     /**
-     * @throws ForkManagerException
+     * @throws ForkControlException
      */
     private function registerFork(int $forkPid, StreamPair $streamPair): Process
     {
