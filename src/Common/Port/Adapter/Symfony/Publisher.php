@@ -18,6 +18,8 @@ final class Publisher implements Task
 {
     /**
      * @param Process[] $workers
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(
         private readonly array $workers,
@@ -28,7 +30,7 @@ final class Publisher implements Task
         private readonly int $batchSize
     ) {
         if ($this->throttleTimeInMicroseconds < 1000) {
-            throw new InvalidArgumentException('throttleTimeInMicroseconds must be greater than 1000');
+            throw new InvalidArgumentException('throttleTimeInMicroseconds must be at least 1000');
         }
     }
 

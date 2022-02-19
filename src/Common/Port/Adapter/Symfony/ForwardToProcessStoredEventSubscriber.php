@@ -13,6 +13,8 @@ final class ForwardToProcessStoredEventSubscriber implements StoredEventSubscrib
 {
     /**
      * @param Process[] $processes
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(
         private readonly array $processes
