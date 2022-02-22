@@ -16,16 +16,22 @@ final class Stream
     ) {
     }
 
+    /**
+     * @throws ForkControlException
+     */
     public function read(): string
     {
-        $data = @stream_get_line($this->resource, 2048, PHP_EOL);
-        if ($data === false) {
+        $message = @fgets($this->resource);
+        if ($message === false || !str_ends_with($message, "\n")) {
             throw new ForkControlException(
-                error_get_last()['message'] ?? 'Cannot read data.'
+                sprintf(
+                    'Message not arrived completely. Received %s bytes.',
+                    $message === false ? '0' : strlen($message)
+                )
             );
         }
 
-        return $data;
+        return base64_decode($message);
     }
 
     /**
@@ -33,12 +39,16 @@ final class Stream
      */
     public function write(string $data): void
     {
-        $data .= PHP_EOL;
+        $message = base64_encode($data) . "\n";
 
-        $numberOfWrittenBytes = @fwrite($this->resource, $data, strlen($data));
-        if ($numberOfWrittenBytes === false) {
+        $numberOfWrittenBytes = @fwrite($this->resource, $message);
+        if ($numberOfWrittenBytes !== strlen($message)) {
             throw new ForkControlException(
-                error_get_last()['message'] ?? 'Cannot write data.'
+                sprintf(
+                    'Expected to write %s bytes, but %s bytes were written.',
+                    strlen($message),
+                    (int)$numberOfWrittenBytes
+                )
             );
         }
     }
@@ -48,9 +58,9 @@ final class Stream
      */
     public function close(): void
     {
-        if (!fclose($this->resource)) {
+        if (!@fclose($this->resource)) {
             throw new ForkControlException(
-                error_get_last()['message'] ?? 'Cannot close stream.'
+                'Cannot close stream.'
             );
         }
     }

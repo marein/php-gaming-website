@@ -24,7 +24,7 @@ final class Process
      */
     public function send(mixed $data): void
     {
-        $this->stream->write(base64_encode(serialize($data)));
+        $this->stream->write(serialize($data));
     }
 
     /**
@@ -32,6 +32,6 @@ final class Process
      */
     public function receive(): mixed
     {
-        return unserialize(base64_decode($this->stream->read()));
+        return unserialize($this->stream->read());
     }
 }
