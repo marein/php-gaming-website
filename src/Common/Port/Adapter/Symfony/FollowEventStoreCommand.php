@@ -100,7 +100,7 @@ final class FollowEventStoreCommand extends Command
         }
 
         $forkControl = new ForkControl(
-            new StreamQueuePairFactory()
+            new StreamQueuePairFactory(10)
         );
         $forkControl->fork(
             new Publisher(

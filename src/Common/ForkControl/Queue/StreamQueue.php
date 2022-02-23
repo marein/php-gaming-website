@@ -10,10 +10,21 @@ final class StreamQueue implements Queue
 {
     /**
      * @param resource $resource
+     *
+     * @throws ForkControlException
      */
     public function __construct(
-        private $resource
+        private $resource,
+        int $sendReceiveTimeoutInSeconds
     ) {
+        if (!stream_set_timeout($this->resource, $sendReceiveTimeoutInSeconds)) {
+            throw new ForkControlException(
+                sprintf(
+                    'Cannot set timeout to %s seconds.',
+                    $sendReceiveTimeoutInSeconds
+                )
+            );
+        }
     }
 
     public function send(mixed $message): void

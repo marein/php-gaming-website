@@ -8,6 +8,11 @@ use Gaming\Common\ForkControl\Exception\ForkControlException;
 
 final class StreamQueuePairFactory implements QueuePairFactory
 {
+    public function __construct(
+        private readonly int $sendReceiveTimeoutInSeconds
+    ) {
+    }
+
     public function create(): QueuePair
     {
         $streamPair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
@@ -18,8 +23,8 @@ final class StreamQueuePairFactory implements QueuePairFactory
         }
 
         return new QueuePair(
-            new StreamQueue($streamPair[0]),
-            new StreamQueue($streamPair[1])
+            new StreamQueue($streamPair[0], $this->sendReceiveTimeoutInSeconds),
+            new StreamQueue($streamPair[1], $this->sendReceiveTimeoutInSeconds)
         );
     }
 }
