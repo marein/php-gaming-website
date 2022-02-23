@@ -8,6 +8,7 @@ use Gaming\Common\EventStore\CompositeStoredEventSubscriber;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkControl\ForkControl;
+use Gaming\Common\ForkControl\Queue\StreamQueuePairFactory;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -98,7 +99,9 @@ final class FollowEventStoreCommand extends Command
             return Command::FAILURE;
         }
 
-        $forkControl = new ForkControl();
+        $forkControl = new ForkControl(
+            new StreamQueuePairFactory()
+        );
         $forkControl->fork(
             new Publisher(
                 array_map(

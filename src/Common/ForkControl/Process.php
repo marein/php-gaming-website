@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Gaming\Common\ForkControl;
 
 use Gaming\Common\ForkControl\Exception\ForkControlException;
+use Gaming\Common\ForkControl\Queue\Queue;
 
 final class Process
 {
     public function __construct(
         private readonly int $processId,
-        private readonly Stream $stream
+        private readonly Queue $queue
     ) {
     }
 
@@ -24,7 +25,7 @@ final class Process
      */
     public function send(mixed $data): void
     {
-        $this->stream->write(serialize($data));
+        $this->queue->send($data);
     }
 
     /**
@@ -32,6 +33,6 @@ final class Process
      */
     public function receive(): mixed
     {
-        return unserialize($this->stream->read());
+        return $this->queue->receive();
     }
 }

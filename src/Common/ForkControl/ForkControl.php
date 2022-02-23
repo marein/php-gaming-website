@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Gaming\Common\ForkControl;
 
 use Gaming\Common\ForkControl\Exception\ForkControlException;
+use Gaming\Common\ForkControl\Queue\QueuePair;
+use Gaming\Common\ForkControl\Queue\QueuePairFactory;
 
 final class ForkControl
 {
@@ -13,8 +15,9 @@ final class ForkControl
      */
     private array $forks;
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly QueuePairFactory $queuePairFactory
+    ) {
         $this->forks = [];
     }
 
@@ -23,7 +26,7 @@ final class ForkControl
      */
     public function fork(Task $task): Process
     {
-        $streamPair = StreamPair::create();
+        $queuePair = $this->queuePairFactory->create();
 
         $parentPid = getmypid();
         if ($parentPid === false) {
@@ -34,8 +37,8 @@ final class ForkControl
 
         return match ($forkPid) {
             -1 => throw new ForkControlException('Unable to fork.'),
-            0 => $this->runTaskAndExit($parentPid, $task, $streamPair),
-            default => $this->registerFork($forkPid, $streamPair)
+            0 => $this->runTaskAndExit($parentPid, $task, $queuePair),
+            default => $this->registerFork($forkPid, $queuePair)
         };
     }
 
@@ -57,11 +60,9 @@ final class ForkControl
     /**
      * @throws ForkControlException
      */
-    private function registerFork(int $forkPid, StreamPair $streamPair): Process
+    private function registerFork(int $forkPid, QueuePair $queuePair): Process
     {
-        $streamPair->parent()->close();
-
-        $fork = new Process($forkPid, $streamPair->fork());
+        $fork = new Process($forkPid, $queuePair->fork());
         $this->forks[] = $fork;
 
         return $fork;
@@ -70,10 +71,8 @@ final class ForkControl
     /*
      * @throws ForkManagerException
      */
-    private function runTaskAndExit(int $parentPid, Task $task, StreamPair $streamPair): never
+    private function runTaskAndExit(int $parentPid, Task $task, QueuePair $queuePair): never
     {
-        $streamPair->fork()->close();
-
-        exit($task->execute(new Process($parentPid, $streamPair->parent())));
+        exit($task->execute(new Process($parentPid, $queuePair->parent())));
     }
 }
