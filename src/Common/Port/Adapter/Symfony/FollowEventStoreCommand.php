@@ -102,6 +102,7 @@ final class FollowEventStoreCommand extends Command
         $forkControl = new ForkControl(
             new StreamQueuePairFactory(10)
         );
+
         $forkControl->fork(
             new Publisher(
                 array_map(
@@ -117,7 +118,22 @@ final class FollowEventStoreCommand extends Command
                 (int)$input->getOption('batch')
             )
         );
-        $forkControl->wait();
+
+        $forkControl->signal()
+            ->dispatchAsync()
+            ->on(
+                [SIGTERM, SIGINT],
+                static function (int $signal) use ($forkControl): void {
+                    $forkControl->terminate()->wait()->all();
+                },
+                false
+            );
+
+        $forkControl->wait()
+            ->any()
+            ->terminate()
+            ->wait()
+            ->all();
 
         return Command::SUCCESS;
     }

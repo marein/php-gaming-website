@@ -42,24 +42,25 @@ final class ForkControl
         };
     }
 
-    public function wait(): void
+    public function signal(): Signal
     {
-        pcntl_async_signals(true);
-        $signalHandler = function () {
-            foreach ($this->forks as $fork) {
-                $fork->terminate();
-            }
-        };
-        pcntl_signal(SIGTERM, $signalHandler, false);
-        pcntl_signal(SIGINT, $signalHandler, false);
-
-        while (pcntl_wait($status) !== -1) {
-        }
+        return new Signal();
     }
 
-    /**
-     * @throws ForkControlException
-     */
+    public function wait(): Wait
+    {
+        return new Wait($this);
+    }
+
+    public function terminate(): ForkControl
+    {
+        foreach ($this->forks as $fork) {
+            $fork->terminate();
+        }
+
+        return $this;
+    }
+
     private function registerFork(int $forkPid, QueuePair $queuePair): Process
     {
         $fork = new Process($forkPid, $queuePair->fork());
