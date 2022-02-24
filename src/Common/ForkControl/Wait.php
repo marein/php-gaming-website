@@ -25,4 +25,9 @@ final class Wait
 
         return $this->forkControl;
     }
+
+    public function terminateAllWhenAnyExits(): void
+    {
+        $this->any()->terminate()->wait()->all();
+    }
 }
