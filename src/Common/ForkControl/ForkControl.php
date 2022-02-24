@@ -28,11 +28,6 @@ final class ForkControl
     {
         $channelPair = $this->channelPairFactory->create();
 
-        $parentPid = getmypid();
-        if ($parentPid === false) {
-            throw new ForkControlException('Unable to get the process id.');
-        }
-
         $forkPid = pcntl_fork();
 
         return match ($forkPid) {
