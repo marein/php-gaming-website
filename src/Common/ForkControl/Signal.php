@@ -52,6 +52,8 @@ final class Signal
             $signals,
             function (int $signal): void {
                 $this->forkControl->kill($signal)->wait()->all();
+
+                exit(0);
             },
             false
         );
