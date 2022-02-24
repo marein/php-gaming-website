@@ -108,7 +108,7 @@ final class FollowEventStoreCommand extends Command
                 array_map(
                     fn() => $forkControl->fork(
                         new Worker($this->storedEventSubscriber($input))
-                    ),
+                    )->queue(),
                     range(1, max(1, (int)$input->getOption('worker')))
                 ),
                 $this->eventStore,

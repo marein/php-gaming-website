@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\Common\ForkControl;
 
-use Gaming\Common\ForkControl\Exception\ForkControlException;
 use Gaming\Common\ForkControl\Queue\Queue;
 
 final class Process
@@ -20,19 +19,8 @@ final class Process
         posix_kill($this->processId, SIGTERM);
     }
 
-    /**
-     * @throws ForkControlException
-     */
-    public function send(mixed $message): void
+    public function queue(): Queue
     {
-        $this->queue->send($message);
-    }
-
-    /**
-     * @throws ForkControlException
-     */
-    public function receive(): mixed
-    {
-        return $this->queue->receive();
+        return $this->queue;
     }
 }
