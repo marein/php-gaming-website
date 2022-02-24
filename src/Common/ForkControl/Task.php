@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Gaming\Common\ForkControl;
 
-use Gaming\Common\ForkControl\Queue\Queue;
+use Gaming\Common\ForkControl\Channel\Channel;
 
 interface Task
 {
-    public function execute(Queue $queue): int;
+    public function execute(Channel $channel): int;
 }

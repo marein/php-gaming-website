@@ -9,7 +9,7 @@ use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\FollowEventStoreDispatcher;
 use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
-use Gaming\Common\ForkControl\Queue\Queue;
+use Gaming\Common\ForkControl\Channel\Channel;
 use Gaming\Common\ForkControl\Task;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use InvalidArgumentException;
@@ -17,12 +17,12 @@ use InvalidArgumentException;
 final class Publisher implements Task
 {
     /**
-     * @param Queue[] $queues
+     * @param Channel[] $channels
      *
      * @throws InvalidArgumentException
      */
     public function __construct(
-        private readonly array $queues,
+        private readonly array $channels,
         private readonly EventStore $eventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
         private readonly string $eventStorePointerName,
@@ -34,10 +34,10 @@ final class Publisher implements Task
         }
     }
 
-    public function execute(Queue $queue): int
+    public function execute(Channel $channel): int
     {
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
-            new ForwardToQueueStoredEventSubscriber($this->queues),
+            new ForwardToChannelStoredEventSubscriber($this->channels),
             new InMemoryCacheEventStorePointer(
                 $this->eventStorePointerFactory->withName(
                     $this->eventStorePointerName
@@ -57,13 +57,13 @@ final class Publisher implements Task
 
     public function synchronize(): void
     {
-        foreach ($this->queues as $queue) {
-            $queue->send('SYN');
+        foreach ($this->channels as $channel) {
+            $channel->send('SYN');
         }
 
-        foreach ($this->queues as $queue) {
-            if ($queue->receive() !== 'ACK') {
-                throw new EventStoreException('No ack from worker');
+        foreach ($this->channels as $channel) {
+            if ($channel->receive() !== 'ACK') {
+                throw new EventStoreException('No ack from channel.');
             }
         }
     }

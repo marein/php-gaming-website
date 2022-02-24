@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Gaming\Common\ForkControl;
 
 use Gaming\Common\ForkControl\Exception\ForkControlException;
-use Gaming\Common\ForkControl\Queue\QueuePair;
-use Gaming\Common\ForkControl\Queue\QueuePairFactory;
+use Gaming\Common\ForkControl\Channel\ChannelPair;
+use Gaming\Common\ForkControl\Channel\ChannelPairFactory;
 
 final class ForkControl
 {
@@ -16,7 +16,7 @@ final class ForkControl
     private array $forks;
 
     public function __construct(
-        private readonly QueuePairFactory $queuePairFactory
+        private readonly ChannelPairFactory $channelPairFactory
     ) {
         $this->forks = [];
     }
@@ -26,7 +26,7 @@ final class ForkControl
      */
     public function fork(Task $task): Process
     {
-        $queuePair = $this->queuePairFactory->create();
+        $channelPair = $this->channelPairFactory->create();
 
         $parentPid = getmypid();
         if ($parentPid === false) {
@@ -37,8 +37,8 @@ final class ForkControl
 
         return match ($forkPid) {
             -1 => throw new ForkControlException('Unable to fork.'),
-            0 => exit($task->execute($queuePair->parent())),
-            default => $this->registerFork($forkPid, $queuePair)
+            0 => exit($task->execute($channelPair->parent())),
+            default => $this->registerFork($forkPid, $channelPair)
         };
     }
 
@@ -61,9 +61,9 @@ final class ForkControl
         return $this;
     }
 
-    private function registerFork(int $forkPid, QueuePair $queuePair): Process
+    private function registerFork(int $forkPid, ChannelPair $channelPair): Process
     {
-        $fork = new Process($forkPid, $queuePair->fork());
+        $fork = new Process($forkPid, $channelPair->fork());
         $this->forks[] = $fork;
 
         return $fork;

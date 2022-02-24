@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl\Queue;
+namespace Gaming\Common\ForkControl\Channel;
 
 use Gaming\Common\ForkControl\Exception\ForkControlException;
 
-final class StreamQueuePairFactory implements QueuePairFactory
+final class StreamChannelPairFactory implements ChannelPairFactory
 {
     public function __construct(
         private readonly int $sendReceiveTimeoutInSeconds
     ) {
     }
 
-    public function create(): QueuePair
+    public function create(): ChannelPair
     {
         $streamPair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
         if ($streamPair === false) {
@@ -22,9 +22,9 @@ final class StreamQueuePairFactory implements QueuePairFactory
             );
         }
 
-        return new QueuePair(
-            new StreamQueue($streamPair[0], $this->sendReceiveTimeoutInSeconds),
-            new StreamQueue($streamPair[1], $this->sendReceiveTimeoutInSeconds)
+        return new ChannelPair(
+            new StreamChannel($streamPair[0], $this->sendReceiveTimeoutInSeconds),
+            new StreamChannel($streamPair[1], $this->sendReceiveTimeoutInSeconds)
         );
     }
 }

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl\Queue;
+namespace Gaming\Common\ForkControl\Channel;
 
 use Gaming\Common\ForkControl\Exception\ForkControlException;
 
-interface QueuePairFactory
+interface ChannelPairFactory
 {
     /**
      * @throws ForkControlException
      */
-    public function create(): QueuePair;
+    public function create(): ChannelPair;
 }

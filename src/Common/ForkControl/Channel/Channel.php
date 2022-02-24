@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl\Queue;
+namespace Gaming\Common\ForkControl\Channel;
 
 use Gaming\Common\ForkControl\Exception\ForkControlException;
 
-interface Queue
+interface Channel
 {
     /**
      * @throws ForkControlException

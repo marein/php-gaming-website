@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Gaming\Common\ForkControl;
 
-use Gaming\Common\ForkControl\Queue\Queue;
+use Gaming\Common\ForkControl\Channel\Channel;
 
 final class Process
 {
     public function __construct(
         private readonly int $processId,
-        private readonly Queue $queue
+        private readonly Channel $channel
     ) {
     }
 
@@ -19,8 +19,8 @@ final class Process
         posix_kill($this->processId, SIGTERM);
     }
 
-    public function queue(): Queue
+    public function channel(): Channel
     {
-        return $this->queue;
+        return $this->channel;
     }
 }

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl\Queue;
+namespace Gaming\Common\ForkControl\Channel;
 
 use Gaming\Common\ForkControl\Exception\ForkControlException;
 
-final class StreamQueue implements Queue
+final class StreamChannel implements Channel
 {
     /**
      * @param resource $resource

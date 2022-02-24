@@ -8,7 +8,7 @@ use Gaming\Common\EventStore\CompositeStoredEventSubscriber;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkControl\ForkControl;
-use Gaming\Common\ForkControl\Queue\StreamQueuePairFactory;
+use Gaming\Common\ForkControl\Channel\StreamChannelPairFactory;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -100,7 +100,7 @@ final class FollowEventStoreCommand extends Command
         }
 
         $forkControl = new ForkControl(
-            new StreamQueuePairFactory(10)
+            new StreamChannelPairFactory(10)
         );
 
         $forkControl->fork(
@@ -108,7 +108,7 @@ final class FollowEventStoreCommand extends Command
                 array_map(
                     fn() => $forkControl->fork(
                         new Worker($this->storedEventSubscriber($input))
-                    )->queue(),
+                    )->channel(),
                     range(1, max(1, (int)$input->getOption('worker')))
                 ),
                 $this->eventStore,
