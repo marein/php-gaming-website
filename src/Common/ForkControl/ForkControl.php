@@ -41,7 +41,7 @@ final class ForkControl
 
     public function wait(): Wait
     {
-        return new Wait($this);
+        return new Wait($this, $this->processes);
     }
 
     public function kill(int $signal): ForkControl

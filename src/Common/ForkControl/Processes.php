@@ -9,7 +9,7 @@ use Gaming\Common\ForkControl\Channel\Channel;
 final class Processes
 {
     /**
-     * @var Process[]
+     * @var array<int, Process>
      */
     private array $processes;
 
@@ -22,9 +22,16 @@ final class Processes
     {
         $process = new Process($processId, $channel);
 
-        $this->processes[] = $process;
+        $this->processes[$processId] = $process;
 
         return $process;
+    }
+
+    public function remove(int $processId): void
+    {
+        if (array_key_exists($processId, $this->processes)) {
+            unset($this->processes[$processId]);
+        }
     }
 
     public function kill(int $signal): void

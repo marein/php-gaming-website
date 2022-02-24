@@ -7,13 +7,15 @@ namespace Gaming\Common\ForkControl;
 final class Wait
 {
     public function __construct(
-        private readonly ForkControl $forkControl
+        private readonly ForkControl $forkControl,
+        private readonly Processes $processes
     ) {
     }
 
     public function all(): ForkControl
     {
-        while (pcntl_wait($status) !== -1) {
+        while (($processId = pcntl_wait($status)) !== -1) {
+            $this->processes->remove($processId);
         }
 
         return $this->forkControl;
@@ -21,7 +23,7 @@ final class Wait
 
     public function any(): ForkControl
     {
-        pcntl_wait($status);
+        $this->processes->remove(pcntl_wait($status));
 
         return $this->forkControl;
     }
