@@ -10,15 +10,12 @@ use Gaming\Common\ForkControl\Channel\ChannelPairFactory;
 
 final class ForkControl
 {
-    /**
-     * @var Process[]
-     */
-    private array $forks;
+    private Processes $processes;
 
     public function __construct(
         private readonly ChannelPairFactory $channelPairFactory
     ) {
-        $this->forks = [];
+        $this->processes = new Processes();
     }
 
     /**
@@ -33,7 +30,7 @@ final class ForkControl
         return match ($forkPid) {
             -1 => throw new ForkControlException('Unable to fork.'),
             0 => exit($task->execute($channelPair->parent())),
-            default => $this->registerFork($forkPid, $channelPair)
+            default => $this->processes->add($forkPid, $channelPair->fork())
         };
     }
 
@@ -49,18 +46,8 @@ final class ForkControl
 
     public function kill(int $signal): ForkControl
     {
-        foreach ($this->forks as $fork) {
-            $fork->kill($signal);
-        }
+        $this->processes->kill($signal);
 
         return $this;
-    }
-
-    private function registerFork(int $forkPid, ChannelPair $channelPair): Process
-    {
-        $fork = new Process($forkPid, $channelPair->fork());
-        $this->forks[] = $fork;
-
-        return $fork;
     }
 }
