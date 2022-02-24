@@ -17,10 +17,10 @@ final class Worker implements Task
 
     public function execute(Channel $channel): int
     {
-        while ($data = $channel->receive()) {
-            match ($data) {
+        while ($message = $channel->receive()) {
+            match ($message) {
                 'SYN' => $channel->send('ACK'),
-                default => $this->storedEventSubscriber->handle($data)
+                default => $this->storedEventSubscriber->handle($message)
             };
         }
 
