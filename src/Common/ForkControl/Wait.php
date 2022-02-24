@@ -26,8 +26,8 @@ final class Wait
         return $this->forkControl;
     }
 
-    public function terminateAllWhenAnyExits(): void
+    public function killAllWhenAnyExits(int $signal): void
     {
-        $this->any()->terminate()->wait()->all();
+        $this->any()->kill($signal)->wait()->all();
     }
 }

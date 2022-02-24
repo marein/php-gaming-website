@@ -46,12 +46,12 @@ final class Signal
      *
      * @throws ForkControlException
      */
-    public function terminateAndWait(array $signals): Signal
+    public function forwardSignalAndWait(array $signals): Signal
     {
         $this->on(
             $signals,
             function (int $signal): void {
-                $this->forkControl->terminate()->wait()->all();
+                $this->forkControl->kill($signal)->wait()->all();
             },
             false
         );

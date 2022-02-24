@@ -121,10 +121,10 @@ final class FollowEventStoreCommand extends Command
 
         $forkControl->signal()
             ->dispatchAsync()
-            ->terminateAndWait([SIGTERM, SIGINT]);
+            ->forwardSignalAndWait([SIGTERM, SIGINT]);
 
         $forkControl->wait()
-            ->terminateAllWhenAnyExits();
+            ->killAllWhenAnyExits(SIGTERM);
 
         return Command::SUCCESS;
     }

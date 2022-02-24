@@ -47,10 +47,10 @@ final class ForkControl
         return new Wait($this);
     }
 
-    public function terminate(): ForkControl
+    public function kill(int $signal): ForkControl
     {
         foreach ($this->forks as $fork) {
-            $fork->terminate();
+            $fork->kill($signal);
         }
 
         return $this;

@@ -14,9 +14,9 @@ final class Process
     ) {
     }
 
-    public function terminate(): void
+    public function kill(int $signal): void
     {
-        posix_kill($this->processId, SIGTERM);
+        posix_kill($this->processId, $signal);
     }
 
     public function channel(): Channel
