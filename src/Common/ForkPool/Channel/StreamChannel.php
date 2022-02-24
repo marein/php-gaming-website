@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl\Channel;
+namespace Gaming\Common\ForkPool\Channel;
 
-use Gaming\Common\ForkControl\Exception\ForkControlException;
+use Gaming\Common\ForkPool\Exception\ForkPoolException;
 
 final class StreamChannel implements Channel
 {
     /**
      * @param resource $resource
      *
-     * @throws ForkControlException
+     * @throws ForkPoolException
      */
     public function __construct(
         private $resource,
         int $sendReceiveTimeoutInSeconds
     ) {
         if (!stream_set_timeout($this->resource, $sendReceiveTimeoutInSeconds)) {
-            throw new ForkControlException(
+            throw new ForkPoolException(
                 sprintf(
                     'Cannot set timeout to %s seconds.',
                     $sendReceiveTimeoutInSeconds
@@ -33,7 +33,7 @@ final class StreamChannel implements Channel
 
         $numberOfWrittenBytes = @fwrite($this->resource, $message);
         if ($numberOfWrittenBytes !== strlen($message)) {
-            throw new ForkControlException(
+            throw new ForkPoolException(
                 sprintf(
                     'Expected to write %s bytes, but %s bytes were written.',
                     strlen($message),
@@ -47,7 +47,7 @@ final class StreamChannel implements Channel
     {
         $message = @fgets($this->resource);
         if ($message === false || !str_ends_with($message, "\n")) {
-            throw new ForkControlException(
+            throw new ForkPoolException(
                 sprintf(
                     'Message not arrived completely. Received %s bytes.',
                     $message === false ? '0' : strlen($message)

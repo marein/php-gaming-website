@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl\Channel;
+namespace Gaming\Common\ForkPool\Channel;
 
-use Gaming\Common\ForkControl\Exception\ForkControlException;
+use Gaming\Common\ForkPool\Exception\ForkPoolException;
 
 final class StreamChannelPairFactory implements ChannelPairFactory
 {
@@ -17,7 +17,7 @@ final class StreamChannelPairFactory implements ChannelPairFactory
     {
         $streamPair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
         if ($streamPair === false) {
-            throw new ForkControlException(
+            throw new ForkPoolException(
                 error_get_last()['message'] ?? 'Cannot create stream pair.'
             );
         }

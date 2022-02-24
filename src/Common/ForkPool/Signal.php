@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl;
+namespace Gaming\Common\ForkPool;
 
 use Closure;
-use Gaming\Common\ForkControl\Exception\ForkControlException;
+use Gaming\Common\ForkPool\Exception\ForkPoolException;
 
 final class Signal
 {
     public function __construct(
-        private readonly ForkControl $forkControl
+        private readonly ForkPool $forkPool
     ) {
     }
 
@@ -18,13 +18,13 @@ final class Signal
      * @param int[] $signals
      * @param Closure(int): void $handler
      *
-     * @throws ForkControlException
+     * @throws ForkPoolException
      */
     public function on(array $signals, Closure $handler, bool $restartSystemCalls): Signal
     {
         foreach ($signals as $signal) {
             if (!pcntl_signal($signal, $handler, $restartSystemCalls)) {
-                throw new ForkControlException(
+                throw new ForkPoolException(
                     'Cannot register signal %s.',
                     $signal
                 );
@@ -44,14 +44,14 @@ final class Signal
     /**
      * @param int[] $signals
      *
-     * @throws ForkControlException
+     * @throws ForkPoolException
      */
     public function forwardSignalAndWait(array $signals): Signal
     {
         $this->on(
             $signals,
             function (int $signal): void {
-                $this->forkControl->kill($signal)->wait()->all();
+                $this->forkPool->kill($signal)->wait()->all();
 
                 exit(0);
             },

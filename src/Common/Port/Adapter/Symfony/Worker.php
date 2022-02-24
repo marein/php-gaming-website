@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Gaming\Common\Port\Adapter\Symfony;
 
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\ForkControl\Channel\Channel;
-use Gaming\Common\ForkControl\Task;
+use Gaming\Common\ForkPool\Channel\Channel;
+use Gaming\Common\ForkPool\Task;
 
 final class Worker implements Task
 {

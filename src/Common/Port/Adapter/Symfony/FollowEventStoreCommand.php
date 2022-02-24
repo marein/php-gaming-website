@@ -7,8 +7,8 @@ namespace Gaming\Common\Port\Adapter\Symfony;
 use Gaming\Common\EventStore\CompositeStoredEventSubscriber;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\ForkControl\ForkControl;
-use Gaming\Common\ForkControl\Channel\StreamChannelPairFactory;
+use Gaming\Common\ForkPool\ForkPool;
+use Gaming\Common\ForkPool\Channel\StreamChannelPairFactory;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -99,14 +99,14 @@ final class FollowEventStoreCommand extends Command
             return Command::FAILURE;
         }
 
-        $forkControl = new ForkControl(
+        $forkPool = new ForkPool(
             new StreamChannelPairFactory(10)
         );
 
-        $forkControl->fork(
+        $forkPool->fork(
             new Publisher(
                 array_map(
-                    fn() => $forkControl->fork(
+                    fn() => $forkPool->fork(
                         new Worker($this->storedEventSubscriber($input))
                     )->channel(),
                     range(1, max(1, (int)$input->getOption('worker')))
@@ -119,11 +119,11 @@ final class FollowEventStoreCommand extends Command
             )
         );
 
-        $forkControl->signal()
+        $forkPool->signal()
             ->dispatchAsync()
             ->forwardSignalAndWait([SIGTERM, SIGINT]);
 
-        $forkControl->wait()
+        $forkPool->wait()
             ->killAllWhenAnyExits(SIGTERM);
 
         return Command::SUCCESS;

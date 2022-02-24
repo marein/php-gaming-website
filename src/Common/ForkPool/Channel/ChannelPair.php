@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl\Channel;
+namespace Gaming\Common\ForkPool\Channel;
 
 final class ChannelPair
 {

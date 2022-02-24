@@ -6,7 +6,7 @@ namespace Gaming\Common\Port\Adapter\Symfony;
 
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\ForkControl\Channel\Channel;
+use Gaming\Common\ForkPool\Channel\Channel;
 use InvalidArgumentException;
 
 final class ForwardToChannelStoredEventSubscriber implements StoredEventSubscriber

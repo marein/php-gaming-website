@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl;
+namespace Gaming\Common\ForkPool;
 
-use Gaming\Common\ForkControl\Exception\ForkControlException;
-use Gaming\Common\ForkControl\Channel\ChannelPair;
-use Gaming\Common\ForkControl\Channel\ChannelPairFactory;
+use Gaming\Common\ForkPool\Exception\ForkPoolException;
+use Gaming\Common\ForkPool\Channel\ChannelPairFactory;
 
-final class ForkControl
+final class ForkPool
 {
     private Processes $processes;
 
@@ -19,7 +18,7 @@ final class ForkControl
     }
 
     /**
-     * @throws ForkControlException
+     * @throws ForkPoolException
      */
     public function fork(Task $task): Process
     {
@@ -28,7 +27,7 @@ final class ForkControl
         $forkPid = pcntl_fork();
 
         return match ($forkPid) {
-            -1 => throw new ForkControlException('Unable to fork.'),
+            -1 => throw new ForkPoolException('Unable to fork.'),
             0 => exit($task->execute($channelPair->parent())),
             default => $this->processes->add($forkPid, $channelPair->fork())
         };
@@ -44,7 +43,7 @@ final class ForkControl
         return new Wait($this, $this->processes);
     }
 
-    public function kill(int $signal): ForkControl
+    public function kill(int $signal): ForkPool
     {
         $this->processes->kill($signal);
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ForkControl;
+namespace Gaming\Common\ForkPool;
 
-use Gaming\Common\ForkControl\Channel\Channel;
+use Gaming\Common\ForkPool\Channel\Channel;
 
 final class Processes
 {
