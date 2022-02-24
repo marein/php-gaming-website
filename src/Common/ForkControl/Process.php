@@ -23,9 +23,9 @@ final class Process
     /**
      * @throws ForkControlException
      */
-    public function send(mixed $data): void
+    public function send(mixed $message): void
     {
-        $this->queue->send($data);
+        $this->queue->send($message);
     }
 
     /**
