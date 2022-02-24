@@ -37,7 +37,7 @@ final class ForkControl
 
         return match ($forkPid) {
             -1 => throw new ForkControlException('Unable to fork.'),
-            0 => $this->runTaskAndExit($parentPid, $task, $queuePair),
+            0 => exit($task->execute($queuePair->parent())),
             default => $this->registerFork($forkPid, $queuePair)
         };
     }
@@ -67,13 +67,5 @@ final class ForkControl
         $this->forks[] = $fork;
 
         return $fork;
-    }
-
-    /*
-     * @throws ForkManagerException
-     */
-    private function runTaskAndExit(int $parentPid, Task $task, QueuePair $queuePair): never
-    {
-        exit($task->execute(new Process($parentPid, $queuePair->parent())));
     }
 }

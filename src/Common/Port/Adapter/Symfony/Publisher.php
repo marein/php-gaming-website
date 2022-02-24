@@ -10,6 +10,7 @@ use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\FollowEventStoreDispatcher;
 use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
 use Gaming\Common\ForkControl\Process;
+use Gaming\Common\ForkControl\Queue\Queue;
 use Gaming\Common\ForkControl\Task;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use InvalidArgumentException;
@@ -34,7 +35,7 @@ final class Publisher implements Task
         }
     }
 
-    public function execute(Process $parent): int
+    public function execute(Queue $queue): int
     {
         $followEventStoreDispatcher = new FollowEventStoreDispatcher(
             new ForwardToProcessStoredEventSubscriber($this->workers),

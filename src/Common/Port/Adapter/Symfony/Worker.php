@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Common\Port\Adapter\Symfony;
 
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\ForkControl\Process;
+use Gaming\Common\ForkControl\Queue\Queue;
 use Gaming\Common\ForkControl\Task;
 
 final class Worker implements Task
@@ -15,11 +15,11 @@ final class Worker implements Task
     ) {
     }
 
-    public function execute(Process $parent): int
+    public function execute(Queue $queue): int
     {
-        while ($data = $parent->receive()) {
+        while ($data = $queue->receive()) {
             match ($data) {
-                'SYN' => $parent->send('ACK'),
+                'SYN' => $queue->send('ACK'),
                 default => $this->storedEventSubscriber->handle($data)
             };
         }
