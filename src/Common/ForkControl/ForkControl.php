@@ -44,7 +44,7 @@ final class ForkControl
 
     public function signal(): Signal
     {
-        return new Signal();
+        return new Signal($this);
     }
 
     public function wait(): Wait

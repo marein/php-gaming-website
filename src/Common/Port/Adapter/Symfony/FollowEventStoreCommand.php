@@ -121,13 +121,7 @@ final class FollowEventStoreCommand extends Command
 
         $forkControl->signal()
             ->dispatchAsync()
-            ->on(
-                [SIGTERM, SIGINT],
-                static function (int $signal) use ($forkControl): void {
-                    $forkControl->terminate()->wait()->all();
-                },
-                false
-            );
+            ->terminateAndWait([SIGTERM, SIGINT]);
 
         $forkControl->wait()
             ->any()

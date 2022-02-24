@@ -9,6 +9,11 @@ use Gaming\Common\ForkControl\Exception\ForkControlException;
 
 final class Signal
 {
+    public function __construct(
+        private readonly ForkControl $forkControl
+    ) {
+    }
+
     /**
      * @param int[] $signals
      * @param Closure(int): void $handler
@@ -32,6 +37,24 @@ final class Signal
     public function dispatchAsync(): Signal
     {
         pcntl_async_signals(true);
+
+        return $this;
+    }
+
+    /**
+     * @param int[] $signals
+     *
+     * @throws ForkControlException
+     */
+    public function terminateAndWait(array $signals): Signal
+    {
+        $this->on(
+            $signals,
+            function (int $signal): void {
+                $this->forkControl->terminate()->wait()->all();
+            },
+            false
+        );
 
         return $this;
     }
