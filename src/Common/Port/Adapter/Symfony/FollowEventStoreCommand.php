@@ -120,7 +120,7 @@ final class FollowEventStoreCommand extends Command
         );
 
         $forkPool->signal()
-            ->dispatchAsync()
+            ->enableAsyncDispatch()
             ->forwardSignalAndWait([SIGTERM, SIGINT]);
 
         $forkPool->wait()

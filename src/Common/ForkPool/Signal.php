@@ -34,7 +34,7 @@ final class Signal
         return $this;
     }
 
-    public function dispatchAsync(): Signal
+    public function enableAsyncDispatch(): Signal
     {
         pcntl_async_signals(true);
 
