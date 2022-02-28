@@ -7,8 +7,10 @@ namespace Gaming\Common\Port\Adapter\Symfony;
 use Gaming\Common\EventStore\CompositeStoredEventSubscriber;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\ForkPool\ForkPool;
 use Gaming\Common\ForkPool\Channel\StreamChannelPairFactory;
+use Gaming\Common\ForkPool\ForkPool;
+use Gaming\Common\Normalizer\Normalizer;
+use Gaming\Common\Port\Adapter\EventStore\Subscriber\SymfonyConsoleDebugSubscriber;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,7 +27,8 @@ final class FollowEventStoreCommand extends Command
     public function __construct(
         private readonly EventStore $eventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
-        private readonly iterable $storedEventSubscribers
+        private readonly iterable $storedEventSubscribers,
+        private readonly Normalizer $normalizer
     ) {
         parent::__construct();
     }
@@ -107,7 +110,7 @@ final class FollowEventStoreCommand extends Command
             new Publisher(
                 array_map(
                     fn() => $forkPool->fork(
-                        new Worker($this->storedEventSubscriber($input))
+                        new Worker($this->storedEventSubscriber($input, $output))
                     )->channel(),
                     range(1, max(1, (int)$input->getOption('worker')))
                 ),
@@ -160,13 +163,16 @@ final class FollowEventStoreCommand extends Command
         );
     }
 
-    private function storedEventSubscriber(InputInterface $input): StoredEventSubscriber
+    private function storedEventSubscriber(InputInterface $input, OutputInterface $output): StoredEventSubscriber
     {
         return new CompositeStoredEventSubscriber(
-            array_intersect_key(
-                iterator_to_array($this->storedEventSubscribers),
-                array_flip($this->selectedSubscriberNames($input))
-            )
+            [
+                ...array_intersect_key(
+                    iterator_to_array($this->storedEventSubscribers),
+                    array_flip($this->selectedSubscriberNames($input))
+                ),
+                new SymfonyConsoleDebugSubscriber($output, $this->normalizer)
+            ]
         );
     }
 }

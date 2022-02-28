@@ -14,11 +14,3 @@ services:
             - '@identity.normalizer'
         tags:
             - { name: 'identity.stored-event-subscriber', key: 'publish-to-message-broker' }
-
-    identity.echo-subscriber:
-        class: Gaming\Common\Port\Adapter\EventStore\Subscriber\EchoSubscriber
-        public: false
-        arguments:
-            - '@identity.normalizer'
-        tags:
-            - { name: 'identity.stored-event-subscriber', key: 'echo' }
