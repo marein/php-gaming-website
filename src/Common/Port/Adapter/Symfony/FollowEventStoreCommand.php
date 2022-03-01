@@ -78,8 +78,8 @@ final class FollowEventStoreCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $selectedSubscribersNames = $this->selectedSubscriberNames($input);
-        if (count($selectedSubscribersNames) === 0) {
+        $selectedSubscriberNames = $this->selectedSubscriberNames($input);
+        if (count($selectedSubscriberNames) === 0) {
             $output->writeln(
                 sprintf(
                     'Please select one of the following subscribers:%s* %s',
