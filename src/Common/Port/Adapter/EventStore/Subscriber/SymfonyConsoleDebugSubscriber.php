@@ -31,8 +31,7 @@ final class SymfonyConsoleDebugSubscriber implements StoredEventSubscriber
                     $this->normalizer->normalize($domainEvent, DomainEvent::class),
                     JSON_THROW_ON_ERROR
                 )
-            ),
-            OutputInterface::VERBOSITY_VERBOSE
+            )
         );
     }
 }

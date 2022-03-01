@@ -78,8 +78,8 @@ final class FollowEventStoreCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $selectedSubscribers = $this->selectedSubscriberNames($input);
-        if (count($selectedSubscribers) === 0) {
+        $selectedSubscribersNames = $this->selectedSubscriberNames($input);
+        if (count($selectedSubscribersNames) === 0) {
             $output->writeln(
                 sprintf(
                     'Please select one of the following subscribers:%s* %s',
@@ -110,7 +110,7 @@ final class FollowEventStoreCommand extends Command
             new Publisher(
                 array_map(
                     fn() => $forkPool->fork(
-                        new Worker($this->storedEventSubscriber($input, $output))
+                        new Worker($this->createStoredEventSubscriber($input, $output))
                     )->channel(),
                     range(1, max(1, (int)$input->getOption('worker')))
                 ),
@@ -163,16 +163,17 @@ final class FollowEventStoreCommand extends Command
         );
     }
 
-    private function storedEventSubscriber(InputInterface $input, OutputInterface $output): StoredEventSubscriber
+    private function createStoredEventSubscriber(InputInterface $input, OutputInterface $output): StoredEventSubscriber
     {
-        return new CompositeStoredEventSubscriber(
-            [
-                ...array_intersect_key(
-                    iterator_to_array($this->storedEventSubscribers),
-                    array_flip($this->selectedSubscriberNames($input))
-                ),
-                new SymfonyConsoleDebugSubscriber($output, $this->normalizer)
-            ]
+        $storedEventSubscribers = array_intersect_key(
+            iterator_to_array($this->storedEventSubscribers),
+            array_flip($this->selectedSubscriberNames($input))
         );
+
+        if ($output->isVerbose()) {
+            $storedEventSubscribers[] = new SymfonyConsoleDebugSubscriber($output, $this->normalizer);
+        }
+
+        return new CompositeStoredEventSubscriber($storedEventSubscribers);
     }
 }
