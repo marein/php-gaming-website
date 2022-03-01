@@ -60,7 +60,7 @@ final class ConsumeMessagesCommand extends Command
         if (count($unknownConsumerNames) !== 0) {
             $output->writeln(
                 sprintf(
-                    'The following subscribers are unknown:%s* %s',
+                    'The following consumers are unknown:%s* %s',
                     PHP_EOL,
                     implode(PHP_EOL . '* ', $unknownConsumerNames)
                 )
