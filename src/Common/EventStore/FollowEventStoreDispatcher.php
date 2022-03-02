@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
+use Closure;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
 use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
@@ -11,20 +12,12 @@ use InvalidArgumentException;
 
 final class FollowEventStoreDispatcher
 {
-    private EventStorePointer $eventStorePointer;
-
-    private EventStore $eventStore;
-
-    private StoredEventPublisher $storedEventPublisher;
-
     public function __construct(
-        EventStorePointer $eventStorePointer,
-        EventStore $eventStore,
-        StoredEventPublisher $storedEventPublisher
+        private readonly StoredEventSubscriber $storedEventSubscriber,
+        private readonly EventStorePointer $eventStorePointer,
+        private readonly EventStore $eventStore,
+        private readonly Closure $afterHandlingStoredEvents
     ) {
-        $this->eventStorePointer = $eventStorePointer;
-        $this->eventStore = $eventStore;
-        $this->storedEventPublisher = $storedEventPublisher;
     }
 
     /**
@@ -32,7 +25,7 @@ final class FollowEventStoreDispatcher
      * @throws FailedRetrieveMostRecentPublishedStoredEventIdException
      * @throws FailedTrackMostRecentPublishedStoredEventIdException
      */
-    public function dispatch(int $batchSize): void
+    public function dispatch(int $batchSize): int
     {
         if ($batchSize < 1) {
             throw new InvalidArgumentException('batchSize must be greater than 0');
@@ -45,11 +38,19 @@ final class FollowEventStoreDispatcher
             $batchSize
         );
 
-        if (!empty($storedEvents)) {
-            $this->storedEventPublisher->publish($storedEvents);
-
-            $lastStoredEventId = end($storedEvents)->id();
-            $this->eventStorePointer->trackMostRecentPublishedStoredEventId($lastStoredEventId);
+        if (count($storedEvents) === 0) {
+            return 0;
         }
+
+        foreach ($storedEvents as $storedEvent) {
+            $this->storedEventSubscriber->handle($storedEvent);
+        }
+
+        ($this->afterHandlingStoredEvents)();
+
+        $lastStoredEventId = end($storedEvents)->id();
+        $this->eventStorePointer->trackMostRecentPublishedStoredEventId($lastStoredEventId);
+
+        return count($storedEvents);
     }
 }
