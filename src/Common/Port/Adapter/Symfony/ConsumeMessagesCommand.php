@@ -44,32 +44,85 @@ final class ConsumeMessagesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $availableConsumers = iterator_to_array($this->consumers);
-
-        $selectedConsumerNames = $input->getOption('consumer');
-        if ($input->getOption('select-all-consumers')) {
-            $selectedConsumerNames = array_keys($availableConsumers);
-        }
-
-        $consumers = [];
-        foreach ($selectedConsumerNames as $selectedConsumerName) {
-            if (!array_key_exists($selectedConsumerName, $availableConsumers)) {
-                $output->writeln('Consumer "' . $selectedConsumerName . '" not known.');
-                return Command::FAILURE;
-            }
-            $consumers[] = new SymfonyConsoleConsumer(
-                $availableConsumers[$selectedConsumerName],
-                $output
+        $selectedConsumerNames = $this->selectedConsumerNames($input);
+        if (count($selectedConsumerNames) === 0) {
+            $output->writeln(
+                sprintf(
+                    'Please select one of the following consumers:%s* %s',
+                    PHP_EOL,
+                    implode(PHP_EOL . '* ', $this->availableConsumerNames())
+                )
             );
-        }
-
-        if (count($consumers) === 0) {
-            $output->writeln('No consumer selected.');
             return Command::FAILURE;
         }
 
-        $this->messageBroker->consume($consumers);
+        $unknownConsumerNames = $this->unknownConsumerNames($input);
+        if (count($unknownConsumerNames) !== 0) {
+            $output->writeln(
+                sprintf(
+                    'The following consumers are unknown:%s* %s',
+                    PHP_EOL,
+                    implode(PHP_EOL . '* ', $unknownConsumerNames)
+                )
+            );
+            return Command::FAILURE;
+        }
+
+        $this->messageBroker->consume(
+            $this->createConsumers($input, $output)
+        );
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function selectedConsumerNames(InputInterface $input): array
+    {
+        return $input->getOption('select-all-consumers') ?
+            $this->availableConsumerNames() :
+            $input->getOption('consumer');
+    }
+
+    /**
+     * @return string[]
+     */
+    private function availableConsumerNames(): array
+    {
+        return array_keys(iterator_to_array($this->consumers));
+    }
+
+    /**
+     * @return string[]
+     */
+    private function unknownConsumerNames(InputInterface $input): array
+    {
+        return array_keys(
+            array_diff_key(
+                array_flip($this->selectedConsumerNames($input)),
+                iterator_to_array($this->consumers)
+            )
+        );
+    }
+
+    /**
+     * @return iterable<Consumer>
+     */
+    private function createConsumers(InputInterface $input, OutputInterface $output): iterable
+    {
+        $consumers = array_intersect_key(
+            iterator_to_array($this->consumers),
+            array_flip($this->selectedConsumerNames($input))
+        );
+
+        if ($output->isVerbose()) {
+            $consumers = array_map(
+                static fn(Consumer $consumer) => new SymfonyConsoleConsumer($consumer, $output),
+                $consumers
+            );
+        }
+
+        return $consumers;
     }
 }
