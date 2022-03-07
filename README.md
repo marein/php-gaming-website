@@ -123,7 +123,7 @@ If authors are assigned to a chat, only those authors can write and read message
 The public interface is formed by a
 [controller](/src/Chat/Presentation/Http/ChatController.php),
 which can be called up via http, and a
-[command line task](/src/Chat/Presentation/Console/RabbitMqCommandListenerCommand.php),
+[message consumer](/src/Chat/Infrastructure/Messaging/CommandConsumer.php),
 which serves as an interface to a message broker.
 
 This context publishes
@@ -131,9 +131,9 @@ This context publishes
 through the message broker to inform other contexts what's happened here.
 First the domain events are stored to the event store.
 This happens in the same transaction in which the commands are executed.
-After that, a
-[command line task](/src/Chat/Presentation/Console/PublishStoredEventsToRabbitMqCommand.php)
-publish these stored events to the message broker.
+After that, an
+[event subscriber](/src/Chat/Infrastructure/Messaging/PublishStoredEventsToRabbitMqSubscriber.php)
+publishes these stored events to the message broker.
 
 I've chosen MySQL as the storage.
 
@@ -182,18 +182,18 @@ This context publishes
 through the message broker to inform other contexts what's happened here.
 First the domain events are stored to the event store.
 This happens in the same transaction in which the commands are executed.
-After that, a
-[command line task](/src/ConnectFour/Port/Adapter/Console/PublishStoredEventsToRabbitMqCommand.php)
-publish these stored events to the message broker.
+After that, an
+[event subscriber](/src/ConnectFour/Port/Adapter/Messaging/PublishStoredEventsToRabbitMqSubscriber.php)
+publishes these stored events to the message broker.
 
 The Connect Four context applies the
 [CQRS](https://martinfowler.com/bliki/CQRS.html)
 pattern. Not only the domain model is divided into command and query side, but also the storage layer.
 The query model is stored in an
 [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency)
-manner. A
-[command line task](/src/ConnectFour/Port/Adapter/Console/BuildQueryModelCommand.php)
-retrieves the stored events from the event store and then builds the query model.
+manner. Multiple
+[projections](/src/ConnectFour/Port/Adapter/Persistence/Projection)
+retrieve the stored events from the event store and create the query models.
 This is done for scalability reasons. Why exactly this was done is described in the section
 "[Scale-Out the application](#scale-out-the-application)".
 Before you use it in your application, you should check if you really need it.
@@ -206,7 +206,7 @@ There's also a
 [Process Manager](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html)
 involved.
 Its name is referee and it's a
-[command line task](/src/ConnectFour/Port/Adapter/Console/RefereeCommand.php).
+[message consumer](/src/ConnectFour/Port/Adapter/Messaging/RefereeConsumer.php).
 The referee picks up a player joined event and ensures, that a chat is initiated.
 When the chat is initiated, it assigns the chat to the game.
 This is done, so the storage of games and chats can be on different MySQL instances.
