@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Identity\Port\Adapter\Messaging;
 
 use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\NoCommit;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\MessageBroker;
@@ -17,6 +18,8 @@ use RuntimeException;
 
 final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
 {
+    use NoCommit;
+
     public function __construct(
         private readonly MessageBroker $messageBroker,
         private readonly Normalizer $normalizer

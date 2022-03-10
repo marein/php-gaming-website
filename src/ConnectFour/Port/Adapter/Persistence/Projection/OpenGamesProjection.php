@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 
+use Gaming\Common\EventStore\NoCommit;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
@@ -14,6 +15,8 @@ use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 
 final class OpenGamesProjection implements StoredEventSubscriber
 {
+    use NoCommit;
+
     public function __construct(
         private readonly OpenGameStore $openGameStore
     ) {

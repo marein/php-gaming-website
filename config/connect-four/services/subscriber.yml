@@ -39,10 +39,10 @@ services:
             - { name: 'connect-four.stored-event-subscriber', key: 'games-by-player-projection' }
 
     connect-four.publish-stored-events-subscriber:
-        class: Gaming\ConnectFour\Port\Adapter\Messaging\PublishStoredEventsToRabbitMqSubscriber
+        class: Gaming\ConnectFour\Port\Adapter\Messaging\PublishStoredEventsToMessageBrokerSubscriber
         public: false
         arguments:
-            - '@gaming.message-broker'
+            - '@gaming.message-broker.gaming-exchange-publisher'
             - '@connect-four.normalizer'
         tags:
             - { name: 'connect-four.stored-event-subscriber', key: 'publish-to-message-broker' }

@@ -7,9 +7,9 @@ namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Message\Name;
+use Gaming\Common\MessageBroker\Publisher;
 use Gaming\Common\Normalizer\Normalizer;
 use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
@@ -21,10 +21,10 @@ use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use RuntimeException;
 
-final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
+final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventSubscriber
 {
     public function __construct(
-        private readonly MessageBroker $messageBroker,
+        private readonly Publisher $publisher,
         private readonly Normalizer $normalizer
     ) {
     }
@@ -43,7 +43,7 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
         //
         // We could use a strong message format like json schema, protobuf etc. to have
         // a clearly defined interface with other domains.
-        $this->messageBroker->publish(
+        $this->publisher->publish(
             new Message(
                 new Name('ConnectFour', $this->nameFromDomainEvent($domainEvent)),
                 json_encode(
@@ -52,6 +52,11 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
                 )
             )
         );
+    }
+
+    public function commit(): void
+    {
+        $this->publisher->flush();
     }
 
     private function nameFromDomainEvent(DomainEvent $domainEvent): string
