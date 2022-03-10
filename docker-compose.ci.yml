@@ -51,8 +51,8 @@ services:
         restart: on-failure
         labels:
             - "traefik.enable=true"
-            - "traefik.priority=20"
-            - "traefik.frontend.rule=PathPrefix:/sse"
+            - "traefik.http.routers.nchan.priority=20"
+            - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
     nginx:
         image: marein/php-gaming-website:nginx
         depends_on:
@@ -60,8 +60,8 @@ services:
         restart: on-failure
         labels:
             - "traefik.enable=true"
-            - "traefik.priority=10"
-            - "traefik.frontend.rule=PathPrefix:/"
+            - "traefik.http.routers.nginx.priority=10"
+            - "traefik.http.routers.nginx.rule=PathPrefix(`/`)"
     php-fpm: *php-container
 
     ##############################

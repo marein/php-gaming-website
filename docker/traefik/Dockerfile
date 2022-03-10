@@ -1,3 +1,3 @@
-FROM traefik:1.7-alpine
+FROM traefik:2.6
 
-COPY /docker/traefik/traefik.toml /etc/traefik/
+COPY /docker/traefik/traefik.yml /etc/traefik/
