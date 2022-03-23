@@ -18,8 +18,22 @@ services:
         arguments:
             - '@identity.user-controller'
 
+    web-interface.psr17-http-factory:
+        class: Nyholm\Psr7\Factory\Psr17Factory
+
+    web-interface.nchan:
+        class: Marein\Nchan\Nchan
+        arguments:
+            - '%env(APPLICATION_WEB_INTERFACE_NCHAN_BASE_URL)%'
+            - !service
+                class: Marein\Nchan\HttpAdapter\Psr18ClientAdapter
+                arguments:
+                    - '@psr18.http_client'
+                    - '@web-interface.psr17-http-factory'
+                    - '@web-interface.psr17-http-factory'
+
     web-interface.browser-notifier:
         class: Gaming\WebInterface\Infrastructure\NchanBrowserNotifier
         public: false
         arguments:
-            - '%env(APPLICATION_WEB_INTERFACE_NCHAN_BASE_URL)%'
+            - '@web-interface.nchan'
