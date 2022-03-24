@@ -54,15 +54,17 @@ services:
         restart: on-failure
         labels:
             - "traefik.enable=true"
-            - "traefik.priority=20"
-            - "traefik.frontend.rule=PathPrefix:/sse"
+            - "traefik.http.routers.nchan.priority=20"
+            - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
     service-js-polyfill:
         image: gamingplatform/service-js-polyfill
         restart: on-failure
         labels:
             - "traefik.enable=true"
-            - "traefik.priority=20"
-            - "traefik.frontend.rule=PathPrefixStrip:/polyfill"
+            - "traefik.http.routers.service-js-polyfill.priority=20"
+            - "traefik.http.routers.service-js-polyfill.rule=PathPrefix(`/polyfill`)"
+            - "traefik.http.routers.service-js-polyfill.middlewares=service-js-polyfill-stripprefix"
+            - "traefik.http.middlewares.service-js-polyfill-stripprefix.stripprefix.prefixes=/polyfill"
     nginx:
         image: marein/php-gaming-website:nginx
         depends_on:
@@ -70,8 +72,8 @@ services:
         restart: on-failure
         labels:
             - "traefik.enable=true"
-            - "traefik.priority=10"
-            - "traefik.frontend.rule=PathPrefix:/"
+            - "traefik.http.routers.nginx.priority=10"
+            - "traefik.http.routers.nginx.rule=PathPrefix(`/`)"
     php-fpm: *php-container
 
     ##############################
