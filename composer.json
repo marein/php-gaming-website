@@ -30,7 +30,7 @@
     "doctrine/orm": "^2.8",
     "enqueue/amqp-lib": "^0.10.8",
     "jms/serializer": "^3.14",
-    "marein/php-nchan-client": "dev-master",
+    "marein/php-nchan-client": "^3.1",
     "marein/symfony-lock-doctrine-migrations-bundle": "^1.0",
     "marein/symfony-standard-headers-csrf-bundle": "^1.0",
     "nyholm/psr7": "^1.5",

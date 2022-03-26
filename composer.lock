@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "693f81729b8a12bae32591a041f66243",
+    "content-hash": "1a3c926334f5e8dd6804f753813a190f",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1917,7 +1917,7 @@
         },
         {
             "name": "marein/php-nchan-client",
-            "version": "dev-master",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marein/php-nchan-client.git",
@@ -1944,7 +1944,6 @@
                 "symfony/http-client": "^5.4",
                 "symfony/process": "^5.4"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1964,7 +1963,7 @@
             "description": "A PHP https://nchan.io client.",
             "support": {
                 "issues": "https://github.com/marein/php-nchan-client/issues",
-                "source": "https://github.com/marein/php-nchan-client/tree/master"
+                "source": "https://github.com/marein/php-nchan-client/tree/3.1.0"
             },
             "time": "2022-03-23T21:14:56+00:00"
         },
@@ -10348,7 +10347,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "marein/php-nchan-client": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
