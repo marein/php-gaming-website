@@ -6,9 +6,10 @@ services:
         arguments:
             - '@chat.event-store'
             - !service
-                class: Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\PredisEventStorePointerFactory
+                class: Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\DoctrineMysqlEventStorePointerFactory
                 arguments:
-                    - '@chat.predis'
+                    - '@chat.doctrine-dbal'
+                    - 'event_store_pointer'
             - !tagged { tag: 'chat.stored-event-subscriber', index_by: 'key' }
             - '@chat.normalizer'
         tags:

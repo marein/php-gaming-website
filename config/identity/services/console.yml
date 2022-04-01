@@ -6,9 +6,10 @@ services:
         arguments:
             - '@identity.event-store'
             - !service
-                class: Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\PredisEventStorePointerFactory
+                class: Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\DoctrineMysqlEventStorePointerFactory
                 arguments:
-                    - '@identity.predis'
+                    - '@identity.doctrine-dbal'
+                    - 'event_store_pointer'
             - !tagged { tag: 'identity.stored-event-subscriber', index_by: 'key' }
             - '@identity.normalizer'
         tags:
