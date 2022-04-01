@@ -1,13 +1,5 @@
 services:
 
-    identity.predis:
-        class: Predis\Client
-        public: false
-        arguments:
-            - '%env(APPLICATION_IDENTITY_PREDIS_CLIENT_URL)%'
-            -
-                prefix: 'identity.'
-
     identity.doctrine-dbal:
         alias: 'doctrine.dbal.identity_connection'
 
