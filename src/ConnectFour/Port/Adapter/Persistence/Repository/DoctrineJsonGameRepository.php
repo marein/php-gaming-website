@@ -15,8 +15,6 @@ use Gaming\ConnectFour\Domain\Game\Games;
 
 final class DoctrineJsonGameRepository implements Games
 {
-    private Connection $connection;
-
     /**
      * The map is used to store data for optimistic locking.
      * This array gets never cleared so this can be a memory leak
@@ -26,22 +24,13 @@ final class DoctrineJsonGameRepository implements Games
      */
     private array $identityMap;
 
-    private DomainEventPublisher $domainEventPublisher;
-
-    private Normalizer $normalizer;
-
-    private string $tableName;
-
     public function __construct(
-        Connection $connection,
-        DomainEventPublisher $domainEventPublisher,
-        Normalizer $normalizer
+        private readonly Connection $connection,
+        private readonly string $tableName,
+        private readonly DomainEventPublisher $domainEventPublisher,
+        private readonly Normalizer $normalizer
     ) {
-        $this->connection = $connection;
         $this->identityMap = [];
-        $this->domainEventPublisher = $domainEventPublisher;
-        $this->normalizer = $normalizer;
-        $this->tableName = 'game';
     }
 
     public function nextIdentity(): GameId
