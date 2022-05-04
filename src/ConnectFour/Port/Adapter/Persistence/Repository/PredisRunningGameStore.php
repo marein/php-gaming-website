@@ -9,27 +9,24 @@ use Predis\ClientInterface;
 
 final class PredisRunningGameStore implements RunningGameStore
 {
-    private const STORAGE_KEY = 'running-games';
-
-    private ClientInterface $predis;
-
-    public function __construct(ClientInterface $predis)
-    {
-        $this->predis = $predis;
+    public function __construct(
+        private readonly ClientInterface $predis,
+        private readonly string $storageKey
+    ) {
     }
 
     public function add(string $gameId): void
     {
-        $this->predis->sadd(self::STORAGE_KEY, [$gameId]);
+        $this->predis->sadd($this->storageKey, [$gameId]);
     }
 
     public function remove(string $gameId): void
     {
-        $this->predis->srem(self::STORAGE_KEY, $gameId);
+        $this->predis->srem($this->storageKey, $gameId);
     }
 
     public function count(): int
     {
-        return $this->predis->scard(self::STORAGE_KEY);
+        return $this->predis->scard($this->storageKey);
     }
 }

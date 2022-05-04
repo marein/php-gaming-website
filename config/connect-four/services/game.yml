@@ -18,6 +18,7 @@ services:
         public: false
         arguments:
             - '@connect-four.doctrine-dbal'
+            - 'game'
             - '@connect-four.domain-event-publisher'
             - '@connect-four.normalizer'
 
@@ -26,6 +27,7 @@ services:
         public: false
         arguments:
             - '@connect-four.predis'
+            - 'game.'
             - '@connect-four.event-store-game-finder'
 
     connect-four.game-finder:
@@ -42,15 +44,18 @@ services:
         public: false
         arguments:
             - '@connect-four.predis'
+            - 'games-by-player.'
 
     connect-four.open-game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisOpenGameStore
         public: false
         arguments:
             - '@connect-four.predis'
+            - 'open-games'
 
     connect-four.running-games-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGameStore
         public: false
         arguments:
             - '@connect-four.predis'
+            - 'running-games'
