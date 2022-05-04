@@ -3,8 +3,8 @@ services:
     identity.domain-event-publisher:
         class: Gaming\Common\Domain\DomainEventPublisher
         public: false
-        calls:
-            - ['subscribe', ['@identity.store-domain-events-subscriber']]
+        arguments:
+            - !tagged { tag: 'identity.domain-event-subscriber' }
 
     identity.user-controller:
         class: Gaming\Identity\Port\Adapter\Http\UserController

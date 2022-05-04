@@ -5,6 +5,8 @@ services:
         public: false
         arguments:
             - '@identity.event-store'
+        tags:
+            - { name: 'identity.domain-event-subscriber' }
 
     identity.publish-stored-events-subscriber:
         class: Gaming\Identity\Port\Adapter\Messaging\PublishStoredEventsToRabbitMqSubscriber

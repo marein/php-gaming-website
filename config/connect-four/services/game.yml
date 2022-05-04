@@ -3,8 +3,8 @@ services:
     connect-four.domain-event-publisher:
         class: Gaming\Common\Domain\DomainEventPublisher
         public: false
-        calls:
-            - ['subscribe', ['@connect-four.store-domain-events-subscriber']]
+        arguments:
+            - !tagged { tag: 'connect-four.domain-event-subscriber' }
 
     connect-four.game-controller:
         class: Gaming\ConnectFour\Port\Adapter\Http\GameController

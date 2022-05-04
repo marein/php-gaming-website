@@ -27,7 +27,7 @@ final class FollowEventStoreCommand extends Command
     public function __construct(
         private readonly EventStore $eventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
-        private readonly iterable $storedEventSubscribers,
+        private readonly Traversable $storedEventSubscribers,
         private readonly Normalizer $normalizer
     ) {
         parent::__construct();
