@@ -12,6 +12,8 @@ services:
         public: false
         arguments:
             - '@chat.doctrine-dbal'
+            - 'chat'
+            - 'message'
 
     chat.chat-service:
         class: Gaming\Chat\Application\ChatService

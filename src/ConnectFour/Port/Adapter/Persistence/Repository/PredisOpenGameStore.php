@@ -11,19 +11,16 @@ use Predis\ClientInterface;
 
 final class PredisOpenGameStore implements OpenGameStore
 {
-    private const STORAGE_KEY = 'open-games';
-
-    private ClientInterface $predis;
-
-    public function __construct(ClientInterface $predis)
-    {
-        $this->predis = $predis;
+    public function __construct(
+        private readonly ClientInterface $predis,
+        private readonly string $storageKey
+    ) {
     }
 
     public function save(OpenGame $openGame): void
     {
         $this->predis->hset(
-            self::STORAGE_KEY,
+            $this->storageKey,
             $openGame->gameId(),
             json_encode(
                 [
@@ -37,7 +34,7 @@ final class PredisOpenGameStore implements OpenGameStore
 
     public function remove(string $gameId): void
     {
-        $this->predis->hdel(self::STORAGE_KEY, [$gameId]);
+        $this->predis->hdel($this->storageKey, [$gameId]);
     }
 
     public function all(): OpenGames
@@ -48,7 +45,7 @@ final class PredisOpenGameStore implements OpenGameStore
                     $payload = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
                     return new OpenGame($payload['gameId'], $payload['playerId']);
                 },
-                array_values($this->predis->hgetall(self::STORAGE_KEY))
+                array_values($this->predis->hgetall($this->storageKey))
             )
         );
     }
