@@ -59,14 +59,12 @@ final class DoctrineChatGateway implements ChatGateway
     {
         // Directly format the date as \DateTime::ATOM, since we know that our server saves dates as UTC.
         return $this->connection->createQueryBuilder()
-            ->select(
-                '
+            ->select('
                 m.id as messageId,
                 m.authorId,
                 m.message,
                 DATE_FORMAT(m.writtenAt, "%Y-%m-%dT%T+00:00") as writtenAt
-            '
-            )
+            ')
             ->from($this->chatTableName, 'c')
             ->leftJoin('c', $this->messageTableName, 'm', 'c.id = m.chatId')
             ->where('m.chatId = :chatId')
