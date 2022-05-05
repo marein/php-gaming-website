@@ -62,7 +62,7 @@ final class Publisher implements Task
 
         foreach ($this->channels as $channel) {
             if ($channel->receive() !== 'PONG') {
-                throw new EventStoreException('No ack from channel.');
+                throw new EventStoreException('No pong from channel.');
             }
         }
     }
