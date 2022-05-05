@@ -48,6 +48,7 @@ services:
         arguments:
             - '@gaming.message-broker.amqp-lib.connection-factory'
             - 'gaming'
+            - !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT
 
     gaming.consume-messages-command:
         class: Gaming\Common\Port\Adapter\Symfony\ConsumeMessagesCommand

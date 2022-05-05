@@ -18,13 +18,14 @@ final class ConfirmingPublisher implements Publisher
 
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
-        private readonly string $exchange
+        private readonly string $exchange,
+        int $deliveryMode
     ) {
         $this->channel = null;
         $this->message = new AMQPMessage(
             '',
             [
-                'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT
+                'delivery_mode' => $deliveryMode
             ]
         );
     }
@@ -61,7 +62,6 @@ final class ConfirmingPublisher implements Publisher
             throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
     }
-
 
     /**
      * @throws MessageBrokerException
