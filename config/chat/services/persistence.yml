@@ -1,13 +1,5 @@
 services:
 
-    chat.predis:
-        class: Predis\Client
-        public: false
-        arguments:
-            - '%env(APPLICATION_CHAT_PREDIS_CLIENT_URL)%'
-            -
-                prefix: 'chat.'
-
     chat.doctrine-dbal:
         alias: 'doctrine.dbal.chat_connection'
 

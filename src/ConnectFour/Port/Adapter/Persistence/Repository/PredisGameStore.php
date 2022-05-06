@@ -18,22 +18,17 @@ use Predis\ClientInterface;
  */
 final class PredisGameStore implements GameStore
 {
-    private const STORAGE_KEY_PREFIX = 'game.';
-
-    private ClientInterface $predis;
-
-    private GameFinder $fallbackGameFinder;
-
-    public function __construct(ClientInterface $predis, GameFinder $fallbackGameFinder)
-    {
-        $this->predis = $predis;
-        $this->fallbackGameFinder = $fallbackGameFinder;
+    public function __construct(
+        private readonly ClientInterface $predis,
+        private readonly string $storageKeyPrefix,
+        private readonly GameFinder $fallbackGameFinder
+    ) {
     }
 
     public function find(string $gameId): Game
     {
         $serializedGame = $this->predis->get(
-            self::STORAGE_KEY_PREFIX . $gameId
+            $this->storageKeyPrefix . $gameId
         );
 
         // If no game is found, use the fallback.
@@ -47,7 +42,7 @@ final class PredisGameStore implements GameStore
     public function save(Game $game): void
     {
         $this->predis->set(
-            self::STORAGE_KEY_PREFIX . $game->id(),
+            $this->storageKeyPrefix . $game->id(),
             serialize($game)
         );
     }

@@ -4,21 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Domain;
 
+use Traversable;
+
 final class DomainEventPublisher
 {
     /**
-     * @var DomainEventSubscriber[]
+     * @param Traversable<DomainEventSubscriber> $subscribers
      */
-    private array $subscribers;
-
-    public function __construct()
-    {
-        $this->subscribers = [];
-    }
-
-    public function subscribe(DomainEventSubscriber $subscriber): void
-    {
-        $this->subscribers[] = $subscriber;
+    public function __construct(
+        private readonly Traversable $subscribers
+    ) {
     }
 
     /**

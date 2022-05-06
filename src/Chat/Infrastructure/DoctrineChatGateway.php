@@ -12,14 +12,11 @@ use Gaming\Chat\Application\Exception\ChatNotFoundException;
 
 final class DoctrineChatGateway implements ChatGateway
 {
-    private const TABLE_CHAT = 'chat';
-    private const TABLE_MESSAGE = 'message';
-
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly string $chatTableName,
+        private readonly string $messageTableName,
+    ) {
     }
 
     public function create(array $authors): ChatId
@@ -27,7 +24,7 @@ final class DoctrineChatGateway implements ChatGateway
         $chatId = ChatId::generate();
 
         $this->connection->insert(
-            self::TABLE_CHAT,
+            $this->chatTableName,
             [
                 'id' => $chatId->toString(),
                 'authors' => $authors
@@ -45,7 +42,7 @@ final class DoctrineChatGateway implements ChatGateway
         DateTimeImmutable $writtenAt
     ): int {
         $this->connection->insert(
-            self::TABLE_MESSAGE,
+            $this->messageTableName,
             [
                 'chatId' => $chatId->toString(),
                 'authorId' => $authorId,
@@ -68,8 +65,8 @@ final class DoctrineChatGateway implements ChatGateway
                 m.message,
                 DATE_FORMAT(m.writtenAt, "%Y-%m-%dT%T+00:00") as writtenAt
             ')
-            ->from(self::TABLE_CHAT, 'c')
-            ->leftJoin('c', self::TABLE_MESSAGE, 'm', 'c.id = m.chatId')
+            ->from($this->chatTableName, 'c')
+            ->leftJoin('c', $this->messageTableName, 'm', 'c.id = m.chatId')
             ->where('m.chatId = :chatId')
             ->andWhere(
                 'JSON_LENGTH(c.authors) = 0 OR JSON_CONTAINS(c.authors, :authorId) > 0'
@@ -86,7 +83,7 @@ final class DoctrineChatGateway implements ChatGateway
     {
         $chat = $this->connection->createQueryBuilder()
             ->select('BIN_TO_UUID(c.id) as id, c.authors')
-            ->from(self::TABLE_CHAT, 'c')
+            ->from($this->chatTableName, 'c')
             ->where('c.id = :id')
             ->setParameter('id', $chatId->toString(), 'uuid')
             ->executeQuery()

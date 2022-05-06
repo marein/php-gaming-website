@@ -10,11 +10,9 @@ use Marein\Nchan\Nchan;
 
 final class NchanBrowserNotifier implements BrowserNotifier
 {
-    private Nchan $nchan;
-
-    public function __construct(string $baseUrl)
-    {
-        $this->nchan = new Nchan($baseUrl);
+    public function __construct(
+        private readonly Nchan $nchan
+    ) {
     }
 
     public function publish(array $channels, string $message): void

@@ -11,13 +11,10 @@ use Predis\ClientInterface;
 
 final class PredisGamesByPlayerStore implements GamesByPlayerStore
 {
-    private const STORAGE_KEY_PREFIX = 'games-by-player.';
-
-    private ClientInterface $predis;
-
-    public function __construct(ClientInterface $predis)
-    {
-        $this->predis = $predis;
+    public function __construct(
+        private readonly ClientInterface $predis,
+        private readonly string $storageKeyPrefix
+    ) {
     }
 
     public function addToPlayer(string $playerId, string $gameId): void
@@ -49,6 +46,6 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
 
     private function storageKeyForPlayer(string $playerId): string
     {
-        return self::STORAGE_KEY_PREFIX . $playerId;
+        return $this->storageKeyPrefix . $playerId;
     }
 }
