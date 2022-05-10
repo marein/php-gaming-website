@@ -22,6 +22,10 @@ services:
     ##############################
     traefik:
         image: marein/php-gaming-website:traefik
+        command:
+            - --api.insecure=true
+            - --providers.docker
+            - --providers.docker.exposedbydefault=false
         ports:
             - "80:80"
         depends_on:
