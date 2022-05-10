@@ -1,6 +1,0 @@
-api:
-  insecure: true
-
-providers:
-  docker:
-    exposedByDefault: false
