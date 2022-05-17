@@ -99,6 +99,8 @@ buildProductionImages() {
     docker build --file docker/mysql/Dockerfile --tag marein/php-gaming-website:mysql .
     docker build --file docker/redis/Dockerfile --tag marein/php-gaming-website:redis .
     docker build --file docker/rabbit-mq/Dockerfile --tag marein/php-gaming-website:rabbit-mq .
+    docker build --file docker/grafana/Dockerfile --tag marein/php-gaming-website:grafana .
+    docker build --file docker/prometheus/Dockerfile --tag marein/php-gaming-website:prometheus .
 }
 
 pushProductionImages() {
@@ -111,6 +113,8 @@ pushProductionImages() {
     docker push marein/php-gaming-website:mysql
     docker push marein/php-gaming-website:redis
     docker push marein/php-gaming-website:rabbit-mq
+    docker push marein/php-gaming-website:grafana
+    docker push marein/php-gaming-website:prometheus
 }
 
 if [ "$*" = "" ]

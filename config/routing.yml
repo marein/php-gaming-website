@@ -1,2 +1,2 @@
-WebInterface:
-    resource: web-interface/routing.yml
+Gaming:
+    resource: '*/routing.yml'

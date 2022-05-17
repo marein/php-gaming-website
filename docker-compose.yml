@@ -42,6 +42,29 @@ services:
             - nginx
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+    grafana:
+        build:
+            context: .
+            dockerfile: ./docker/grafana/Dockerfile
+        environment:
+            GF_AUTH_DISABLE_LOGIN_FORM: 1
+            GF_AUTH_ANONYMOUS_ENABLED: 1
+            GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+        ports:
+            - "8085:3000"
+        volumes:
+            - ./docker/grafana/provisioning:/etc/grafana/provisioning
+            - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
+    prometheus:
+        build:
+            context: .
+            dockerfile: ./docker/prometheus/Dockerfile
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+        volumes:
+            - prometheus:/prometheus
+        restart: on-failure
     mysql:
         build:
             context: .
@@ -174,3 +197,4 @@ volumes:
     mysql:
     redis:
     rabbit-mq:
+    prometheus:

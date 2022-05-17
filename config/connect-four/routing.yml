@@ -1,0 +1,6 @@
+connect-four_metrics:
+    path: /metrics/connect-four
+    methods:
+        - GET
+    defaults:
+        _controller: connect-four.metrics-controller::metricsAction

@@ -1,0 +1,8 @@
+services:
+
+    connect-four.metrics-controller:
+        class: Gaming\ConnectFour\Port\Adapter\Http\MetricsController
+        arguments:
+            - '@connect-four.query-bus'
+        tags:
+            - 'controller.service_arguments'

@@ -60,6 +60,23 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.nchan.priority=20"
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
+    grafana:
+        image: marein/php-gaming-website:grafana
+        restart: on-failure
+        environment:
+            GF_AUTH_DISABLE_LOGIN_FORM: 1
+            GF_AUTH_ANONYMOUS_ENABLED: 1
+            GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+        ports:
+            - "8085:3000"
+    prometheus:
+        image: marein/php-gaming-website:prometheus
+        restart: on-failure
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+        volumes:
+            - prometheus:/prometheus
     service-js-polyfill:
         image: gamingplatform/service-js-polyfill
         restart: on-failure
@@ -103,3 +120,4 @@ volumes:
     mysql:
     redis:
     rabbit-mq:
+    prometheus:
