@@ -7,6 +7,7 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use Throwable;
 
 final class ConnectionFactory
 {
@@ -25,12 +26,16 @@ final class ConnectionFactory
             throw new MessageBrokerException('Cannot parse ' . $this->dsn . ' as url.');
         }
 
-        return new AMQPStreamConnection(
-            $urlComponents['host'] ?? '127.0.0.1',
-            $urlComponents['port'] ?? 5672,
-            $urlComponents['user'] ?? 'guest',
-            $urlComponents['pass'] ?? 'guest',
-            $urlComponents['path'] ?? '/'
-        );
+        try {
+            return new AMQPStreamConnection(
+                $urlComponents['host'] ?? '127.0.0.1',
+                $urlComponents['port'] ?? 5672,
+                $urlComponents['user'] ?? 'guest',
+                $urlComponents['pass'] ?? 'guest',
+                $urlComponents['path'] ?? '/'
+            );
+        } catch (Throwable $throwable) {
+            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
+        }
     }
 }

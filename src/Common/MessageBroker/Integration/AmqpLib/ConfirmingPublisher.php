@@ -9,6 +9,7 @@ use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Publisher;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Throwable;
 
 final class ConfirmingPublisher implements Publisher
 {
@@ -32,33 +33,33 @@ final class ConfirmingPublisher implements Publisher
 
     public function publish(Message $message): void
     {
+        $this->channel ??= $this->createConfirmingChannel();
+
+        $this->message->setBody(
+            json_encode(
+                [(string)$message->name(), $message->body()],
+                JSON_THROW_ON_ERROR
+            )
+        );
+
         try {
-            $this->channel ??= $this->createConfirmingChannel();
-
-            $this->message->setBody(
-                json_encode(
-                    [(string)$message->name(), $message->body()],
-                    JSON_THROW_ON_ERROR
-                )
-            );
-
             $this->channel->basic_publish(
                 $this->message,
                 $this->exchange,
                 $message->name()->domain() . '.' . $message->name()->name()
             );
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
     }
 
     public function flush(): void
     {
-        try {
-            $this->channel ??= $this->createConfirmingChannel();
+        $this->channel ??= $this->createConfirmingChannel();
 
+        try {
             $this->channel->wait_for_pending_acks();
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
     }
@@ -68,10 +69,15 @@ final class ConfirmingPublisher implements Publisher
      */
     private function createConfirmingChannel(): AMQPChannel
     {
-        $channel = $this->connectionFactory->create()->channel();
+        $connection = $this->connectionFactory->create();
 
-        $channel->confirm_select();
+        try {
+            $channel = $connection->channel();
+            $channel->confirm_select();
 
-        return $channel;
+            return $channel;
+        } catch (Throwable $throwable) {
+            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
+        }
     }
 }
