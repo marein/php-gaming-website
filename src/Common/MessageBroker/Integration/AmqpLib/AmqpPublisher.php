@@ -75,11 +75,11 @@ final class AmqpPublisher implements Publisher
 
         try {
             $channel = $connection->channel();
-
-            $this->topology->declare($channel);
         } catch (Throwable $throwable) {
             throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
+
+        $this->topology->declare($channel);
 
         $this->reliablePublishing->prepareChannel($channel);
 
