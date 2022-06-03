@@ -35,7 +35,7 @@ final class ConnectionFactory
                 $urlComponents['path'] ?? '/'
             );
         } catch (Throwable $throwable) {
-            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
+            throw MessageBrokerException::fromThrowable($throwable);
         }
     }
 }

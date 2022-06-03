@@ -7,6 +7,7 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
+use Throwable;
 
 final class TopicExchangeTopology implements Topology
 {
@@ -26,7 +27,7 @@ final class TopicExchangeTopology implements Topology
                 false
             );
         } catch (Throwable $throwable) {
-            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
+            throw MessageBrokerException::fromThrowable($throwable);
         }
     }
 }

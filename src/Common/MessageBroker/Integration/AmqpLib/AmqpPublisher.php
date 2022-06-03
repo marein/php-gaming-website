@@ -51,7 +51,7 @@ final class AmqpPublisher implements Publisher
                 $message->name()->domain() . '.' . $message->name()->name()
             );
         } catch (Throwable $throwable) {
-            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
+            throw MessageBrokerException::fromThrowable($throwable);
         }
     }
 
@@ -72,7 +72,7 @@ final class AmqpPublisher implements Publisher
         try {
             $channel = $connection->channel();
         } catch (Throwable $throwable) {
-            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
+            throw MessageBrokerException::fromThrowable($throwable);
         }
 
         $this->topology->declare($channel);

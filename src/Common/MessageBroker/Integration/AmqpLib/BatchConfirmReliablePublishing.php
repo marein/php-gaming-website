@@ -15,7 +15,7 @@ final class BatchConfirmReliablePublishing implements ReliablePublishing
         try {
             $channel->wait_for_pending_acks();
         } catch (Throwable $throwable) {
-            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
+            throw MessageBrokerException::fromThrowable($throwable);
         }
     }
 
@@ -24,7 +24,7 @@ final class BatchConfirmReliablePublishing implements ReliablePublishing
         try {
             $channel->confirm_select();
         } catch (Throwable $throwable) {
-            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
+            throw MessageBrokerException::fromThrowable($throwable);
         }
     }
 }
