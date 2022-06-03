@@ -11,7 +11,7 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Throwable;
 
-final class ConfirmingPublisher implements Publisher
+final class AmqpPublisher implements Publisher
 {
     private ?AMQPChannel $channel;
 
@@ -20,6 +20,7 @@ final class ConfirmingPublisher implements Publisher
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
         private readonly Topology $topology,
+        private readonly ReliablePublishing $reliablePublishing,
         private readonly string $exchangeToPublishTo,
         int $deliveryMode
     ) {
@@ -59,7 +60,7 @@ final class ConfirmingPublisher implements Publisher
         $this->channel ??= $this->createConfirmingChannelAndTopology();
 
         try {
-            $this->channel->wait_for_pending_acks();
+            $this->reliablePublishing->flush($this->channel);
         } catch (Throwable $throwable) {
             throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
@@ -74,12 +75,13 @@ final class ConfirmingPublisher implements Publisher
 
         try {
             $channel = $connection->channel();
-            $channel->confirm_select();
 
             $this->topology->declare($channel);
         } catch (Throwable $throwable) {
             throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
+
+        $this->reliablePublishing->prepareChannel($channel);
 
         return $channel;
     }

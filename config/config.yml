@@ -48,12 +48,17 @@ services:
         arguments:
             - 'gaming'
 
+    gaming.message-broker.batch-confirm-reliable-publishing:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\BatchConfirmReliablePublishing
+        public: false
+
     gaming.message-broker.gaming-exchange-publisher:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConfirmingPublisher
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpPublisher
         public: false
         arguments:
             - '@gaming.message-broker.amqp-lib.connection-factory'
             - '@gaming.message-broker.gaming-exchange-topology'
+            - '@gaming.message-broker.batch-confirm-reliable-publishing'
             - 'gaming'
             - !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT
 
