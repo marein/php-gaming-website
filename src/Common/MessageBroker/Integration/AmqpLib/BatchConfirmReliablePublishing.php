@@ -10,19 +10,19 @@ use Throwable;
 
 final class BatchConfirmReliablePublishing implements ReliablePublishing
 {
-    public function flush(AMQPChannel $channel): void
+    public function prepareChannel(AMQPChannel $channel): void
     {
         try {
-            $channel->wait_for_pending_acks();
+            $channel->confirm_select();
         } catch (Throwable $throwable) {
             throw MessageBrokerException::fromThrowable($throwable);
         }
     }
 
-    public function prepareChannel(AMQPChannel $channel): void
+    public function flush(AMQPChannel $channel): void
     {
         try {
-            $channel->confirm_select();
+            $channel->wait_for_pending_acks();
         } catch (Throwable $throwable) {
             throw MessageBrokerException::fromThrowable($throwable);
         }
