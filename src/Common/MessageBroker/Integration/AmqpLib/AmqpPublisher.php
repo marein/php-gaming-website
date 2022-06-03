@@ -59,11 +59,7 @@ final class AmqpPublisher implements Publisher
     {
         $this->channel ??= $this->createConfirmingChannelAndTopology();
 
-        try {
-            $this->reliablePublishing->flush($this->channel);
-        } catch (Throwable $throwable) {
-            throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
-        }
+        $this->reliablePublishing->flush($this->channel);
     }
 
     /**
