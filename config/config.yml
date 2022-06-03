@@ -42,11 +42,18 @@ services:
         arguments:
             - '%env(APPLICATION_RABBIT_MQ_DSN)%'
 
+    gaming.message-broker.gaming-exchange-topology:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\TopicExchangeTopology
+        public: false
+        arguments:
+            - 'gaming'
+
     gaming.message-broker.gaming-exchange-publisher:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConfirmingPublisher
         public: false
         arguments:
             - '@gaming.message-broker.amqp-lib.connection-factory'
+            - '@gaming.message-broker.gaming-exchange-topology'
             - 'gaming'
             - !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT
 

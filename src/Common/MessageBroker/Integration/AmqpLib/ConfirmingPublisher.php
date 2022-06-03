@@ -19,7 +19,8 @@ final class ConfirmingPublisher implements Publisher
 
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
-        private readonly string $exchange,
+        private readonly Topology $topology,
+        private readonly string $exchangeToPublishTo,
         int $deliveryMode
     ) {
         $this->channel = null;
@@ -33,7 +34,7 @@ final class ConfirmingPublisher implements Publisher
 
     public function publish(Message $message): void
     {
-        $this->channel ??= $this->createConfirmingChannel();
+        $this->channel ??= $this->createConfirmingChannelAndTopology();
 
         $this->message->setBody(
             json_encode(
@@ -45,7 +46,7 @@ final class ConfirmingPublisher implements Publisher
         try {
             $this->channel->basic_publish(
                 $this->message,
-                $this->exchange,
+                $this->exchangeToPublishTo,
                 $message->name()->domain() . '.' . $message->name()->name()
             );
         } catch (Throwable $throwable) {
@@ -55,7 +56,7 @@ final class ConfirmingPublisher implements Publisher
 
     public function flush(): void
     {
-        $this->channel ??= $this->createConfirmingChannel();
+        $this->channel ??= $this->createConfirmingChannelAndTopology();
 
         try {
             $this->channel->wait_for_pending_acks();
@@ -67,7 +68,7 @@ final class ConfirmingPublisher implements Publisher
     /**
      * @throws MessageBrokerException
      */
-    private function createConfirmingChannel(): AMQPChannel
+    private function createConfirmingChannelAndTopology(): AMQPChannel
     {
         $connection = $this->connectionFactory->create();
 
@@ -75,9 +76,11 @@ final class ConfirmingPublisher implements Publisher
             $channel = $connection->channel();
             $channel->confirm_select();
 
-            return $channel;
+            $this->topology->declare($channel);
         } catch (Throwable $throwable) {
             throw new MessageBrokerException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
+
+        return $channel;
     }
 }
