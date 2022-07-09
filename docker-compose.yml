@@ -39,7 +39,7 @@ services:
         depends_on:
             - nchan
             - service-js-polyfill
-            - nginx
+            - php-fpm
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
     mysql:
@@ -87,19 +87,6 @@ services:
             - "traefik.http.routers.service-js-polyfill.rule=PathPrefix(`/polyfill`)"
             - "traefik.http.routers.service-js-polyfill.middlewares=service-js-polyfill-stripprefix"
             - "traefik.http.middlewares.service-js-polyfill-stripprefix.stripprefix.prefixes=/polyfill"
-    nginx:
-        build:
-            context: .
-            dockerfile: ./docker/nginx/Dockerfile
-        depends_on:
-            - php-fpm
-        volumes:
-            - ./web/assets:/project/web/assets:delegated
-        restart: on-failure
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.nginx.priority=10"
-            - "traefik.http.routers.nginx.rule=PathPrefix(`/`)"
     php-fpm:
         <<: *php-container
         volumes:
@@ -107,7 +94,13 @@ services:
             - ./src:/project/src:delegated
             - ./tests:/project/tests:delegated
             - ./var:/project/var:delegated
+            - ./web:/project/web:delegated
             - vendor:/project/vendor
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.php-fpm.priority=10"
+            - "traefik.http.routers.php-fpm.rule=PathPrefix(`/`)"
+            - "traefik.http.services.php-fpm.loadbalancer.server.port=80"
 
     ##############################
     #   Long running processes   #
