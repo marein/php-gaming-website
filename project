@@ -87,14 +87,13 @@ acceptance() {
 
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci build --pull
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci up -d
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run -v $(pwd)/tests:/project/tests php bash -c 'wait-for-tcp-server php-fpm:9000 120 && vendor/bin/codecept run acceptance'
+    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run -v $(pwd)/tests:/project/tests php bash -c 'wait-for-tcp-server php-fpm:80 120 && vendor/bin/codecept run acceptance'
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci down -v
 }
 
 buildProductionImages() {
     docker build --build-arg environment=production --file docker/php-fpm/Dockerfile --tag marein/php-gaming-website:php-fpm .
     docker build --file docker/traefik/Dockerfile --tag marein/php-gaming-website:traefik .
-    docker build --file docker/nginx/Dockerfile --tag marein/php-gaming-website:nginx .
     docker build --file docker/nchan/Dockerfile --tag marein/php-gaming-website:nchan .
     docker build --file docker/mysql/Dockerfile --tag marein/php-gaming-website:mysql .
     docker build --file docker/redis/Dockerfile --tag marein/php-gaming-website:redis .
@@ -108,7 +107,6 @@ pushProductionImages() {
 
     docker push marein/php-gaming-website:php-fpm
     docker push marein/php-gaming-website:traefik
-    docker push marein/php-gaming-website:nginx
     docker push marein/php-gaming-website:nchan
     docker push marein/php-gaming-website:mysql
     docker push marein/php-gaming-website:redis

@@ -34,4 +34,4 @@ RUN /cache-warmup.sh
 COPY /docker/php-fpm/${environment}.ini /etc/php/8.0/fpm/conf.d/
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["php-fpm"]
+CMD ["php-http"]

@@ -31,7 +31,7 @@ services:
         depends_on:
             - nchan
             - service-js-polyfill
-            - nginx
+            - php-fpm
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
     mysql:
@@ -86,16 +86,13 @@ services:
             - "traefik.http.routers.service-js-polyfill.rule=PathPrefix(`/polyfill`)"
             - "traefik.http.routers.service-js-polyfill.middlewares=service-js-polyfill-stripprefix"
             - "traefik.http.middlewares.service-js-polyfill-stripprefix.stripprefix.prefixes=/polyfill"
-    nginx:
-        image: marein/php-gaming-website:nginx
-        depends_on:
-            - php-fpm
-        restart: on-failure
+    php-fpm:
+        <<: *php-container
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.nginx.priority=10"
-            - "traefik.http.routers.nginx.rule=PathPrefix(`/`)"
-    php-fpm: *php-container
+            - "traefik.http.routers.php-fpm.priority=10"
+            - "traefik.http.routers.php-fpm.rule=PathPrefix(`/`)"
+            - "traefik.http.services.php-fpm.loadbalancer.server.port=80"
 
     ##############################
     #   Long running processes   #
