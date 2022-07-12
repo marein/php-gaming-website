@@ -52,6 +52,13 @@ services:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\BatchConfirmReliablePublishing
         public: false
 
+    gaming.message-broker.message-translator:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator
+        public: false
+        arguments:
+            -
+              delivery_mode: !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT
+
     gaming.message-broker.gaming-exchange-publisher:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpPublisher
         public: false
@@ -59,8 +66,8 @@ services:
             - '@gaming.message-broker.amqp-lib.connection-factory'
             - '@gaming.message-broker.gaming-exchange-topology'
             - '@gaming.message-broker.batch-confirm-reliable-publishing'
+            - '@gaming.message-broker.message-translator'
             - 'gaming'
-            - !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT
 
     gaming.consume-messages-command:
         class: Gaming\Common\Port\Adapter\Symfony\ConsumeMessagesCommand

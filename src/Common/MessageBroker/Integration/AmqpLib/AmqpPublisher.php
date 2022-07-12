@@ -15,40 +15,25 @@ final class AmqpPublisher implements Publisher
 {
     private ?AMQPChannel $channel;
 
-    private AMQPMessage $message;
-
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
         private readonly Topology $topology,
         private readonly ReliablePublishing $reliablePublishing,
-        private readonly string $exchangeToPublishTo,
-        int $deliveryMode
+        private readonly MessageTranslator $messageTranslator,
+        private readonly string $exchangeToPublishTo
     ) {
         $this->channel = null;
-        $this->message = new AMQPMessage(
-            '',
-            [
-                'delivery_mode' => $deliveryMode
-            ]
-        );
     }
 
     public function publish(Message $message): void
     {
         $this->channel ??= $this->createConfirmingChannelAndTopology();
 
-        $this->message->setBody(
-            json_encode(
-                [(string)$message->name(), $message->body()],
-                JSON_THROW_ON_ERROR
-            )
-        );
-
         try {
             $this->channel->basic_publish(
-                $this->message,
+                $this->messageTranslator->messageToAmqpMessage($message),
                 $this->exchangeToPublishTo,
-                $message->name()->domain() . '.' . $message->name()->name()
+                (string)$message->name()
             );
         } catch (Throwable $throwable) {
             throw MessageBrokerException::fromThrowable($throwable);
