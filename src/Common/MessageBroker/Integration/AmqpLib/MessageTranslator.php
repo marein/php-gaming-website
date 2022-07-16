@@ -17,7 +17,7 @@ final class MessageTranslator
     ) {
     }
 
-    public function messageToAmqpMessage(Message $message): AMQPMessage
+    public function createAmqpMessageFromMessage(Message $message): AMQPMessage
     {
         return new AMQPMessage(
             json_encode(

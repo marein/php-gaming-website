@@ -27,11 +27,11 @@ final class AmqpPublisher implements Publisher
 
     public function publish(Message $message): void
     {
-        $this->channel ??= $this->createConfirmingChannelAndTopology();
+        $this->channel ??= $this->createChannelAndTopology();
 
         try {
             $this->channel->basic_publish(
-                $this->messageTranslator->messageToAmqpMessage($message),
+                $this->messageTranslator->createAmqpMessageFromMessage($message),
                 $this->exchangeToPublishTo,
                 (string)$message->name()
             );
@@ -42,7 +42,7 @@ final class AmqpPublisher implements Publisher
 
     public function flush(): void
     {
-        $this->channel ??= $this->createConfirmingChannelAndTopology();
+        $this->channel ??= $this->createChannelAndTopology();
 
         $this->reliablePublishing->flush($this->channel);
     }
@@ -50,7 +50,7 @@ final class AmqpPublisher implements Publisher
     /**
      * @throws MessageBrokerException
      */
-    private function createConfirmingChannelAndTopology(): AMQPChannel
+    private function createChannelAndTopology(): AMQPChannel
     {
         $connection = $this->connectionFactory->create();
 
