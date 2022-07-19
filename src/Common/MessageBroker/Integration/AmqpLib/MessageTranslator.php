@@ -4,27 +4,14 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 
+use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use PhpAmqpLib\Message\AMQPMessage;
 
-final class MessageTranslator
+interface MessageTranslator
 {
     /**
-     * @param array<string, mixed> $properties
+     * @throws MessageBrokerException
      */
-    public function __construct(
-        private readonly array $properties
-    ) {
-    }
-
-    public function createAmqpMessageFromMessage(Message $message): AMQPMessage
-    {
-        return new AMQPMessage(
-            json_encode(
-                [(string)$message->name(), $message->body()],
-                JSON_THROW_ON_ERROR
-            ),
-            $this->properties
-        );
-    }
+    public function createAmqpMessageFromMessage(Message $message): AMQPMessage;
 }

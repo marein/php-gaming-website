@@ -53,7 +53,7 @@ services:
         public: false
 
     gaming.message-broker.message-translator:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator
+        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageTranslator
         public: false
         arguments:
             -
