@@ -37,7 +37,7 @@ services:
             - 'gaming'
 
     gaming.message-broker.amqp-lib.connection-factory:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpStreamConnectionFactory
         public: false
         arguments:
             - '%env(APPLICATION_RABBIT_MQ_DSN)%'
