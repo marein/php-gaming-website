@@ -43,7 +43,7 @@ final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventS
         //
         // We could use a strong message format like json schema, protobuf etc. to have
         // a clearly defined interface with other domains.
-        $this->publisher->publish(
+        $this->publisher->send(
             new Message(
                 new Name('ConnectFour', $this->nameFromDomainEvent($domainEvent)),
                 json_encode(

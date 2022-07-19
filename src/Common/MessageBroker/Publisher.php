@@ -12,7 +12,7 @@ interface Publisher
     /**
      * @throws MessageBrokerException
      */
-    public function publish(Message $message): void;
+    public function send(Message $message): void;
 
     /**
      * Flush can have different semantics depending on the technology used

@@ -25,7 +25,7 @@ final class AmqpPublisher implements Publisher
         $this->channel = null;
     }
 
-    public function publish(Message $message): void
+    public function send(Message $message): void
     {
         $this->channel ??= $this->createChannelAndTopology();
 
