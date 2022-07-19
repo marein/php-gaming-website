@@ -36,7 +36,7 @@ services:
             - '%env(APPLICATION_RABBIT_MQ_DSN)%'
             - 'gaming'
 
-    gaming.message-broker.amqp-lib.connection-factory:
+    gaming.message-broker.connection-factory:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpStreamConnectionFactory
         public: false
         arguments:
@@ -63,7 +63,7 @@ services:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpPublisher
         public: false
         arguments:
-            - '@gaming.message-broker.amqp-lib.connection-factory'
+            - '@gaming.message-broker.connection-factory'
             - '@gaming.message-broker.gaming-exchange-topology'
             - '@gaming.message-broker.batch-confirm-reliable-publishing'
             - '@gaming.message-broker.message-translator'
