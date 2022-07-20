@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
+namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use PhpAmqpLib\Channel\AMQPChannel;

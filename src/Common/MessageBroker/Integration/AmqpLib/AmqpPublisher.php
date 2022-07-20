@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\ConnectionFactory;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\ReliablePublishing\ReliablePublishing;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\Topology;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Publisher;
 use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Message\AMQPMessage;
 use Throwable;
 
 final class AmqpPublisher implements Publisher

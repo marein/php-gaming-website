@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Messaging;
 
-use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use PhpAmqpLib\Message\AMQPMessage;
 

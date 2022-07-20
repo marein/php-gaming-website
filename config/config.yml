@@ -37,19 +37,19 @@ services:
             - 'gaming'
 
     gaming.message-broker.connection-factory:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpStreamConnectionFactory
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\AmqpStreamConnectionFactory
         public: false
         arguments:
             - '%env(APPLICATION_RABBIT_MQ_DSN)%'
 
     gaming.message-broker.gaming-exchange-topology:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\TopicExchangeTopology
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\TopicExchangeTopology
         public: false
         arguments:
             - 'gaming'
 
     gaming.message-broker.batch-confirm-reliable-publishing:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\BatchConfirmReliablePublishing
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ReliablePublishing\BatchConfirmReliablePublishing
         public: false
 
     gaming.message-broker.message-translator:
