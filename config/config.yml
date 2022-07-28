@@ -42,6 +42,14 @@ services:
         arguments:
             - '%env(APPLICATION_RABBIT_MQ_DSN)%'
 
+    gaming.message-broker.schedule-periodic-heartbeat-connection-factory:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\SchedulePeriodicHeartbeatConnectionFactory
+        decorates: gaming.message-broker.connection-factory
+        public: false
+        arguments:
+            - '@.inner'
+            - '@gaming.scheduler'
+
     gaming.message-broker.gaming-exchange-topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\TopicExchangeTopology
         public: false
@@ -77,6 +85,10 @@ services:
             - !tagged { tag: 'gaming.consumer', index_by: 'key' }
         tags:
             - { name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }
+
+    gaming.scheduler:
+        class: Gaming\Common\Scheduler\PcntlScheduler
+        public: false
 
     # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.

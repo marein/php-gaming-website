@@ -23,13 +23,17 @@ final class AmqpStreamConnectionFactory implements ConnectionFactory
             throw new MessageBrokerException('Cannot parse ' . $this->dsn . ' as url.');
         }
 
+        $queryParameters = [];
+        parse_str($urlComponents['query'] ?? '', $queryParameters);
+
         try {
             return new AMQPStreamConnection(
-                $urlComponents['host'] ?? '127.0.0.1',
-                $urlComponents['port'] ?? 5672,
-                $urlComponents['user'] ?? 'guest',
-                $urlComponents['pass'] ?? 'guest',
-                $urlComponents['path'] ?? '/'
+                host: $urlComponents['host'] ?? '127.0.0.1',
+                port: $urlComponents['port'] ?? 5672,
+                user: $urlComponents['user'] ?? 'guest',
+                password: $urlComponents['pass'] ?? 'guest',
+                vhost: $urlComponents['path'] ?? '/',
+                heartbeat: (int)($queryParameters['heartbeat'] ?? 0)
             );
         } catch (Throwable $throwable) {
             throw MessageBrokerException::fromThrowable($throwable);
