@@ -25,7 +25,7 @@ final class SchedulePeriodicHeartbeatConnectionFactory implements ConnectionFact
 
         $interval = (int)ceil($connection->getHeartbeat() / 2);
 
-        $this->scheduler->schedule($interval, $this->createHandler($connection, $interval));
+        $this->scheduler->schedule(time() + $interval, $this->createHandler($connection, $interval));
 
         return $connection;
     }
