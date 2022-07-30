@@ -36,6 +36,47 @@ services:
             - '%env(APPLICATION_RABBIT_MQ_DSN)%'
             - 'gaming'
 
+    gaming.message-broker.connection-factory:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\AmqpStreamConnectionFactory
+        public: false
+        arguments:
+            - '%env(APPLICATION_RABBIT_MQ_DSN)%'
+
+    gaming.message-broker.schedule-periodic-heartbeat-connection-factory:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\SchedulePeriodicHeartbeatConnectionFactory
+        decorates: gaming.message-broker.connection-factory
+        public: false
+        arguments:
+            - '@.inner'
+            - '@gaming.scheduler'
+
+    gaming.message-broker.gaming-exchange-topology:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\TopicExchangeTopology
+        public: false
+        arguments:
+            - 'gaming'
+
+    gaming.message-broker.batch-confirm-reliable-publishing:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ReliablePublishing\BatchConfirmReliablePublishing
+        public: false
+
+    gaming.message-broker.message-translator:
+        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageTranslator
+        public: false
+        arguments:
+            -
+              delivery_mode: !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT
+
+    gaming.message-broker.gaming-exchange-publisher:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpPublisher
+        public: false
+        arguments:
+            - '@gaming.message-broker.connection-factory'
+            - '@gaming.message-broker.gaming-exchange-topology'
+            - '@gaming.message-broker.batch-confirm-reliable-publishing'
+            - '@gaming.message-broker.message-translator'
+            - 'gaming'
+
     gaming.consume-messages-command:
         class: Gaming\Common\Port\Adapter\Symfony\ConsumeMessagesCommand
         public: false
@@ -44,6 +85,10 @@ services:
             - !tagged { tag: 'gaming.consumer', index_by: 'key' }
         tags:
             - { name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }
+
+    gaming.scheduler:
+        class: Gaming\Common\Scheduler\PcntlScheduler
+        public: false
 
     # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.

@@ -19,11 +19,19 @@ final class Worker implements Task
     {
         while ($message = $channel->receive()) {
             match ($message) {
-                'SYN' => $channel->send('ACK'),
+                'PING' => $channel->send('PONG'),
+                'COMMIT' => $this->handleCommit($channel),
                 default => $this->storedEventSubscriber->handle($message)
             };
         }
 
         return 0;
+    }
+
+    private function handleCommit(Channel $channel): void
+    {
+        $this->storedEventSubscriber->commit();
+
+        $channel->send('ACK');
     }
 }

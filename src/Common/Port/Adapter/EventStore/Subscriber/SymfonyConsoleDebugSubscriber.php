@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Common\Port\Adapter\EventStore\Subscriber;
 
 use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\NoCommit;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\Normalizer\Normalizer;
@@ -12,6 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class SymfonyConsoleDebugSubscriber implements StoredEventSubscriber
 {
+    use NoCommit;
+
     public function __construct(
         private readonly OutputInterface $output,
         private readonly Normalizer $normalizer

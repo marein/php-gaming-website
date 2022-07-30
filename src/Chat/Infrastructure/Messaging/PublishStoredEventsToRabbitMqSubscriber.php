@@ -7,6 +7,7 @@ namespace Gaming\Chat\Infrastructure\Messaging;
 use Gaming\Chat\Application\Event\ChatInitiated;
 use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\NoCommit;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\MessageBroker;
@@ -17,6 +18,8 @@ use RuntimeException;
 
 final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
 {
+    use NoCommit;
+
     public function __construct(
         private readonly MessageBroker $messageBroker,
         private readonly Normalizer $normalizer

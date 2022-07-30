@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
+use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkPool\Channel\Channel;
@@ -28,5 +29,18 @@ final class ForwardToChannelStoredEventSubscriber implements StoredEventSubscrib
     {
         $shardId = crc32($storedEvent->domainEvent()->aggregateId()) % count($this->channels);
         $this->channels[$shardId]->send($storedEvent);
+    }
+
+    public function commit(): void
+    {
+        foreach ($this->channels as $channel) {
+            $channel->send('COMMIT');
+        }
+
+        foreach ($this->channels as $channel) {
+            if ($channel->receive() !== 'ACK') {
+                throw new EventStoreException('No ack from channel.');
+            }
+        }
     }
 }

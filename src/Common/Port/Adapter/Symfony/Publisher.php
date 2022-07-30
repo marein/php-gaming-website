@@ -43,27 +43,26 @@ final class Publisher implements Task
                     $this->eventStorePointerName
                 )
             ),
-            new ConsistentOrderEventStore($this->eventStore),
-            $this->synchronize(...)
+            new ConsistentOrderEventStore($this->eventStore)
         );
 
         while (true) {
             if ($followEventStoreDispatcher->dispatch($this->batchSize) === 0) {
-                $this->synchronize();
+                $this->ping();
                 usleep($this->throttleTimeInMicroseconds);
             }
         }
     }
 
-    public function synchronize(): void
+    public function ping(): void
     {
         foreach ($this->channels as $channel) {
-            $channel->send('SYN');
+            $channel->send('PING');
         }
 
         foreach ($this->channels as $channel) {
-            if ($channel->receive() !== 'ACK') {
-                throw new EventStoreException('No ack from channel.');
+            if ($channel->receive() !== 'PONG') {
+                throw new EventStoreException('No pong from channel.');
             }
         }
     }

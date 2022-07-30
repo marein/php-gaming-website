@@ -9,6 +9,9 @@ use Gaming\Common\MessageBroker\Model\Message\Message;
 
 interface MessageBroker
 {
+    /**
+     * @deprecated Use Publisher instead.
+     */
     public function publish(Message $message): void;
 
     /**
