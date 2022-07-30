@@ -29,6 +29,13 @@ twig:
 
 services:
 
+    gaming.schedule-doctrine-connection-heartbeat-middleware:
+        class: Gaming\Common\DoctrineHeartbeatMiddleware\SchedulePeriodicHeartbeatMiddleware
+        arguments:
+            - '@gaming.scheduler'
+        tags:
+            - { name: doctrine.middleware }
+
     gaming.message-broker:
         class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
         public: false

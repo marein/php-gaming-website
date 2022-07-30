@@ -2,14 +2,6 @@ services:
 
     # The following definitions decorate the routing command bus. This could be done with a factory object.
     chat.command-bus:
-        class: Gaming\Common\Port\Adapter\Bus\DoctrineReconnectBus
-        public: false
-        arguments:
-            - '@chat.symfony-validator-command-bus'
-            - '@chat.doctrine-dbal'
-            - 300
-
-    chat.symfony-validator-command-bus:
         class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
         public: false
         arguments:

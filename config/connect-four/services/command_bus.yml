@@ -2,14 +2,6 @@ services:
 
     # The following definitions decorate the routing command bus. This could be done with a factory object.
     connect-four.command-bus:
-        class: Gaming\Common\Port\Adapter\Bus\DoctrineReconnectBus
-        public: false
-        arguments:
-            - '@connect-four.symfony-validator-command-bus'
-            - '@connect-four.doctrine-dbal'
-            - 300
-
-    connect-four.symfony-validator-command-bus:
         class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
         public: false
         arguments:
