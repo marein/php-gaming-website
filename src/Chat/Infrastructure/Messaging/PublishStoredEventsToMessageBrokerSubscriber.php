@@ -7,21 +7,18 @@ namespace Gaming\Chat\Infrastructure\Messaging;
 use Gaming\Chat\Application\Event\ChatInitiated;
 use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Common\Domain\DomainEvent;
-use Gaming\Common\EventStore\NoCommit;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\MessageBroker\MessageBroker;
 use Gaming\Common\MessageBroker\Model\Message\Message;
 use Gaming\Common\MessageBroker\Model\Message\Name;
+use Gaming\Common\MessageBroker\Publisher;
 use Gaming\Common\Normalizer\Normalizer;
 use RuntimeException;
 
-final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscriber
+final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventSubscriber
 {
-    use NoCommit;
-
     public function __construct(
-        private readonly MessageBroker $messageBroker,
+        private readonly Publisher $publisher,
         private readonly Normalizer $normalizer
     ) {
     }
@@ -40,7 +37,7 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
         //
         // We could use a strong message format like json schema, protobuf etc. to have
         // a clearly defined interface with other domains.
-        $this->messageBroker->publish(
+        $this->publisher->send(
             new Message(
                 new Name('Chat', $this->nameFromDomainEvent($domainEvent)),
                 json_encode(
@@ -49,6 +46,11 @@ final class PublishStoredEventsToRabbitMqSubscriber implements StoredEventSubscr
                 )
             )
         );
+    }
+
+    public function commit(): void
+    {
+        $this->publisher->flush();
     }
 
     private function nameFromDomainEvent(DomainEvent $domainEvent): string
