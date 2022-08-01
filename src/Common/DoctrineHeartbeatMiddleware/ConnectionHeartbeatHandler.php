@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\DoctrineHeartbeatMiddleware;
 
+use Gaming\Common\Clock\Clock;
 use Gaming\Common\Scheduler\Handler;
 use Gaming\Common\Scheduler\Scheduler;
 use WeakReference;
@@ -38,7 +39,7 @@ final class ConnectionHeartbeatHandler implements Handler
 
         if (
             !$connection->isWriting()
-            && ($connection->lastActivity() + $this->interval) < time()
+            && ($connection->lastActivity() + $this->interval) < Clock::instance()->now()->getTimestamp()
         ) {
             $connection->query($this->dummySql);
         }
