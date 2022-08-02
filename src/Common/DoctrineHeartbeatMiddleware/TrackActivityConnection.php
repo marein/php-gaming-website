@@ -12,14 +12,14 @@ use Doctrine\DBAL\ParameterType;
 
 final class TrackActivityConnection implements Connection
 {
-    private bool $isWriting;
+    private bool $isQuerying;
 
     private int $lastActivity;
 
     public function __construct(
         private readonly Connection $connection
     ) {
-        $this->isWriting = false;
+        $this->isQuerying = false;
         $this->lastActivity = 0;
     }
 
@@ -63,9 +63,9 @@ final class TrackActivityConnection implements Connection
         return $this->decorate(fn() => $this->connection->rollBack());
     }
 
-    public function isWriting(): bool
+    public function isQuerying(): bool
     {
-        return $this->isWriting;
+        return $this->isQuerying;
     }
 
     public function lastActivity(): int
@@ -75,13 +75,13 @@ final class TrackActivityConnection implements Connection
 
     private function decorate(Closure $action): mixed
     {
-        $this->isWriting = true;
+        $this->isQuerying = true;
 
         try {
             return $action();
         } finally {
             $this->lastActivity = time();
-            $this->isWriting = false;
+            $this->isQuerying = false;
         }
     }
 }

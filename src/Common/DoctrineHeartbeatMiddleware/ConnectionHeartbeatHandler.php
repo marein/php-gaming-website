@@ -38,7 +38,7 @@ final class ConnectionHeartbeatHandler implements Handler
         assert($connection instanceof TrackActivityConnection);
 
         if (
-            !$connection->isWriting()
+            !$connection->isQuerying()
             && ($connection->lastActivity() + $this->interval) < Clock::instance()->now()->getTimestamp()
         ) {
             $connection->query($this->dummySql);
