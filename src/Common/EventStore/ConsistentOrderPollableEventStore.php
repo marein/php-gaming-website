@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-use Gaming\Common\Domain\DomainEvent;
-
-final class ConsistentOrderEventStore implements EventStore
+final class ConsistentOrderPollableEventStore implements PollableEventStore
 {
-    private EventStore $eventStore;
-
-    public function __construct(EventStore $eventStore)
-    {
-        $this->eventStore = $eventStore;
+    public function __construct(
+        private readonly PollableEventStore $pollableEventStore
+    ) {
     }
 
     public function since(int $id, int $limit): array
     {
-        $storedEvents = $this->eventStore->since($id, $limit);
+        $storedEvents = $this->pollableEventStore->since($id, $limit);
 
         $expectedStoredEventId = $id;
         $filteredStoredEvents = [];
@@ -39,18 +35,8 @@ final class ConsistentOrderEventStore implements EventStore
         return $filteredStoredEvents;
     }
 
-    public function byAggregateId(string $aggregateId, int $sinceId = 0): array
-    {
-        return $this->eventStore->byAggregateId($aggregateId, $sinceId);
-    }
-
-    public function append(DomainEvent $domainEvent): void
-    {
-        $this->eventStore->append($domainEvent);
-    }
-
     public function hasUncommittedStoredEventId(int $id): bool
     {
-        return $this->eventStore->hasUncommittedStoredEventId($id);
+        return $this->pollableEventStore->hasUncommittedStoredEventId($id);
     }
 }

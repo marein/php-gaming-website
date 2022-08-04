@@ -13,10 +13,11 @@ use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\Exception\UnrecoverableException;
+use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\Normalizer\Normalizer;
 
-final class DoctrineEventStore implements EventStore
+final class DoctrineEventStore implements EventStore, PollableEventStore
 {
     private const SELECT = 'e.id, e.event, e.occurredOn';
 

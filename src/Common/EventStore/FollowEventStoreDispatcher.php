@@ -14,7 +14,7 @@ final class FollowEventStoreDispatcher
     public function __construct(
         private readonly StoredEventSubscriber $storedEventSubscriber,
         private readonly EventStorePointer $eventStorePointer,
-        private readonly EventStore $eventStore
+        private readonly PollableEventStore $pollableEventStore
     ) {
     }
 
@@ -31,7 +31,7 @@ final class FollowEventStoreDispatcher
 
         $lastStoredEventId = $this->eventStorePointer->retrieveMostRecentPublishedStoredEventId();
 
-        $storedEvents = $this->eventStore->since(
+        $storedEvents = $this->pollableEventStore->since(
             $lastStoredEventId,
             $batchSize
         );

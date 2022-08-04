@@ -14,15 +14,6 @@ final class InMemoryEventStore implements EventStore
      */
     private array $storedEvents = [];
 
-    public function since(int $id, int $limit): array
-    {
-        return array_slice(
-            $this->storedEvents,
-            $id,
-            $limit
-        );
-    }
-
     public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
         return array_filter(
@@ -40,10 +31,5 @@ final class InMemoryEventStore implements EventStore
             Clock::instance()->now(),
             $domainEvent
         );
-    }
-
-    public function hasUncommittedStoredEventId(int $id): bool
-    {
-        return array_key_exists($id - 1, $this->storedEvents);
     }
 }

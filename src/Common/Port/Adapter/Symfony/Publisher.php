@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
-use Gaming\Common\EventStore\ConsistentOrderEventStore;
-use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\ConsistentOrderPollableEventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\FollowEventStoreDispatcher;
 use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
+use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\ForkPool\Channel\Channel;
 use Gaming\Common\ForkPool\Task;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
@@ -23,7 +23,7 @@ final class Publisher implements Task
      */
     public function __construct(
         private readonly array $channels,
-        private readonly EventStore $eventStore,
+        private readonly PollableEventStore $pollableEventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
         private readonly string $eventStorePointerName,
         private readonly int $throttleTimeInMicroseconds,
@@ -43,7 +43,7 @@ final class Publisher implements Task
                     $this->eventStorePointerName
                 )
             ),
-            new ConsistentOrderEventStore($this->eventStore)
+            new ConsistentOrderPollableEventStore($this->pollableEventStore)
         );
 
         while (true) {
