@@ -113,6 +113,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
      * @param array<int, array<string, mixed>> $rows
      *
      * @return StoredEvent[]
+     * @throws Throwable
      */
     private function transformRowsToStoredEvents(array $rows): array
     {
