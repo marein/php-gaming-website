@@ -28,7 +28,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
         private readonly string $table,
         private readonly Normalizer $normalizer
     ) {
-        $this->gapDetection = new DoctrineIsolationLevelGapDetection(
+        $this->gapDetection = new DoctrineWaitForUncommittedStoredEventsGapDetection(
             $this->connection,
             $this->table,
             'id'

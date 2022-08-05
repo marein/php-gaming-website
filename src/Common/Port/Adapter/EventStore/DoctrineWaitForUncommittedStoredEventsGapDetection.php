@@ -8,7 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Gaming\Common\EventStore\GapDetection;
 
-final class DoctrineIsolationLevelGapDetection implements GapDetection
+final class DoctrineWaitForUncommittedStoredEventsGapDetection implements GapDetection
 {
     public function __construct(
         private readonly Connection $connection,
