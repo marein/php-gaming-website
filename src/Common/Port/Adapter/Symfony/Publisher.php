@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
-use Gaming\Common\EventStore\ConsistentOrderPollableEventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\FollowEventStoreDispatcher;
 use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
@@ -43,7 +42,7 @@ final class Publisher implements Task
                     $this->eventStorePointerName
                 )
             ),
-            new ConsistentOrderPollableEventStore($this->pollableEventStore)
+            $this->pollableEventStore
         );
 
         while (true) {
