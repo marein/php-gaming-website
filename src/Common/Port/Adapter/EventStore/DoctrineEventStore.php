@@ -35,32 +35,6 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
         );
     }
 
-    public function since(int $id, int $limit): array
-    {
-        try {
-            $rows = $this->connection->createQueryBuilder()
-                ->select(self::SELECT)
-                ->from($this->table, 'e')
-                ->where('e.id > :id')
-                ->setParameter('id', $id)
-                ->setMaxResults($limit)
-                ->executeQuery()
-                ->fetchAllAssociative();
-
-            return StoredEventFilters::untilGapIsFound(
-                $this->transformRowsToStoredEvents($rows),
-                $id,
-                $this->gapDetection
-            );
-        } catch (Throwable $e) {
-            throw new EventStoreException(
-                $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
-    }
-
     public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
         try {
@@ -99,6 +73,32 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
                     'json',
                     'datetime_immutable'
                 ]
+            );
+        } catch (Throwable $e) {
+            throw new EventStoreException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+    }
+
+    public function since(int $id, int $limit): array
+    {
+        try {
+            $rows = $this->connection->createQueryBuilder()
+                ->select(self::SELECT)
+                ->from($this->table, 'e')
+                ->where('e.id > :id')
+                ->setParameter('id', $id)
+                ->setMaxResults($limit)
+                ->executeQuery()
+                ->fetchAllAssociative();
+
+            return StoredEventFilters::untilGapIsFound(
+                $this->transformRowsToStoredEvents($rows),
+                $id,
+                $this->gapDetection
             );
         } catch (Throwable $e) {
             throw new EventStoreException(
