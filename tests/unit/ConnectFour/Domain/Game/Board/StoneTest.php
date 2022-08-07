@@ -22,7 +22,7 @@ class StoneTest extends TestCase
      */
     public function aRedStoneCanBeCreated(): void
     {
-        $this->assertSame(1, Stone::red()->color());
+        $this->assertSame(1, Stone::Red->color());
     }
 
     /**

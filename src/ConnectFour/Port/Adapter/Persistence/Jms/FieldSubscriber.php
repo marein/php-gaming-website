@@ -59,7 +59,7 @@ final class FieldSubscriber implements SubscribingHandlerInterface
         $point = new Point((int)$x, (int)$y);
 
         return match ((int)$color) {
-            Stone::red()->color() => Field::empty($point)->placeStone(Stone::red()),
+            Stone::Red->color() => Field::empty($point)->placeStone(Stone::Red),
             Stone::yellow()->color() => Field::empty($point)->placeStone(Stone::yellow()),
             default => Field::empty($point)
         };

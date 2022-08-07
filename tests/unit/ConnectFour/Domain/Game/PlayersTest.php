@@ -115,6 +115,6 @@ class PlayersTest extends TestCase
 
     private function redPlayer(): Player
     {
-        return new Player('1', Stone::red());
+        return new Player('1', Stone::Red);
     }
 }

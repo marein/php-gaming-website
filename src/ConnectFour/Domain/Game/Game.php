@@ -49,7 +49,7 @@ final class Game implements AggregateRoot
     public static function open(GameId $gameId, Configuration $configuration, string $playerId): Game
     {
         $size = $configuration->size();
-        $player = new Player($playerId, Stone::red());
+        $player = new Player($playerId, Stone::Red);
 
         return new self(
             $gameId,

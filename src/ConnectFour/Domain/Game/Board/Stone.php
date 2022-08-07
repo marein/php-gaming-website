@@ -13,14 +13,6 @@ enum Stone: int
     /**
      * @deprecated Backward compatibility.
      */
-    public static function red(): Stone
-    {
-        return Stone::Red;
-    }
-
-    /**
-     * @deprecated Backward compatibility.
-     */
     public static function yellow(): Stone
     {
         return Stone::Yellow;

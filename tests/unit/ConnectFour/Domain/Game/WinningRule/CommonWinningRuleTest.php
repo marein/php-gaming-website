@@ -52,10 +52,10 @@ class CommonWinningRuleTest extends TestCase
         $board = Board::empty($size);
         $commonWinningRule = new CommonWinningRule();
 
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 1);
+        $board = $board->dropStone(Stone::Red, 1);
+        $board = $board->dropStone(Stone::Red, 1);
+        $board = $board->dropStone(Stone::Red, 1);
+        $board = $board->dropStone(Stone::Red, 1);
 
         $this->assertTrue($commonWinningRule->calculate($board));
     }
