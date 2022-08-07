@@ -33,7 +33,7 @@ class PlayerTest extends TestCase
         $this->expectException(PlayerHasInvalidStoneException::class);
 
         $id = uniqid();
-        $stone = Stone::none();
+        $stone = Stone::None;
 
         new Player($id, $stone);
     }

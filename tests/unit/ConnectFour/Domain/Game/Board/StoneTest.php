@@ -14,7 +14,7 @@ class StoneTest extends TestCase
      */
     public function aNoneStoneCanBeCreated(): void
     {
-        $this->assertSame(0, Stone::none()->color());
+        $this->assertSame(0, Stone::None->color());
     }
 
     /**
