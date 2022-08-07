@@ -6,6 +6,9 @@ namespace Gaming\Common\Normalizer\Test;
 
 use Gaming\Common\Normalizer\Migration;
 
+/**
+ * This class can be used for testing purposes.
+ */
 final class TestMigration implements Migration
 {
     public function __construct(
