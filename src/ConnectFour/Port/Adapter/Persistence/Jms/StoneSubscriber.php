@@ -27,6 +27,8 @@ final class StoneSubscriber implements SubscribingHandlerInterface
 
     /**
      * @param array<mixed, mixed> $type
+     *
+     * @return array<string, mixed>
      */
     public function serializeStoneToJson(
         JsonSerializationVisitor $visitor,
@@ -38,6 +40,7 @@ final class StoneSubscriber implements SubscribingHandlerInterface
     }
 
     /**
+     * @param array<string, mixed> $stone
      * @param array<mixed, mixed> $type
      */
     public function deserializeStoneFromJson(
