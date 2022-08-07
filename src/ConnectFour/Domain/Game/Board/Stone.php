@@ -9,12 +9,4 @@ enum Stone: int
     case None = 0;
     case Red = 1;
     case Yellow = 2;
-
-    /**
-     * @deprecated Backward compatibility.
-     */
-    public function color(): int
-    {
-        return $this->value;
-    }
 }

@@ -24,7 +24,7 @@ final class PlayerMoved implements DomainEvent
         $this->gameId = $gameId->toString();
         $this->x = $point->x();
         $this->y = $point->y();
-        $this->color = $stone->color();
+        $this->color = $stone->value;
     }
 
     public function aggregateId(): string

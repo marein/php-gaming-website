@@ -40,7 +40,7 @@ final class DiagonalWinningRule implements WinningRule
         // Create a string representation of fields e.g. "000121 000121"
         $haystack = implode($fields1) . ' ' . implode($fields2);
         // Create a string like "1111|2222" depending on the stone and the required matches.
-        $needle = str_repeat((string)$stone->color(), $this->numberOfRequiredMatches);
+        $needle = str_repeat((string)$stone->value, $this->numberOfRequiredMatches);
 
         // Check whether "1111|2222" is in "000121 000121"
         return strpos($haystack, $needle) !== false;

@@ -42,10 +42,10 @@ class FieldTest extends TestCase
     {
         $field = Field::empty(new Point(0, 1));
 
-        $this->assertSame((string)Stone::None->color(), (string)$field);
+        $this->assertSame((string)Stone::None->value, (string)$field);
 
         $fieldWithStone = $field->placeStone(Stone::Red);
 
-        $this->assertSame((string)Stone::Red->color(), (string)$fieldWithStone);
+        $this->assertSame((string)Stone::Red->value, (string)$fieldWithStone);
     }
 }
