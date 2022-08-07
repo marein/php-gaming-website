@@ -13,14 +13,6 @@ enum Stone: int
     /**
      * @deprecated Backward compatibility.
      */
-    public static function yellow(): Stone
-    {
-        return Stone::Yellow;
-    }
-
-    /**
-     * @deprecated Backward compatibility.
-     */
     public function color(): int
     {
         return $this->value;

@@ -29,7 +29,7 @@ final class Open implements State
 
     public function join(GameId $gameId, string $playerId): Transition
     {
-        $joinedPlayer = new Player($playerId, Stone::yellow());
+        $joinedPlayer = new Player($playerId, Stone::Yellow);
         $size = $this->configuration->size();
         $width = $size->width();
         $height = $size->height();
