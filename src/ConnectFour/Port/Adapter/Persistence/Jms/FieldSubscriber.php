@@ -56,13 +56,8 @@ final class FieldSubscriber implements SubscribingHandlerInterface
         Context $context
     ): Field {
         [$x, $y, $color] = explode('|', $field);
-        $field = Field::empty(new Point((int)$x, (int)$y));
-        $stone = Stone::from((int)$color);
 
-        if ($stone !== Stone::None) {
-            $field = $field->placeStone($stone);
-        }
-
-        return $field;
+        return Field::empty(new Point((int)$x, (int)$y))
+            ->placeStone(Stone::from((int)$color));
     }
 }
