@@ -27,28 +27,25 @@ final class StoneSubscriber implements SubscribingHandlerInterface
 
     /**
      * @param array<mixed, mixed> $type
-     *
-     * @return array<string, mixed>
      */
     public function serializeStoneToJson(
         JsonSerializationVisitor $visitor,
         Stone $stone,
         array $type,
         Context $context
-    ): array {
-        return ['color' => $stone->value];
+    ): int {
+        return $stone->value;
     }
 
     /**
-     * @param array<string, mixed> $stone
      * @param array<mixed, mixed> $type
      */
     public function deserializeStoneFromJson(
         JsonDeserializationVisitor $visitor,
-        array $stone,
+        int $stone,
         array $type,
         Context $context
     ): Stone {
-        return Stone::from($stone['color'] ?? -1);
+        return Stone::from($stone);
     }
 }

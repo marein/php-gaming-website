@@ -1,0 +1,14 @@
+services:
+
+    connect-four.migrating-normalizer.game-migrations:
+        class: Gaming\Common\Normalizer\Migrations
+        arguments:
+            - 'schemaVersion'
+            - !tagged_iterator connect-four.normalizer.game-migration
+        tags:
+            - { name: 'connect-four.normalizer.migrations', key: 'Gaming\ConnectFour\Domain\Game\Game' }
+
+    connect-four.migrating-normalizer.game-migration.stone-to-enum:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\MigratingNormalizer\StoneAsScalarMigration
+        tags:
+            - { name: 'connect-four.normalizer.game-migration' }
