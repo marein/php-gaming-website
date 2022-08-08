@@ -18,7 +18,7 @@ final class Field
 
     public static function empty(Point $point): Field
     {
-        return new self($point, Stone::none());
+        return new self($point, Stone::None);
     }
 
     public function placeStone(Stone $stone): Field
@@ -28,7 +28,7 @@ final class Field
 
     public function isEmpty(): bool
     {
-        return $this->stone->color() === Stone::none()->color();
+        return $this->stone === Stone::None;
     }
 
     public function stone(): Stone
@@ -43,6 +43,6 @@ final class Field
 
     public function __toString(): string
     {
-        return (string)$this->stone()->color();
+        return (string)$this->stone()->value;
     }
 }

@@ -46,14 +46,14 @@ class BoardTest extends TestCase
         $board = $this->createBoard();
         $boardCopy = clone $board;
 
-        $boardWithStone = $board->dropStone(Stone::red(), 1);
+        $boardWithStone = $board->dropStone(Stone::Red, 1);
         $affectedField = $boardWithStone->fields()[35];
-        $this->assertEquals(Stone::red(), $affectedField->stone());
+        $this->assertEquals(Stone::Red, $affectedField->stone());
         $this->assertEquals($affectedField, $boardWithStone->lastUsedField());
 
-        $boardWithStone = $boardWithStone->dropStone(Stone::yellow(), 1);
+        $boardWithStone = $boardWithStone->dropStone(Stone::Yellow, 1);
         $affectedField = $boardWithStone->fields()[28];
-        $this->assertEquals(Stone::yellow(), $affectedField->stone());
+        $this->assertEquals(Stone::Yellow, $affectedField->stone());
         $this->assertEquals($affectedField, $boardWithStone->lastUsedField());
 
         $this->assertEquals($board, $boardCopy);
@@ -68,13 +68,13 @@ class BoardTest extends TestCase
 
         $board = $this->createBoard();
 
-        $boardWithStone = $board->dropStone(Stone::red(), 1);
-        $boardWithStone = $boardWithStone->dropStone(Stone::yellow(), 1);
-        $boardWithStone = $boardWithStone->dropStone(Stone::red(), 1);
-        $boardWithStone = $boardWithStone->dropStone(Stone::yellow(), 1);
-        $boardWithStone = $boardWithStone->dropStone(Stone::red(), 1);
-        $boardWithStone = $boardWithStone->dropStone(Stone::red(), 1);
-        $boardWithStone->dropStone(Stone::yellow(), 1);
+        $boardWithStone = $board->dropStone(Stone::Red, 1);
+        $boardWithStone = $boardWithStone->dropStone(Stone::Yellow, 1);
+        $boardWithStone = $boardWithStone->dropStone(Stone::Red, 1);
+        $boardWithStone = $boardWithStone->dropStone(Stone::Yellow, 1);
+        $boardWithStone = $boardWithStone->dropStone(Stone::Red, 1);
+        $boardWithStone = $boardWithStone->dropStone(Stone::Red, 1);
+        $boardWithStone->dropStone(Stone::Yellow, 1);
     }
 
     /**
@@ -86,7 +86,7 @@ class BoardTest extends TestCase
 
         $board = $this->createBoard();
 
-        $board->dropStone(Stone::red(), 8);
+        $board->dropStone(Stone::Red, 8);
     }
 
     /**

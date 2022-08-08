@@ -17,6 +17,10 @@ services:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\FieldSubscriber
         tags: ['connect-four.jms.subscriber']
 
+    connect-four.jms.subscriber.stone:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\StoneSubscriber
+        tags: ['connect-four.jms.subscriber']
+
     connect-four.normalizer:
         class: Gaming\Common\Port\Adapter\Normalizer\JmsSerializerNormalizer
         arguments:

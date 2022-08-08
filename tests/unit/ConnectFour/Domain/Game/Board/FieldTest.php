@@ -19,7 +19,7 @@ class FieldTest extends TestCase
         $field = Field::empty(new Point(0, 1));
 
         $this->assertTrue($field->isEmpty());
-        $this->assertEquals(Stone::none(), $field->stone());
+        $this->assertEquals(Stone::None, $field->stone());
     }
 
     /**
@@ -29,10 +29,10 @@ class FieldTest extends TestCase
     {
         $field = Field::empty(new Point(0, 1));
 
-        $fieldWithStone = $field->placeStone(Stone::red());
+        $fieldWithStone = $field->placeStone(Stone::Red);
 
         $this->assertFalse($fieldWithStone->isEmpty());
-        $this->assertEquals(Stone::red(), $fieldWithStone->stone());
+        $this->assertEquals(Stone::Red, $fieldWithStone->stone());
     }
 
     /**
@@ -42,10 +42,10 @@ class FieldTest extends TestCase
     {
         $field = Field::empty(new Point(0, 1));
 
-        $this->assertSame((string)Stone::none()->color(), (string)$field);
+        $this->assertSame((string)Stone::None->value, (string)$field);
 
-        $fieldWithStone = $field->placeStone(Stone::red());
+        $fieldWithStone = $field->placeStone(Stone::Red);
 
-        $this->assertSame((string)Stone::red()->color(), (string)$fieldWithStone);
+        $this->assertSame((string)Stone::Red->value, (string)$fieldWithStone);
     }
 }

@@ -37,7 +37,7 @@ final class VerticalWinningRule implements WinningRule
         // Create a string representation of fields e.g. "000121"
         $haystack = implode($board->findFieldsByColumn($point->x()));
         // Create a string like "1111|2222" depending on the stone and the required matches.
-        $needle = str_repeat((string)$stone->color(), $this->numberOfRequiredMatches);
+        $needle = str_repeat((string)$stone->value, $this->numberOfRequiredMatches);
 
         // Check whether "1111|2222" is in "000121"
         return strpos($haystack, $needle) !== false;

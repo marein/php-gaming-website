@@ -34,13 +34,13 @@ class VerticalWinningRuleTest extends TestCase
 
         $this->assertFalse($verticalWinningRule->calculate($board));
 
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 1);
+        $board = $board->dropStone(Stone::Red, 1);
+        $board = $board->dropStone(Stone::Red, 1);
+        $board = $board->dropStone(Stone::Red, 1);
 
         $this->assertFalse($verticalWinningRule->calculate($board));
 
-        $board = $board->dropStone(Stone::red(), 1);
+        $board = $board->dropStone(Stone::Red, 1);
 
         $this->assertTrue($verticalWinningRule->calculate($board));
     }

@@ -40,19 +40,19 @@ class DiagonalWinningRuleTest extends TestCase
          *  /
          * /
          */
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 2);
-        $board = $board->dropStone(Stone::red(), 2);
-        $board = $board->dropStone(Stone::red(), 3);
-        $board = $board->dropStone(Stone::red(), 3);
-        $board = $board->dropStone(Stone::red(), 3);
-        $board = $board->dropStone(Stone::red(), 4);
-        $board = $board->dropStone(Stone::red(), 4);
-        $board = $board->dropStone(Stone::red(), 4);
+        $board = $board->dropStone(Stone::Red, 1);
+        $board = $board->dropStone(Stone::Red, 2);
+        $board = $board->dropStone(Stone::Red, 2);
+        $board = $board->dropStone(Stone::Red, 3);
+        $board = $board->dropStone(Stone::Red, 3);
+        $board = $board->dropStone(Stone::Red, 3);
+        $board = $board->dropStone(Stone::Red, 4);
+        $board = $board->dropStone(Stone::Red, 4);
+        $board = $board->dropStone(Stone::Red, 4);
 
         $this->assertFalse($diagonalWinningRule->calculate($board));
 
-        $board = $board->dropStone(Stone::red(), 4);
+        $board = $board->dropStone(Stone::Red, 4);
 
         $this->assertTrue($diagonalWinningRule->calculate($board));
 
@@ -64,19 +64,19 @@ class DiagonalWinningRuleTest extends TestCase
          *   \
          *    \
          */
-        $board = $board->dropStone(Stone::red(), 7);
-        $board = $board->dropStone(Stone::red(), 6);
-        $board = $board->dropStone(Stone::red(), 6);
-        $board = $board->dropStone(Stone::red(), 5);
-        $board = $board->dropStone(Stone::red(), 5);
-        $board = $board->dropStone(Stone::red(), 5);
-        $board = $board->dropStone(Stone::red(), 4);
-        $board = $board->dropStone(Stone::red(), 4);
-        $board = $board->dropStone(Stone::red(), 4);
+        $board = $board->dropStone(Stone::Red, 7);
+        $board = $board->dropStone(Stone::Red, 6);
+        $board = $board->dropStone(Stone::Red, 6);
+        $board = $board->dropStone(Stone::Red, 5);
+        $board = $board->dropStone(Stone::Red, 5);
+        $board = $board->dropStone(Stone::Red, 5);
+        $board = $board->dropStone(Stone::Red, 4);
+        $board = $board->dropStone(Stone::Red, 4);
+        $board = $board->dropStone(Stone::Red, 4);
 
         $this->assertFalse($diagonalWinningRule->calculate($board));
 
-        $board = $board->dropStone(Stone::red(), 4);
+        $board = $board->dropStone(Stone::Red, 4);
 
         $this->assertTrue($diagonalWinningRule->calculate($board));
     }

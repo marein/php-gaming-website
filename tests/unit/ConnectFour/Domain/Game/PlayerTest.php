@@ -17,7 +17,7 @@ class PlayerTest extends TestCase
     public function itShouldBeCreatedWithItsValues(): void
     {
         $id = uniqid();
-        $stone = Stone::red();
+        $stone = Stone::Red;
 
         $player = new Player($id, $stone);
 
@@ -33,7 +33,7 @@ class PlayerTest extends TestCase
         $this->expectException(PlayerHasInvalidStoneException::class);
 
         $id = uniqid();
-        $stone = Stone::none();
+        $stone = Stone::None;
 
         new Player($id, $stone);
     }
