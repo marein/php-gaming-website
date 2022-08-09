@@ -23,13 +23,13 @@ final class MigratingNormalizer implements Normalizer
 
     public function normalize(mixed $value, string $typeName): mixed
     {
-        $typeMigrations = $this->typeToMigrationsMap[$typeName] ?? null;
+        $migrations = $this->typeToMigrationsMap[$typeName] ?? null;
         $normalized = $this->normalizer->normalize($value, $typeName);
-        if ($typeMigrations === null || !is_array($normalized)) {
+        if ($migrations === null || !is_array($normalized)) {
             return $normalized;
         }
 
-        $normalized[$typeMigrations->versionKey()] = $typeMigrations->latestVersion();
+        $normalized[$migrations->versionKey()] = $migrations->latestVersion();
 
         return $normalized;
     }

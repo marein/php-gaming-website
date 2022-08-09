@@ -21,6 +21,13 @@ services:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\StoneSubscriber
         tags: ['connect-four.jms.subscriber']
 
+    connect-four.migrating-normalizer:
+        class: Gaming\Common\Normalizer\MigratingNormalizer
+        decorates: connect-four.normalizer
+        arguments:
+            - '@.inner'
+            - !tagged { tag: 'connect-four.migrating-normalizer.migrations', index_by: 'key' }
+
     connect-four.normalizer:
         class: Gaming\Common\Port\Adapter\Normalizer\JmsSerializerNormalizer
         arguments:
