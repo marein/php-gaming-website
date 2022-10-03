@@ -20,4 +20,11 @@ final class CompositeStoredEventSubscriber implements StoredEventSubscriber
             $subscriber->handle($storedEvent);
         }
     }
+
+    public function commit(): void
+    {
+        foreach ($this->subscribers as $subscriber) {
+            $subscriber->commit();
+        }
+    }
 }

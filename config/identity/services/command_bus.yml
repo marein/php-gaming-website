@@ -2,14 +2,6 @@ services:
 
     # The following definitions decorate the routing command bus. This could be done with a factory object.
     identity.command-bus:
-        class: Gaming\Common\Port\Adapter\Bus\DoctrineReconnectBus
-        public: false
-        arguments:
-            - '@identity.symfony-validator-command-bus'
-            - '@identity.doctrine-dbal'
-            - 300
-
-    identity.symfony-validator-command-bus:
         class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
         public: false
         arguments:

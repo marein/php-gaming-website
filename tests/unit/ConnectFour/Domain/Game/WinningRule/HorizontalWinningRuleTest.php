@@ -34,13 +34,13 @@ class HorizontalWinningRuleTest extends TestCase
 
         $this->assertFalse($horizontalWinningRule->calculate($board));
 
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 2);
-        $board = $board->dropStone(Stone::red(), 3);
+        $board = $board->dropStone(Stone::Red, 1);
+        $board = $board->dropStone(Stone::Red, 2);
+        $board = $board->dropStone(Stone::Red, 3);
 
         $this->assertFalse($horizontalWinningRule->calculate($board));
 
-        $board = $board->dropStone(Stone::red(), 4);
+        $board = $board->dropStone(Stone::Red, 4);
 
         $this->assertTrue($horizontalWinningRule->calculate($board));
     }

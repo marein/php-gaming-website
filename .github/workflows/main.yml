@@ -18,7 +18,7 @@ jobs:
 
       - name: Testsuite
         run: |
-          docker-compose -f docker-compose.ci.yml run php vendor/bin/codecept run unit
+          docker-compose -f docker-compose.ci.yml run php vendor/bin/codecept run --skip acceptance
           docker-compose -f docker-compose.ci.yml run php vendor/bin/phpcs
           docker-compose -f docker-compose.ci.yml run php vendor/bin/phpstan analyse
           docker-compose -f docker-compose.ci.yml up -d

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Common\Port\Adapter\Symfony;
 
 use Gaming\Common\EventStore\CompositeStoredEventSubscriber;
-use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkPool\Channel\StreamChannelPairFactory;
 use Gaming\Common\ForkPool\ForkPool;
@@ -25,7 +25,7 @@ final class FollowEventStoreCommand extends Command
      * @param Traversable<string, StoredEventSubscriber> $storedEventSubscribers
      */
     public function __construct(
-        private readonly EventStore $eventStore,
+        private readonly PollableEventStore $pollableEventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
         private readonly Traversable $storedEventSubscribers,
         private readonly Normalizer $normalizer
@@ -114,7 +114,7 @@ final class FollowEventStoreCommand extends Command
                     )->channel(),
                     range(1, max(1, (int)$input->getOption('worker')))
                 ),
-                $this->eventStore,
+                $this->pollableEventStore,
                 $this->eventStorePointerFactory,
                 (string)$input->getArgument('pointer'),
                 max(1, (int)$input->getOption('throttle')) * 1000,

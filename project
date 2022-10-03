@@ -71,7 +71,7 @@ tests() {
 }
 
 unit() {
-    docker-compose run php vendor/bin/codecept run unit --coverage-html
+    docker-compose run php vendor/bin/codecept run --skip acceptance --coverage-html
 }
 
 sniffer() {

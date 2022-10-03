@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-use Closure;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\Exception\FailedRetrieveMostRecentPublishedStoredEventIdException;
 use Gaming\Common\EventStore\Exception\FailedTrackMostRecentPublishedStoredEventIdException;
@@ -15,8 +14,7 @@ final class FollowEventStoreDispatcher
     public function __construct(
         private readonly StoredEventSubscriber $storedEventSubscriber,
         private readonly EventStorePointer $eventStorePointer,
-        private readonly EventStore $eventStore,
-        private readonly Closure $afterHandlingStoredEvents
+        private readonly PollableEventStore $pollableEventStore
     ) {
     }
 
@@ -33,7 +31,7 @@ final class FollowEventStoreDispatcher
 
         $lastStoredEventId = $this->eventStorePointer->retrieveMostRecentPublishedStoredEventId();
 
-        $storedEvents = $this->eventStore->since(
+        $storedEvents = $this->pollableEventStore->since(
             $lastStoredEventId,
             $batchSize
         );
@@ -46,7 +44,7 @@ final class FollowEventStoreDispatcher
             $this->storedEventSubscriber->handle($storedEvent);
         }
 
-        ($this->afterHandlingStoredEvents)();
+        $this->storedEventSubscriber->commit();
 
         $lastStoredEventId = end($storedEvents)->id();
         $this->eventStorePointer->trackMostRecentPublishedStoredEventId($lastStoredEventId);

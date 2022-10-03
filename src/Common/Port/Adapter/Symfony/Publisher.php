@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Port\Adapter\Symfony;
 
-use Gaming\Common\EventStore\ConsistentOrderEventStore;
-use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\FollowEventStoreDispatcher;
 use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
+use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\ForkPool\Channel\Channel;
 use Gaming\Common\ForkPool\Task;
 use Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\EventStorePointerFactory;
@@ -23,7 +22,7 @@ final class Publisher implements Task
      */
     public function __construct(
         private readonly array $channels,
-        private readonly EventStore $eventStore,
+        private readonly PollableEventStore $pollableEventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
         private readonly string $eventStorePointerName,
         private readonly int $throttleTimeInMicroseconds,
@@ -43,27 +42,26 @@ final class Publisher implements Task
                     $this->eventStorePointerName
                 )
             ),
-            new ConsistentOrderEventStore($this->eventStore),
-            $this->synchronize(...)
+            $this->pollableEventStore
         );
 
         while (true) {
             if ($followEventStoreDispatcher->dispatch($this->batchSize) === 0) {
-                $this->synchronize();
+                $this->ping();
                 usleep($this->throttleTimeInMicroseconds);
             }
         }
     }
 
-    public function synchronize(): void
+    public function ping(): void
     {
         foreach ($this->channels as $channel) {
-            $channel->send('SYN');
+            $channel->send('PING');
         }
 
         foreach ($this->channels as $channel) {
-            if ($channel->receive() !== 'ACK') {
-                throw new EventStoreException('No ack from channel.');
+            if ($channel->receive() !== 'PONG') {
+                throw new EventStoreException('No pong from channel.');
             }
         }
     }
