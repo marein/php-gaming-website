@@ -6,8 +6,17 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['localhost:9090']
-  - job_name: 'connect-four'
+  - job_name: 'docker'
     scrape_interval: 5s
-    metrics_path: '/metrics/connect-four'
-    static_configs:
-      - targets: ['traefik']
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+    relabel_configs:
+      - source_labels: [ __meta_docker_container_label_prometheus_job ]
+        regex: .+
+        action: keep
+      - source_labels: [ __meta_docker_container_label_prometheus_job ]
+        target_label: job
+      - source_labels: [ __meta_docker_container_label_prometheus_path ]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)

@@ -72,11 +72,13 @@ services:
     prometheus:
         image: marein/php-gaming-website:prometheus
         restart: on-failure
+        user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
         command:
             - '--config.file=/etc/prometheus/prometheus.yml'
             - '--storage.tsdb.path=/prometheus'
         volumes:
             - prometheus:/prometheus
+            - /var/run/docker.sock:/var/run/docker.sock
     service-js-polyfill:
         image: gamingplatform/service-js-polyfill
         restart: on-failure
@@ -93,6 +95,8 @@ services:
             - "traefik.http.routers.php-fpm.priority=10"
             - "traefik.http.routers.php-fpm.rule=PathPrefix(`/`)"
             - "traefik.http.services.php-fpm.loadbalancer.server.port=80"
+            - "prometheus-job=php-fpm"
+            - "prometheus-path=/metrics/connect-four"
 
     ##############################
     #   Long running processes   #
