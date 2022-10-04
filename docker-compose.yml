@@ -61,7 +61,7 @@ services:
             dockerfile: ./docker/prometheus/Dockerfile
         user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
         command:
-            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--config.file=/etc/prometheus/prometheus-docker.yml'
             - '--storage.tsdb.path=/prometheus'
         volumes:
             - prometheus:/prometheus

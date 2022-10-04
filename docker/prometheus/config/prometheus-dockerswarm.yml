@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 1m
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: 'dockerswarm'
+    scrape_interval: 5s
+    dockerswarm_sd_configs:
+      - host: unix:///var/run/docker.sock
+        role: tasks
+    relabel_configs:
+      - source_labels: [ __meta_dockerswarm_service_label_prometheus_job ]
+        regex: .+
+        action: keep
+      - source_labels: [ __meta_dockerswarm_service_label_prometheus_job ]
+        target_label: job
+      - source_labels: [ __meta_dockerswarm_service_label_prometheus_path ]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
