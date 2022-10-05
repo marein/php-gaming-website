@@ -9,19 +9,21 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 final class AssignUserIdOnKernelRequest
 {
-    public function __construct(
-        private readonly IdentityService $identityService,
-        private readonly string $ignoredPathExpression
-    ) {
+    private IdentityService $identityService;
+
+    public function __construct(IdentityService $identityService)
+    {
+        $this->identityService = $identityService;
     }
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if ($this->shouldIgnoreRequest($event)) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
-        $session = $event->getRequest()->getSession();
+        $request = $event->getRequest();
+        $session = $request->getSession();
 
         if (!$session->has('user')) {
             // todo Create user only when it's really needed.
@@ -30,11 +32,5 @@ final class AssignUserIdOnKernelRequest
             // For example: open a game, sign up etc.
             $session->set('user', $this->identityService->arrive()['userId']);
         }
-    }
-
-    private function shouldIgnoreRequest(RequestEvent $event): bool
-    {
-        return !$event->isMainRequest()
-            || preg_match($this->ignoredPathExpression, $event->getRequest()->getRequestUri()) === 1;
     }
 }

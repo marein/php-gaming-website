@@ -5,6 +5,5 @@ services:
         public: false
         arguments:
             - '@web-interface.identity-service'
-            - '/^\/metrics\//'
         tags:
             - { name: kernel.event_listener, event: kernel.request }
