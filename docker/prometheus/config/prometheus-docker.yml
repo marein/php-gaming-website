@@ -20,3 +20,8 @@ scrape_configs:
         action: replace
         target_label: __metrics_path__
         regex: (.+)
+      - source_labels: [ __address__, __meta_docker_container_label_prometheus_port ]
+        target_label: __address__
+        separator: ';'
+        regex: '([^:]+):(\d+);(\d+)'
+        replacement: '${1}:${3}'
