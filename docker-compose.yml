@@ -69,11 +69,6 @@ services:
         restart: on-failure
     node-exporter:
         image: quay.io/prometheus/node-exporter
-        command:
-            - '--path.rootfs=/host'
-        pid: host
-        volumes:
-            - '/:/host:ro,rslave'
         labels:
             - "prometheus-job=node-exporter"
             - "prometheus-port=9100"
