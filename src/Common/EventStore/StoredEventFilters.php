@@ -27,7 +27,6 @@ final class StoredEventFilters
             $expectedStoredEventId++;
             $isStoredEventIdExpected = $storedEvent->id() === $expectedStoredEventId;
 
-            $gapDetection->shouldWaitForStoredEventWithId($expectedStoredEventId);
             if (!$isStoredEventIdExpected && $gapDetection->shouldWaitForStoredEventWithId($expectedStoredEventId)) {
                 return $filteredStoredEvents;
             }
