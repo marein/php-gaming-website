@@ -24,10 +24,15 @@ scrape_configs:
       - source_labels: [ __address__, __meta_dockerswarm_service_label_prometheus_port ]
         target_label: __address__
         separator: ';'
-        regex: '([^:]+):(\d+);(\d+)'
-        replacement: '${1}:${3}'
+        regex: '([^:]+):\d+;(\d+)'
+        replacement: '${1}:${2}'
       - source_labels: [ __meta_dockerswarm_service_mode, __meta_dockerswarm_node_hostname ]
         target_label: instance
         separator: ';'
         regex: 'global;(.*)'
+        replacement: '${1}'
+      - source_labels: [ __meta_dockerswarm_service_mode, __meta_dockerswarm_service_name ]
+        target_label: instance
+        separator: ';'
+        regex: 'replicated;(.*)'
         replacement: '${1}'
