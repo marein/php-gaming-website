@@ -70,7 +70,7 @@ services:
     node-exporter:
         image: quay.io/prometheus/node-exporter
         labels:
-            - "prometheus-job=node-exporter"
+            - "prometheus-job=node"
             - "prometheus-port=9100"
     mysql:
         build:
