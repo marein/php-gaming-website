@@ -42,6 +42,36 @@ services:
             - php-fpm
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+    grafana:
+        build:
+            context: .
+            dockerfile: ./docker/grafana/Dockerfile
+        environment:
+            GF_AUTH_DISABLE_LOGIN_FORM: 1
+            GF_AUTH_ANONYMOUS_ENABLED: 1
+            GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+        ports:
+            - "8085:3000"
+        volumes:
+            - ./docker/grafana/provisioning:/etc/grafana/provisioning
+            - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
+    prometheus:
+        build:
+            context: .
+            dockerfile: ./docker/prometheus/Dockerfile
+        user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
+        command:
+            - '--config.file=/etc/prometheus/prometheus-docker.yml'
+            - '--storage.tsdb.path=/prometheus'
+        volumes:
+            - prometheus:/prometheus
+            - /var/run/docker.sock:/var/run/docker.sock
+        restart: on-failure
+    node-exporter:
+        image: quay.io/prometheus/node-exporter
+        labels:
+            - "prometheus-job=node"
+            - "prometheus-port=9100"
     mysql:
         build:
             context: .
@@ -167,3 +197,4 @@ volumes:
     mysql:
     redis:
     rabbit-mq:
+    prometheus:
