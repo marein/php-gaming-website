@@ -35,7 +35,7 @@ services:
             - --providers.docker.exposedbydefault=false
         ports:
             - "80:80"
-            - "8084:8080"
+            - "8083:8080"
         depends_on:
             - nchan
             - service-js-polyfill
@@ -51,7 +51,7 @@ services:
             GF_AUTH_ANONYMOUS_ENABLED: 1
             GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
         ports:
-            - "8085:3000"
+            - "8084:3000"
         volumes:
             - ./docker/grafana/provisioning:/etc/grafana/provisioning
             - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
@@ -94,8 +94,6 @@ services:
             context: .
             dockerfile: ./docker/rabbit-mq/Dockerfile
         hostname: rabbit-mq
-        ports:
-            - "8083:15672"
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
         labels:

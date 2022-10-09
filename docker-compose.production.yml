@@ -72,7 +72,7 @@ services:
             GF_AUTH_ANONYMOUS_ENABLED: 1
             GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
         ports:
-            - "8085:3000"
+            - "8084:3000"
     prometheus:
         image: marein/php-gaming-website:prometheus
         restart: on-failure
