@@ -52,6 +52,10 @@ services:
         hostname: rabbit-mq
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
+        labels:
+            - "prometheus-job=rabbitmq"
+            - "prometheus-port=15692"
+            - "prometheus-path=/metrics/per-object"
         restart: on-failure
     nchan:
         image: marein/php-gaming-website:nchan

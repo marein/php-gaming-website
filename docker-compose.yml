@@ -98,6 +98,10 @@ services:
             - "8083:15672"
         volumes:
             - rabbit-mq:/var/lib/rabbitmq/mnesia
+        labels:
+            - "prometheus-job=rabbitmq"
+            - "prometheus-port=15692"
+            - "prometheus-path=/metrics/per-object"
         restart: on-failure
     nchan:
         build:
