@@ -49,7 +49,6 @@
       },
       "hiddenSeries": false,
       "id": 2,
-      "interval": "5s",
       "legend": {
         "alignAsTable": false,
         "avg": false,
@@ -79,9 +78,8 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "(\n  (1 - rate(node_cpu_seconds_total{job=\"node\", mode=\"idle\", instance=\"$instance\"}[$__interval]))\n/ ignoring(cpu) group_left\n  count without (cpu)( node_cpu_seconds_total{job=\"node\", mode=\"idle\", instance=\"$instance\"})\n)\n",
+          "expr": "(\n  (1 - rate(node_cpu_seconds_total{job=\"node\", mode=\"idle\", instance=\"$instance\"}[$__rate_interval]))\n/ ignoring(cpu) group_left\n  count without (cpu)( node_cpu_seconds_total{job=\"node\", mode=\"idle\", instance=\"$instance\"})\n)\n",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "{{cpu}}",
           "refId": "A"
         }
@@ -139,7 +137,6 @@
       },
       "hiddenSeries": false,
       "id": 3,
-      "interval": "5s",
       "legend": {
         "alignAsTable": false,
         "avg": false,
@@ -175,7 +172,6 @@
           },
           "expr": "node_load1{job=\"node\", instance=\"$instance\"}",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "1m load average",
           "refId": "A"
         },
@@ -186,7 +182,6 @@
           },
           "expr": "node_load5{job=\"node\", instance=\"$instance\"}",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "5m load average",
           "refId": "B"
         },
@@ -197,7 +192,6 @@
           },
           "expr": "node_load15{job=\"node\", instance=\"$instance\"}",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "15m load average",
           "refId": "C"
         },
@@ -208,7 +202,6 @@
           },
           "expr": "count(node_cpu_seconds_total{job=\"node\", instance=\"$instance\", mode=\"idle\"})",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "logical cores",
           "refId": "D"
         }
@@ -264,7 +257,6 @@
       },
       "hiddenSeries": false,
       "id": 4,
-      "interval": "5s",
       "legend": {
         "alignAsTable": false,
         "avg": false,
@@ -300,7 +292,6 @@
           },
           "expr": "(\n  node_memory_MemTotal_bytes{job=\"node\", instance=\"$instance\"}\n-\n  node_memory_MemFree_bytes{job=\"node\", instance=\"$instance\"}\n-\n  node_memory_Buffers_bytes{job=\"node\", instance=\"$instance\"}\n-\n  node_memory_Cached_bytes{job=\"node\", instance=\"$instance\"}\n)\n",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "memory used",
           "refId": "A"
         },
@@ -311,7 +302,6 @@
           },
           "expr": "node_memory_Buffers_bytes{job=\"node\", instance=\"$instance\"}",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "memory buffers",
           "refId": "B"
         },
@@ -322,7 +312,6 @@
           },
           "expr": "node_memory_Cached_bytes{job=\"node\", instance=\"$instance\"}",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "memory cached",
           "refId": "C"
         },
@@ -333,7 +322,6 @@
           },
           "expr": "node_memory_MemFree_bytes{job=\"node\", instance=\"$instance\"}",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "memory free",
           "refId": "D"
         }
@@ -418,7 +406,6 @@
         "y": 7
       },
       "id": 5,
-      "interval": "5s",
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -438,7 +425,6 @@
         {
           "expr": "100 -\n(\n  avg(node_memory_MemAvailable_bytes{job=\"node\", instance=\"$instance\"})\n/\n  avg(node_memory_MemTotal_bytes{job=\"node\", instance=\"$instance\"})\n* 100\n)\n",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "",
           "refId": "A"
         }
@@ -462,7 +448,6 @@
       },
       "hiddenSeries": false,
       "id": 6,
-      "interval": "5s",
       "legend": {
         "alignAsTable": false,
         "avg": false,
@@ -501,23 +486,20 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(node_disk_read_bytes_total{job=\"node\", instance=\"$instance\", device!=\"\"}[$__interval])",
+          "expr": "rate(node_disk_read_bytes_total{job=\"node\", instance=\"$instance\", device!=\"\"}[$__rate_interval])",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "{{device}} read",
           "refId": "A"
         },
         {
-          "expr": "rate(node_disk_written_bytes_total{job=\"node\", instance=\"$instance\", device!=\"\"}[$__interval])",
+          "expr": "rate(node_disk_written_bytes_total{job=\"node\", instance=\"$instance\", device!=\"\"}[$__rate_interval])",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "{{device}} written",
           "refId": "B"
         },
         {
-          "expr": "rate(node_disk_io_time_seconds_total{job=\"node\", instance=\"$instance\", device!=\"\"}[$__interval])",
+          "expr": "rate(node_disk_io_time_seconds_total{job=\"node\", instance=\"$instance\", device!=\"\"}[$__rate_interval])",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "{{device}} io time",
           "refId": "C"
         }
@@ -568,7 +550,6 @@
       },
       "hiddenSeries": false,
       "id": 7,
-      "interval": "5s",
       "legend": {
         "alignAsTable": false,
         "avg": false,
@@ -609,14 +590,12 @@
         {
           "expr": "sum(\n  max by (device) (\n    node_filesystem_size_bytes{job=\"node\", instance=\"$instance\", fstype!=\"\"}\n  -\n    node_filesystem_avail_bytes{job=\"node\", instance=\"$instance\", fstype!=\"\"}\n  )\n)\n",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "used",
           "refId": "A"
         },
         {
           "expr": "sum(\n  max by (device) (\n    node_filesystem_avail_bytes{job=\"node\", instance=\"$instance\", fstype!=\"\"}\n  )\n)\n",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "available",
           "refId": "B"
         }
@@ -672,7 +651,6 @@
       },
       "hiddenSeries": false,
       "id": 8,
-      "interval": "5s",
       "legend": {
         "alignAsTable": false,
         "avg": false,
@@ -706,9 +684,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(node_network_receive_bytes_total{job=\"node\", instance=\"$instance\", device!=\"lo\"}[$__interval])",
+          "expr": "rate(node_network_receive_bytes_total{job=\"node\", instance=\"$instance\", device!=\"lo\"}[$__rate_interval])",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "{{device}}",
           "refId": "A"
         }
@@ -764,7 +741,6 @@
       },
       "hiddenSeries": false,
       "id": 9,
-      "interval": "5s",
       "legend": {
         "alignAsTable": false,
         "avg": false,
@@ -798,9 +774,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(node_network_transmit_bytes_total{job=\"node\", instance=\"$instance\", device!=\"lo\"}[$__interval])",
+          "expr": "rate(node_network_transmit_bytes_total{job=\"node\", instance=\"$instance\", device!=\"lo\"}[$__rate_interval])",
           "format": "time_series",
-          "intervalFactor": 2,
           "legendFormat": "{{device}}",
           "refId": "A"
         }
