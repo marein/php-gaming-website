@@ -7,5 +7,7 @@ datasources:
     access: proxy
     uid: prometheus
     url: http://prometheus:9090
+    jsonData:
+      timeInterval: 5s
     version: 1
     editable: true
