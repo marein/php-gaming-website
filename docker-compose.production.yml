@@ -60,6 +60,8 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.nchan.priority=20"
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
+            - "prometheus-job=nchan"
+            - "prometheus-port=81"
     grafana:
         image: marein/php-gaming-website:grafana
         restart: on-failure
