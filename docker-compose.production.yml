@@ -34,34 +34,6 @@ services:
             - php-fpm
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-    mysql:
-        image: marein/php-gaming-website:mysql
-        environment:
-            MYSQL_ROOT_PASSWORD: password
-        volumes:
-            - mysql:/var/lib/mysql
-        restart: on-failure
-    redis:
-        image: marein/php-gaming-website:redis
-        command: redis-server --appendonly yes
-        volumes:
-            - redis:/data
-        restart: on-failure
-    rabbit-mq:
-        image: marein/php-gaming-website:rabbit-mq
-        hostname: rabbit-mq
-        volumes:
-            - rabbit-mq:/var/lib/rabbitmq/mnesia
-        restart: on-failure
-    nchan:
-        image: marein/php-gaming-website:nchan
-        restart: on-failure
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.nchan.priority=20"
-            - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
-            - "prometheus-job=nchan"
-            - "prometheus-port=81"
     grafana:
         image: marein/php-gaming-website:grafana
         restart: on-failure
@@ -86,6 +58,41 @@ services:
         labels:
             - "prometheus-job=node"
             - "prometheus-port=9100"
+    mysql:
+        image: marein/php-gaming-website:mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - mysql:/var/lib/mysql
+        restart: on-failure
+    mysql-exporter:
+        image: prom/mysqld-exporter
+        environment:
+            DATA_SOURCE_NAME: "root:password@(mysql:3306)/"
+        labels:
+            - "prometheus-job=mysql"
+            - "prometheus-port=9104"
+    redis:
+        image: marein/php-gaming-website:redis
+        command: redis-server --appendonly yes
+        volumes:
+            - redis:/data
+        restart: on-failure
+    rabbit-mq:
+        image: marein/php-gaming-website:rabbit-mq
+        hostname: rabbit-mq
+        volumes:
+            - rabbit-mq:/var/lib/rabbitmq/mnesia
+        restart: on-failure
+    nchan:
+        image: marein/php-gaming-website:nchan
+        restart: on-failure
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.nchan.priority=20"
+            - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
+            - "prometheus-job=nchan"
+            - "prometheus-port=81"
     service-js-polyfill:
         image: gamingplatform/service-js-polyfill
         restart: on-failure
