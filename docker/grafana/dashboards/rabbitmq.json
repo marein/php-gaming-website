@@ -12,7 +12,7 @@
       }
     ]
   },
-  "description": "A new RabbitMQ Management Overview",
+  "description": "Visualizes RabbitMQ metrics.",
   "editable": true,
   "gnetId": 10991,
   "graphTooltip": 1,
