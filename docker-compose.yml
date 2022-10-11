@@ -30,18 +30,20 @@ services:
             context: .
             dockerfile: ./docker/traefik/Dockerfile
         command:
-            - --api.insecure=true
+            - --metrics.prometheus=true
             - --providers.docker
             - --providers.docker.exposedbydefault=false
         ports:
             - "80:80"
-            - "8084:8080"
         depends_on:
             - nchan
             - service-js-polyfill
             - php-fpm
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+        labels:
+            - "prometheus-job=traefik"
+            - "prometheus-port=8080"
     grafana:
         build:
             context: .
