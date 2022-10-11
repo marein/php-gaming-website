@@ -81,6 +81,13 @@ services:
         volumes:
             - mysql:/var/lib/mysql
         restart: on-failure
+    mysql-exporter:
+        image: prom/mysqld-exporter
+        environment:
+            DATA_SOURCE_NAME: "root:password@(mysql:3306)/"
+        labels:
+            - "prometheus-job=mysql"
+            - "prometheus-port=9104"
     redis:
         build:
             context: .

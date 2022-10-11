@@ -34,6 +34,30 @@ services:
             - php-fpm
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+    grafana:
+        image: marein/php-gaming-website:grafana
+        restart: on-failure
+        environment:
+            GF_AUTH_DISABLE_LOGIN_FORM: 1
+            GF_AUTH_ANONYMOUS_ENABLED: 1
+            GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+        ports:
+            - "8085:3000"
+    prometheus:
+        image: marein/php-gaming-website:prometheus
+        restart: on-failure
+        user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
+        command:
+            - '--config.file=/etc/prometheus/prometheus-docker.yml'
+            - '--storage.tsdb.path=/prometheus'
+        volumes:
+            - prometheus:/prometheus
+            - /var/run/docker.sock:/var/run/docker.sock
+    node-exporter:
+        image: quay.io/prometheus/node-exporter
+        labels:
+            - "prometheus-job=node"
+            - "prometheus-port=9100"
     mysql:
         image: marein/php-gaming-website:mysql
         environment:
@@ -41,6 +65,13 @@ services:
         volumes:
             - mysql:/var/lib/mysql
         restart: on-failure
+    mysql-exporter:
+        image: prom/mysqld-exporter
+        environment:
+            DATA_SOURCE_NAME: "root:password@(mysql:3306)/"
+        labels:
+            - "prometheus-job=mysql"
+            - "prometheus-port=9104"
     redis:
         image: marein/php-gaming-website:redis
         command: redis-server --appendonly yes
@@ -64,30 +95,6 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.nchan.priority=20"
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
-    grafana:
-        image: marein/php-gaming-website:grafana
-        restart: on-failure
-        environment:
-            GF_AUTH_DISABLE_LOGIN_FORM: 1
-            GF_AUTH_ANONYMOUS_ENABLED: 1
-            GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
-        ports:
-            - "8084:3000"
-    prometheus:
-        image: marein/php-gaming-website:prometheus
-        restart: on-failure
-        user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
-        command:
-            - '--config.file=/etc/prometheus/prometheus-docker.yml'
-            - '--storage.tsdb.path=/prometheus'
-        volumes:
-            - prometheus:/prometheus
-            - /var/run/docker.sock:/var/run/docker.sock
-    node-exporter:
-        image: quay.io/prometheus/node-exporter
-        labels:
-            - "prometheus-job=node"
-            - "prometheus-port=9100"
     service-js-polyfill:
         image: gamingplatform/service-js-polyfill
         restart: on-failure
