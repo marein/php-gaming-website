@@ -354,6 +354,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "Nchan Overview",
+  "description": "Visualizes Nchan metrics.",
   "uid": "EaeSxGIVk",
   "version": 1,
   "weekStart": ""
