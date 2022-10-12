@@ -3030,8 +3030,8 @@
         "allFormat": "glob",
         "current": {
           "selected": false,
-          "text": "192.168.80.11:9104",
-          "value": "192.168.80.11:9104"
+          "text": "None",
+          "value": "–"
         },
         "datasource": {
           "type": "prometheus",
