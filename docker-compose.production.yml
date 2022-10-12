@@ -94,6 +94,8 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.nchan.priority=20"
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
+            - "prometheus-job=nchan"
+            - "prometheus-port=81"
     service-js-polyfill:
         image: gamingplatform/service-js-polyfill
         restart: on-failure
