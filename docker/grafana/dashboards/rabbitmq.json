@@ -457,7 +457,7 @@
       "thresholds": "-1,50",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Incoming messages / s",
+      "title": "Incoming Messages / s",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -548,7 +548,7 @@
       "thresholds": "-1,50",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Outgoing messages / s",
+      "title": "Outgoing Messages / s",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -639,7 +639,7 @@
       "thresholds": "10000,100000",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Ready messages",
+      "title": "Ready Messages",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -730,7 +730,7 @@
       "thresholds": "100,500",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Unacknowledged messages",
+      "title": "Unacknowledged Messages",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -876,7 +876,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Memory available before publishers blocked",
+      "title": "Memory Available Before Publishers Blocked",
       "tooltip": {
         "shared": true,
         "sort": 1,
@@ -1031,7 +1031,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Disk space available before publishers blocked",
+      "title": "Disk Space Available Before Publishers Blocked",
       "tooltip": {
         "shared": true,
         "sort": 1,
@@ -1187,7 +1187,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "File descriptors available",
+      "title": "File Descriptors Available",
       "tooltip": {
         "shared": true,
         "sort": 1,
@@ -1342,7 +1342,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "TCP sockets available",
+      "title": "TCP Sockets Available",
       "tooltip": {
         "shared": true,
         "sort": 1,
@@ -1498,7 +1498,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages ready to be delivered to consumers",
+      "title": "Messages Ready To Be Delivered To Consumers",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -1637,7 +1637,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages pending consumer acknowledgement",
+      "title": "Messages Pending Consumer Acknowledgement",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -1793,7 +1793,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages published / s",
+      "title": "Messages Published / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -1932,7 +1932,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages confirmed to publishers / s",
+      "title": "Messages Confirmed To Publishers / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -2044,7 +2044,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Unroutable messages returned to publishers / s",
+      "title": "Unroutable Messages Returned To Publishers / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -2183,7 +2183,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages routed to queues / s",
+      "title": "Messages Routed To Queues / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -2322,7 +2322,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages unconfirmed to publishers / s",
+      "title": "Messages Unconfirmed To Publishers / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -2434,7 +2434,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Unroutable messages dropped / s",
+      "title": "Unroutable Messages Dropped / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -2590,7 +2590,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages delivered / s",
+      "title": "Messages Delivered / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -2729,7 +2729,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages delivered auto ack / s",
+      "title": "Messages Delivered Auto Ack / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -2841,7 +2841,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Polling operations with auto ack / s",
+      "title": "Polling Operations With Auto Ack / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -2997,7 +2997,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages redelivered / s",
+      "title": "Messages Redelivered / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -3136,7 +3136,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages delivered with manual ack / s",
+      "title": "Messages Delivered With Manual Ack / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -3248,7 +3248,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Polling operations with manual ack / s",
+      "title": "Polling Operations With Manual Ack / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -3387,7 +3387,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Messages acknowledged / s",
+      "title": "Messages Acknowledged / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -3500,7 +3500,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Polling operations that yield no result / s",
+      "title": "Polling Operations That Yield No Result / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -3656,7 +3656,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Total queues",
+      "title": "Total Queues",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -3812,7 +3812,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Queues declared / s",
+      "title": "Queues Declared / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -3968,7 +3968,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Queues created / s",
+      "title": "Queues Created / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -4124,7 +4124,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Queues deleted / s",
+      "title": "Queues Deleted / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -4280,7 +4280,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Total channels",
+      "title": "Total Channels",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -4436,7 +4436,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Channels opened / s",
+      "title": "Channels Opened / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -4592,7 +4592,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Channels closed / s",
+      "title": "Channels Closed / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -4748,7 +4748,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Total connections",
+      "title": "Total Connections",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -4905,7 +4905,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Connections opened / s",
+      "title": "Connections Opened / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -5061,7 +5061,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Connections closed / s",
+      "title": "Connections Closed / s",
       "tooltip": {
         "shared": true,
         "sort": 2,
