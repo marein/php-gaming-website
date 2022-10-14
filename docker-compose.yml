@@ -30,18 +30,20 @@ services:
             context: .
             dockerfile: ./docker/traefik/Dockerfile
         command:
-            - --api.insecure=true
+            - --metrics.prometheus=true
             - --providers.docker
             - --providers.docker.exposedbydefault=false
         ports:
             - "80:80"
-            - "8084:8080"
         depends_on:
             - nchan
             - service-js-polyfill
             - php-fpm
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+        labels:
+            - "prometheus-job=traefik"
+            - "prometheus-port=8080"
     grafana:
         build:
             context: .
@@ -51,7 +53,7 @@ services:
             GF_AUTH_ANONYMOUS_ENABLED: 1
             GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
         ports:
-            - "8085:3000"
+            - "8084:3000"
         volumes:
             - ./docker/grafana/provisioning:/etc/grafana/provisioning
             - ./docker/grafana/dashboards:/var/lib/grafana/dashboards

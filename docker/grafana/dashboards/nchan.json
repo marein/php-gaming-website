@@ -318,8 +318,8 @@
       {
         "current": {
           "selected": false,
-          "text": "php-gaming-website_nchan_1",
-          "value": "php-gaming-website_nchan_1"
+          "text": "None",
+          "value": "–"
         },
         "datasource": {
           "type": "prometheus",

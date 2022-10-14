@@ -23,7 +23,7 @@ services:
     traefik:
         image: marein/php-gaming-website:traefik
         command:
-            - --api.insecure=true
+            - --metrics.prometheus=true
             - --providers.docker
             - --providers.docker.exposedbydefault=false
         ports:
@@ -34,6 +34,9 @@ services:
             - php-fpm
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+        labels:
+            - "prometheus-job=traefik"
+            - "prometheus-port=8080"
     grafana:
         image: marein/php-gaming-website:grafana
         restart: on-failure
@@ -42,7 +45,7 @@ services:
             GF_AUTH_ANONYMOUS_ENABLED: 1
             GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
         ports:
-            - "8085:3000"
+            - "8084:3000"
     prometheus:
         image: marein/php-gaming-website:prometheus
         restart: on-failure
