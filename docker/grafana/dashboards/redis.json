@@ -1336,10 +1336,7 @@
   "refresh": "5s",
   "schemaVersion": 22,
   "style": "dark",
-  "tags": [
-    "prometheus",
-    "redis"
-  ],
+  "tags": [],
   "templating": {
     "list": [
       {
