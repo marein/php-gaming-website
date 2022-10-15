@@ -81,6 +81,13 @@ services:
         volumes:
             - redis:/data
         restart: on-failure
+    redis-exporter:
+        image: oliver006/redis_exporter
+        command:
+            - '-redis.addr=redis:6379'
+        labels:
+            - "prometheus-job=redis"
+            - "prometheus-port=9121"
     rabbit-mq:
         image: marein/php-gaming-website:rabbit-mq
         hostname: rabbit-mq
