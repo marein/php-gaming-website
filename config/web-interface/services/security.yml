@@ -1,0 +1,17 @@
+services:
+
+  web-interface.security:
+    class: Gaming\WebInterface\Infrastructure\Security\Security
+    arguments:
+      - '@security.token_storage'
+
+  web-interface.security.user_provider:
+    class: Gaming\WebInterface\Infrastructure\Security\UserProvider
+    public: false
+
+  web-interface.security.arrival_authenticator:
+    class: Gaming\WebInterface\Infrastructure\Security\ArrivalAuthenticator
+    public: false
+    arguments:
+      - '@web-interface.identity-service'
+      - '@security.token_storage'

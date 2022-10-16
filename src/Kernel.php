@@ -11,6 +11,7 @@ use Marein\StandardHeadersCsrfBundle\MareinStandardHeadersCsrfBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -31,7 +32,8 @@ final class Kernel extends BaseKernel
             new MareinLockDoctrineMigrationsBundle(),
             new MareinStandardHeadersCsrfBundle(),
             new TwigBundle(),
-            new MonologBundle()
+            new MonologBundle(),
+            new SecurityBundle()
         ];
 
         if ($this->getEnvironment() === 'dev') {

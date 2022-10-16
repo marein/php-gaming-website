@@ -13,7 +13,7 @@
     </section>
     <section class="middle">
         <connect-four-game-list open-games="{{ openGames|json_encode|e('html_attr') }}"
-                                player-id="{{ app.session.get('user')|e('html_attr') }}"
+                                player-id="{{ user.userIdentifier|e('html_attr') }}"
                                 maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
         </connect-four-game-list>
     </section>
