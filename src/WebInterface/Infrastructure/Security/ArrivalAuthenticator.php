@@ -30,13 +30,9 @@ final class ArrivalAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $currentUser = $this->tokenStorage->getToken()?->getUser() ?? new User(
-            $this->identityService->arrive()['userId']
-        );
-
         return new SelfValidatingPassport(
             new UserBadge(
-                $currentUser->getUserIdentifier()
+                $this->identityService->arrive()['userId']
             )
         );
     }
