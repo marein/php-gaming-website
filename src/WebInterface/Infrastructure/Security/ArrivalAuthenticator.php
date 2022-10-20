@@ -25,6 +25,10 @@ final class ArrivalAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
+        /**
+         * A better idea would be to authenticate an anonymous user only when needed.
+         * See https://github.com/marein/php-gaming-website/issues/155.
+         */
         return $this->tokenStorage->getToken() === null;
     }
 
