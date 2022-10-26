@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Presentation\Http;
 
 use Gaming\WebInterface\Application\ConnectFourService;
-use Gaming\WebInterface\Infrastructure\Security\User;
+use Gaming\WebInterface\Infrastructure\Security\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ConnectFourController
 {
     public function __construct(
-        private readonly ConnectFourService $connectFourService
+        private readonly ConnectFourService $connectFourService,
+        private readonly Security $security
     ) {
     }
 
@@ -23,51 +24,51 @@ final class ConnectFourController
         );
     }
 
-    public function openAction(Request $request, User $user): JsonResponse
+    public function openAction(Request $request): JsonResponse
     {
         return new JsonResponse(
             $this->connectFourService->open(
-                $user->getUserIdentifier()
+                $this->security->getUser()->getUserIdentifier()
             )
         );
     }
 
-    public function joinAction(Request $request, User $user, string $gameId): JsonResponse
+    public function joinAction(Request $request, string $gameId): JsonResponse
     {
         return new JsonResponse(
             $this->connectFourService->join(
                 $gameId,
-                $user->getUserIdentifier()
+                $this->security->getUser()->getUserIdentifier()
             )
         );
     }
 
-    public function abortAction(Request $request, User $user, string $gameId): JsonResponse
+    public function abortAction(Request $request, string $gameId): JsonResponse
     {
         return new JsonResponse(
             $this->connectFourService->abort(
                 $gameId,
-                $user->getUserIdentifier()
+                $this->security->getUser()->getUserIdentifier()
             )
         );
     }
 
-    public function resignAction(Request $request, User $user, string $gameId): JsonResponse
+    public function resignAction(Request $request, string $gameId): JsonResponse
     {
         return new JsonResponse(
             $this->connectFourService->resign(
                 $gameId,
-                $user->getUserIdentifier()
+                $this->security->getUser()->getUserIdentifier()
             )
         );
     }
 
-    public function moveAction(Request $request, User $user, string $gameId): JsonResponse
+    public function moveAction(Request $request, string $gameId): JsonResponse
     {
         return new JsonResponse(
             $this->connectFourService->move(
                 $gameId,
-                $user->getUserIdentifier(),
+                $this->security->getUser()->getUserIdentifier(),
                 (int)$request->request->get('column', -1)
             )
         );

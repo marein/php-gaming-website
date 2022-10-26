@@ -1,12 +1,9 @@
 services:
 
-  web-interface.security.user_argument_value_resolver:
-    class: Gaming\WebInterface\Infrastructure\Security\UserArgumentValueResolver
-    public: false
+  web-interface.security:
+    class: Gaming\WebInterface\Infrastructure\Security\Security
     arguments:
       - '@security.token_storage'
-    tags:
-      - { name: controller.argument_value_resolver }
 
   web-interface.security.user_provider:
     class: Gaming\WebInterface\Infrastructure\Security\UserProvider
