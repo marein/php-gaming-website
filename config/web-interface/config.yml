@@ -1,10 +1,5 @@
 imports:
-    - { resource: services/console.yml }
-    - { resource: services/consumer.yml }
-    - { resource: services/controller.yml }
-    - { resource: services/event_listener.yml }
-    - { resource: services/integration.yml }
-    - { resource: services/persistence.yml }
+    - { resource: services/ }
 
 # The framework configuration belongs here, because when we transition to the microservice approach,
 # the other contexts don't have the concept of a session.
@@ -16,3 +11,16 @@ framework:
 twig:
     paths:
         "%kernel.project_dir%/src/WebInterface/Presentation/Http/View": web-interface
+
+security:
+    providers:
+        user_provider:
+            id: 'web-interface.security.user_provider'
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            pattern: ^/
+            custom_authenticators:
+                - 'web-interface.security.arrival_authenticator'

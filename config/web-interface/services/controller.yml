@@ -5,6 +5,7 @@ services:
         arguments:
             - '@twig'
             - '@web-interface.connect-four-service'
+            - '@web-interface.security'
         tags:
             - 'controller.service_arguments'
 
@@ -12,6 +13,7 @@ services:
         class: Gaming\WebInterface\Presentation\Http\ChatController
         arguments:
             - '@web-interface.chat-service'
+            - '@web-interface.security'
         tags:
             - 'controller.service_arguments'
 
@@ -19,6 +21,7 @@ services:
         class: Gaming\WebInterface\Presentation\Http\ConnectFourController
         arguments:
             - '@web-interface.connect-four-service'
+            - '@web-interface.security'
         tags:
             - 'controller.service_arguments'
 
@@ -26,5 +29,6 @@ services:
         class: Gaming\WebInterface\Presentation\Http\IdentityController
         arguments:
             - '@web-interface.identity-service'
+            - '@web-interface.security'
         tags:
             - 'controller.service_arguments'

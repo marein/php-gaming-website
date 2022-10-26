@@ -1,9 +1,0 @@
-services:
-
-    web-interface.assign-user-id-on-kernel-request:
-        class: Gaming\WebInterface\Infrastructure\EventListener\AssignUserIdOnKernelRequest
-        public: false
-        arguments:
-            - '@web-interface.identity-service'
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }

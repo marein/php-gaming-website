@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Presentation\Http;
 
 use Gaming\WebInterface\Application\IdentityService;
+use Gaming\WebInterface\Infrastructure\Security\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final class IdentityController
 {
-    private IdentityService $identityService;
-
-    public function __construct(IdentityService $identityService)
-    {
-        $this->identityService = $identityService;
+    public function __construct(
+        private readonly IdentityService $identityService,
+        private readonly Security $security
+    ) {
     }
 
     public function signUpAction(Request $request): JsonResponse
     {
         return new JsonResponse(
             $this->identityService->signUp(
-                (string)$request->getSession()->get('user'),
+                $this->security->getUser()->getUserIdentifier(),
                 (string)$request->request->get('username', uniqid()),
                 (string)$request->request->get('password', 'password')
             )
