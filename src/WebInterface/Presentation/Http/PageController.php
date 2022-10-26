@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Presentation\Http;
 
 use Gaming\WebInterface\Application\ConnectFourService;
+use Gaming\WebInterface\Infrastructure\Security\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
 final class PageController
 {
-    private Environment $twig;
-
-    private ConnectFourService $connectFourService;
-
     public function __construct(
-        Environment $twig,
-        ConnectFourService $connectFourService
+        private readonly Environment $twig,
+        private readonly ConnectFourService $connectFourService,
+        private readonly Security $security
     ) {
-        $this->twig = $twig;
-        $this->connectFourService = $connectFourService;
     }
 
     public function lobbyAction(): Response
@@ -29,7 +25,8 @@ final class PageController
             $this->twig->render('@web-interface/lobby.html.twig', [
                 'maximumNumberOfGamesInList' => 10,
                 'openGames' => $this->connectFourService->openGames()['games'],
-                'runningGames' => $this->connectFourService->runningGames()
+                'runningGames' => $this->connectFourService->runningGames(),
+                'user' => $this->security->getUser()
             ])
         );
     }
@@ -48,7 +45,7 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
                 'games' => $this->connectFourService->gamesByPlayer(
-                    (string)$request->getSession()->get('user')
+                    $this->security->getUser()->getUserIdentifier()
                 )['games']
             ])
         );

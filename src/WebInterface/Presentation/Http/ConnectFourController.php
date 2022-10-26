@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Presentation\Http;
 
 use Gaming\WebInterface\Application\ConnectFourService;
+use Gaming\WebInterface\Infrastructure\Security\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ConnectFourController
 {
-    private ConnectFourService $connectFourService;
-
-    public function __construct(ConnectFourService $connectFourService)
-    {
-        $this->connectFourService = $connectFourService;
+    public function __construct(
+        private readonly ConnectFourService $connectFourService,
+        private readonly Security $security
+    ) {
     }
 
     public function showAction(string $gameId): JsonResponse
@@ -28,7 +28,7 @@ final class ConnectFourController
     {
         return new JsonResponse(
             $this->connectFourService->open(
-                (string)$request->getSession()->get('user')
+                $this->security->getUser()->getUserIdentifier()
             )
         );
     }
@@ -38,7 +38,7 @@ final class ConnectFourController
         return new JsonResponse(
             $this->connectFourService->join(
                 $gameId,
-                (string)$request->getSession()->get('user')
+                $this->security->getUser()->getUserIdentifier()
             )
         );
     }
@@ -48,7 +48,7 @@ final class ConnectFourController
         return new JsonResponse(
             $this->connectFourService->abort(
                 $gameId,
-                (string)$request->getSession()->get('user')
+                $this->security->getUser()->getUserIdentifier()
             )
         );
     }
@@ -58,7 +58,7 @@ final class ConnectFourController
         return new JsonResponse(
             $this->connectFourService->resign(
                 $gameId,
-                (string)$request->getSession()->get('user')
+                $this->security->getUser()->getUserIdentifier()
             )
         );
     }
@@ -68,7 +68,7 @@ final class ConnectFourController
         return new JsonResponse(
             $this->connectFourService->move(
                 $gameId,
-                (string)$request->getSession()->get('user'),
+                $this->security->getUser()->getUserIdentifier(),
                 (int)$request->request->get('column', -1)
             )
         );
