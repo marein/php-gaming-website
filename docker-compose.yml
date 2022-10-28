@@ -115,7 +115,6 @@ services:
         labels:
             - "prometheus-job=rabbitmq"
             - "prometheus-port=15692"
-            - "prometheus-path=/metrics/per-object"
         restart: on-failure
     nchan:
         build:
