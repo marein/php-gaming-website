@@ -72,8 +72,7 @@ Following urls are accessible after the project is successfully started.
 | [http://localhost/](http://localhost/)           | The application.               |
 | [http://localhost:8081/](http://localhost:8081/) | MySQL management interface.    |
 | [http://localhost:8082/](http://localhost:8082/) | Redis management interface.    |
-| [http://localhost:8083/](http://localhost:8083/) | RabbitMq management interface. |
-| [http://localhost:8084/](http://localhost:8084/) | Grafana management interface.  |
+| [http://localhost:8083/](http://localhost:8083/) | Grafana management interface.  |
 
 ### Production
 
