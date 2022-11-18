@@ -342,6 +342,7 @@ Some other technologies:
 * [Redis](https://redis.io) for the query models or as a caching layer. Also the user sessions are stored here.
 * [Rabbit Mq](https://www.rabbitmq.com) as the message broker.
 * [Nchan](https://nchan.io) for real-time browser notifications.
+* [Grafana](https://grafana.com) and [Prometheus](https://prometheus.io) for observability.
 * Various [libraries](/composer.json) for php.
 
 ## A note on testing
