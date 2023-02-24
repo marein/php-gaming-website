@@ -93,6 +93,8 @@ services:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
         command: 'true'
+        volumes:
+            - ./tests:/project/tests:delegated
 
 volumes:
     mysql:

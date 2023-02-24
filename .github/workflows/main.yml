@@ -17,13 +17,7 @@ jobs:
         run: ./project buildProductionImages
 
       - name: Testsuite
-        run: |
-          docker-compose -f docker-compose.ci.yml run php vendor/bin/codecept run --skip acceptance
-          docker-compose -f docker-compose.ci.yml run php vendor/bin/phpcs
-          docker-compose -f docker-compose.ci.yml run php vendor/bin/phpstan analyse
-          docker-compose -f docker-compose.ci.yml up -d
-          docker-compose -f docker-compose.ci.yml run php bash -c 'wait-for-tcp-server php-fpm:80 120 && vendor/bin/codecept run acceptance'
-          docker-compose -f docker-compose.ci.yml down -v
+        run: ./project tests
 
       - name: Deploy
         if: github.ref == 'refs/heads/master'
