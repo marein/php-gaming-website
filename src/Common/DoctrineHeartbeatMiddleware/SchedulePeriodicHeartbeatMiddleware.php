@@ -15,12 +15,17 @@ use Gaming\Common\Scheduler\Scheduler;
 final class SchedulePeriodicHeartbeatMiddleware implements Middleware
 {
     public function __construct(
-        private readonly Scheduler $scheduler
+        private readonly Scheduler $scheduler,
+        private readonly int $heartbeat
     ) {
     }
 
     public function wrap(Driver $driver): Driver
     {
-        return new ScheduleHeartbeatOnConnectDriver($driver, $this->scheduler);
+        if (php_sapi_name() !== 'cli' || $this->heartbeat <= 0) {
+            return $driver;
+        }
+
+        return new ScheduleHeartbeatOnConnectDriver($driver, $this->scheduler, $this->heartbeat);
     }
 }
