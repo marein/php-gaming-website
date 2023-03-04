@@ -12,28 +12,22 @@ final class ScheduleHeartbeatOnConnectDriver extends AbstractDriverMiddleware
 {
     public function __construct(
         Driver $driver,
-        private readonly Scheduler $scheduler
+        private readonly Scheduler $scheduler,
+        private readonly int $heartbeat
     ) {
         parent::__construct($driver);
     }
 
     public function connect(array $params)
     {
-        $parameters = new Parameters($params);
-        $connection = parent::connect($parameters->removeDriverOptions()->parameters);
-
-        if (php_sapi_name() !== 'cli' || $parameters->heartbeat() <= 0) {
-            return $connection;
-        }
-
-        $trackActivityConnection = new TrackActivityConnection($connection);
+        $trackActivityConnection = new TrackActivityConnection(parent::connect($params));
 
         $this->scheduler->schedule(
-            time() + $parameters->heartbeat(),
+            time() + $this->heartbeat,
             new ConnectionHeartbeatHandler(
                 $trackActivityConnection,
                 $this->getDatabasePlatform()->getDummySelectSQL(),
-                $parameters->heartbeat()
+                $this->heartbeat
             )
         );
 

@@ -33,6 +33,7 @@ services:
         class: Gaming\Common\DoctrineHeartbeatMiddleware\SchedulePeriodicHeartbeatMiddleware
         arguments:
             - '@gaming.scheduler'
+            - 60
         tags:
             - { name: doctrine.middleware }
 
