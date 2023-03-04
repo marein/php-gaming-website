@@ -3,7 +3,7 @@ ARG environment=development
 ##############################
 #     Build dependencies     #
 ##############################
-FROM gamingplatform/php-fpm:8.1-development as builder
+FROM ghcr.io/gaming-platform/docker-php-fpm:8.2-development as builder
 
 ARG environment=development
 
@@ -19,7 +19,7 @@ RUN /composer-install-after-code-copy.sh
 ##############################
 #       Build php-fpm        #
 ##############################
-FROM gamingplatform/php-fpm:8.1-$environment
+FROM ghcr.io/gaming-platform/docker-php-fpm:8.2-$environment
 
 ARG environment=development
 
