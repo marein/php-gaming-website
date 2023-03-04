@@ -131,7 +131,7 @@ through the message broker to inform other contexts what's happened here.
 First the domain events are stored to the event store.
 This happens in the same transaction in which the commands are executed.
 After that, an
-[event subscriber](/src/Chat/Infrastructure/Messaging/PublishStoredEventsToRabbitMqSubscriber.php)
+[event subscriber](/src/Chat/Infrastructure/Messaging/PublishStoredEventsToMessageBrokerSubscriber.php)
 publishes these stored events to the message broker.
 
 I've chosen MySQL as the storage.
@@ -182,7 +182,7 @@ through the message broker to inform other contexts what's happened here.
 First the domain events are stored to the event store.
 This happens in the same transaction in which the commands are executed.
 After that, an
-[event subscriber](/src/ConnectFour/Port/Adapter/Messaging/PublishStoredEventsToRabbitMqSubscriber.php)
+[event subscriber](/src/ConnectFour/Port/Adapter/Messaging/PublishStoredEventsToMessageBrokerSubscriber.php)
 publishes these stored events to the message broker.
 
 The Connect Four context applies the
