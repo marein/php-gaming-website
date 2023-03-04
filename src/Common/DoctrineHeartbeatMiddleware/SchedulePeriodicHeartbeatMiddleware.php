@@ -21,10 +21,6 @@ final class SchedulePeriodicHeartbeatMiddleware implements Middleware
 
     public function wrap(Driver $driver): Driver
     {
-        if (php_sapi_name() !== 'cli') {
-            return $driver;
-        }
-
         return new ScheduleHeartbeatOnConnectDriver($driver, $this->scheduler);
     }
 }
