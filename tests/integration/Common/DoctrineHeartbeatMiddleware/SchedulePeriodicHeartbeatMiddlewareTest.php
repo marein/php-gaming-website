@@ -24,7 +24,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
     {
         $scheduler = new TestScheduler();
         $logger = $this->createMock(LoggerInterface::class);
-        $connection = $this->createConnectionWithMiddleware('sqlite:///:memory:?heartbeat=5', $scheduler, $logger);
+        $connection = $this->createConnectionWithMiddleware('sqlite:///:memory:', $scheduler, 5, $logger);
 
         // The logger is used to check how many queries have been made.
         // The first expectation is when opening, the second is the heartbeat that is triggered.
@@ -61,11 +61,11 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
      * @test
      * @dataProvider withoutHeartbeatDataProvider
      */
-    public function itShouldNotScheduleWithoutHeartbeatConfiguration(string $url): void
+    public function itShouldNotScheduleWithoutHeartbeatConfiguration(string $url, int $heartbeat): void
     {
         $scheduler = new TestScheduler();
         $logger = $this->createMock(LoggerInterface::class);
-        $connection = $this->createConnectionWithMiddleware($url, $scheduler, $logger);
+        $connection = $this->createConnectionWithMiddleware($url, $scheduler, $heartbeat, $logger);
 
         $connection->executeQuery('SELECT 1');
         self::assertSame(0, $scheduler->numberOfPendingJobs());
@@ -74,6 +74,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
     private function createConnectionWithMiddleware(
         string $url,
         TestScheduler $scheduler,
+        int $heartbeat,
         LoggerInterface $logger
     ): Connection {
         return DriverManager::getConnection(
@@ -82,7 +83,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
                 ->setMiddlewares(
                     [
                         new LoggerMiddleware($logger),
-                        new SchedulePeriodicHeartbeatMiddleware($scheduler)
+                        new SchedulePeriodicHeartbeatMiddleware($scheduler, $heartbeat)
                     ]
                 )
         );
@@ -91,9 +92,8 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
     private function withoutHeartbeatDataProvider(): array
     {
         return [
-            ['sqlite:///:memory:'],
-            ['sqlite:///:memory:?heartbeat=0'],
-            ['sqlite:///:memory:?heartbeat=-1']
+            ['sqlite:///:memory:', 0],
+            ['sqlite:///:memory:', -1]
         ];
     }
 }
