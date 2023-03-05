@@ -18,3 +18,4 @@ services:
             - '@connect-four.doctrine-dbal'
             - 'event_store'
             - '@connect-four.normalizer'
+            - '@clock'

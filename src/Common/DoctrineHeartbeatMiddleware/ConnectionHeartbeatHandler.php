@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Gaming\Common\DoctrineHeartbeatMiddleware;
 
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\Scheduler\Handler;
 use Gaming\Common\Scheduler\Scheduler;
+use Psr\Clock\ClockInterface;
 use WeakReference;
 
 final class ConnectionHeartbeatHandler implements Handler
@@ -25,6 +25,7 @@ final class ConnectionHeartbeatHandler implements Handler
         TrackActivityConnection $connection,
         private readonly string $dummySql,
         private readonly int $interval,
+        private readonly ClockInterface $clock,
     ) {
         $this->connectionWeakReference = WeakReference::create($connection);
     }
@@ -39,7 +40,7 @@ final class ConnectionHeartbeatHandler implements Handler
 
         if (
             !$connection->isQuerying()
-            && ($connection->lastActivity() + $this->interval) < Clock::instance()->now()->getTimestamp()
+            && ($connection->lastActivity() + $this->interval) < $this->clock->now()->getTimestamp()
         ) {
             $connection->query($this->dummySql);
         }

@@ -34,6 +34,7 @@ services:
         arguments:
             - '@gaming.scheduler'
             - 60
+            - '@clock'
         tags:
             - { name: doctrine.middleware }
 
