@@ -155,9 +155,27 @@ services:
     ##############################
     #   Long running processes   #
     ##############################
-    php-connect-four-follow-event-store:
+    php-connect-four-follow-event-store-1:
         <<: *php-container
-        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer --select-all-subscribers -v
+        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer-1 --select-all-subscribers -v
+    php-connect-four-follow-event-store-2:
+        <<: *php-container
+        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer-2 --select-all-subscribers -v
+        environment:
+            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
+            RUN_CHAT_MIGRATIONS: 1
+            RUN_CONNECT_FOUR_MIGRATIONS: 1
+            RUN_IDENTITY_MIGRATIONS: 1
+            APPLICATION_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: connect-four-shard2
+    php-connect-four-follow-event-store-3:
+        <<: *php-container
+        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer-3 --select-all-subscribers -v
+        environment:
+            WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
+            RUN_CHAT_MIGRATIONS: 1
+            RUN_CONNECT_FOUR_MIGRATIONS: 1
+            RUN_IDENTITY_MIGRATIONS: 1
+            APPLICATION_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: connect-four-shard3
     php-chat-follow-event-store:
         <<: *php-container
         command: bin/restartOnChange bin/console chat:follow-event-store pointer --select-all-subscribers -v

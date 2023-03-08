@@ -13,6 +13,16 @@ services:
             - '@connect-four.command-bus'
             - '@connect-four.query-bus'
 
+    connect-four.select-shard-game-repository:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\SelectShardGameRepository
+        public: false
+        decorates: 'connect-four.game-repository'
+        arguments:
+            - '@.inner'
+            - '@connect-four.doctrine-dbal'
+            - 'connect-four-shard'
+            - 3
+
     connect-four.game-repository:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\DoctrineJsonGameRepository
         public: false
