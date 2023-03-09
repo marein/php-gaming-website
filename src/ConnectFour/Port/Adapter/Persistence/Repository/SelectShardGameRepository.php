@@ -12,11 +12,13 @@ use mysqli;
 
 final class SelectShardGameRepository implements Games
 {
+    /**
+     * @param string[] $shards
+     */
     public function __construct(
         private readonly Games $games,
         private readonly Connection $connection,
-        private readonly string $databaseNamePrefix,
-        private readonly int $numberOfShards
+        private readonly array $shards
     ) {
     }
 
@@ -48,7 +50,7 @@ final class SelectShardGameRepository implements Games
         assert($mysqli instanceof mysqli);
 
         $mysqli->select_db(
-            $this->databaseNamePrefix . ((crc32($gameId->toString()) % $this->numberOfShards) + 1)
+            $this->shards[crc32($gameId->toString()) % count($this->shards)]
         );
     }
 }
