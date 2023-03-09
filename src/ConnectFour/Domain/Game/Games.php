@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
 
+use Closure;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 
@@ -11,13 +12,13 @@ interface Games
 {
     public function nextIdentity(): GameId;
 
-    /**
-     * @throws ConcurrencyException
-     */
-    public function save(Game $game): void;
+    public function add(Game $game): void;
 
     /**
+     * @params Closure(Game): void $operation
+     *
+     * @throws ConcurrencyException
      * @throws GameNotFoundException
      */
-    public function get(GameId $gameId): Game;
+    public function update(GameId $gameId, Closure $operation): void;
 }

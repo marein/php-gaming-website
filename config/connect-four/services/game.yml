@@ -13,15 +13,6 @@ services:
             - '@connect-four.command-bus'
             - '@connect-four.query-bus'
 
-    connect-four.select-shard-game-repository:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\SelectShardGameRepository
-        public: false
-        decorates: 'connect-four.game-repository'
-        arguments:
-            - '@.inner'
-            - '@connect-four.doctrine-dbal'
-            - ['connect-four-shard1', 'connect-four-shard2', 'connect-four-shard3']
-
     connect-four.game-repository:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\DoctrineJsonGameRepository
         public: false
@@ -30,6 +21,23 @@ services:
             - 'game'
             - '@connect-four.domain-event-publisher'
             - '@connect-four.normalizer'
+
+    connect-four.transactional-game-repository:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\TransactionalGameRepository
+        public: false
+        decorates: 'connect-four.game-repository'
+        arguments:
+            - '@.inner'
+            - '@connect-four.doctrine-dbal'
+
+    connect-four.select-shard-game-repository:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\SelectShardGameRepository
+        public: false
+        decorates: 'connect-four.game-repository'
+        arguments:
+            - '@.inner'
+            - '@connect-four.doctrine-dbal'
+            - ['connect-four-shard1', 'connect-four-shard2', 'connect-four-shard3']
 
     connect-four.game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameStore

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
+use Closure;
 use Doctrine\DBAL\Connection;
 use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
@@ -27,21 +28,18 @@ final class SelectShardGameRepository implements Games
         return $this->games->nextIdentity();
     }
 
-    /**
-     * @throw ConcurrencyException
-     */
-    public function save(Game $game): void
+    public function add(Game $game): void
     {
         $this->selectDatabase($game->id());
 
-        $this->games->save($game);
+        $this->games->add($game);
     }
 
-    public function get(GameId $id): Game
+    public function update(GameId $gameId, Closure $operation): void
     {
-        $this->selectDatabase($id);
+        $this->selectDatabase($gameId);
 
-        return $this->games->get($id);
+        $this->games->update($gameId, $operation);
     }
 
     private function selectDatabase(GameId $gameId): void
