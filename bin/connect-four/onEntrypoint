@@ -4,8 +4,7 @@ set -e
 
 if [ "${APP_CONNECT_FOUR_RUN_MIGRATIONS}" = "1" ]
 then
-    shards="connect-four-shard1,connect-four-shard2,connect-four-shard3"
-    IFS=, read -ra values <<< "$shards"
+    IFS=, read -ra values <<< "${APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS}"
     for value in "${values[@]}"
     do
         APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE=${value} bin/console doctrine:database:create \

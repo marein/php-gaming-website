@@ -11,6 +11,8 @@ x-php-container:
         APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@mysql:3306/chat?persistent=1"
         APP_CHAT_RUN_MIGRATIONS: "1"
         APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@mysql:3306/connect-four?persistent=1"
+        APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four"
+        APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS: "connect-four"
         APP_CONNECT_FOUR_RUN_MIGRATIONS: "1"
         APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
         APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@mysql:3306/identity?persistent=1"

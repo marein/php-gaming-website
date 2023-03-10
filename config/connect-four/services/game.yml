@@ -29,7 +29,7 @@ services:
         arguments:
             - '@.inner'
             - '@connect-four.doctrine-dbal'
-            - ['connect-four-shard1', 'connect-four-shard2', 'connect-four-shard3']
+            - '%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%'
 
     connect-four.game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameStore
