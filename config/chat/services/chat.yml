@@ -21,3 +21,4 @@ services:
         arguments:
             - '@chat.chat-gateway'
             - '@chat.event-store'
+            - '@clock'

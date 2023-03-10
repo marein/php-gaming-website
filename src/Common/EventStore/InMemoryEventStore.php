@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
+use Psr\Clock\ClockInterface;
 
 final class InMemoryEventStore implements EventStore
 {
@@ -13,6 +13,11 @@ final class InMemoryEventStore implements EventStore
      * @var StoredEvent[]
      */
     private array $storedEvents = [];
+
+    public function __construct(
+        private readonly ClockInterface $clock
+    ) {
+    }
 
     public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
@@ -28,7 +33,7 @@ final class InMemoryEventStore implements EventStore
     {
         $this->storedEvents[] = new StoredEvent(
             count($this->storedEvents) + 1,
-            Clock::instance()->now(),
+            $this->clock->now(),
             $domainEvent
         );
     }

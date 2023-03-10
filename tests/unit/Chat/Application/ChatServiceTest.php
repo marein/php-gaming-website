@@ -14,10 +14,10 @@ use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
 use Gaming\Chat\Application\Query\MessagesQuery;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\InMemoryEventStore;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\MockClock;
 
 final class ChatServiceTest extends TestCase
 {
@@ -26,11 +26,8 @@ final class ChatServiceTest extends TestCase
      */
     public function itShouldInitiateChat(): void
     {
-        Clock::instance()->freeze();
-
         $generatedChatId = ChatId::generate();
         $authors = ['authorId1', 'authorId2'];
-
 
         $chatGateway = $this->createMock(ChatGateway::class);
         $chatGateway
@@ -39,12 +36,13 @@ final class ChatServiceTest extends TestCase
             ->with($authors)
             ->willReturn($generatedChatId);
 
-        $eventStore = new InMemoryEventStore();
+        $eventStore = new InMemoryEventStore(new MockClock());
 
         /** @var ChatGateway $chatGateway */
         $chatService = new ChatService(
             $chatGateway,
-            $eventStore
+            $eventStore,
+            new MockClock()
         );
 
         $chatId = $chatService->initiateChat(
@@ -57,8 +55,6 @@ final class ChatServiceTest extends TestCase
 
         assert($storedEvents[0]->domainEvent() instanceof ChatInitiated);
         self::assertEquals($generatedChatId->toString(), $storedEvents[0]->domainEvent()->aggregateId());
-
-        Clock::instance()->resume();
     }
 
     /**
@@ -75,7 +71,8 @@ final class ChatServiceTest extends TestCase
         /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $chatGateway,
-            $eventStore
+            $eventStore,
+            new MockClock()
         );
 
         // Test also if trim is performed.
@@ -111,7 +108,8 @@ final class ChatServiceTest extends TestCase
         /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $chatGateway,
-            $eventStore
+            $eventStore,
+            new MockClock()
         );
 
         $chatService->writeMessage(
@@ -128,12 +126,12 @@ final class ChatServiceTest extends TestCase
      */
     public function itShouldWriteMessage(): void
     {
-        Clock::instance()->freeze();
+        $clock = new MockClock();
 
         $chatId = ChatId::generate();
         $authorId = 'authorId';
         $message = 'message';
-        $writtenAt = Clock::instance()->now();
+        $writtenAt = $clock->now();
         $messageId = 7;
 
         $chatGateway = $this->createMock(ChatGateway::class);
@@ -148,12 +146,13 @@ final class ChatServiceTest extends TestCase
             ->with($chatId, $authorId, $message)
             ->willReturn($messageId);
 
-        $eventStore = new InMemoryEventStore();
+        $eventStore = new InMemoryEventStore($clock);
 
         /** @var ChatGateway $chatGateway */
         $chatService = new ChatService(
             $chatGateway,
-            $eventStore
+            $eventStore,
+            $clock
         );
 
         $chatService->writeMessage(
@@ -173,8 +172,6 @@ final class ChatServiceTest extends TestCase
         self::assertEquals($authorId, $storedEvents[0]->domainEvent()->authorId());
         self::assertEquals($message, $storedEvents[0]->domainEvent()->message());
         self::assertEquals($writtenAt, $storedEvents[0]->domainEvent()->writtenAt());
-
-        Clock::instance()->resume();
     }
 
     /**
@@ -200,7 +197,8 @@ final class ChatServiceTest extends TestCase
         /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $chatGateway,
-            $eventStore
+            $eventStore,
+            new MockClock()
         );
 
         $messages = $chatService->messages(

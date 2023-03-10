@@ -7,13 +7,15 @@ namespace Gaming\Common\DoctrineHeartbeatMiddleware;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\Middleware\AbstractDriverMiddleware;
 use Gaming\Common\Scheduler\Scheduler;
+use Psr\Clock\ClockInterface;
 
 final class ScheduleHeartbeatOnConnectDriver extends AbstractDriverMiddleware
 {
     public function __construct(
         Driver $driver,
         private readonly Scheduler $scheduler,
-        private readonly int $heartbeat
+        private readonly int $heartbeat,
+        private readonly ClockInterface $clock,
     ) {
         parent::__construct($driver);
     }
@@ -27,7 +29,8 @@ final class ScheduleHeartbeatOnConnectDriver extends AbstractDriverMiddleware
             new ConnectionHeartbeatHandler(
                 $trackActivityConnection,
                 $this->getDatabasePlatform()->getDummySelectSQL(),
-                $this->heartbeat
+                $this->heartbeat,
+                $this->clock
             )
         );
 

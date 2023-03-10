@@ -10,3 +10,4 @@ services:
             - '@chat.doctrine-dbal'
             - 'event_store'
             - '@chat.normalizer'
+            - '@clock'

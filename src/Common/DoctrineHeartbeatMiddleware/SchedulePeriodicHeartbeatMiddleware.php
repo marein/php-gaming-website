@@ -7,6 +7,7 @@ namespace Gaming\Common\DoctrineHeartbeatMiddleware;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\Middleware;
 use Gaming\Common\Scheduler\Scheduler;
+use Psr\Clock\ClockInterface;
 
 /**
  * This middleware should be the first to be applied.
@@ -16,7 +17,8 @@ final class SchedulePeriodicHeartbeatMiddleware implements Middleware
 {
     public function __construct(
         private readonly Scheduler $scheduler,
-        private readonly int $heartbeat
+        private readonly int $heartbeat,
+        private readonly ClockInterface $clock
     ) {
     }
 
@@ -26,6 +28,6 @@ final class SchedulePeriodicHeartbeatMiddleware implements Middleware
             return $driver;
         }
 
-        return new ScheduleHeartbeatOnConnectDriver($driver, $this->scheduler, $this->heartbeat);
+        return new ScheduleHeartbeatOnConnectDriver($driver, $this->scheduler, $this->heartbeat, $this->clock);
     }
 }
