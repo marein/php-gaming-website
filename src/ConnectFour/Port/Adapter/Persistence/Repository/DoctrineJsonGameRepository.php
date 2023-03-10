@@ -31,54 +31,59 @@ final class DoctrineJsonGameRepository implements Games
 
     public function add(Game $game): void
     {
-        $this->domainEventPublisher->publish(
-            $game->flushDomainEvents()
-        );
+        $this->connection->transactional(function () use ($game) {
+            $this->domainEventPublisher->publish($game->flushDomainEvents());
 
-        $id = $game->id()->toString();
-        $normalizedGame = $this->normalizer->normalize($game, Game::class);
-        $this->connection->insert(
-            $this->tableName,
-            ['id' => $id, 'aggregate' => $normalizedGame, 'version' => 1],
-            ['id' => 'uuid', 'aggregate' => 'json', 'version' => 'integer']
-        );
+            $this->connection->insert(
+                $this->tableName,
+                ['id' => $game->id()->toString(), 'aggregate' => $this->normalizeGame($game), 'version' => 1],
+                ['id' => 'uuid', 'aggregate' => 'json', 'version' => 'integer']
+            );
+        });
     }
 
     public function update(GameId $gameId, Closure $operation): void
     {
-        $id = $gameId->toString();
-        $row = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from($this->tableName, 'g')
-            ->where('g.id = :id')
-            ->setParameter('id', $id, 'uuid')
-            ->executeQuery()
-            ->fetchAssociative();
-        if ($row === false) {
-            throw new GameNotFoundException();
-        }
+        $this->connection->transactional(function () use ($gameId, $operation) {
+            $id = $gameId->toString();
+            $row = $this->connection->createQueryBuilder()
+                ->select('*')
+                ->from($this->tableName, 'g')
+                ->where('g.id = :id')
+                ->setParameter('id', $id, 'uuid')
+                ->executeQuery()
+                ->fetchAssociative();
+            if ($row === false) {
+                throw new GameNotFoundException();
+            }
 
-        $operation(
-            $game = $this->normalizer->denormalize(
-                json_decode($row['aggregate'], true, 512, JSON_THROW_ON_ERROR),
-                Game::class
-            )
+            $game = $this->denormalizeGame($row['aggregate']);
+            $operation($game);
+
+            $this->domainEventPublisher->publish($game->flushDomainEvents());
+
+            $result = $this->connection->update(
+                $this->tableName,
+                ['aggregate' => $this->normalizeGame($game), 'version' => $row['version'] + 1],
+                ['id' => $id, 'version' => $row['version']],
+                ['id' => 'uuid', 'aggregate' => 'json', 'version' => 'integer']
+            );
+            if ($result === 0) {
+                throw new ConcurrencyException();
+            }
+        });
+    }
+
+    private function normalizeGame(Game $game): mixed
+    {
+        return $this->normalizer->normalize($game, Game::class);
+    }
+
+    private function denormalizeGame(mixed $game): Game
+    {
+        return $this->normalizer->denormalize(
+            json_decode($game, true, 512, JSON_THROW_ON_ERROR),
+            Game::class
         );
-
-        $this->domainEventPublisher->publish(
-            $game->flushDomainEvents()
-        );
-
-        $normalizedGame = $this->normalizer->normalize($game, Game::class);
-        $result = $this->connection->update(
-            $this->tableName,
-            ['aggregate' => $normalizedGame, 'version' => $row['version'] + 1],
-            ['id' => $id, 'version' => $row['version']],
-            ['id' => 'uuid', 'aggregate' => 'json', 'version' => 'integer']
-        );
-
-        if ($result === 0) {
-            throw new ConcurrencyException();
-        }
     }
 }

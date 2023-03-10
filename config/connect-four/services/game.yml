@@ -22,14 +22,6 @@ services:
             - '@connect-four.domain-event-publisher'
             - '@connect-four.normalizer'
 
-    connect-four.transactional-game-repository:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\TransactionalGameRepository
-        public: false
-        decorates: 'connect-four.game-repository'
-        arguments:
-            - '@.inner'
-            - '@connect-four.doctrine-dbal'
-
     connect-four.select-shard-game-repository:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\SelectShardGameRepository
         public: false
