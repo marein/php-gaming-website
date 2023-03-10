@@ -11,7 +11,7 @@ imports:
     - { resource: web-interface/config.yml }
 
 framework:
-    secret: '%env(APPLICATION_KERNEL_SECRET)%'
+    secret: '%env(APP_KERNEL_SECRET)%'
     validation:
         enabled: true
     router:
@@ -42,14 +42,14 @@ services:
         class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
         public: false
         arguments:
-            - '%env(APPLICATION_RABBIT_MQ_DSN)%'
+            - '%env(APP_RABBIT_MQ_DSN)%'
             - 'gaming'
 
     gaming.message-broker.connection-factory:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\AmqpStreamConnectionFactory
         public: false
         arguments:
-            - '%env(APPLICATION_RABBIT_MQ_DSN)%'
+            - '%env(APP_RABBIT_MQ_DSN)%'
 
     gaming.message-broker.schedule-periodic-heartbeat-connection-factory:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\SchedulePeriodicHeartbeatConnectionFactory

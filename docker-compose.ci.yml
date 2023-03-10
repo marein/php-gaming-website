@@ -3,12 +3,9 @@ version: '3.4'
 x-php-container:
     &php-container
     image: marein/php-gaming-website:php-fpm
+    env_file: ./.env
     environment:
-        APPLICATION_ENVIRONMENT: prod
-        WAIT_FOR: mysql:3306,redis:6379,rabbit-mq:5672,nchan:81
-        RUN_CHAT_MIGRATIONS: 1
-        RUN_CONNECT_FOUR_MIGRATIONS: 1
-        RUN_IDENTITY_MIGRATIONS: 1
+        APP_ENVIRONMENT: prod
     depends_on:
         - mysql
         - redis
@@ -92,6 +89,7 @@ services:
         build:
             context: .
             dockerfile: ./docker/php-fpm/Dockerfile
+        entrypoint: ''
         command: 'true'
         volumes:
             - ./tests:/project/tests:delegated

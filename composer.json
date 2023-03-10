@@ -19,7 +19,7 @@
     }
   },
   "require": {
-    "php": "^8.1",
+    "php": "^8.2",
     "ext-pcntl": "*",
     "ext-posix": "*",
     "ext-session": "*",
@@ -43,7 +43,6 @@
     "symfony/clock": "^6.2",
     "symfony/config": "^6.1",
     "symfony/console": "^6.1",
-    "symfony/dotenv": "^6.1",
     "symfony/finder": "^6.1",
     "symfony/framework-bundle": "^6.1",
     "symfony/http-client": "^6.1",
