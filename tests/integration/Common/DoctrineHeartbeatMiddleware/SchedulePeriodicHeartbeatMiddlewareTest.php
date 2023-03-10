@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Integration\Common\DoctrineHeartbeatMiddleware;
 
-use DateTimeImmutable;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\Middleware as LoggerMiddleware;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\DoctrineHeartbeatMiddleware\SchedulePeriodicHeartbeatMiddleware;
 use Gaming\Common\Scheduler\TestScheduler;
 use PHPUnit\Framework\TestCase;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Clock\MockClock;
 
 final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
 {
@@ -23,8 +23,9 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
     public function itShouldScheduleHeartbeatsUntilClosed(): void
     {
         $scheduler = new TestScheduler();
+        $clock = new MockClock();
         $logger = $this->createMock(LoggerInterface::class);
-        $connection = $this->createConnectionWithMiddleware('sqlite:///:memory:', $scheduler, 5, $logger);
+        $connection = $this->createConnectionWithMiddleware('sqlite:///:memory:', $scheduler, 5, $clock, $logger);
 
         // The logger is used to check how many queries have been made.
         // The first expectation is when opening, the second is the heartbeat that is triggered.
@@ -44,17 +45,15 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
         }
 
         // It should trigger a heartbeat and reschedule after the configured timeout.
-        Clock::instance()->freeze(new DateTimeImmutable('+7 seconds'));
+        $clock->modify('+7 seconds');
         $scheduler->invokePendingJobs();
         self::assertSame(1, $scheduler->numberOfPendingJobs());
-        Clock::instance()->resume();
 
         // It shouldn't trigger a heartbeat and shouldn't be rescheduled after the connection is closed.
-        Clock::instance()->freeze(Clock::instance()->now()->modify('+7 seconds'));
+        $clock->modify('+7 seconds');
         $connection->close();
         $scheduler->invokePendingJobs();
         self::assertSame(0, $scheduler->numberOfPendingJobs());
-        Clock::instance()->resume();
     }
 
     /**
@@ -65,7 +64,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
     {
         $scheduler = new TestScheduler();
         $logger = $this->createMock(LoggerInterface::class);
-        $connection = $this->createConnectionWithMiddleware($url, $scheduler, $heartbeat, $logger);
+        $connection = $this->createConnectionWithMiddleware($url, $scheduler, $heartbeat, new MockClock(), $logger);
 
         $connection->executeQuery('SELECT 1');
         self::assertSame(0, $scheduler->numberOfPendingJobs());
@@ -75,6 +74,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
         string $url,
         TestScheduler $scheduler,
         int $heartbeat,
+        ClockInterface $clock,
         LoggerInterface $logger
     ): Connection {
         return DriverManager::getConnection(
@@ -83,7 +83,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
                 ->setMiddlewares(
                     [
                         new LoggerMiddleware($logger),
-                        new SchedulePeriodicHeartbeatMiddleware($scheduler, $heartbeat)
+                        new SchedulePeriodicHeartbeatMiddleware($scheduler, $heartbeat, $clock)
                     ]
                 )
         );

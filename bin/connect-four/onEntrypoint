@@ -2,16 +2,16 @@
 
 set -e
 
-if [ "$RUN_CONNECT_FOUR_MIGRATIONS" = "1" ]
+if [ "${APP_CONNECT_FOUR_RUN_MIGRATIONS}" = "1" ]
 then
     shards="connect-four-shard1,connect-four-shard2,connect-four-shard3"
     IFS=, read -ra values <<< "$shards"
     for value in "${values[@]}"
     do
-        APPLICATION_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE=${value} bin/console doctrine:database:create \
+        APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE=${value} bin/console doctrine:database:create \
             --connection=connect_four \
             --if-not-exists
-        APPLICATION_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE=${value} bin/console doctrine:migrations:migrate \
+        APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE=${value} bin/console doctrine:migrations:migrate \
             --configuration=config/connect-four/migrations.yml \
             --conn=connect_four \
             --allow-no-migration \

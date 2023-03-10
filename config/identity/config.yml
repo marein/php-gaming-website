@@ -10,7 +10,7 @@ doctrine:
     dbal:
         connections:
             identity:
-                url: '%env(APPLICATION_IDENTITY_DOCTRINE_DBAL_URL)%'
+                url: '%env(APP_IDENTITY_DOCTRINE_DBAL_URL)%'
                 server_version: 8.0
                 charset: utf8mb4
                 default_table_options:
