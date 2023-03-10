@@ -29,7 +29,7 @@ COPY /docker/php-fpm/entrypoint.sh /
 
 COPY --from=builder /project /project
 
-COPY /docker/php-fpm/${environment}.ini /etc/php/8.1/fpm/conf.d/
+COPY /docker/php-fpm/${environment}.ini /etc/php/8.2/fpm/conf.d/
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-http"]
