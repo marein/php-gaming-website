@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "$RUN_IDENTITY_MIGRATIONS" = "1" ]
+if [ "${APP_IDENTITY_RUN_MIGRATIONS}" = "1" ]
 then
     bin/console doctrine:database:create \
         --connection=identity \

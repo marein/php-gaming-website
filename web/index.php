@@ -4,15 +4,12 @@ declare(strict_types=1);
 namespace {
 
     use Gaming\Kernel;
-    use Symfony\Component\Dotenv\Dotenv;
     use Symfony\Component\ErrorHandler\Debug;
     use Symfony\Component\HttpFoundation\Request;
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    (new Dotenv('APPLICATION_ENVIRONMENT'))->loadEnv(__DIR__ . '/../config/environment.env');
-
-    $environment = $_SERVER['APPLICATION_ENVIRONMENT'] ?? $_ENV['APPLICATION_ENVIRONMENT'] ?? 'dev';
+    $environment = $_SERVER['APP_ENVIRONMENT'] ?? $_ENV['APP_ENVIRONMENT'] ?? 'dev';
     $isDevelopmentEnvironment = $environment !== 'prod';
 
     if ($isDevelopmentEnvironment) {

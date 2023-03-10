@@ -7,7 +7,6 @@ namespace {
     use Gaming\Kernel;
     use Symfony\Bundle\FrameworkBundle\Console\Application;
     use Symfony\Component\Console\Input\ArgvInput;
-    use Symfony\Component\Dotenv\Dotenv;
     use Symfony\Component\ErrorHandler\Debug;
 
     umask(0000);
@@ -16,12 +15,10 @@ namespace {
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    (new Dotenv('APPLICATION_ENVIRONMENT'))->loadEnv(__DIR__ . '/../config/environment.env');
-
     $input = new ArgvInput();
     $environment = $input->getParameterOption(
             ['--env', '-e'],
-            $_SERVER['APPLICATION_ENVIRONMENT'] ?? $_ENV['APPLICATION_ENVIRONMENT'] ?? 'dev'
+            $_SERVER['APP_ENVIRONMENT'] ?? $_ENV['APP_ENVIRONMENT'] ?? 'dev'
     );
     $isDevelopmentEnvironment = $environment !== 'prod';
 

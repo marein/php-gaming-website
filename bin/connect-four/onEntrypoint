@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "$RUN_CONNECT_FOUR_MIGRATIONS" = "1" ]
+if [ "${APP_CONNECT_FOUR_RUN_MIGRATIONS}" = "1" ]
 then
     bin/console doctrine:database:create \
         --connection=connect_four \

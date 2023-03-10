@@ -21,7 +21,7 @@ services:
     web-interface.nchan:
         class: Marein\Nchan\Nchan
         arguments:
-            - '%env(APPLICATION_WEB_INTERFACE_NCHAN_BASE_URL)%'
+            - '%env(APP_WEB_INTERFACE_NCHAN_BASE_URL)%'
             - !service
                 class: Marein\Nchan\HttpAdapter\Psr18ClientAdapter
                 arguments:
