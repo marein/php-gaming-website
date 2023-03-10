@@ -6,7 +6,6 @@ namespace Gaming\Common\Port\Adapter\EventStore;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
@@ -15,6 +14,7 @@ use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventFilters;
 use Gaming\Common\Normalizer\Normalizer;
+use Psr\Clock\ClockInterface;
 use Throwable;
 
 final class DoctrineEventStore implements EventStore, PollableEventStore
@@ -26,7 +26,8 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     public function __construct(
         private readonly Connection $connection,
         private readonly string $table,
-        private readonly Normalizer $normalizer
+        private readonly Normalizer $normalizer,
+        private readonly ClockInterface $clock
     ) {
         $this->gapDetection = new DoctrineWaitForUncommittedStoredEventsGapDetection(
             $this->connection,
@@ -66,7 +67,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
                 [
                     'aggregateId' => $domainEvent->aggregateId(),
                     'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
-                    'occurredOn' => Clock::instance()->now()
+                    'occurredOn' => $this->clock->now()
                 ],
                 [
                     'uuid',

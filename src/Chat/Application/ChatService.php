@@ -12,8 +12,8 @@ use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
 use Gaming\Chat\Application\Query\MessagesQuery;
-use Gaming\Common\Clock\Clock;
 use Gaming\Common\EventStore\EventStore;
+use Psr\Clock\ClockInterface;
 
 /**
  * Although this class is an application service, it still contains business logic.
@@ -21,16 +21,11 @@ use Gaming\Common\EventStore\EventStore;
  */
 final class ChatService
 {
-    private ChatGateway $chatGateway;
-
-    private EventStore $eventStore;
-
     public function __construct(
-        ChatGateway $chatGateway,
-        EventStore $eventStore
+        private readonly ChatGateway $chatGateway,
+        private readonly EventStore $eventStore,
+        private readonly ClockInterface $clock
     ) {
-        $this->chatGateway = $chatGateway;
-        $this->eventStore = $eventStore;
     }
 
     public function initiateChat(InitiateChatCommand $initiateChatCommand): string
@@ -67,7 +62,7 @@ final class ChatService
             throw new AuthorNotAllowedException();
         }
 
-        $writtenAt = Clock::instance()->now();
+        $writtenAt = $this->clock->now();
 
         $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
 
