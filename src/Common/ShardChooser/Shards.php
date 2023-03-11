@@ -6,10 +6,10 @@ namespace Gaming\Common\ShardChooser;
 
 use Gaming\Common\ShardChooser\Exception\ShardChooserException;
 
-interface Storage
+interface Shards
 {
     /**
      * @throws ShardChooserException
      */
-    public function useShard(string $shard): void;
+    public function fromValue(string $value): string;
 }

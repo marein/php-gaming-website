@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 namespace Gaming\Common\ShardChooser;
 
+use Gaming\Common\ShardChooser\Exception\ShardChooserException;
+
 final class ShardChooser
 {
     private ?string $selectedShard;
 
-    /**
-     * @param string[] $shards
-     */
     public function __construct(
         private readonly Storage $storage,
-        private readonly array $shards
+        private readonly Shards $shards
     ) {
         $this->selectedShard = null;
     }
 
+    /**
+     * @throws ShardChooserException
+     */
     public function select(string $value): void
     {
-        $shard = $this->shards[crc32($value) % count($this->shards)];
+        $shard = $this->shards->fromValue($value);
         if ($this->selectedShard === $shard) {
             return;
         }

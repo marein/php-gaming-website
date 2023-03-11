@@ -28,4 +28,7 @@ services:
                 arguments:
                     - '@connect-four.doctrine-dbal'
                     - 'USE %s'
-            - '%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%'
+            - !service
+                class: Gaming\Common\ShardChooser\Integration\Crc32ModShards
+                arguments:
+                    - '%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%'
