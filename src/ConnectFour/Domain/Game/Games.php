@@ -25,6 +25,8 @@ interface Games
 
     /**
      * @return DomainEvent[]
+     *
+     * @throws GameNotFoundException
      */
     public function eventsFor(GameId $gameId): array;
 }
