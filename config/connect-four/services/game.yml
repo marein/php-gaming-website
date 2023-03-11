@@ -1,11 +1,5 @@
 services:
 
-    connect-four.domain-event-publisher:
-        class: Gaming\Common\Domain\DomainEventPublisher
-        public: false
-        arguments:
-            - !tagged { tag: 'connect-four.domain-event-subscriber' }
-
     connect-four.game-controller:
         class: Gaming\ConnectFour\Port\Adapter\Http\GameController
         public: false
@@ -18,18 +12,10 @@ services:
         public: false
         arguments:
             - '@connect-four.doctrine-dbal'
+            - '@connect-four.shard-chooser'
             - 'game'
-            - '@connect-four.domain-event-publisher'
+            - '@connect-four.event-store'
             - '@connect-four.normalizer'
-
-    connect-four.select-shard-game-repository:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\SelectShardGameRepository
-        public: false
-        decorates: 'connect-four.game-repository'
-        arguments:
-            - '@.inner'
-            - '@connect-four.doctrine-dbal'
-            - '%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%'
 
     connect-four.game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameStore
@@ -37,16 +23,16 @@ services:
         arguments:
             - '@connect-four.predis'
             - 'game.'
-            - '@connect-four.event-store-game-finder'
+            - '@connect-four.games-game-finder'
 
     connect-four.game-finder:
         alias: 'connect-four.game-store'
 
-    connect-four.event-store-game-finder:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\EventStoreGameFinder
+    connect-four.games-game-finder:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\GamesGameFinder
         public: false
         arguments:
-            - '@connect-four.event-store'
+            - '@connect-four.game-repository'
 
     connect-four.games-by-player-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerStore

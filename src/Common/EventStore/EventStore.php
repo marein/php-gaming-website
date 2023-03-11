@@ -18,5 +18,5 @@ interface EventStore
     /**
      * @throws EventStoreException
      */
-    public function append(DomainEvent $domainEvent): void;
+    public function append(DomainEvent ...$domainEvents): void;
 }

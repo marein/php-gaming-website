@@ -151,19 +151,9 @@ services:
     ##############################
     #   Long running processes   #
     ##############################
-    php-connect-four-follow-event-store-1:
+    php-connect-four-follow-event-store:
         <<: *php-container
-        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer-1 --select-all-subscribers -v
-    php-connect-four-follow-event-store-2:
-        <<: *php-container
-        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer-2 --select-all-subscribers -v
-        environment:
-            APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: connect-four-shard2
-    php-connect-four-follow-event-store-3:
-        <<: *php-container
-        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer-3 --select-all-subscribers -v
-        environment:
-            APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: connect-four-shard3
+        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer --select-all-subscribers -v
     php-chat-follow-event-store:
         <<: *php-container
         command: bin/restartOnChange bin/console chat:follow-event-store pointer --select-all-subscribers -v

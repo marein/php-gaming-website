@@ -29,12 +29,14 @@ final class InMemoryEventStore implements EventStore
         );
     }
 
-    public function append(DomainEvent $domainEvent): void
+    public function append(DomainEvent ...$domainEvents): void
     {
-        $this->storedEvents[] = new StoredEvent(
-            count($this->storedEvents) + 1,
-            $this->clock->now(),
-            $domainEvent
-        );
+        foreach ($domainEvents as $domainEvent) {
+            $this->storedEvents[] = new StoredEvent(
+                count($this->storedEvents) + 1,
+                $this->clock->now(),
+                $domainEvent
+            );
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
+use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class InMemoryCacheGameStore implements GameStore
 {
@@ -25,10 +26,10 @@ final class InMemoryCacheGameStore implements GameStore
         $this->cachedGames = [];
     }
 
-    public function find(string $gameId): Game
+    public function find(GameId $gameId): Game
     {
-        if (array_key_exists($gameId, $this->cachedGames)) {
-            return $this->cachedGames[$gameId];
+        if (array_key_exists($gameId->toString(), $this->cachedGames)) {
+            return $this->cachedGames[$gameId->toString()];
         }
 
         return $this->gameStore->find($gameId);
