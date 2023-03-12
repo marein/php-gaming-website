@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\ShardChooser\Integration;
+namespace Gaming\Common\Sharding\Integration;
 
-use Gaming\Common\ShardChooser\Exception\ShardChooserException;
-use Gaming\Common\ShardChooser\Shards;
+use Gaming\Common\Sharding\Exception\ShardingException;
+use Gaming\Common\Sharding\Shards;
 
 final class Crc32ModShards implements Shards
 {
     /**
      * @param string[] $shards
      *
-     * @throws ShardChooserException
+     * @throws ShardingException
      */
     public function __construct(
         private readonly array $shards
     ) {
         if (count($this->shards) === 0) {
-            throw new ShardChooserException('At least one shard must be specified.');
+            throw new ShardingException('At least one shard must be specified.');
         }
     }
 
-    public function fromValue(string $value): string
+    public function lookup(string $value): string
     {
         return $this->shards[crc32($value) % count($this->shards)];
     }

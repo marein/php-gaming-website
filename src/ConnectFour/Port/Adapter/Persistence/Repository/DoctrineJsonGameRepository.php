@@ -12,7 +12,7 @@ use Gaming\Common\Domain\Exception\ConcurrencyException;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\Normalizer\Normalizer;
-use Gaming\Common\ShardChooser\ShardChooser;
+use Gaming\Common\Sharding\Shards;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
@@ -22,10 +22,10 @@ final class DoctrineJsonGameRepository implements Games
 {
     public function __construct(
         private readonly Connection $connection,
-        private readonly ShardChooser $shardChooser,
         private readonly string $tableName,
         private readonly EventStore $eventStore,
-        private readonly Normalizer $normalizer
+        private readonly Normalizer $normalizer,
+        private readonly Shards $shards
     ) {
     }
 
@@ -36,7 +36,7 @@ final class DoctrineJsonGameRepository implements Games
 
     public function add(Game $game): void
     {
-        $this->shardChooser->select($game->id()->toString());
+        $this->switchShard($game->id());
 
         $this->connection->transactional(function () use ($game) {
             $this->eventStore->append(...$game->flushDomainEvents());
@@ -51,7 +51,7 @@ final class DoctrineJsonGameRepository implements Games
 
     public function update(GameId $gameId, Closure $operation): void
     {
-        $this->shardChooser->select($gameId->toString());
+        $this->switchShard($gameId);
 
         $this->connection->transactional(function () use ($gameId, $operation) {
             $id = $gameId->toString();
@@ -83,7 +83,7 @@ final class DoctrineJsonGameRepository implements Games
 
     public function eventsFor(GameId $gameId): array
     {
-        $this->shardChooser->select($gameId->toString());
+        $this->switchShard($gameId);
 
         $domainEvents = array_map(
             static fn(StoredEvent $storedEvent): DomainEvent => $storedEvent->domainEvent(),
@@ -94,6 +94,13 @@ final class DoctrineJsonGameRepository implements Games
         }
 
         return $domainEvents;
+    }
+
+    private function switchShard(GameId $gameId): void
+    {
+        $this->connection->executeStatement(
+            'USE ' . $this->connection->quoteIdentifier($this->shards->lookup($gameId->toString()))
+        );
     }
 
     private function normalizeGame(Game $game): mixed

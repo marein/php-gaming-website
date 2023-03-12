@@ -12,10 +12,13 @@ services:
         public: false
         arguments:
             - '@connect-four.doctrine-dbal'
-            - '@connect-four.shard-chooser'
             - 'game'
             - '@connect-four.event-store'
             - '@connect-four.normalizer'
+            - !service
+                class: Gaming\Common\Sharding\Integration\Crc32ModShards
+                arguments:
+                    - '%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%'
 
     connect-four.game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameStore
