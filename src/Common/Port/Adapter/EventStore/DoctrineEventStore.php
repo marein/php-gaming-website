@@ -41,7 +41,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     {
         try {
             $rows = $this->connection->fetchAllAssociative(
-                'SELECT ' . self::SELECT . ' FROM ' . $this->table . ' e WHERE e.aggregateId = ? AND e.id > 0',
+                'SELECT ' . self::SELECT . ' FROM ' . $this->table . ' e WHERE e.aggregateId = ? AND e.id > ?',
                 [$aggregateId, $sinceId],
                 ['uuid', Types::INTEGER]
             );
@@ -69,8 +69,8 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
                     ],
                     [
                         'uuid',
-                        'json',
-                        'datetime_immutable'
+                        Types::JSON,
+                        Types::DATETIME_IMMUTABLE
                     ]
                 );
             }
