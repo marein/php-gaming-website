@@ -91,7 +91,7 @@ services:
             context: .
             dockerfile: ./docker/proxysql/Dockerfile
         environment:
-            PROXYSQL_CNF: |
+            PROXYSQL_CONFIG: |
                 datadir="/var/run/proxysql"
                 admin_variables: {
                     restapi_enabled="true"

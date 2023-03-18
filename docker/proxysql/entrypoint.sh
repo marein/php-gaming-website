@@ -2,9 +2,9 @@
 
 set -e
 
-if [ "${PROXYSQL_CNF}" != "" ]
+if [ "${PROXYSQL_CONFIG}" != "" ]
 then
-    echo "${PROXYSQL_CNF}" > /etc/proxysql.cnf
+    echo "${PROXYSQL_CONFIG}" > /etc/proxysql.cnf
 fi
 
 exec "$@"
