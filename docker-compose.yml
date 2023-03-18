@@ -79,6 +79,29 @@ services:
         volumes:
             - mysql:/var/lib/mysql
         restart: on-failure
+    proxysql:
+        build:
+            context: .
+            dockerfile: ./docker/proxysql/Dockerfile
+        environment:
+            PROXYSQL_ADMIN_VARIABLES_1: 'admin_credentials="admin:admin"'
+            PROXYSQL_ADMIN_VARIABLES_2: 'mysql_ifaces="127.0.0.1:6032"'
+            PROXYSQL_ADMIN_VARIABLES_3: 'restapi_enabled="true"'
+            PROXYSQL_ADMIN_VARIABLES_4: 'restapi_port=6070'
+            PROXYSQL_MYSQL_VARIABLES_1: 'interfaces="0.0.0.0:6033"'
+            PROXYSQL_MYSQL_VARIABLES_2: 'server_version="8.0"'
+            PROXYSQL_MYSQL_VARIABLES_3: 'monitor_username="root"'
+            PROXYSQL_MYSQL_VARIABLES_4: 'monitor_password="password"'
+            PROXYSQL_MYSQL_VARIABLES_6: 'auto_increment_delay_multiplex=0'
+            PROXYSQL_MYSQL_SERVERS_1: 'hostgroup=1,address="mysql",port=3306,max_connections=100'
+            PROXYSQL_MYSQL_USERS_1: 'username="root",password="password",default_hostgroup=1'
+        depends_on:
+            - mysql
+        labels:
+            - "prometheus-job=proxysql"
+            - "prometheus-port=6070"
+            - "prometheus-path=/metrics"
+        restart: on-failure
     mysql-exporter:
         image: prom/mysqld-exporter
         environment:
