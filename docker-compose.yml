@@ -94,13 +94,9 @@ services:
             PROXYSQL_CNF: |
                 datadir="/var/run/proxysql"
                 admin_variables: {
-                    admin_credentials="admin:admin"
-                    mysql_ifaces="127.0.0.1:6032"
                     restapi_enabled="true"
-                    restapi_port=6070
                 }
                 mysql_variables: {
-                    interfaces="0.0.0.0:6033"
                     server_version="8.0"
                     monitor_username="root"
                     monitor_password="password"
