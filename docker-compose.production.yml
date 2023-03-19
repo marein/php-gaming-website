@@ -19,6 +19,7 @@ x-php-container:
         APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://nchan:81"
     depends_on:
         - mysql
+        - proxysql
         - redis
         - rabbit-mq
         - nchan

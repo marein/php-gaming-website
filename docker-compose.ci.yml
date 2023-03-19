@@ -8,6 +8,7 @@ x-php-container:
         APP_ENVIRONMENT: prod
     depends_on:
         - mysql
+        - proxysql
         - redis
         - rabbit-mq
         - nchan
