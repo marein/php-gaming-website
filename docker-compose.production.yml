@@ -87,7 +87,6 @@ services:
         image: marein/php-gaming-website:proxysql
         environment:
             PROXYSQL_CONFIG: |
-                datadir="/var/run/proxysql"
                 admin_variables: {
                     restapi_enabled="true"
                 }

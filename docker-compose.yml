@@ -92,7 +92,6 @@ services:
             dockerfile: ./docker/proxysql/Dockerfile
         environment:
             PROXYSQL_CONFIG: |
-                datadir="/var/run/proxysql"
                 admin_variables: {
                     restapi_enabled="true"
                 }
