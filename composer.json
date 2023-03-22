@@ -23,6 +23,7 @@
     "ext-pcntl": "*",
     "ext-posix": "*",
     "ext-session": "*",
+    "artprima/prometheus-metrics-bundle": "^1.16",
     "doctrine/dbal": "^3.3",
     "doctrine/doctrine-bundle": "^2.7",
     "doctrine/doctrine-migrations-bundle": "^3.2",

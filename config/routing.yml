@@ -1,2 +1,6 @@
 WebInterface:
     resource: web-interface/routing.yml
+
+metrics:
+    path: /metrics
+    controller: Artprima\PrometheusMetricsBundle\Controller\MetricsController::prometheus

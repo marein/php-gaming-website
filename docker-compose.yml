@@ -147,6 +147,7 @@ services:
             - "traefik.http.routers.php-fpm.priority=10"
             - "traefik.http.routers.php-fpm.rule=PathPrefix(`/`)"
             - "traefik.http.services.php-fpm.loadbalancer.server.port=80"
+            - "prometheus-job=php-fpm"
 
     ##############################
     #   Long running processes   #

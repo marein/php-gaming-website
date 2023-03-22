@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming;
 
+use Artprima\PrometheusMetricsBundle\ArtprimaPrometheusMetricsBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Marein\LockDoctrineMigrationsBundle\MareinLockDoctrineMigrationsBundle;
@@ -33,7 +34,8 @@ final class Kernel extends BaseKernel
             new MareinStandardHeadersCsrfBundle(),
             new TwigBundle(),
             new MonologBundle(),
-            new SecurityBundle()
+            new SecurityBundle(),
+            new ArtprimaPrometheusMetricsBundle()
         ];
 
         if ($this->getEnvironment() === 'dev') {
