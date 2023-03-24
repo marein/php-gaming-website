@@ -1,0 +1,36 @@
+dependencies:
+- name: mysql
+  repository: https://charts.bitnami.com/bitnami
+  version: 9.7.0
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 17.9.0
+- name: rabbitmq
+  repository: https://charts.bitnami.com/bitnami
+  version: 11.12.0
+- name: nchan
+  repository: file://./dependencyCharts/nchan
+  version: 0.0.1
+- name: prometheus
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 20.0.1
+- name: grafana
+  repository: https://grafana.github.io/helm-charts
+  version: 6.52.4
+- name: php-connect-four-follow-event-store
+  repository: file://./dependencyCharts/php-connect-four-follow-event-store
+  version: 0.0.1
+- name: php-chat-follow-event-store
+  repository: file://./dependencyCharts/php-chat-follow-event-store
+  version: 0.0.1
+- name: php-identity-follow-event-store
+  repository: file://./dependencyCharts/php-identity-follow-event-store
+  version: 0.0.1
+- name: php-consume-messages
+  repository: file://./dependencyCharts/php-consume-messages
+  version: 0.0.1
+- name: php-web-interface-publish-running-games-count-to-nchan
+  repository: file://./dependencyCharts/php-web-interface-publish-running-games-count-to-nchan
+  version: 0.0.1
+digest: sha256:e5cbc18f497026213c36f1bb03ec55934cabf4f7a4b74b5972c001b071bc6105
+generated: "2023-03-24T00:09:16.191597+01:00"

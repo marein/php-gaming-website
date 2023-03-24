@@ -10,6 +10,9 @@ help() {
     echo build
     echo Build the environment for development.
     echo
+    echo k8s
+    echo Operate project using k8s.
+    echo
     echo up
     echo Shorthand to start an already built project.
     echo
@@ -90,6 +93,7 @@ acceptance() {
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci build --pull
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci up -d
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run php bash -c 'wait-for-tcp-server php-fpm:80 120 && vendor/bin/codecept run acceptance'
+# FIXME: when acceptance fails down doesn't run (expected?)
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci down -v
 }
 
@@ -115,6 +119,36 @@ pushProductionImages() {
     docker push marein/php-gaming-website:rabbit-mq
     docker push marein/php-gaming-website:grafana
     docker push marein/php-gaming-website:prometheus
+}
+
+k8s() {
+  help() {
+    echo
+    echo ------------------
+    echo Available commands
+    echo ------------------
+    echo up
+    echo Shorthand to start an already built project.
+    echo
+    echo down
+    echo Shorthand to down a started project.
+    echo
+  }
+  up() {
+    helm dep up k8s
+    helm upgrade --install php-gaming-website k8s -f k8s/values-dev.yaml
+  }
+
+  down() {
+    helm uninstall php-gaming-website
+  }
+
+  if [ "$*" = "" ]
+  then
+      help
+  else
+      $1 "${@:2}"
+  fi
 }
 
 if [ "$*" = "" ]

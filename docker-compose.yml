@@ -90,7 +90,8 @@ services:
         build:
             context: .
             dockerfile: ./docker/redis/Dockerfile
-        command: redis-server --appendonly yes
+        environment:
+            ALLOW_EMPTY_PASSWORD: true
         volumes:
             - redis:/data
         restart: on-failure

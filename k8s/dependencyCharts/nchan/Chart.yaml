@@ -1,0 +1,7 @@
+apiVersion: v2
+name: nchan
+description: Nchan as a dependency
+# An Nchan helm chart doesn't exist by itself, so I've created this to support the parent php-gaming-website chart
+type: application
+version: 0.0.1
+appVersion: "1.1.15"
