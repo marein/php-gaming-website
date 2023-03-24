@@ -1,0 +1,236 @@
+env:
+  ############################
+  #          Shared          #
+  ############################
+  APP_ENVIRONMENT: "prod"
+  APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
+  APP_WAIT_FOR: "php-gaming-website-mysql:3306,php-gaming-website-redis-master:6379,php-gaming-website-rabbitmq:5672,php-gaming-website-nchan:81"
+  APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+  ############################
+  #       Chat Context       #
+  ############################
+  APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/chat?persistent=1"
+  APP_CHAT_RUN_MIGRATIONS: 1
+  ############################
+  #   Connect Four Context   #
+  ############################
+  APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+  APP_CONNECT_FOUR_RUN_MIGRATIONS: 1
+  APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+  ############################
+  #     Identity Context     #
+  ############################
+  APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+  APP_IDENTITY_RUN_MIGRATIONS: 1
+  ############################
+  #  Web Interface Context   #
+  ############################
+  APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+  APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://php-gaming-website-nchan:81"
+
+# Consumer configuration
+# TODO: It appears that some consumers don't fail when they don't get the "all" ENVVARs they need, therefore I'm passing all
+php-connect-four-follow-event-store:
+  command: [ "bin/console", "connect-four:follow-event-store", "pointer", "--select-all-subscribers", "-v"]
+  env:
+    #    APP_ENVIRONMENT: "prod"
+    #    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    #    APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+    #    APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    #    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    ############################
+    #          Shared          #
+    ############################
+    APP_ENVIRONMENT: "prod"
+    APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
+    APP_WAIT_FOR: "php-gaming-website-mysql:3306,php-gaming-website-redis-master:6379,php-gaming-website-rabbitmq:5672,php-gaming-website-nchan:81"
+    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    ############################
+    #       Chat Context       #
+    ############################
+    APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/chat?persistent=1"
+    APP_CHAT_RUN_MIGRATIONS: 1
+    ############################
+    #   Connect Four Context   #
+    ############################
+    APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+    APP_CONNECT_FOUR_RUN_MIGRATIONS: 1
+    APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    ############################
+    #     Identity Context     #
+    ############################
+    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    APP_IDENTITY_RUN_MIGRATIONS: 1
+    ############################
+    #  Web Interface Context   #
+    ############################
+    APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://php-gaming-website-nchan:81"
+php-chat-follow-event-store:
+  command: ["bin/console", "chat:follow-event-store", "pointer", "--select-all-subscribers", "-v"]
+  env:
+    #    APP_ENVIRONMENT: "prod"
+    #    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    #    APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/chat?persistent=1"
+    #    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    ############################
+    #          Shared          #
+    ############################
+    APP_ENVIRONMENT: "prod"
+    APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
+    APP_WAIT_FOR: "php-gaming-website-mysql:3306,php-gaming-website-redis-master:6379,php-gaming-website-rabbitmq:5672,php-gaming-website-nchan:81"
+    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    ############################
+    #       Chat Context       #
+    ############################
+    APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/chat?persistent=1"
+    APP_CHAT_RUN_MIGRATIONS: 1
+    ############################
+    #   Connect Four Context   #
+    ############################
+    APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+    APP_CONNECT_FOUR_RUN_MIGRATIONS: 1
+    APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    ############################
+    #     Identity Context     #
+    ############################
+    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    APP_IDENTITY_RUN_MIGRATIONS: 1
+    ############################
+    #  Web Interface Context   #
+    ############################
+    APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://php-gaming-website-nchan:81"
+php-identity-follow-event-store:
+  command: ["bin/console", "identity:follow-event-store", "pointer", "--select-all-subscribers", "-v"]
+  env:
+    #    APP_ENVIRONMENT: "prod"
+    #    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    #    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    ############################
+    #          Shared          #
+    ############################
+    APP_ENVIRONMENT: "prod"
+    APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
+    APP_WAIT_FOR: "php-gaming-website-mysql:3306,php-gaming-website-redis-master:6379,php-gaming-website-rabbitmq:5672,php-gaming-website-nchan:81"
+    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    ############################
+    #       Chat Context       #
+    ############################
+    APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/chat?persistent=1"
+    APP_CHAT_RUN_MIGRATIONS: 1
+    ############################
+    #   Connect Four Context   #
+    ############################
+    APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+    APP_CONNECT_FOUR_RUN_MIGRATIONS: 1
+    APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    ############################
+    #     Identity Context     #
+    ############################
+    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    APP_IDENTITY_RUN_MIGRATIONS: 1
+    ############################
+    #  Web Interface Context   #
+    ############################
+    APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://php-gaming-website-nchan:81"
+php-consume-messages:
+  command: ["bin/console", "gaming:consume-messages", "--select-all-consumers", "-v"]
+  env:
+    #    APP_ENVIRONMENT: "prod"
+    #    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    #    APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/chat?persistent=1"
+    #    APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+    #    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    #    APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://php-gaming-website-nchan:81"
+    ############################
+    #          Shared          #
+    ############################
+    APP_ENVIRONMENT: "prod"
+    APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
+    APP_WAIT_FOR: "php-gaming-website-mysql:3306,php-gaming-website-redis-master:6379,php-gaming-website-rabbitmq:5672,php-gaming-website-nchan:81"
+    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    ############################
+    #       Chat Context       #
+    ############################
+    APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/chat?persistent=1"
+    APP_CHAT_RUN_MIGRATIONS: 1
+    ############################
+    #   Connect Four Context   #
+    ############################
+    APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+    APP_CONNECT_FOUR_RUN_MIGRATIONS: 1
+    APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    ############################
+    #     Identity Context     #
+    ############################
+    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    APP_IDENTITY_RUN_MIGRATIONS: 1
+    ############################
+    #  Web Interface Context   #
+    ############################
+    APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://php-gaming-website-nchan:81"
+php-web-interface-publish-running-games-count-to-nchan:
+  command: ["bin/console", "web-interface:publish-running-games-count-to-nchan", "-v"]
+  env:
+    #    APP_ENVIRONMENT: "prod"
+    #    APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+    #    APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    #    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    #    APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://php-gaming-website-nchan:81"
+    ############################
+    #          Shared          #
+    ############################
+    APP_ENVIRONMENT: "prod"
+    APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
+    APP_WAIT_FOR: "php-gaming-website-mysql:3306,php-gaming-website-redis-master:6379,php-gaming-website-rabbitmq:5672,php-gaming-website-nchan:81"
+    APP_RABBIT_MQ_DSN: "amqp://user:bitnami@php-gaming-website-rabbitmq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+    ############################
+    #       Chat Context       #
+    ############################
+    APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/chat?persistent=1"
+    APP_CHAT_RUN_MIGRATIONS: 1
+    ############################
+    #   Connect Four Context   #
+    ############################
+    APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/connect-four?persistent=1"
+    APP_CONNECT_FOUR_RUN_MIGRATIONS: 1
+    APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    ############################
+    #     Identity Context     #
+    ############################
+    APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@php-gaming-website-mysql:3306/identity?persistent=1"
+    APP_IDENTITY_RUN_MIGRATIONS: 1
+    ############################
+    #  Web Interface Context   #
+    ############################
+    APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://php-gaming-website-redis-master:6379?persistent=1"
+    APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://php-gaming-website-nchan:81"
+
+# Ingresses
+ingress:
+  enabled: true
+  hosts:
+    - host: app.php-gaming-website.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+nchan:
+  ingress:
+    enabled: true
+    hosts:
+      - host: app.php-gaming-website.local
+        paths:
+          - path: /sse
+            pathType: ImplementationSpecific
+
+grafana:
+  ingress:
+    enabled: true
+    path: /
+    pathType: ImplementationSpecific
+    hosts:
+      - grafana.php-gaming-website.local

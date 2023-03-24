@@ -1,0 +1,161 @@
+# Default values for php-gaming-website.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: marein/php-gaming-website
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "php-fpm"
+
+imagePullSecrets: []
+nameOverride: "server"
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+env: {}
+  # Environment variables in the following format:
+  # ENV_VAR: <string>
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Default consumer configuration
+php-connect-four-follow-event-store:
+  command: [ "bin/console", "connect-four:follow-event-store", "pointer", "--select-all-subscribers"]
+php-chat-follow-event-store:
+  command: ["bin/console", "chat:follow-event-store", "pointer", "--select-all-subscribers"]
+php-identity-follow-event-store:
+  command: ["bin/console", "identity:follow-event-store", "pointer", "--select-all-subscribers"]
+php-consume-messages:
+  command: ["bin/console", "gaming:consume-messages", "--select-all-consumers"]
+php-web-interface-publish-running-games-count-to-nchan:
+  command: ["bin/console", "web-interface:publish-running-games-count-to-nchan"]
+
+# Default configuration overwrite of dependencies
+mysql:
+  image:
+    registry: docker.io
+    repository: marein/php-gaming-website
+    tag: mysql
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      jobLabel: "mysql"
+  auth:
+    createDatabase: false
+    rootPassword: "password"
+
+redis:
+#  TODO: Uncomment below once repo image is bitnami based
+#  image:
+#    registry: docker.io
+#    repository: marein/php-gaming-website
+#    tag: redis
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      jobLabel: "redis"
+  #      additionalLabels: # FIXME: jobLabel doesn't exist on the redis helmChart like in mysql/rabbit
+  #        prometheus-job: "redis"
+  auth:
+    enabled: false
+  architecture: standalone
+
+rabbitmq:
+#  TODO: Uncomment below once repo image is bitnami based
+#  image:
+#    registry: docker.io
+#    repository: marein/php-gaming-website
+#    tag: rabbit-mq
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      jobLabel: "rabbitmq"
+  auth:
+    username: "user"
+    password: "bitnami"
+    securePassword: false
+
+prometheus:
+  server:
+    image:
+      repository: marein/php-gaming-website
+      tag: prometheus
+  alertmanager:
+    enabled: false
+  prometheus-pushgateway:
+    enabled: false
+  kube-state-metrics: # TODO: Do I want to measure kube metrics on grafana boards? If yes, enable true (or remove keys)
+    enabled: false
+
+grafana:
+  # TODO: apparently mounts are overriding image layer for /var/lib/grafana/dashboards
+  # Uncomment if my proposal to modify the dashboard storage for the docker image passes
+  image:
+    repository: marein/php-gaming-website
+    tag: grafana
+  env:
+    GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: true
+    GF_AUTH_DISABLE_LOGIN_FORM: 1
+    GF_AUTH_ANONYMOUS_ENABLED: 1
+    GF_AUTH_ANONYMOUS_ORG_ROLE: Admin

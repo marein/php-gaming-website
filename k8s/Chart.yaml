@@ -1,0 +1,47 @@
+apiVersion: v2
+name: php-gaming-website
+description: Markus playground project to explore new ideas and concepts
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+
+dependencies:
+  - name: mysql
+    version: 9.7.0 #appVersion: 8.0.32
+    repository: https://charts.bitnami.com/bitnami
+    #https://artifacthub.io/packages/helm/bitnami/mysql
+  - name: redis
+    version: 17.9.0 #appVersion: 7.0.10
+    repository: https://charts.bitnami.com/bitnami
+    #https://artifacthub.io/packages/helm/bitnami/redis
+  - name: rabbitmq
+    version: 11.12.0 #appVersion: 3.11.11
+    repository: https://charts.bitnami.com/bitnami
+    #https://artifacthub.io/packages/helm/bitnami/rabbitmq
+  - name: nchan
+    version: 0.0.1 #appVersion: 1.1.15
+    repository: "file://./dependencyCharts/nchan"
+  - name: prometheus
+    version: 20.0.1 #appVersion: v2.41.0
+    repository: https://prometheus-community.github.io/helm-charts
+    #https://artifacthub.io/packages/helm/prometheus-community/prometheus
+  - name: grafana
+    version: 6.52.4 #appVersion: 9.4.3
+    repository: https://grafana.github.io/helm-charts
+    #https://artifacthub.io/packages/helm/grafana/grafana
+  # Consumers
+  - name: php-connect-four-follow-event-store
+    version: 0.0.1 #appVersion: 0.0.1
+    repository: "file://./dependencyCharts/php-connect-four-follow-event-store"
+  - name: php-chat-follow-event-store
+    version: 0.0.1 #appVersion: 0.0.1
+    repository: "file://./dependencyCharts/php-chat-follow-event-store"
+  - name: php-identity-follow-event-store
+    version: 0.0.1 #appVersion: 0.0.1
+    repository: "file://./dependencyCharts/php-identity-follow-event-store"
+  - name: php-consume-messages
+    version: 0.0.1 #appVersion: 0.0.1
+    repository: "file://./dependencyCharts/php-consume-messages"
+  - name: php-web-interface-publish-running-games-count-to-nchan
+    version: 0.0.1 #appVersion: 0.0.1
+    repository: "file://./dependencyCharts/php-web-interface-publish-running-games-count-to-nchan"

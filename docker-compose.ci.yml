@@ -36,7 +36,8 @@ services:
         restart: on-failure
     redis:
         image: marein/php-gaming-website:redis
-        command: redis-server --appendonly yes
+        environment:
+            ALLOW_EMPTY_PASSWORD: true
         volumes:
             - redis:/data
         restart: on-failure

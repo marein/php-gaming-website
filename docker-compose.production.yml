@@ -7,7 +7,7 @@ x-php-container:
         APP_ENVIRONMENT: "prod"
         APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
         APP_WAIT_FOR: "mysql:3306,redis:6379,rabbit-mq:5672,nchan:81"
-        APP_RABBIT_MQ_DSN: "amqp://guest:guest@rabbit-mq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+        APP_RABBIT_MQ_DSN: "amqp://user:bitnami@rabbit-mq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
         APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@mysql:3306/chat?persistent=1"
         APP_CHAT_RUN_MIGRATIONS: "1"
         APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@mysql:3306/connect-four?persistent=1"
@@ -85,7 +85,8 @@ services:
             - "prometheus-port=9104"
     redis:
         image: marein/php-gaming-website:redis
-        command: redis-server --appendonly yes
+        environment:
+            ALLOW_EMPTY_PASSWORD: true
         volumes:
             - redis:/data
         restart: on-failure
