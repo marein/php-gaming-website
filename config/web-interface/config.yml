@@ -22,8 +22,11 @@ security:
             security: false
         metrics:
             pattern: ^/metrics
-            security: false
+            stateless: true
         main:
             pattern: ^/
             custom_authenticators:
                 - 'web-interface.security.arrival_authenticator'
+    access_control:
+        - { path: '^/metrics', roles: PUBLIC_ACCESS, ips: ['%env(APP_METRICS_ALLOWED_IPS)%'] }
+        - { path: '^/metrics', roles: ROLE_NO_ACCESS }

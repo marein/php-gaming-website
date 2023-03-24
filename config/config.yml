@@ -12,6 +12,7 @@ imports:
 
 framework:
     secret: '%env(APP_KERNEL_SECRET)%'
+    trusted_proxies: '%env(APP_TRUSTED_PROXIES)%'
     validation:
         enabled: true
     router:
