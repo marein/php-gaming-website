@@ -308,18 +308,22 @@ In the next step we've to scale the databases. We've to divide this into two par
 1. First we want to scale the databases for reading purposes.  
 Since there should not be a concurrency problem in this application, we can add replicas for the MySQL and Redis stores.
 2. Then we want to scale the databases for writing purposes.  
-__Example for connect four__: I've put much effort to allow scaling the Connect Four context properly.
-Because we use the CQRS pattern to decouple the queries that span multiple games,
-such as counting running games or listing open games, we can ignore this queries in this case.
-To fetch the command model we exclusively need a game id.
-With this in mind, we can leverage a technique called
+__Example for connect four__: This context already can be scaled-out by
 [sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture))
-for this. The shard key is in our case the game id.  
+the database, since queries that span multiple games have been offloaded. How this is made possible is described
+[in this section](#connect-four).
+Only the game id is needed for the execution of the command model,
+which is why it's well suited for the sharding key.
+Sharding is done at the application level, more specifically in the
+[repository](/src/ConnectFour/Port/Adapter/Persistence/Repository/DoctrineJsonGameRepository.php).
+The application uses schema-based sharding and is only aware of all existing logical shards,
+while it's only aware of one physical connection. To actually forward queries to separate physical shards,
+a proxy such as ProxySQL can be used. An example will be added with #118.  
 __Example for chat__: Currently there shouldn't be queries that span multiple chats.
 To invoke a chat operation (either writing or reading) we exclusively need a chat id.
 As in connect four context, we can use
 [sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture))
-for the chat context.
+for the chat context, where the chat id is the sharding key.
 
 You may have seen that all contexts uses only one MySQL and one Redis instance.
 This could be different for the production environment depending on the scale.
