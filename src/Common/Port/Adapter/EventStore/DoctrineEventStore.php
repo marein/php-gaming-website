@@ -6,7 +6,6 @@ namespace Gaming\Common\Port\Adapter\EventStore;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Types;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
@@ -40,11 +39,15 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     public function byAggregateId(string $aggregateId, int $sinceId = 0): array
     {
         try {
-            $rows = $this->connection->fetchAllAssociative(
-                'SELECT ' . self::SELECT . ' FROM ' . $this->table . ' e WHERE e.aggregateId = ? AND e.id > ?',
-                [$aggregateId, $sinceId],
-                ['uuid', Types::INTEGER]
-            );
+            $rows = $this->connection->createQueryBuilder()
+                ->select(self::SELECT)
+                ->from($this->table, 'e')
+                ->where('e.aggregateId = :aggregateId')
+                ->andWhere('e.id > :id')
+                ->setParameter('aggregateId', $aggregateId, 'uuid')
+                ->setParameter('id', $sinceId)
+                ->executeQuery()
+                ->fetchAllAssociative();
 
             return $this->transformRowsToStoredEvents($rows);
         } catch (Throwable $e) {
@@ -56,24 +59,22 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
         }
     }
 
-    public function append(DomainEvent ...$domainEvents): void
+    public function append(DomainEvent $domainEvent): void
     {
         try {
-            foreach ($domainEvents as $domainEvent) {
-                $this->connection->insert(
-                    $this->table,
-                    [
-                        'aggregateId' => $domainEvent->aggregateId(),
-                        'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
-                        'occurredOn' => $this->clock->now()
-                    ],
-                    [
-                        'uuid',
-                        Types::JSON,
-                        Types::DATETIME_IMMUTABLE
-                    ]
-                );
-            }
+            $this->connection->insert(
+                $this->table,
+                [
+                    'aggregateId' => $domainEvent->aggregateId(),
+                    'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
+                    'occurredOn' => $this->clock->now()
+                ],
+                [
+                    'uuid',
+                    'json',
+                    'datetime_immutable'
+                ]
+            );
         } catch (Throwable $e) {
             throw new EventStoreException(
                 $e->getMessage(),
@@ -86,11 +87,14 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     public function since(int $id, int $limit): array
     {
         try {
-            $rows = $this->connection->fetchAllAssociative(
-                'SELECT ' . self::SELECT . ' FROM ' . $this->table . ' e WHERE e.id > ? LIMIT ?',
-                [$id, $limit],
-                [Types::INTEGER, Types::INTEGER]
-            );
+            $rows = $this->connection->createQueryBuilder()
+                ->select(self::SELECT)
+                ->from($this->table, 'e')
+                ->where('e.id > :id')
+                ->setParameter('id', $id)
+                ->setMaxResults($limit)
+                ->executeQuery()
+                ->fetchAllAssociative();
 
             return StoredEventFilters::untilGapIsFound(
                 $this->transformRowsToStoredEvents($rows),

@@ -1,5 +1,13 @@
 services:
 
+    connect-four.store-domain-events-subscriber:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\EventStore\StoreDomainEventsSubscriber
+        public: false
+        arguments:
+            - '@connect-four.event-store'
+        tags:
+            - { name: 'connect-four.domain-event-subscriber' }
+
     connect-four.game-projection:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\GameProjection
         public: false

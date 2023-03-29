@@ -8,6 +8,7 @@ use Closure;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\Domain\DomainEventPublisher;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\StoredEvent;
@@ -23,6 +24,7 @@ final class DoctrineJsonGameRepository implements Games
     public function __construct(
         private readonly Connection $connection,
         private readonly string $tableName,
+        private readonly DomainEventPublisher $domainEventPublisher,
         private readonly EventStore $eventStore,
         private readonly Normalizer $normalizer,
         private readonly Shards $shards
@@ -39,7 +41,7 @@ final class DoctrineJsonGameRepository implements Games
         $this->switchShard($game->id());
 
         $this->connection->transactional(function () use ($game) {
-            $this->eventStore->append(...$game->flushDomainEvents());
+            $this->domainEventPublisher->publish($game->flushDomainEvents());
 
             $this->connection->insert(
                 $this->tableName,
@@ -67,7 +69,7 @@ final class DoctrineJsonGameRepository implements Games
             $game = $this->denormalizeGame($row['aggregate']);
             $operation($game);
 
-            $this->eventStore->append(...$game->flushDomainEvents());
+            $this->domainEventPublisher->publish($game->flushDomainEvents());
 
             $result = $this->connection->update(
                 $this->tableName,

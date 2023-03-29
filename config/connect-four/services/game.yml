@@ -1,5 +1,11 @@
 services:
 
+    connect-four.domain-event-publisher:
+        class: Gaming\Common\Domain\DomainEventPublisher
+        public: false
+        arguments:
+            - !tagged { tag: 'connect-four.domain-event-subscriber' }
+
     connect-four.game-controller:
         class: Gaming\ConnectFour\Port\Adapter\Http\GameController
         public: false
@@ -13,6 +19,7 @@ services:
         arguments:
             - '@connect-four.doctrine-dbal'
             - 'game'
+            - '@connect-four.domain-event-publisher'
             - '@connect-four.event-store'
             - '@connect-four.normalizer'
             - !service
