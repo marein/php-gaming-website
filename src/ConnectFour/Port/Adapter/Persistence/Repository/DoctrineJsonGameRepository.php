@@ -61,25 +61,19 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
                 'SELECT * FROM ' . $this->tableName . ' g WHERE g.id = ?',
                 [$id],
                 ['uuid']
-            );
-            if ($row === false) {
-                throw new GameNotFoundException();
-            }
+            ) ?: throw new GameNotFoundException();
 
             $game = $this->denormalizeGame($row['aggregate']);
             $operation($game);
 
             $this->domainEventPublisher->publish($game->flushDomainEvents());
 
-            $result = $this->connection->update(
+            $this->connection->update(
                 $this->tableName,
                 ['aggregate' => $this->normalizeGame($game), 'version' => $row['version'] + 1],
                 ['id' => $id, 'version' => $row['version']],
                 ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
-            );
-            if ($result === 0) {
-                throw new ConcurrencyException();
-            }
+            ) ?: throw new ConcurrencyException();
         });
     }
 
@@ -87,10 +81,9 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
     {
         $this->switchShard($gameId);
 
-        $storedEvents = $this->eventStore->byAggregateId($gameId->toString());
-        if (count($storedEvents) === 0) {
-            throw new GameNotFoundException();
-        }
+        $storedEvents = $this->eventStore->byAggregateId(
+            $gameId->toString()
+        ) ?: throw new GameNotFoundException();
 
         $game = new GameQueryModel();
         foreach ($storedEvents as $storedEvent) {
