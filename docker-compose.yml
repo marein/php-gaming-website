@@ -16,6 +16,7 @@ x-php-container:
         - ./config:/project/config:delegated
         - ./src:/project/src:delegated
         - vendor:/project/vendor
+        - proxysql.sock:/var/run/proxysql
     restart: on-failure
 
 services:
@@ -97,6 +98,7 @@ services:
                     restapi_enabled="true"
                 }
                 mysql_variables: {
+                    interfaces="/var/run/proxysql/proxysql.sock"
                     server_version="8.0"
                     monitor_username="root"
                     monitor_password="password"
@@ -110,6 +112,8 @@ services:
                 )
         depends_on:
             - mysql
+        volumes:
+            - proxysql.sock:/var/run/proxysql
         labels:
             - "prometheus-job=proxysql"
             - "prometheus-port=6070"
@@ -171,6 +175,7 @@ services:
             - ./var:/project/var:delegated
             - ./web:/project/web:delegated
             - vendor:/project/vendor
+            - proxysql.sock:/var/run/proxysql
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.php-fpm.priority=10"
@@ -242,6 +247,7 @@ services:
 volumes:
     vendor:
     mysql:
+    proxysql.sock:
     redis:
     rabbit-mq:
     prometheus:

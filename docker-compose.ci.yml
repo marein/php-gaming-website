@@ -12,6 +12,8 @@ x-php-container:
         - redis
         - rabbit-mq
         - nchan
+    volumes:
+        - proxysql.sock:/var/run/proxysql
     restart: on-failure
 
 services:
@@ -43,6 +45,7 @@ services:
                     restapi_enabled="true"
                 }
                 mysql_variables: {
+                    interfaces="/var/run/proxysql/proxysql.sock"
                     server_version="8.0"
                     monitor_username="root"
                     monitor_password="password"
@@ -56,6 +59,8 @@ services:
                 )
         depends_on:
             - mysql
+        volumes:
+            - proxysql.sock:/var/run/proxysql
         restart: on-failure
     redis:
         image: marein/php-gaming-website:redis
@@ -119,5 +124,6 @@ services:
 
 volumes:
     mysql:
+    proxysql.sock:
     redis:
     rabbit-mq:
