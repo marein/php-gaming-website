@@ -7,6 +7,14 @@ namespace Gaming\Common\Sharding\Integration;
 use Gaming\Common\Sharding\Exception\ShardingException;
 use Gaming\Common\Sharding\Shards;
 
+/**
+ * This implementation causes problems in the event of re-sharding,
+ * because it's very likely that values will be reassigned to another shard.
+ * This can lead to more network calls until everything is back in place.
+ * It's therefore not suitable for every use case and should be used with caution.
+ * A better alternative would be to use a consistent hashing algorithm,
+ * which would reduce the likelihood of values being reassigned to another shard.
+ */
 final class Crc32ModShards implements Shards
 {
     /**
