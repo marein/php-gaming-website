@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Domain\Game;
 
 use Closure;
-use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 
@@ -22,11 +21,4 @@ interface Games
      * @throws GameNotFoundException
      */
     public function update(GameId $gameId, Closure $operation): void;
-
-    /**
-     * @return DomainEvent[]
-     *
-     * @throws GameNotFoundException
-     */
-    public function eventsFor(GameId $gameId): array;
 }

@@ -33,15 +33,6 @@ services:
         arguments:
             - '@connect-four.predis'
             - 'game.'
-            - '@connect-four.games-game-finder'
-
-    connect-four.game-finder:
-        alias: 'connect-four.game-store'
-
-    connect-four.games-game-finder:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\GamesGameFinder
-        public: false
-        arguments:
             - '@connect-four.game-repository'
 
     connect-four.games-by-player-store:
