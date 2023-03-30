@@ -28,11 +28,7 @@ final class InMemoryCacheGameStore implements GameStore
 
     public function find(GameId $gameId): Game
     {
-        if (array_key_exists($gameId->toString(), $this->cachedGames)) {
-            return $this->cachedGames[$gameId->toString()];
-        }
-
-        return $this->gameStore->find($gameId);
+        return $this->cachedGames[$gameId->toString()] ?? $this->gameStore->find($gameId);
     }
 
     public function save(Game $game): void
