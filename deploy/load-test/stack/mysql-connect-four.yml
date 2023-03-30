@@ -1,0 +1,120 @@
+version: '3.4'
+
+services:
+    mysql-connect-four-1:
+        image: marein/php-gaming-website:mysql
+        command: mysqld --max-connections=1000
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - mysql-connect-four-1:/var/lib/mysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-1==1"
+    mysql-connect-four-1-exporter:
+        image: prom/mysqld-exporter
+        environment:
+            DATA_SOURCE_NAME: "root:password@(mysql-connect-four-1:3306)/"
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-1==1"
+            labels:
+                - "prometheus-job=mysql"
+                - "prometheus-port=9104"
+    mysql-connect-four-2:
+        image: marein/php-gaming-website:mysql
+        command: mysqld --max-connections=1000
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - mysql-connect-four-2:/var/lib/mysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-2==1"
+    mysql-connect-four-2-exporter:
+        image: prom/mysqld-exporter
+        environment:
+            DATA_SOURCE_NAME: "root:password@(mysql-connect-four-2:3306)/"
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-2==1"
+            labels:
+                - "prometheus-job=mysql"
+                - "prometheus-port=9104"
+    mysql-connect-four-3:
+        image: marein/php-gaming-website:mysql
+        command: mysqld --max-connections=1000
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - mysql-connect-four-3:/var/lib/mysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-3==1"
+    mysql-connect-four-3-exporter:
+        image: prom/mysqld-exporter
+        environment:
+            DATA_SOURCE_NAME: "root:password@(mysql-connect-four-3:3306)/"
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-3==1"
+            labels:
+                - "prometheus-job=mysql"
+                - "prometheus-port=9104"
+    mysql-connect-four-4:
+        image: marein/php-gaming-website:mysql
+        command: mysqld --max-connections=1000
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - mysql-connect-four-4:/var/lib/mysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-4==1"
+    mysql-connect-four-4-exporter:
+        image: prom/mysqld-exporter
+        environment:
+            DATA_SOURCE_NAME: "root:password@(mysql-connect-four-4:3306)/"
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-4==1"
+            labels:
+                - "prometheus-job=mysql"
+                - "prometheus-port=9104"
+    mysql-connect-four-5:
+        image: marein/php-gaming-website:mysql
+        command: mysqld --max-connections=1000
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - mysql-connect-four-5:/var/lib/mysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-5==1"
+    mysql-connect-four-5-exporter:
+        image: prom/mysqld-exporter
+        environment:
+            DATA_SOURCE_NAME: "root:password@(mysql-connect-four-5:3306)/"
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.mysql-connect-four-5==1"
+            labels:
+                - "prometheus-job=mysql"
+                - "prometheus-port=9104"
+
+volumes:
+    mysql-connect-four-1:
+    mysql-connect-four-2:
+    mysql-connect-four-3:
+    mysql-connect-four-4:
+    mysql-connect-four-5:

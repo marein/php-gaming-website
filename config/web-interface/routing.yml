@@ -98,9 +98,3 @@ move:
     methods: [POST]
     controller: web-interface.connect-four-controller::moveAction
     defaults: { _format: json }
-
-game_json:
-    path: /api/connect-four/games/{gameId}
-    methods: [GET]
-    controller: web-interface.connect-four-controller::showAction
-    defaults: { _format: json }

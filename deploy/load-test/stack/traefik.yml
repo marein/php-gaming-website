@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+    traefik:
+        image: marein/php-gaming-website:traefik
+        command:
+            - --metrics.prometheus=true
+            - --providers.docker
+            - --providers.docker.swarmmode=true
+            - --providers.docker.exposedbydefault=false
+        ports:
+            - "80:80"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.traefik==1"
+            labels:
+                - "prometheus-job=traefik"
+                - "prometheus-port=8080"
