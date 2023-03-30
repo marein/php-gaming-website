@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+    service-js-polyfill:
+        image: gamingplatform/service-js-polyfill
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.js-polyfill==1"
+            labels:
+                - "traefik.enable=true"
+                - "traefik.http.routers.service-js-polyfill.priority=20"
+                - "traefik.http.routers.service-js-polyfill.rule=PathPrefix(`/polyfill`)"
+                - "traefik.http.routers.service-js-polyfill.middlewares=service-js-polyfill-stripprefix"
+                - "traefik.http.middlewares.service-js-polyfill-stripprefix.stripprefix.prefixes=/polyfill"
+                - "traefik.http.services.service-js-polyfill.loadbalancer.server.port=80"

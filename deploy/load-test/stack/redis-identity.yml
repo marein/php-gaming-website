@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+    redis-web-interface:
+        image: marein/php-gaming-website:redis
+        command: redis-server --appendonly yes
+        volumes:
+            - redis-web-interface:/data
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.redis-web-interface==1"
+    redis-web-interface-exporter:
+        image: oliver006/redis_exporter
+        command:
+            - '-redis.addr=redis-web-interface:6379'
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.redis-web-interface==1"
+            labels:
+                - "prometheus-job=redis"
+                - "prometheus-port=9121"
+
+volumes:
+    redis-web-interface:

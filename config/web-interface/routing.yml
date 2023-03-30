@@ -87,14 +87,6 @@ move:
         _controller: web-interface.connect-four-controller::moveAction
         _format: json
 
-game_json:
-    path: /api/connect-four/games/{gameId}
-    methods:
-        - GET
-    defaults:
-        _controller: web-interface.connect-four-controller::showAction
-        _format: json
-
 ###############################################
 #               Identity Service              #
 ###############################################
