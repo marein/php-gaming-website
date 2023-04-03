@@ -33,6 +33,7 @@ services:
         arguments:
             - '@connect-four.predis'
             - 'game.'
+            - '@connect-four.normalizer'
             - '@connect-four.game-repository'
 
     connect-four.games-by-player-store:
