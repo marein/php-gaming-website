@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query;
 
-use Gaming\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class GameHandler
 {
@@ -22,8 +23,6 @@ final class GameHandler
      */
     public function __invoke(GameQuery $query): Game
     {
-        return $this->gameFinder->find(
-            $query->gameId()
-        );
+        return $this->gameFinder->find(GameId::fromString($query->gameId()));
     }
 }
