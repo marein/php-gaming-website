@@ -25,7 +25,7 @@ final class OpenHandler
             $command->playerId()
         );
 
-        $this->games->save($game);
+        $this->games->add($game);
 
         return $game->id()->toString();
     }

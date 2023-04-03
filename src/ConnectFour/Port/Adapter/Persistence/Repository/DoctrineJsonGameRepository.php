@@ -4,33 +4,31 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 
+use Closure;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Gaming\Common\Domain\DomainEventPublisher;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
+use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\Normalizer\Normalizer;
+use Gaming\Common\Sharding\Shards;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game as GameQueryModel;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Games;
 
-final class DoctrineJsonGameRepository implements Games
+final class DoctrineJsonGameRepository implements Games, GameFinder
 {
-    /**
-     * The map is used to store data for optimistic locking.
-     * This array gets never cleared so this can be a memory leak
-     * in a long running process.
-     *
-     * @var array<string, array<string, mixed>>
-     */
-    private array $identityMap;
-
     public function __construct(
         private readonly Connection $connection,
         private readonly string $tableName,
         private readonly DomainEventPublisher $domainEventPublisher,
-        private readonly Normalizer $normalizer
+        private readonly EventStore $eventStore,
+        private readonly Normalizer $normalizer,
+        private readonly Shards $shards
     ) {
-        $this->identityMap = [];
     }
 
     public function nextIdentity(): GameId
@@ -38,97 +36,80 @@ final class DoctrineJsonGameRepository implements Games
         return GameId::generate();
     }
 
-    /**
-     * @throw ConcurrencyException
-     */
-    public function save(Game $game): void
+    public function add(Game $game): void
     {
-        $id = $game->id()->toString();
-        $this->domainEventPublisher->publish(
-            $game->flushDomainEvents()
-        );
+        $this->switchShard($game->id());
 
-        if (isset($this->identityMap[$id])) {
-            $this->update($id, $game);
-        } else {
-            $this->insert($id, $game);
-        }
+        $this->connection->transactional(function () use ($game) {
+            $this->domainEventPublisher->publish($game->flushDomainEvents());
+
+            $this->connection->insert(
+                $this->tableName,
+                ['id' => $game->id()->toString(), 'aggregate' => $this->normalizeGame($game), 'version' => 1],
+                ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
+            );
+        });
     }
 
-    public function get(GameId $id): Game
+    public function update(GameId $gameId, Closure $operation): void
     {
-        $builder = $this->connection->createQueryBuilder();
+        $this->switchShard($gameId);
 
-        $row = $builder
-            ->select('*')
-            ->from($this->tableName, 't')
-            ->where('t.id = :id')
-            ->setParameter('id', $id->toString(), 'uuid')
-            ->executeQuery()
-            ->fetchAssociative();
+        $this->connection->transactional(function () use ($gameId, $operation) {
+            $id = $gameId->toString();
+            $row = $this->connection->fetchAssociative(
+                'SELECT * FROM ' . $this->tableName . ' g WHERE g.id = ?',
+                [$id],
+                ['uuid']
+            ) ?: throw new GameNotFoundException();
 
-        if ($row === false) {
-            throw new GameNotFoundException();
-        }
+            $game = $this->denormalizeGame($row['aggregate']);
+            $operation($game);
 
-        $gameAsArray = json_decode($row['aggregate'], true, 512, JSON_THROW_ON_ERROR);
+            $this->domainEventPublisher->publish($game->flushDomainEvents());
 
-        $this->registerAggregateId($id->toString(), (int)$row['version']);
-
-        return $this->normalizer->denormalize($gameAsArray, Game::class);
+            $this->connection->update(
+                $this->tableName,
+                ['aggregate' => $this->normalizeGame($game), 'version' => $row['version'] + 1],
+                ['id' => $id, 'version' => $row['version']],
+                ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
+            ) ?: throw new ConcurrencyException();
+        });
     }
 
-    /**
-     * @throws ConcurrencyException
-     */
-    private function update(string $id, Game $game): void
+    public function find(GameId $gameId): GameQueryModel
     {
-        $version = $this->identityMap[$id]['version'];
+        $this->switchShard($gameId);
 
-        $result = $this->connection->update(
-            $this->tableName,
-            [
-                'aggregate' => $this->normalizer->normalize($game, Game::class),
-                'version' => $version + 1
-            ],
-            ['id' => $id, 'version' => $version],
-            [
-                'id' => 'uuid',
-                'aggregate' => 'json',
-                'version' => 'integer'
-            ]
-        );
+        $storedEvents = $this->eventStore->byAggregateId(
+            $gameId->toString()
+        ) ?: throw new GameNotFoundException();
 
-        if ($result === 0) {
-            throw new ConcurrencyException();
+        $game = new GameQueryModel();
+        foreach ($storedEvents as $storedEvent) {
+            $game->apply($storedEvent->domainEvent());
         }
 
-        $this->registerAggregateId($id, $version + 1);
+        return $game;
     }
 
-    private function insert(string $id, Game $game): void
+    private function switchShard(GameId $gameId): void
     {
-        $this->connection->insert(
-            $this->tableName,
-            [
-                'id' => $id,
-                'aggregate' => $this->normalizer->normalize($game, Game::class),
-                'version' => 1
-            ],
-            [
-                'id' => 'uuid',
-                'aggregate' => 'json',
-                'version' => 'integer'
-            ]
+        $this->connection->executeStatement(
+            'USE ' . $this->connection->quoteIdentifier($this->shards->lookup($gameId->toString()))
         );
-
-        $this->registerAggregateId($id, 1);
     }
 
-    private function registerAggregateId(string $id, int $version): void
+    private function normalizeGame(Game $game): mixed
     {
-        $this->identityMap[$id] = [
-            'version' => $version
-        ];
+        return $this->normalizer->normalize($game, Game::class);
+    }
+
+    private function denormalizeGame(mixed $game): Game
+    {
+        return $this->normalizer->denormalize(
+            json_decode($game, true, 512, JSON_THROW_ON_ERROR),
+            Game::class
+        );
     }
 }
