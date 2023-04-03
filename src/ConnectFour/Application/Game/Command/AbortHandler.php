@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
 
+use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Games;
 
@@ -18,10 +19,9 @@ final class AbortHandler
 
     public function __invoke(AbortCommand $command): void
     {
-        $game = $this->games->get(GameId::fromString($command->gameId()));
-
-        $game->abort($command->playerId());
-
-        $this->games->save($game);
+        $this->games->update(
+            GameId::fromString($command->gameId()),
+            static fn(Game $game) => $game->abort($command->playerId())
+        );
     }
 }

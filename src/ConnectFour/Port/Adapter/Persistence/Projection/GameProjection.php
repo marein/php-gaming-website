@@ -10,6 +10,7 @@ use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
 use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
+use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Port\Adapter\Persistence\Repository\InMemoryCacheGameStore;
 
 final class GameProjection implements StoredEventSubscriber
@@ -32,7 +33,7 @@ final class GameProjection implements StoredEventSubscriber
 
         $game = match ($domainEvent::class) {
             GameOpened::class => new Game(),
-            default => $this->gameStore->find($domainEvent->aggregateId())
+            default => $this->gameStore->find(GameId::fromString($domainEvent->aggregateId()))
         };
 
         $game->apply($domainEvent);

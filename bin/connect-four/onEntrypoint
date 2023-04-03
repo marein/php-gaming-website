@@ -4,12 +4,16 @@ set -e
 
 if [ "${APP_CONNECT_FOUR_RUN_MIGRATIONS}" = "1" ]
 then
-    bin/console doctrine:database:create \
-        --connection=connect_four \
-        --if-not-exists
-    bin/console doctrine:migrations:migrate \
-        --configuration=config/connect-four/migrations.yml \
-        --conn=connect_four \
-        --allow-no-migration \
-        --no-interaction
+    IFS=, read -ra values <<< "${APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS}"
+    for value in "${values[@]}"
+    do
+        APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE=${value} bin/console doctrine:database:create \
+            --connection=connect_four \
+            --if-not-exists
+        APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE=${value} bin/console doctrine:migrations:migrate \
+            --configuration=config/connect-four/migrations.yml \
+            --conn=connect_four \
+            --allow-no-migration \
+            --no-interaction
+    done
 fi

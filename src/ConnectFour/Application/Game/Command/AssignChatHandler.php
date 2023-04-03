@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
 
+use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Games;
 
@@ -18,10 +19,9 @@ final class AssignChatHandler
 
     public function __invoke(AssignChatCommand $command): void
     {
-        $game = $this->games->get(GameId::fromString($command->gameId()));
-
-        $game->assignChat($command->chatId());
-
-        $this->games->save($game);
+        $this->games->update(
+            GameId::fromString($command->gameId()),
+            static fn(Game $game) => $game->assignChat($command->chatId())
+        );
     }
 }

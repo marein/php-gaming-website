@@ -7,6 +7,7 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
+use Gaming\ConnectFour\Domain\Game\GameId;
 use Predis\ClientInterface;
 
 /**
@@ -25,7 +26,7 @@ final class PredisGameStore implements GameStore
     ) {
     }
 
-    public function find(string $gameId): Game
+    public function find(GameId $gameId): Game
     {
         $serializedGame = $this->predis->get(
             $this->storageKeyPrefix . $gameId

@@ -22,7 +22,7 @@ services:
         class: Gaming\ConnectFour\Application\Game\Query\GameHandler
         public: false
         arguments:
-            - '@connect-four.game-finder'
+            - '@connect-four.game-store'
 
     connect-four.query.games-by-player-handler:
         class: Gaming\ConnectFour\Application\Game\Query\GamesByPlayerHandler

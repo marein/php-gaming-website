@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-use Gaming\ConnectFour\Application\Game\Query\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Domain\Game\GameId;
 
 interface GameFinder
 {
     /**
      * @throws GameNotFoundException
      */
-    public function find(string $gameId): Game;
+    public function find(GameId $gameId): Game;
 }
