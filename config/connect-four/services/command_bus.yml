@@ -12,16 +12,9 @@ services:
         class: Gaming\Common\Bus\RetryBus
         public: false
         arguments:
-            - '@connect-four.doctrine-transactional-command-bus'
+            - '@connect-four.routing-command-bus'
             - 3
             - 'Gaming\Common\Domain\Exception\ConcurrencyException'
-
-    connect-four.doctrine-transactional-command-bus:
-        class: Gaming\Common\Port\Adapter\Bus\DoctrineTransactionalBus
-        public: false
-        arguments:
-            - '@connect-four.routing-command-bus'
-            - '@connect-four.doctrine-dbal'
 
     # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.routing-command-bus:

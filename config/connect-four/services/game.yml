@@ -20,7 +20,12 @@ services:
             - '@connect-four.doctrine-dbal'
             - 'game'
             - '@connect-four.domain-event-publisher'
+            - '@connect-four.event-store'
             - '@connect-four.normalizer'
+            - !service
+                class: Gaming\Common\Sharding\Integration\Crc32ModShards
+                arguments:
+                    - '%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%'
 
     connect-four.game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGameStore
@@ -28,16 +33,7 @@ services:
         arguments:
             - '@connect-four.predis'
             - 'game.'
-            - '@connect-four.event-store-game-finder'
-
-    connect-four.game-finder:
-        alias: 'connect-four.game-store'
-
-    connect-four.event-store-game-finder:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\EventStoreGameFinder
-        public: false
-        arguments:
-            - '@connect-four.event-store'
+            - '@connect-four.game-repository'
 
     connect-four.games-by-player-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerStore
