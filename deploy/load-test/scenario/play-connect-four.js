@@ -33,16 +33,16 @@ export default function () {
 }
 
 function open(jar) {
-    let url = baseUrl + '/api/connect-four/games/open';
+    let url = `${baseUrl}/api/connect-four/games/open`;
     return http.post(url, {}, {jar, headers}).json().gameId;
 }
 
 function join(jar, gameId) {
-    let url = baseUrl + '/api/connect-four/games/' + gameId + '/join';
+    let url = `${baseUrl}/api/connect-four/games/${gameId}/join`;
     return http.post(url, {}, {jar, headers});
 }
 
 function move(jar, gameId, column) {
-    let url = baseUrl + '/api/connect-four/games/' + gameId + '/move';
+    let url = `${baseUrl}/api/connect-four/games/${gameId}/move`;
     return http.post(url, {column}, {jar, headers});
 }
