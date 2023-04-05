@@ -8,6 +8,7 @@ x-php-container:
     env_file: ./.env
     depends_on:
         - mysql
+        - proxysql
         - redis
         - rabbit-mq
         - nchan
@@ -15,6 +16,7 @@ x-php-container:
         - ./config:/project/config:delegated
         - ./src:/project/src:delegated
         - vendor:/project/vendor
+        - proxysql.sock:/var/run/proxysql
     restart: on-failure
 
 services:
@@ -86,6 +88,37 @@ services:
         labels:
             - "prometheus-job=mysql"
             - "prometheus-port=9104"
+    proxysql:
+        build:
+            context: .
+            dockerfile: ./docker/proxysql/Dockerfile
+        environment:
+            PROXYSQL_CONFIG: |
+                admin_variables: {
+                    restapi_enabled="true"
+                }
+                mysql_variables: {
+                    interfaces="/var/run/proxysql/proxysql.sock"
+                    server_version="8.0"
+                    monitor_username="root"
+                    monitor_password="password"
+                    auto_increment_delay_multiplex=0
+                }
+                mysql_servers: (
+                    {hostgroup=1,address="mysql",port=3306,max_connections=100}
+                )
+                mysql_users: (
+                    {username="root",password="password",default_hostgroup=1}
+                )
+        depends_on:
+            - mysql
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        labels:
+            - "prometheus-job=proxysql"
+            - "prometheus-port=6070"
+            - "prometheus-path=/metrics"
+        restart: on-failure
     redis:
         build:
             context: .
@@ -142,6 +175,7 @@ services:
             - ./var:/project/var:delegated
             - ./web:/project/web:delegated
             - vendor:/project/vendor
+            - proxysql.sock:/var/run/proxysql
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.php-fpm.priority=10"
@@ -213,6 +247,7 @@ services:
 volumes:
     vendor:
     mysql:
+    proxysql.sock:
     redis:
     rabbit-mq:
     prometheus:
