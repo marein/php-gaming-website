@@ -8,9 +8,12 @@ x-php-container:
         APP_ENVIRONMENT: prod
     depends_on:
         - mysql
+        - proxysql
         - redis
         - rabbit-mq
         - nchan
+    volumes:
+        - proxysql.sock:/var/run/proxysql
     restart: on-failure
 
 services:
@@ -33,6 +36,31 @@ services:
             MYSQL_ROOT_PASSWORD: password
         volumes:
             - mysql:/var/lib/mysql
+        restart: on-failure
+    proxysql:
+        image: marein/php-gaming-website:proxysql
+        environment:
+            PROXYSQL_CONFIG: |
+                admin_variables: {
+                    restapi_enabled="true"
+                }
+                mysql_variables: {
+                    interfaces="/var/run/proxysql/proxysql.sock"
+                    server_version="8.0"
+                    monitor_username="root"
+                    monitor_password="password"
+                    auto_increment_delay_multiplex=0
+                }
+                mysql_servers: (
+                    {hostgroup=1,address="mysql",port=3306,max_connections=100}
+                )
+                mysql_users: (
+                    {username="root",password="password",default_hostgroup=1}
+                )
+        depends_on:
+            - mysql
+        volumes:
+            - proxysql.sock:/var/run/proxysql
         restart: on-failure
     redis:
         image: marein/php-gaming-website:redis
@@ -96,5 +124,6 @@ services:
 
 volumes:
     mysql:
+    proxysql.sock:
     redis:
     rabbit-mq:

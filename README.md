@@ -344,6 +344,7 @@ or in this context, the directory structure.
 
 Some other technologies:
 * [MySQL](https://www.mysql.com) as the main storage of the contexts.
+* [ProxySQL](https://proxysql.com) as a connection pool and for query routing / database sharding.
 * [Redis](https://redis.io) for the query models or as a caching layer. Also the user sessions are stored here.
 * [Rabbit Mq](https://www.rabbitmq.com) as the message broker.
 * [Nchan](https://nchan.io) for real-time browser notifications.
