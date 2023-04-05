@@ -8,24 +8,27 @@ x-php-container:
         APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
         APP_TRUSTED_PROXIES: ""
         APP_METRICS_ALLOWED_IPS: "0.0.0.0/0"
-        APP_WAIT_FOR: "mysql:3306,redis:6379,rabbit-mq:5672,nchan:81"
+        APP_WAIT_FOR: "unix:///var/run/proxysql/proxysql.sock,mysql:3306,redis:6379,rabbit-mq:5672,nchan:81"
         APP_RABBIT_MQ_DSN: "amqp://guest:guest@rabbit-mq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
-        APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@mysql:3306/chat?persistent=1"
+        APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@localhost/chat?persistent=1&unix_socket=/var/run/proxysql/proxysql.sock"
         APP_CHAT_RUN_MIGRATIONS: "1"
-        APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@mysql:3306?persistent=1"
+        APP_CONNECT_FOUR_DOCTRINE_DBAL_URL: "mysqli://root:password@localhost?persistent=1&unix_socket=/var/run/proxysql/proxysql.sock"
         APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four"
         APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS: "connect-four"
         APP_CONNECT_FOUR_RUN_MIGRATIONS: "1"
         APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
-        APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@mysql:3306/identity?persistent=1"
+        APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@localhost/identity?persistent=1&unix_socket=/var/run/proxysql/proxysql.sock"
         APP_IDENTITY_RUN_MIGRATIONS: "1"
         APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
         APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://nchan:81"
     depends_on:
         - mysql
+        - proxysql
         - redis
         - rabbit-mq
         - nchan
+    volumes:
+        - proxysql.sock:/var/run/proxysql
     restart: on-failure
 
 services:
@@ -87,6 +90,35 @@ services:
         labels:
             - "prometheus-job=mysql"
             - "prometheus-port=9104"
+    proxysql:
+        image: marein/php-gaming-website:proxysql
+        environment:
+            PROXYSQL_CONFIG: |
+                admin_variables: {
+                    restapi_enabled="true"
+                }
+                mysql_variables: {
+                    interfaces="/var/run/proxysql/proxysql.sock"
+                    server_version="8.0"
+                    monitor_username="root"
+                    monitor_password="password"
+                    auto_increment_delay_multiplex=0
+                }
+                mysql_servers: (
+                    {hostgroup=1,address="mysql",port=3306,max_connections=100}
+                )
+                mysql_users: (
+                    {username="root",password="password",default_hostgroup=1}
+                )
+        depends_on:
+            - mysql
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        labels:
+            - "prometheus-job=proxysql"
+            - "prometheus-port=6070"
+            - "prometheus-path=/metrics"
+        restart: on-failure
     redis:
         image: marein/php-gaming-website:redis
         command: redis-server --appendonly yes
@@ -158,6 +190,7 @@ services:
 
 volumes:
     mysql:
+    proxysql.sock:
     redis:
     rabbit-mq:
     prometheus:
