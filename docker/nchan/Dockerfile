@@ -1,5 +1,12 @@
-FROM meroje/alpine-nchan:1.1.15
+FROM safesecurity/nginx-nchan:1.2.15
 
-COPY /docker/nchan/default.conf /etc/nginx/conf.d/default.conf
+ENV NCHAN_SHARED_MEMORY_SIZE=256M \
+    NCHAN_MESSAGE_BUFFER_LENGTH=10 \
+    NCHAN_MESSAGE_TIMEOUT=10s \
+    NCHAN_HTTP_KEEPALIVE_REQUESTS=10000
 
-RUN sed -i "1iload_module 'modules/ngx_nchan_module.so';" /etc/nginx/nginx.conf
+COPY /docker/nchan/entrypoint.sh /
+COPY /docker/nchan/default.conf /etc/nginx/sites-template/
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
