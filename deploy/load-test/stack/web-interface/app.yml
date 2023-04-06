@@ -23,7 +23,7 @@ services:
         volumes:
             - proxysql.sock:/var/run/proxysql
         deploy:
-            replicas: 20
+            replicas: 35
             placement:
                 constraints:
                     - "node.labels.long-running==1"
