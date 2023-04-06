@@ -1,0 +1,54 @@
+version: '3.4'
+
+services:
+    proxysql-sidecar:
+        image: marein/php-gaming-website:proxysql
+        environment:
+            PROXYSQL_CONFIG: |
+                admin_variables: {
+                    restapi_enabled="true"
+                }
+                mysql_variables: {
+                    interfaces="/var/run/proxysql/proxysql.sock"
+                    server_version="8.0"
+                    monitor_username="root"
+                    monitor_password="password"
+                    auto_increment_delay_multiplex=0
+                    threads=8
+                }
+                mysql_servers: (
+                    {hostgroup=1,address="mysql-connect-four-1",port=3306,max_connections=100},
+                    {hostgroup=2,address="mysql-connect-four-2",port=3306,max_connections=100},
+                    {hostgroup=3,address="mysql-connect-four-3",port=3306,max_connections=100},
+                    {hostgroup=4,address="mysql-connect-four-4",port=3306,max_connections=100},
+                    {hostgroup=5,address="mysql-connect-four-5",port=3306,max_connections=100}
+                )
+                mysql_users: (
+                    {username="root",password="password",default_hostgroup=1}
+                )
+                mysql_query_rules: (
+                    {rule_id=1,schemaname="db1",destination_hostgroup=1,apply=1},
+                    {rule_id=2,schemaname="db2",destination_hostgroup=2,apply=1},
+                    {rule_id=3,schemaname="db3",destination_hostgroup=3,apply=1},
+                    {rule_id=4,schemaname="db4",destination_hostgroup=4,apply=1},
+                    {rule_id=5,schemaname="db5",destination_hostgroup=5,apply=1},
+                    {rule_id=6,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db1`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db1`",destination_hostgroup=1,apply=1},
+                    {rule_id=7,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db2`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db2`",destination_hostgroup=2,apply=1},
+                    {rule_id=8,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db3`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db3`",destination_hostgroup=3,apply=1},
+                    {rule_id=9,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db4`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db4`",destination_hostgroup=4,apply=1},
+                    {rule_id=10,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db5`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db5`",destination_hostgroup=5,apply=1}
+                )
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            mode: global
+            placement:
+                constraints:
+                    - "node.labels.needs-proxysql-sidecar==1"
+            labels:
+                - "prometheus-job=proxysql"
+                - "prometheus-port=6070"
+                - "prometheus-path=/metrics"
+
+volumes:
+    proxysql.sock:
