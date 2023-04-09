@@ -29,18 +29,18 @@ services:
                     {username="root",password="password",default_hostgroup=1}
                 )
                 mysql_query_rules: (
-                    {rule_id=1,schemaname="db1",destination_hostgroup=1,apply=1},
-                    {rule_id=2,schemaname="db2",destination_hostgroup=2,apply=1},
-                    {rule_id=3,schemaname="db3",destination_hostgroup=3,apply=1},
-                    {rule_id=4,schemaname="db4",destination_hostgroup=4,apply=1},
-                    {rule_id=5,schemaname="db5",destination_hostgroup=5,apply=1},
+                    {rule_id=1,schemaname="connect-four-1",destination_hostgroup=1,apply=1},
+                    {rule_id=2,schemaname="connect-four-2",destination_hostgroup=2,apply=1},
+                    {rule_id=3,schemaname="connect-four-3",destination_hostgroup=3,apply=1},
+                    {rule_id=4,schemaname="connect-four-4",destination_hostgroup=4,apply=1},
+                    {rule_id=5,schemaname="connect-four-5",destination_hostgroup=5,apply=1},
                     {rule_id=6,schemaname="chat",destination_hostgroup=6,apply=1},
                     {rule_id=7,schemaname="identity",destination_hostgroup=7,apply=1},
-                    {rule_id=8,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db1`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db1`",destination_hostgroup=1,apply=1},
-                    {rule_id=9,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db2`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db2`",destination_hostgroup=2,apply=1},
-                    {rule_id=10,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db3`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db3`",destination_hostgroup=3,apply=1},
-                    {rule_id=11,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db4`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db4`",destination_hostgroup=4,apply=1},
-                    {rule_id=12,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `db5`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `db5`",destination_hostgroup=5,apply=1},
+                    {rule_id=8,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-1`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-1`",destination_hostgroup=1,apply=1},
+                    {rule_id=9,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-2`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-2`",destination_hostgroup=2,apply=1},
+                    {rule_id=10,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-3`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-3`",destination_hostgroup=3,apply=1},
+                    {rule_id=11,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-4`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-4`",destination_hostgroup=4,apply=1},
+                    {rule_id=12,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-5`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-5`",destination_hostgroup=5,apply=1},
                     {rule_id=13,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `chat`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `chat`",destination_hostgroup=6,apply=1},
                     {rule_id=14,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `identity`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `identity`",destination_hostgroup=7,apply=1}
                 )

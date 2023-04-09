@@ -6,7 +6,7 @@ services:
         command: bin/console connect-four:follow-event-store message-broker-2 -s publish-to-message-broker
         env_file: ../app.env
         environment:
-            APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "db2"
+            APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four-2"
         volumes:
             - proxysql.sock:/var/run/proxysql
         deploy:
@@ -18,7 +18,7 @@ services:
         command: bin/console connect-four:follow-event-store projection-2 -s game-projection -s games-by-player-projection -s running-games-projection -s open-games-projection -w 8
         env_file: ../app.env
         environment:
-            APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "db2"
+            APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four-2"
         volumes:
             - proxysql.sock:/var/run/proxysql
         deploy:
