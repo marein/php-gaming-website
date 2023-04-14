@@ -1,5 +1,7 @@
 version: '3.4'
 
+# This file must be self-contained because it is used by Play with Docker.
+
 x-php-container:
     &php-container
     image: marein/php-gaming-website:php-fpm
@@ -30,9 +32,6 @@ x-php-container:
     restart: on-failure
 
 services:
-    ##############################
-    #  Database and application  #
-    ##############################
     traefik:
         image: marein/php-gaming-website:traefik
         command:
@@ -44,7 +43,7 @@ services:
         depends_on:
             - nchan
             - service-js-polyfill
-            - php-fpm
+            - web-interface-http
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
         labels:
@@ -158,30 +157,26 @@ services:
             - "traefik.http.routers.service-js-polyfill.rule=PathPrefix(`/polyfill`)"
             - "traefik.http.routers.service-js-polyfill.middlewares=service-js-polyfill-stripprefix"
             - "traefik.http.middlewares.service-js-polyfill-stripprefix.stripprefix.prefixes=/polyfill"
-    php-fpm:
+    web-interface-http:
         <<: *php-container
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.php-fpm.priority=10"
-            - "traefik.http.routers.php-fpm.rule=PathPrefix(`/`)"
-            - "traefik.http.services.php-fpm.loadbalancer.server.port=80"
-
-    ##############################
-    #   Long running processes   #
-    ##############################
-    php-connect-four-follow-event-store:
+            - "traefik.http.routers.web-interface-http.priority=10"
+            - "traefik.http.routers.web-interface-http.rule=PathPrefix(`/`)"
+            - "traefik.http.services.web-interface-http.loadbalancer.server.port=80"
+    connect-four-follow-event-store:
         <<: *php-container
         command: bin/console connect-four:follow-event-store pointer --select-all-subscribers
-    php-chat-follow-event-store:
+    chat-follow-event-store:
         <<: *php-container
         command: bin/console chat:follow-event-store pointer --select-all-subscribers
-    php-identity-follow-event-store:
+    identity-follow-event-store:
         <<: *php-container
         command: bin/console identity:follow-event-store pointer --select-all-subscribers
-    php-consume-messages:
+    consume-messages:
         <<: *php-container
         command: bin/console gaming:consume-messages --select-all-consumers
-    php-web-interface-publish-running-games-count-to-nchan:
+    web-interface-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/console web-interface:publish-running-games-count-to-nchan
 
