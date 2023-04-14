@@ -2,7 +2,7 @@ services:
 
     connect-four.jms:
         class: JMS\Serializer\Serializer
-        factory: ['Gaming\Common\Port\Adapter\Jms\JmsSerializerFactory', 'create']
+        factory: ['Gaming\Common\JmsSerializer\JmsSerializerFactory', 'create']
         arguments:
             - '%kernel.debug%'
             - '%kernel.cache_dir%/connect-four/jms'
@@ -29,6 +29,6 @@ services:
             - !tagged { tag: 'connect-four.migrating-normalizer.migrations', index_by: 'key' }
 
     connect-four.normalizer:
-        class: Gaming\Common\Port\Adapter\Normalizer\JmsSerializerNormalizer
+        class: Gaming\Common\Normalizer\Intergration\JmsSerializerNormalizer
         arguments:
             - '@connect-four.jms'

@@ -2,7 +2,7 @@ services:
 
     # The following definitions decorate the routing command bus. This could be done with a factory object.
     identity.command-bus:
-        class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
+        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
         public: false
         arguments:
             - '@identity.retry-command-bus'
@@ -17,7 +17,7 @@ services:
             - 'Gaming\Common\Domain\Exception\ConcurrencyException'
 
     identity.doctrine-transactional-command-bus:
-        class: Gaming\Common\Port\Adapter\Bus\DoctrineTransactionalBus
+        class: Gaming\Common\Bus\Integration\DoctrineTransactionalBus
         public: false
         arguments:
             - '@identity.routing-command-bus'

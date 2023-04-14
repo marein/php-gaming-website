@@ -2,7 +2,7 @@ services:
 
     # This is pretty ugly. We can use tags, or create this via a factory in php.
     chat.query-bus:
-        class: Gaming\Common\Port\Adapter\Bus\SymfonyValidatorBus
+        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
         public: false
         arguments:
             - '@chat.routing-query-bus'

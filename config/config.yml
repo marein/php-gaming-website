@@ -39,7 +39,7 @@ services:
             - { name: doctrine.middleware }
 
     gaming.message-broker:
-        class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
+        class: Gaming\Common\MessageBroker\Integration\Enqueue\AmqpTopicExchangeMessageBroker
         public: false
         arguments:
             - '%env(APP_RABBIT_MQ_DSN)%'
@@ -70,7 +70,7 @@ services:
         public: false
 
     gaming.message-broker.message-translator:
-        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageTranslator
+        class: Gaming\Common\MessageBroker\Integration\GamingMessageTranslator
         public: false
         arguments:
             -
@@ -87,7 +87,7 @@ services:
             - 'gaming'
 
     gaming.consume-messages-command:
-        class: Gaming\Common\Port\Adapter\Symfony\ConsumeMessagesCommand
+        class: Gaming\Common\MessageBroker\Integration\Symfony\ConsumeMessagesCommand
         public: false
         arguments:
             - '@gaming.message-broker'
@@ -103,14 +103,14 @@ services:
     # Lower priority so that the profiler is respected.
     # todo: This can be removed as soon as https://github.com/marein/php-gaming-website/issues/34 is done.
     gaming.exception-to-json-listener:
-        class: Gaming\Common\Port\Adapter\Symfony\GamingExceptionListener
+        class: Gaming\Common\ExceptionHandling\GamingExceptionListener
         public: false
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: -100 }
 
     # Lower priority so that the profiler is respected.
     gaming.application-exception-to-json-listener:
-        class: Gaming\Common\Port\Adapter\Symfony\TransformApplicationExceptionListener
+        class: Gaming\Common\Bus\Integration\ApplicationExceptionToJsonListener
         public: false
         arguments:
             - []

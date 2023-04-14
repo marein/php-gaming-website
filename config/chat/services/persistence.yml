@@ -4,7 +4,7 @@ services:
         alias: 'doctrine.dbal.chat_connection'
 
     chat.event-store:
-        class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
+        class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
         public: false
         arguments:
             - '@chat.doctrine-dbal'

@@ -85,12 +85,12 @@ You can run them as follows.
 ```
 git clone https://github.com/marein/php-gaming-website
 cd php-gaming-website
-docker-compose -f docker-compose.production.yml pull
-docker-compose -f docker-compose.production.yml up
+docker-compose -f deploy/single-server/docker-compose.yml pull
+docker-compose -f deploy/single-server/docker-compose.yml up
 ```
 
 Or you can try out
-[Play with Docker](http://play-with-docker.com?stack=https://raw.githubusercontent.com/marein/php-gaming-website/master/docker-compose.production.yml).
+[Play with Docker](http://play-with-docker.com?stack=https://raw.githubusercontent.com/marein/php-gaming-website/master/deploy/single-server/docker-compose.yml).
 
 ## Context is king
 

@@ -1,12 +1,12 @@
 services:
 
     chat.follow-event-store-command:
-        class: Gaming\Common\Port\Adapter\Symfony\FollowEventStoreCommand
+        class: Gaming\Common\EventStore\Integration\Symfony\FollowEventStoreCommand
         public: false
         arguments:
             - '@chat.event-store'
             - !service
-                class: Gaming\Common\Port\Adapter\Symfony\EventStorePointerFactory\DoctrineMysqlEventStorePointerFactory
+                class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineMysqlEventStorePointerFactory
                 arguments:
                     - '@chat.doctrine-dbal'
                     - 'event_store_pointer'
