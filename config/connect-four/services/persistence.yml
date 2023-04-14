@@ -12,7 +12,7 @@ services:
         alias: 'doctrine.dbal.connect_four_connection'
 
     connect-four.event-store:
-        class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
+        class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
         public: false
         arguments:
             - '@connect-four.doctrine-dbal'

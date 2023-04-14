@@ -6,7 +6,7 @@ namespace Gaming\Chat\Infrastructure\Migration;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
-use Gaming\Common\Port\Adapter\EventStore\DoctrineEventStorePointerSchema;
+use Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStorePointerSchema;
 
 final class Version20220331223826 extends AbstractMigration
 {
