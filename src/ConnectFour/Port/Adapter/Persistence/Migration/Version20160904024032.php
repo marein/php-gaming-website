@@ -6,7 +6,7 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Migration;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
-use Gaming\Common\Port\Adapter\EventStore\DoctrineEventStoreSchema;
+use Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStoreSchema;
 
 final class Version20160904024032 extends AbstractMigration
 {
