@@ -1,28 +1,28 @@
 version: '3.4'
 
 services:
-    mysql-chat:
+    chat-mysql:
         image: marein/php-gaming-website:mysql
         command: mysqld --max-connections=1000
         environment:
             MYSQL_ROOT_PASSWORD: password
         volumes:
-            - mysql-chat:/var/lib/mysql
+            - chat-mysql:/var/lib/mysql
         deploy:
             placement:
                 constraints:
-                    - "node.labels.mysql-chat==1"
-    mysql-chat-exporter:
+                    - "node.labels.chat-mysql==1"
+    chat-mysql-exporter:
         image: prom/mysqld-exporter
         environment:
-            DATA_SOURCE_NAME: "root:password@(mysql-chat:3306)/"
+            DATA_SOURCE_NAME: "root:password@(chat-mysql:3306)/"
         deploy:
             placement:
                 constraints:
-                    - "node.labels.mysql-chat==1"
+                    - "node.labels.chat-mysql==1"
             labels:
                 - "prometheus-job=mysql"
                 - "prometheus-port=9104"
 
 volumes:
-    mysql-chat:
+    chat-mysql:
