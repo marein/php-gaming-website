@@ -1,28 +1,28 @@
 version: '3.4'
 
 services:
-    mysql-connect-four-1:
+    connect-four-mysql-1:
         image: marein/php-gaming-website:mysql
         command: mysqld --max-connections=1000
         environment:
             MYSQL_ROOT_PASSWORD: password
         volumes:
-            - mysql-connect-four-1:/var/lib/mysql
+            - connect-four-mysql-1:/var/lib/mysql
         deploy:
             placement:
                 constraints:
-                    - "node.labels.mysql-connect-four-1==1"
-    mysql-connect-four-1-exporter:
+                    - "node.labels.connect-four-mysql-1==1"
+    connect-four-mysql-1-exporter:
         image: prom/mysqld-exporter
         environment:
-            DATA_SOURCE_NAME: "root:password@(mysql-connect-four-1:3306)/"
+            DATA_SOURCE_NAME: "root:password@(connect-four-mysql-1:3306)/"
         deploy:
             placement:
                 constraints:
-                    - "node.labels.mysql-connect-four-1==1"
+                    - "node.labels.connect-four-mysql-1==1"
             labels:
                 - "prometheus-job=mysql"
                 - "prometheus-port=9104"
 
 volumes:
-    mysql-connect-four-1:
+    connect-four-mysql-1:
