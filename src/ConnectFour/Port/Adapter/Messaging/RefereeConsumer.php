@@ -68,6 +68,7 @@ final class RefereeConsumer implements Consumer
                 new MessageName('Chat', 'InitiateChat'),
                 json_encode(
                     [
+                        'idempotencyKey' => 'connect-four.' . $payload['gameId'],
                         'correlationId' => $payload['gameId'],
                         'authors' => []
                     ],

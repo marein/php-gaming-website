@@ -9,10 +9,12 @@ use Gaming\Chat\Application\Command\WriteMessageCommand;
 use Gaming\Chat\Application\Event\ChatInitiated;
 use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
+use Gaming\Chat\Application\Exception\ChatAlreadyExistsException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
 use Gaming\Chat\Application\Query\MessagesQuery;
 use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\IdempotentStorage\IdempotentStorage;
 use Psr\Clock\ClockInterface;
 
 /**
@@ -21,20 +23,36 @@ use Psr\Clock\ClockInterface;
  */
 final class ChatService
 {
+    /**
+     * @param IdempotentStorage<ChatId> $idempotentChatIdStorage
+     */
     public function __construct(
         private readonly ChatGateway $chatGateway,
         private readonly EventStore $eventStore,
-        private readonly ClockInterface $clock
+        private readonly ClockInterface $clock,
+        private readonly IdempotentStorage $idempotentChatIdStorage
     ) {
     }
 
     public function initiateChat(InitiateChatCommand $initiateChatCommand): string
     {
-        $chatId = $this->chatGateway->create($initiateChatCommand->authors());
-
-        $this->eventStore->append(
-            new ChatInitiated($chatId)
+        $chatId = $this->idempotentChatIdStorage->add(
+            $initiateChatCommand->idempotencyKey(),
+            $this->chatGateway->nextIdentity()
         );
+
+        try {
+            $this->chatGateway->create($chatId, $initiateChatCommand->authors());
+            $this->eventStore->append(
+                new ChatInitiated($chatId)
+            );
+        } catch (ChatAlreadyExistsException) {
+            // This happens when a command with the same idempotency key is executed more than once.
+            // In this case we can safely ignore the exception. However, if we cannot trust our chat id
+            // generation to create unique chat ids, we should compare the idempotency key from the command
+            // with the idempotency key from the chat. If they are different, we could throw an exception, log
+            // or retry with a new idempotency key by appending "-retry".
+        }
 
         return $chatId->toString();
     }
