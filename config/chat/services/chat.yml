@@ -15,6 +15,12 @@ services:
             - 'chat'
             - 'message'
 
+    chat.idempotent-chat-id-storage:
+        class: Gaming\Common\IdempotentStorage\PredisIdempotentStorage
+        arguments:
+            - '@chat.predis'
+            - 86400
+
     chat.chat-service:
         class: Gaming\Chat\Application\ChatService
         public: false
@@ -22,3 +28,4 @@ services:
             - '@chat.chat-gateway'
             - '@chat.event-store'
             - '@clock'
+            - '@chat.idempotent-chat-id-storage'

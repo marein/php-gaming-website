@@ -81,13 +81,13 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
     {
         $this->switchShard($gameId);
 
-        $storedEvents = $this->eventStore->byAggregateId(
+        $domainEvents = $this->eventStore->byAggregateId(
             $gameId->toString()
         ) ?: throw new GameNotFoundException();
 
         $game = new GameQueryModel();
-        foreach ($storedEvents as $storedEvent) {
-            $game->apply($storedEvent->domainEvent());
+        foreach ($domainEvents as $domainEvent) {
+            $game->apply($domainEvent);
         }
 
         return $game;

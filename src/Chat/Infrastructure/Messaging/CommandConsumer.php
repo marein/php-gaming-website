@@ -28,6 +28,7 @@ final class CommandConsumer implements Consumer
 
         $chatId = $this->commandBus->handle(
             new InitiateChatCommand(
+                $payload['idempotencyKey'],
                 $payload['authors']
             )
         );

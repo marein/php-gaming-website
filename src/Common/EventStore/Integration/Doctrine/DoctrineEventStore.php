@@ -36,20 +36,21 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
         );
     }
 
-    public function byAggregateId(string $aggregateId, int $sinceId = 0): array
+    public function byAggregateId(string $aggregateId): array
     {
         try {
             $rows = $this->connection->createQueryBuilder()
                 ->select(self::SELECT)
                 ->from($this->table, 'e')
                 ->where('e.aggregateId = :aggregateId')
-                ->andWhere('e.id > :id')
                 ->setParameter('aggregateId', $aggregateId, 'uuid')
-                ->setParameter('id', $sinceId)
                 ->executeQuery()
                 ->fetchAllAssociative();
 
-            return $this->transformRowsToStoredEvents($rows);
+            return array_map(
+                $this->transformRowToDomainEvent(...),
+                $rows
+            );
         } catch (Throwable $e) {
             throw new EventStoreException(
                 $e->getMessage(),
@@ -122,17 +123,25 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
             fn(array $row): StoredEvent => new StoredEvent(
                 (int)$row['id'],
                 new DateTimeImmutable($row['occurredOn']),
-                $this->normalizer->denormalize(
-                    json_decode(
-                        $row['event'],
-                        true,
-                        512,
-                        JSON_THROW_ON_ERROR
-                    ),
-                    DomainEvent::class
-                )
+                $this->transformRowToDomainEvent($row)
             ),
             $rows
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function transformRowToDomainEvent(array $row): DomainEvent
+    {
+        return $this->normalizer->denormalize(
+            json_decode(
+                $row['event'],
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            ),
+            DomainEvent::class
         );
     }
 }

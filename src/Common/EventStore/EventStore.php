@@ -10,10 +10,10 @@ use Gaming\Common\EventStore\Exception\EventStoreException;
 interface EventStore
 {
     /**
-     * @return StoredEvent[]
+     * @return DomainEvent[]
      * @throws EventStoreException
      */
-    public function byAggregateId(string $aggregateId, int $sinceId = 0): array;
+    public function byAggregateId(string $aggregateId): array;
 
     /**
      * @throws EventStoreException

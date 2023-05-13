@@ -5,36 +5,21 @@ declare(strict_types=1);
 namespace Gaming\Common\EventStore;
 
 use Gaming\Common\Domain\DomainEvent;
-use Psr\Clock\ClockInterface;
 
 final class InMemoryEventStore implements EventStore
 {
     /**
-     * @var StoredEvent[]
+     * @var array<string, DomainEvent[]>
      */
-    private array $storedEvents = [];
+    private array $domainEvents = [];
 
-    public function __construct(
-        private readonly ClockInterface $clock
-    ) {
-    }
-
-    public function byAggregateId(string $aggregateId, int $sinceId = 0): array
+    public function byAggregateId(string $aggregateId): array
     {
-        return array_filter(
-            $this->storedEvents,
-            static function (StoredEvent $storedEvent) use ($aggregateId, $sinceId): bool {
-                return $storedEvent->domainEvent()->aggregateId() === $aggregateId && $storedEvent->id() > $sinceId;
-            }
-        );
+        return $this->domainEvents[$aggregateId] ?? [];
     }
 
     public function append(DomainEvent $domainEvent): void
     {
-        $this->storedEvents[] = new StoredEvent(
-            count($this->storedEvents) + 1,
-            $this->clock->now(),
-            $domainEvent
-        );
+        $this->domainEvents[$domainEvent->aggregateId()][] = $domainEvent;
     }
 }
