@@ -12,10 +12,11 @@ use Gaming\Chat\Application\Command\WriteMessageCommand;
 use Gaming\Chat\Application\Event\ChatInitiated;
 use Gaming\Chat\Application\Event\MessageWritten;
 use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
+use Gaming\Chat\Application\Exception\ChatAlreadyExistsException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
 use Gaming\Chat\Application\Query\MessagesQuery;
-use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\InMemoryEventStore;
+use Gaming\Common\IdempotentStorage\InMemoryIdempotentStorage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 
@@ -24,29 +25,39 @@ final class ChatServiceTest extends TestCase
     /**
      * @test
      */
-    public function itShouldInitiateChat(): void
+    public function itShouldInitiateChatExactlyOnce(): void
     {
         $expectedChatId = ChatId::generate();
         $authors = ['authorId1', 'authorId2'];
 
         $chatGateway = $this->createMock(ChatGateway::class);
         $chatGateway
-            ->expects($this->once())
+            ->expects($this->exactly(2))
+            ->method('nextIdentity')
+            ->willReturnOnConsecutiveCalls($expectedChatId, ChatId::generate());
+        $chatGateway
+            ->expects($this->exactly(2))
             ->method('create')
-            ->with($authors)
-            ->willReturn($expectedChatId);
+            ->with($expectedChatId, $authors)
+            ->willReturnOnConsecutiveCalls(null, $this->throwException(new ChatAlreadyExistsException()));
 
         $eventStore = new InMemoryEventStore();
 
-        /** @var ChatGateway $chatGateway */
         $chatService = new ChatService(
             $chatGateway,
             $eventStore,
-            new MockClock()
+            new MockClock(),
+            new InMemoryIdempotentStorage()
         );
 
         $chatId = $chatService->initiateChat(
-            new InitiateChatCommand($authors)
+            new InitiateChatCommand('idempotency-key', $authors)
+        );
+        $this->assertSame($expectedChatId->toString(), $chatId);
+
+        // Retry with the same idempotency key. The chat id should be the same.
+        $chatId = $chatService->initiateChat(
+            new InitiateChatCommand('idempotency-key', $authors)
         );
         $this->assertSame($expectedChatId->toString(), $chatId);
 
@@ -68,7 +79,8 @@ final class ChatServiceTest extends TestCase
         $chatService = new ChatService(
             $this->createMock(ChatGateway::class),
             new InMemoryEventStore(),
-            new MockClock()
+            new MockClock(),
+            new InMemoryIdempotentStorage()
         );
 
         // Test also if trim is performed.
@@ -101,7 +113,8 @@ final class ChatServiceTest extends TestCase
         $chatService = new ChatService(
             $chatGateway,
             new InMemoryEventStore(),
-            new MockClock()
+            new MockClock(),
+            new InMemoryIdempotentStorage()
         );
 
         $chatService->writeMessage(
@@ -143,7 +156,8 @@ final class ChatServiceTest extends TestCase
         $chatService = new ChatService(
             $chatGateway,
             $eventStore,
-            $clock
+            $clock,
+            new InMemoryIdempotentStorage()
         );
 
         $chatService->writeMessage(
@@ -188,7 +202,8 @@ final class ChatServiceTest extends TestCase
         $chatService = new ChatService(
             $chatGateway,
             new InMemoryEventStore(),
-            new MockClock()
+            new MockClock(),
+            new InMemoryIdempotentStorage()
         );
 
         $messages = $chatService->messages(

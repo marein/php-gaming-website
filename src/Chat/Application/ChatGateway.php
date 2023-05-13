@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace Gaming\Chat\Application;
 
 use DateTimeImmutable;
+use Gaming\Chat\Application\Exception\ChatAlreadyExistsException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 
 interface ChatGateway
 {
+    public function nextIdentity(): ChatId;
+
     /**
      * @param string[] $authors
+     *
+     * @throws ChatAlreadyExistsException
      */
-    public function create(array $authors): ChatId;
+    public function create(ChatId $chatId, array $authors): void;
 
     public function createMessage(
         ChatId $chatId,
