@@ -26,7 +26,7 @@ final class ChatServiceTest extends TestCase
      */
     public function itShouldInitiateChat(): void
     {
-        $generatedChatId = ChatId::generate();
+        $expectedChatId = ChatId::generate();
         $authors = ['authorId1', 'authorId2'];
 
         $chatGateway = $this->createMock(ChatGateway::class);
@@ -34,9 +34,9 @@ final class ChatServiceTest extends TestCase
             ->expects($this->once())
             ->method('create')
             ->with($authors)
-            ->willReturn($generatedChatId);
+            ->willReturn($expectedChatId);
 
-        $eventStore = new InMemoryEventStore(new MockClock());
+        $eventStore = new InMemoryEventStore();
 
         /** @var ChatGateway $chatGateway */
         $chatService = new ChatService(
@@ -48,13 +48,14 @@ final class ChatServiceTest extends TestCase
         $chatId = $chatService->initiateChat(
             new InitiateChatCommand($authors)
         );
-        $this->assertSame($generatedChatId->toString(), $chatId);
+        $this->assertSame($expectedChatId->toString(), $chatId);
 
-        $storedEvents = $eventStore->byAggregateId($generatedChatId->toString());
-        self::assertCount(1, $storedEvents);
-
-        assert($storedEvents[0]->domainEvent() instanceof ChatInitiated);
-        self::assertEquals($generatedChatId->toString(), $storedEvents[0]->domainEvent()->aggregateId());
+        self::assertEquals(
+            $eventStore->byAggregateId($expectedChatId->toString()),
+            [
+                new ChatInitiated($expectedChatId)
+            ]
+        );
     }
 
     /**
@@ -64,14 +65,9 @@ final class ChatServiceTest extends TestCase
     {
         $this->expectException(EmptyMessageException::class);
 
-        $chatGateway = $this->createMock(ChatGateway::class);
-        $eventStore = $this->createMock(EventStore::class);
-
-        /** @var ChatGateway $chatGateway */
-        /** @var EventStore $eventStore */
         $chatService = new ChatService(
-            $chatGateway,
-            $eventStore,
+            $this->createMock(ChatGateway::class),
+            new InMemoryEventStore(),
             new MockClock()
         );
 
@@ -96,19 +92,15 @@ final class ChatServiceTest extends TestCase
         $assignedAuthors = json_encode(['authorId1', 'authorId2'], JSON_THROW_ON_ERROR);
 
         $chatGateway = $this->createMock(ChatGateway::class);
-        $eventStore = $this->createMock(EventStore::class);
-
         $chatGateway
             ->expects($this->once())
             ->method('byId')
             ->with($chatId)
             ->willReturn(['chatId' => $chatId, 'authors' => $assignedAuthors]);
 
-        /** @var ChatGateway $chatGateway */
-        /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $chatGateway,
-            $eventStore,
+            new InMemoryEventStore(),
             new MockClock()
         );
 
@@ -146,9 +138,8 @@ final class ChatServiceTest extends TestCase
             ->with($chatId, $authorId, $message)
             ->willReturn($messageId);
 
-        $eventStore = new InMemoryEventStore($clock);
+        $eventStore = new InMemoryEventStore();
 
-        /** @var ChatGateway $chatGateway */
         $chatService = new ChatService(
             $chatGateway,
             $eventStore,
@@ -163,15 +154,18 @@ final class ChatServiceTest extends TestCase
             )
         );
 
-        $storedEvents = $eventStore->byAggregateId($chatId->toString());
-        self::assertCount(1, $storedEvents);
-
-        assert($storedEvents[0]->domainEvent() instanceof MessageWritten);
-        self::assertEquals($chatId->toString(), $storedEvents[0]->domainEvent()->aggregateId());
-        self::assertEquals($messageId, $storedEvents[0]->domainEvent()->messageId());
-        self::assertEquals($authorId, $storedEvents[0]->domainEvent()->authorId());
-        self::assertEquals($message, $storedEvents[0]->domainEvent()->message());
-        self::assertEquals($writtenAt, $storedEvents[0]->domainEvent()->writtenAt());
+        self::assertEquals(
+            $eventStore->byAggregateId($chatId->toString()),
+            [
+                new MessageWritten(
+                    $chatId,
+                    $messageId,
+                    $authorId,
+                    $message,
+                    $writtenAt
+                )
+            ]
+        );
     }
 
     /**
@@ -185,19 +179,15 @@ final class ChatServiceTest extends TestCase
         $limit = 10;
 
         $chatGateway = $this->createMock(ChatGateway::class);
-        $eventStore = $this->createMock(EventStore::class);
-
         $chatGateway
             ->expects($this->once())
             ->method('messages')
             ->with($chatId, $authorId, $offset, $limit)
             ->willReturn(['a', 'a', 'a']);
 
-        /** @var ChatGateway $chatGateway */
-        /** @var EventStore $eventStore */
         $chatService = new ChatService(
             $chatGateway,
-            $eventStore,
+            new InMemoryEventStore(),
             new MockClock()
         );
 
