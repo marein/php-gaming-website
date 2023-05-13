@@ -41,7 +41,7 @@ final class ChatServiceTest extends TestCase
             ->with($expectedChatId, $authors)
             ->willReturnOnConsecutiveCalls(null, $this->throwException(new ChatAlreadyExistsException()));
 
-        $eventStore = new InMemoryEventStore(new MockClock());
+        $eventStore = new InMemoryEventStore();
 
         $chatService = new ChatService(
             $chatGateway,
@@ -61,11 +61,12 @@ final class ChatServiceTest extends TestCase
         );
         $this->assertSame($expectedChatId->toString(), $chatId);
 
-        $storedEvents = $eventStore->byAggregateId($expectedChatId->toString());
-        self::assertCount(1, $storedEvents);
-
-        assert($storedEvents[0]->domainEvent() instanceof ChatInitiated);
-        self::assertEquals($expectedChatId->toString(), $storedEvents[0]->domainEvent()->aggregateId());
+        self::assertEquals(
+            $eventStore->byAggregateId($expectedChatId->toString()),
+            [
+                new ChatInitiated($expectedChatId)
+            ]
+        );
     }
 
     /**
@@ -77,7 +78,7 @@ final class ChatServiceTest extends TestCase
 
         $chatService = new ChatService(
             $this->createMock(ChatGateway::class),
-            new InMemoryEventStore(new MockClock()),
+            new InMemoryEventStore(),
             new MockClock(),
             new InMemoryIdempotentStorage()
         );
@@ -111,7 +112,7 @@ final class ChatServiceTest extends TestCase
 
         $chatService = new ChatService(
             $chatGateway,
-            new InMemoryEventStore(new MockClock()),
+            new InMemoryEventStore(),
             new MockClock(),
             new InMemoryIdempotentStorage()
         );
@@ -150,7 +151,7 @@ final class ChatServiceTest extends TestCase
             ->with($chatId, $authorId, $message)
             ->willReturn($messageId);
 
-        $eventStore = new InMemoryEventStore($clock);
+        $eventStore = new InMemoryEventStore();
 
         $chatService = new ChatService(
             $chatGateway,
@@ -167,15 +168,18 @@ final class ChatServiceTest extends TestCase
             )
         );
 
-        $storedEvents = $eventStore->byAggregateId($chatId->toString());
-        self::assertCount(1, $storedEvents);
-
-        assert($storedEvents[0]->domainEvent() instanceof MessageWritten);
-        self::assertEquals($chatId->toString(), $storedEvents[0]->domainEvent()->aggregateId());
-        self::assertEquals($messageId, $storedEvents[0]->domainEvent()->messageId());
-        self::assertEquals($authorId, $storedEvents[0]->domainEvent()->authorId());
-        self::assertEquals($message, $storedEvents[0]->domainEvent()->message());
-        self::assertEquals($writtenAt, $storedEvents[0]->domainEvent()->writtenAt());
+        self::assertEquals(
+            $eventStore->byAggregateId($chatId->toString()),
+            [
+                new MessageWritten(
+                    $chatId,
+                    $messageId,
+                    $authorId,
+                    $message,
+                    $writtenAt
+                )
+            ]
+        );
     }
 
     /**
@@ -197,7 +201,7 @@ final class ChatServiceTest extends TestCase
 
         $chatService = new ChatService(
             $chatGateway,
-            new InMemoryEventStore(new MockClock()),
+            new InMemoryEventStore(),
             new MockClock(),
             new InMemoryIdempotentStorage()
         );
