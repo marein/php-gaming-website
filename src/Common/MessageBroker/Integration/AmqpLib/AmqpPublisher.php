@@ -6,10 +6,10 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\ConnectionFactory;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\ReliablePublishing\ReliablePublishing;
-use Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\Topology;
-use Gaming\Common\MessageBroker\Model\Message\Message;
+use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
 use PhpAmqpLib\Channel\AMQPChannel;
 use Throwable;
@@ -20,23 +20,24 @@ final class AmqpPublisher implements Publisher
 
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
-        private readonly Topology $topology,
         private readonly ReliablePublishing $reliablePublishing,
         private readonly MessageTranslator $messageTranslator,
-        private readonly string $exchangeToPublishTo
+        private readonly MessageRouter $messageRouter
     ) {
         $this->channel = null;
     }
 
     public function send(Message $message): void
     {
-        $this->channel ??= $this->createChannelAndTopology();
+        $this->channel ??= $this->createChannel();
+
+        $route = $this->messageRouter->route($message);
 
         try {
             $this->channel->basic_publish(
                 $this->messageTranslator->createAmqpMessageFromMessage($message),
-                $this->exchangeToPublishTo,
-                (string)$message->name()
+                $route->exchange,
+                $route->routingKey
             );
         } catch (Throwable $throwable) {
             throw MessageBrokerException::fromThrowable($throwable);
@@ -45,7 +46,7 @@ final class AmqpPublisher implements Publisher
 
     public function flush(): void
     {
-        $this->channel ??= $this->createChannelAndTopology();
+        $this->channel ??= $this->createChannel();
 
         $this->reliablePublishing->flush($this->channel);
     }
@@ -53,7 +54,7 @@ final class AmqpPublisher implements Publisher
     /**
      * @throws MessageBrokerException
      */
-    private function createChannelAndTopology(): AMQPChannel
+    private function createChannel(): AMQPChannel
     {
         $connection = $this->connectionFactory->create();
 
@@ -62,8 +63,6 @@ final class AmqpPublisher implements Publisher
         } catch (Throwable $throwable) {
             throw MessageBrokerException::fromThrowable($throwable);
         }
-
-        $this->topology->declare($channel);
 
         $this->reliablePublishing->prepareChannel($channel);
 

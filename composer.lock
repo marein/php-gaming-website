@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03c2ad0d7ce7a2c9a3fe48803925e738",
+    "content-hash": "ebb71c46770aaf6fe113ffd7395d5f0f",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1391,179 +1391,6 @@
             "time": "2022-05-23T21:33:49+00:00"
         },
         {
-            "name": "enqueue/amqp-lib",
-            "version": "0.10.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-enqueue/amqp-lib.git",
-                "reference": "c70405ef50b77ca375825aa846bb3c90f685d3c4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/amqp-lib/zipball/c70405ef50b77ca375825aa846bb3c90f685d3c4",
-                "reference": "c70405ef50b77ca375825aa846bb3c90f685d3c4",
-                "shasum": ""
-            },
-            "require": {
-                "enqueue/amqp-tools": "^0.10",
-                "php": "^7.3|^8.0",
-                "php-amqplib/php-amqplib": "^3.0",
-                "queue-interop/amqp-interop": "^0.8.2",
-                "queue-interop/queue-interop": "^0.8"
-            },
-            "require-dev": {
-                "enqueue/null": "0.10.x-dev",
-                "enqueue/test": "0.10.x-dev",
-                "phpunit/phpunit": "^9.5",
-                "queue-interop/queue-spec": "^0.6.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.10.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Enqueue\\AmqpLib\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Message Queue Amqp Transport",
-            "homepage": "https://enqueue.forma-pro.com/",
-            "keywords": [
-                "AMQP",
-                "messaging",
-                "queue"
-            ],
-            "support": {
-                "docs": "https://github.com/php-enqueue/enqueue-dev/blob/master/docs/index.md",
-                "email": "opensource@forma-pro.com",
-                "forum": "https://gitter.im/php-enqueue/Lobby",
-                "issues": "https://github.com/php-enqueue/enqueue-dev/issues",
-                "source": "https://github.com/php-enqueue/enqueue-dev"
-            },
-            "time": "2021-03-17T14:29:02+00:00"
-        },
-        {
-            "name": "enqueue/amqp-tools",
-            "version": "0.10.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-enqueue/amqp-tools.git",
-                "reference": "1a2bdcacf0b56c677df965544baa1801d8dd95e1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/amqp-tools/zipball/1a2bdcacf0b56c677df965544baa1801d8dd95e1",
-                "reference": "1a2bdcacf0b56c677df965544baa1801d8dd95e1",
-                "shasum": ""
-            },
-            "require": {
-                "enqueue/dsn": "^0.10",
-                "php": "^7.3|^8.0",
-                "queue-interop/amqp-interop": "^0.8.2",
-                "queue-interop/queue-interop": "^0.8"
-            },
-            "require-dev": {
-                "enqueue/null": "0.10.x-dev",
-                "enqueue/test": "0.10.x-dev",
-                "phpunit/phpunit": "^9.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.10.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Enqueue\\AmqpTools\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Message Queue Amqp Tools",
-            "homepage": "https://enqueue.forma-pro.com/",
-            "keywords": [
-                "AMQP",
-                "messaging",
-                "queue"
-            ],
-            "support": {
-                "docs": "https://github.com/php-enqueue/enqueue-dev/blob/master/docs/index.md",
-                "email": "opensource@forma-pro.com",
-                "forum": "https://gitter.im/php-enqueue/Lobby",
-                "issues": "https://github.com/php-enqueue/enqueue-dev/issues",
-                "source": "https://github.com/php-enqueue/enqueue-dev"
-            },
-            "time": "2021-02-17T21:24:06+00:00"
-        },
-        {
-            "name": "enqueue/dsn",
-            "version": "0.10.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-enqueue/dsn.git",
-                "reference": "729fabaae6b24189d14598033b174bd72e825e9a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-enqueue/dsn/zipball/729fabaae6b24189d14598033b174bd72e825e9a",
-                "reference": "729fabaae6b24189d14598033b174bd72e825e9a",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3|^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.10.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Enqueue\\Dsn\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Parse DSN",
-            "homepage": "https://enqueue.forma-pro.com/",
-            "keywords": [
-                "dsn",
-                "parse"
-            ],
-            "support": {
-                "docs": "https://github.com/php-enqueue/enqueue-dev/blob/master/docs/index.md",
-                "email": "opensource@forma-pro.com",
-                "forum": "https://gitter.im/php-enqueue/Lobby",
-                "issues": "https://github.com/php-enqueue/enqueue-dev/issues",
-                "source": "https://github.com/php-enqueue/enqueue-dev"
-            },
-            "time": "2021-02-09T12:01:28+00:00"
-        },
-        {
             "name": "jms/metadata",
             "version": "2.8.0",
             "source": {
@@ -2932,100 +2759,6 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.0"
             },
             "time": "2021-07-14T16:46:02+00:00"
-        },
-        {
-            "name": "queue-interop/amqp-interop",
-            "version": "0.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/queue-interop/amqp-interop.git",
-                "reference": "a893c72832784ca846fcc1bd86274a6a449a1ab7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/queue-interop/amqp-interop/zipball/a893c72832784ca846fcc1bd86274a6a449a1ab7",
-                "reference": "a893c72832784ca846fcc1bd86274a6a449a1ab7",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3 | ^8.0",
-                "queue-interop/queue-interop": "^0.7|^0.8|^0.9"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~9.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.8.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Interop\\Amqp\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "AMQP interop",
-            "support": {
-                "issues": "https://github.com/queue-interop/amqp-interop/issues",
-                "source": "https://github.com/queue-interop/amqp-interop/tree/0.8.2"
-            },
-            "time": "2021-01-21T11:33:30+00:00"
-        },
-        {
-            "name": "queue-interop/queue-interop",
-            "version": "0.8.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/queue-interop/queue-interop.git",
-                "reference": "117043fd38490f8b5516622cd4b697b33a89ce2b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/queue-interop/queue-interop/zipball/117043fd38490f8b5516622cd4b697b33a89ce2b",
-                "reference": "117043fd38490f8b5516622cd4b697b33a89ce2b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1.3 || ^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.5 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
-                "queue-interop/queue-spec": "^0.6@dev"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.7-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Interop\\Queue\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Promoting the interoperability of MQs objects. Based on Java JMS",
-            "homepage": "https://github.com/queue-interop/queue-interop",
-            "keywords": [
-                "MQ",
-                "jms",
-                "message queue",
-                "messaging",
-                "queue"
-            ],
-            "support": {
-                "issues": "https://github.com/queue-interop/queue-interop/issues",
-                "source": "https://github.com/queue-interop/queue-interop/tree/0.8.1"
-            },
-            "time": "2020-12-21T13:14:51+00:00"
         },
         {
             "name": "symfony/asset",
@@ -4651,6 +4384,84 @@
                 }
             ],
             "time": "2023-02-28T13:26:41+00:00"
+        },
+        {
+            "name": "symfony/lock",
+            "version": "v6.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/lock.git",
+                "reference": "fe452788cc81762f0840bd2a3dd1f230193186e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/lock/zipball/fe452788cc81762f0840bd2a3dd1f230193186e5",
+                "reference": "fe452788cc81762f0840bd2a3dd1f230193186e5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "psr/log": "^1|^2|^3"
+            },
+            "conflict": {
+                "doctrine/dbal": "<2.13",
+                "symfony/cache": "<6.2"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^2.13|^3.0",
+                "predis/predis": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Lock\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jérémy Derussé",
+                    "email": "jeremy@derusse.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Creates and manages locks, a mechanism to provide exclusive access to a shared resource",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "cas",
+                "flock",
+                "locking",
+                "mutex",
+                "redlock",
+                "semaphore"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/lock/tree/v6.2.8"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-03-14T15:00:05+00:00"
         },
         {
             "name": "symfony/monolog-bridge",
