@@ -12,17 +12,15 @@ web_profiler:
 
 monolog:
     handlers:
-        application_debug:
+        debug_stream:
             type: stream
-            path: "%kernel.logs_dir%/application.debug.log"
+            path: 'php://stderr'
             level: debug
-        application_deprecation:
-            level:    info
-            type:     stream
-            path:     "%kernel.logs_dir%/application.deprecation.log"
-            channels: [php]
-        application_doctrine:
-            level:    debug
-            type:     stream
-            path:     "%kernel.logs_dir%/application.doctrine.log"
-            channels: [doctrine]
+            formatter: 'monolog.formatter.json'
+            channels: ['app', 'php']
+            bubble: false
+        error_stream:
+            type: stream
+            path: 'php://stderr'
+            formatter: 'monolog.formatter.json'
+            level: error

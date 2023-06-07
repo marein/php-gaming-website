@@ -17,13 +17,6 @@ framework:
     router:
         resource: "%kernel.project_dir%/config/routing.yml"
 
-monolog:
-    handlers:
-        application_error:
-            type: stream
-            path: "php://stderr"
-            level: error
-
 twig:
     strict_variables: '%kernel.debug%'
 
