@@ -107,7 +107,7 @@ final class FollowEventStoreCommand extends Command
             new StreamChannelPairFactory(10)
         );
 
-        $forkPool->fork(
+        $publisher = $forkPool->fork(
             new Publisher(
                 array_map(
                     fn() => $forkPool->fork(
@@ -125,7 +125,16 @@ final class FollowEventStoreCommand extends Command
 
         $forkPool->signal()
             ->enableAsyncDispatch()
-            ->forwardSignalAndWait([SIGTERM, SIGINT]);
+            ->on(
+                [SIGINT, SIGTERM],
+                static function () use ($forkPool, $publisher): void {
+                    $publisher->kill(SIGTERM);
+                    $forkPool->wait()->all();
+
+                    exit(0);
+                },
+                false
+            );
 
         $forkPool->wait()
             ->killAllWhenAnyExits(SIGTERM);
