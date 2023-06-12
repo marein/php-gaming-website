@@ -19,7 +19,8 @@ final class Worker implements Task
     {
         while ($message = $channel->receive()) {
             match ($message) {
-                'PING' => $channel->send('PONG'),
+                'KEEPALIVE' => true,
+                'STOP' => exit(0),
                 'COMMIT' => $this->handleCommit($channel),
                 default => $this->storedEventSubscriber->handle($message)
             };
