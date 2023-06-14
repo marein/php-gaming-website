@@ -17,6 +17,15 @@ framework:
     router:
         resource: "%kernel.project_dir%/config/routing.yml"
 
+monolog:
+    handlers:
+        application_stream:
+            type: stream
+            path: 'php://stderr'
+            level: warning
+            process_psr_3_messages: false
+            formatter: 'monolog.formatter.json'
+
 twig:
     strict_variables: '%kernel.debug%'
 

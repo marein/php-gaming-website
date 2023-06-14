@@ -12,15 +12,13 @@ web_profiler:
 
 monolog:
     handlers:
-        debug_stream:
-            type: stream
-            path: 'php://stderr'
+        application_stream:
             level: debug
-            formatter: 'monolog.formatter.json'
-            channels: ['app', 'php']
-            bubble: false
-        error_stream:
-            type: stream
-            path: 'php://stderr'
-            formatter: 'monolog.formatter.json'
-            level: error
+            channels: ['!event']
+
+services:
+    Gaming\Common\EventStore\Integration\Doctrine\SkipDebugMatchingSqlPatternLogger:
+        decorates: 'monolog.logger.doctrine'
+        arguments:
+            - '@.inner'
+            - ['/^SELECT.*FROM event_store .*WHERE.*id >/']

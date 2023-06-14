@@ -1,10 +1,2 @@
 imports:
     - { resource: config.yml }
-
-monolog:
-    handlers:
-        error_stream:
-            type: stream
-            path: 'php://stderr'
-            level: error
-            formatter: 'monolog.formatter.json'
