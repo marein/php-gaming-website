@@ -12,17 +12,13 @@ web_profiler:
 
 monolog:
     handlers:
-        application_debug:
-            type: stream
-            path: "%kernel.logs_dir%/application.debug.log"
+        application_stream:
             level: debug
-        application_deprecation:
-            level:    info
-            type:     stream
-            path:     "%kernel.logs_dir%/application.deprecation.log"
-            channels: [php]
-        application_doctrine:
-            level:    debug
-            type:     stream
-            path:     "%kernel.logs_dir%/application.doctrine.log"
-            channels: [doctrine]
+            channels: ['!event']
+
+services:
+    Gaming\Common\EventStore\Integration\Doctrine\SkipDebugMatchingSqlPatternLogger:
+        decorates: 'monolog.logger.doctrine'
+        arguments:
+            - '@.inner'
+            - ['/^SELECT.*FROM event_store .*WHERE.*id >/']
