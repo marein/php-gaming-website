@@ -6,12 +6,14 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer;
 
 use ArrayObject;
 use Closure;
+use Gaming\Common\MessageBroker\Event\MessageReceived;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpContext;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
 use Gaming\Common\MessageBroker\MessageHandler;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 final readonly class ResolvingCallbackFactory implements CallbackFactory
 {
@@ -22,21 +24,28 @@ final readonly class ResolvingCallbackFactory implements CallbackFactory
         private MessageRouter $messageRouter,
         private MessageTranslator $messageTranslator,
         private ArrayObject $pendingMessageToContext,
-        private AMQPChannel $channel
+        private AMQPChannel $channel,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
     public function create(string $queueName, MessageHandler $messageHandler): Closure
     {
         return function (AMQPMessage $amqpMessage) use ($queueName, $messageHandler): void {
+            $message = $this->messageTranslator->createMessageFromAmqpMessage($amqpMessage);
+
+            $this->eventDispatcher->dispatch(new MessageReceived($message, ['queue' => $queueName]));
+
             $messageHandler->handle(
-                $this->messageTranslator->createMessageFromAmqpMessage($amqpMessage),
+                $message,
                 $context = new AmqpContext(
                     $this->messageRouter,
                     $this->messageTranslator,
                     $this->pendingMessageToContext,
                     $this->channel,
+                    $this->eventDispatcher,
                     $queueName,
+                    $message,
                     $amqpMessage
                 )
             );

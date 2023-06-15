@@ -112,18 +112,11 @@ final class ConsumeMessagesCommand extends Command
 
     private function createQueueConsumer(InputInterface $input, OutputInterface $output): QueueConsumer
     {
-        $queueConsumers = array_intersect_key(
-            iterator_to_array($this->queueConsumers),
-            array_flip($this->selectedConsumerNames($input))
+        return new CompositeQueueConsumer(
+            array_intersect_key(
+                iterator_to_array($this->queueConsumers),
+                array_flip($this->selectedConsumerNames($input))
+            )
         );
-
-        if ($output->isVerbose()) {
-            $queueConsumers = array_map(
-                static fn(QueueConsumer $queueConsumer) => new SymfonyConsoleQueueConsumer($queueConsumer, $output),
-                $queueConsumers
-            );
-        }
-
-        return new CompositeQueueConsumer($queueConsumers);
     }
 }

@@ -13,6 +13,7 @@ use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTra
 use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\QueueConsumer;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ResolvingCallbackFactory;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
 final class AmqpConsumer
@@ -28,7 +29,8 @@ final class AmqpConsumer
         private readonly ConnectionFactory $connectionFactory,
         private readonly int $prefetchCount,
         private readonly MessageRouter $messageRouter,
-        private readonly MessageTranslator $messageTranslator
+        private readonly MessageTranslator $messageTranslator,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
         $this->shouldStop = false;
         $this->pendingMessageToContext = new ArrayObject();
@@ -49,7 +51,8 @@ final class AmqpConsumer
                     $this->messageRouter,
                     $this->messageTranslator,
                     $this->pendingMessageToContext,
-                    $channel
+                    $channel,
+                    $this->eventDispatcher
                 )
             );
 

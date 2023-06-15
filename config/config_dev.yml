@@ -22,3 +22,11 @@ services:
         arguments:
             - '@.inner'
             - ['/^SELECT.*FROM event_store .*WHERE.*id >/']
+
+    Gaming\Common\MessageBroker\Logging\LoggingListener:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, method: 'messageReceived' }
+            - { name: kernel.event_listener, method: 'messageHandled' }
+            - { name: kernel.event_listener, method: 'messageSent' }

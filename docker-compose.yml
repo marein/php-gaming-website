@@ -196,7 +196,7 @@ services:
         command: bin/restartOnChange bin/console identity:follow-event-store pointer --select-all-subscribers -v
     php-consume-messages:
         <<: *php-container
-        command: bin/restartOnChange bin/console gaming:consume-messages --select-all-consumers -v
+        command: bin/restartOnChange bin/console gaming:consume-messages --select-all-consumers
     php-web-interface-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/restartOnChange bin/console web-interface:publish-running-games-count-to-nchan

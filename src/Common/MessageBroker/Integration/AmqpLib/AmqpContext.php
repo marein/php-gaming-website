@@ -6,11 +6,14 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 
 use ArrayObject;
 use Gaming\Common\MessageBroker\Context;
+use Gaming\Common\MessageBroker\Event\MessageHandled;
+use Gaming\Common\MessageBroker\Event\MessageSent;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
 use Gaming\Common\MessageBroker\Message;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class AmqpContext implements Context
 {
@@ -24,7 +27,9 @@ final class AmqpContext implements Context
         private readonly MessageTranslator $messageTranslator,
         private readonly ArrayObject $pendingMessageToContext,
         private readonly AMQPChannel $channel,
-        private readonly string $replyToQueueName,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly string $queueName,
+        private readonly Message $incomingMessage,
         private readonly AMQPMessage $incomingAmqpMessage
     ) {
         $this->numberOfPendingMessages = 0;
@@ -33,7 +38,7 @@ final class AmqpContext implements Context
     public function request(Message $message): void
     {
         $amqpMessage = $this->messageTranslator->createAmqpMessageFromMessage($message);
-        $amqpMessage->set('reply_to', $this->replyToQueueName);
+        $amqpMessage->set('reply_to', $this->queueName);
 
         $route = $this->messageRouter->route($message);
 
@@ -41,6 +46,13 @@ final class AmqpContext implements Context
             $amqpMessage,
             $route->exchange,
             $route->routingKey
+        );
+
+        $this->eventDispatcher->dispatch(
+            new MessageSent(
+                $message,
+                ['queue' => $this->queueName, 'exchange' => $route->exchange, 'routingKey' => $route->routingKey]
+            )
         );
     }
 
@@ -50,18 +62,36 @@ final class AmqpContext implements Context
             return;
         }
 
+        $routingKey = $this->incomingAmqpMessage->get('reply_to');
+
         $this->publishAmqpMessage(
             $this->messageTranslator->createAmqpMessageFromMessage($message),
             '',
-            $this->incomingAmqpMessage->get('reply_to')
+            $routingKey
+        );
+
+        $this->eventDispatcher->dispatch(
+            new MessageSent(
+                $message,
+                ['queue' => $this->queueName, 'exchange' => '', 'routingKey' => $routingKey]
+            )
         );
     }
 
     public function ackIncomingMessageIfContextIsResolved(): void
     {
-        if ($this->numberOfPendingMessages === 0) {
-            $this->incomingAmqpMessage->ack();
+        if ($this->numberOfPendingMessages !== 0) {
+            return;
         }
+
+        $this->incomingAmqpMessage->ack();
+
+        $this->eventDispatcher->dispatch(
+            new MessageHandled(
+                $this->incomingMessage,
+                ['queue' => $this->queueName]
+            )
+        );
     }
 
     public function resolvePositiveAcknowledgement(AMQPMessage $amqpMessage): void

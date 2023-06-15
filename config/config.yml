@@ -114,6 +114,7 @@ services:
                     - 10
                     - '@gaming.message-broker.message-router'
                     - '@gaming.message-broker.message-translator'
+                    - '@event_dispatcher'
             - !tagged { tag: 'gaming.consumer', index_by: 'key' }
         tags:
             - { name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }

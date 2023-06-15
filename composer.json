@@ -36,6 +36,7 @@
     "php-amqplib/php-amqplib": "^3.2",
     "predis/predis": "^2.0",
     "psr/clock": "^1.0",
+    "psr/event-dispatcher": "^1.0",
     "psr/log": "^3.0",
     "symfony/asset": "^6.1",
     "symfony/clock": "^6.2",
