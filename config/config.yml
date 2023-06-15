@@ -19,10 +19,12 @@ framework:
 
 monolog:
     handlers:
-        application_error:
+        application_stream:
             type: stream
-            path: "php://stderr"
-            level: error
+            path: 'php://stderr'
+            level: warning
+            process_psr_3_messages: false
+            formatter: 'monolog.formatter.json'
 
 twig:
     strict_variables: '%kernel.debug%'
