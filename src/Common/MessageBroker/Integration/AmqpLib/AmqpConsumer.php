@@ -5,18 +5,23 @@ declare(strict_types=1);
 namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 
 use ArrayObject;
+use Gaming\Common\MessageBroker\Consumer;
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\ConnectionFactory;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\Exception\MessageReturnedException;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\QueueConsumer;
-use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ResolvingCallbackFactory;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\CallbackFactory;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
-final class AmqpConsumer
+/**
+ * @template T
+ * @implements Consumer<QueueConsumer>
+ */
+final class AmqpConsumer implements Consumer
 {
     private bool $shouldStop;
 
@@ -36,29 +41,30 @@ final class AmqpConsumer
         $this->pendingMessageToContext = new ArrayObject();
     }
 
-    public function start(QueueConsumer $queueConsumer): void
+    public function start(iterable $topicConsumers): void
     {
         $connection = $this->connectionFactory->create();
 
         try {
             $channel = $connection->channel();
-            $channel->confirm_select();
             $channel->basic_qos(0, $this->prefetchCount, false);
-
-            $queueConsumer->register(
-                $channel,
-                new ResolvingCallbackFactory(
-                    $this->messageRouter,
-                    $this->messageTranslator,
-                    $this->pendingMessageToContext,
-                    $channel,
-                    $this->eventDispatcher
-                )
-            );
-
+            $channel->confirm_select();
             $channel->set_ack_handler($this->onPositiveAcknowledgement(...));
             $channel->set_nack_handler($this->onNegativeAcknowledgement(...));
             $channel->set_return_listener($this->onReturn(...));
+
+            foreach ($topicConsumers as $topicConsumer) {
+                $topicConsumer->register(
+                    $channel,
+                    new CallbackFactory(
+                        $this->messageRouter,
+                        $this->messageTranslator,
+                        $this->pendingMessageToContext,
+                        $this->eventDispatcher,
+                        $channel
+                    )
+                );
+            }
 
             while (!$this->shouldStop && $channel->is_consuming()) {
                 $channel->wait();

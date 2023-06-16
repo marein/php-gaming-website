@@ -7,7 +7,7 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Wire\AMQPTable;
 
-final class HashExchangeTopology implements MultiQueueTopology
+final class HashExchangeTopology implements Topology, DefinesQueues
 {
     /**
      * @param string[] $routingKeys

@@ -12,7 +12,7 @@ use Throwable;
 /**
  * This decorator should only be used in long-lived processes.
  * An alternative would be to declare the topology in a separate
- * process during startup, e.g. in the container's entrypoint.
+ * process, e.g. in the container's entrypoint, or by another department.
  */
 final class DeclareTopologyConnectionFactory implements ConnectionFactory
 {

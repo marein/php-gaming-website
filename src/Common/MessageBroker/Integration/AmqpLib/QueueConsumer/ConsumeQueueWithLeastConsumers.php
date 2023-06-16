@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer;
 
-use Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\MultiQueueTopology;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\DefinesQueues;
 use Gaming\Common\MessageBroker\MessageHandler;
-use Generator;
 use PhpAmqpLib\Channel\AMQPChannel;
 use Symfony\Component\Lock\LockFactory;
 
 /**
- * This queue consumer can be used with a MultiQueueTopology. It consumes
+ * This queue consumer can be used with sharded queues. It consumes
  * from the queue with the least number of consumers. To consume from all
  * queues, multiple instances of this queue consumer must be started. Scaling up
  * to more consumers should be no problem. Care must be taken when scaling down,
  * as some queues are unlikely to be consumed.
  */
-final class MultiQueueConsumer implements QueueConsumer
+final class ConsumeQueueWithLeastConsumers implements QueueConsumer
 {
     public function __construct(
         private readonly MessageHandler $messageHandler,
-        private readonly MultiQueueTopology $topology,
+        private readonly DefinesQueues $definesQueues,
         private readonly LockFactory $lockFactory
     ) {
     }
@@ -46,7 +45,7 @@ final class MultiQueueConsumer implements QueueConsumer
     {
         $numberOfConsumersPerQueue = [];
 
-        foreach ($this->topology->queueNames() as $queueName) {
+        foreach ($this->definesQueues->queueNames() as $queueName) {
             $numberOfConsumersPerQueue[$queueName] = ($channel->queue_declare($queueName, true) ?? [0, 0, 0])[2];
 
             if ($numberOfConsumersPerQueue[$queueName] === 0) {

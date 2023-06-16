@@ -6,7 +6,7 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 
 use PhpAmqpLib\Channel\AMQPChannel;
 
-final class QueueTopology implements Topology
+final class QueueTopology implements Topology, DefinesQueue
 {
     /**
      * @param string[] $routingKeys
@@ -35,5 +35,10 @@ final class QueueTopology implements Topology
                 $routingKey
             );
         }
+    }
+
+    public function queueName(): string
+    {
+        return $this->queueName;
     }
 }

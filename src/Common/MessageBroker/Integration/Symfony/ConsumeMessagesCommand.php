@@ -2,25 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Integration;
+namespace Gaming\Common\MessageBroker\Integration\Symfony;
 
-use Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer;
-use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\CompositeQueueConsumer;
-use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\QueueConsumer;
+use Gaming\Common\MessageBroker\Consumer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Traversable;
+use Symfony\Contracts\Service\ServiceProviderInterface;
 
+/**
+ * @template T
+ */
 final class ConsumeMessagesCommand extends Command
 {
     /**
-     * @param Traversable<string, QueueConsumer> $queueConsumers
+     * @param Consumer<T> $consumer
+     * @param ServiceProviderInterface<T> $topicConsumers
      */
     public function __construct(
-        private readonly AmqpConsumer $amqpConsumer,
-        private readonly iterable $queueConsumers
+        private readonly Consumer $consumer,
+        private readonly ServiceProviderInterface $topicConsumers
     ) {
         parent::__construct();
     }
@@ -32,13 +34,13 @@ final class ConsumeMessagesCommand extends Command
                 'consumer',
                 'c',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'List of consumers.'
+                'List of topic consumers.'
             )
             ->addOption(
                 'select-all-consumers',
                 null,
                 InputOption::VALUE_NONE,
-                'Overwrites individual consumers. This is useful for the development environment.'
+                'Overwrites individual topic consumers. This is useful for the development environment.'
             );
     }
 
@@ -48,19 +50,19 @@ final class ConsumeMessagesCommand extends Command
         if (count($selectedConsumerNames) === 0) {
             $output->writeln(
                 sprintf(
-                    'Please select one of the following consumers:%s* %s',
+                    'Please select one of the following topic consumers:%s* %s',
                     PHP_EOL,
-                    implode(PHP_EOL . '* ', $this->availableQueueConsumerNames())
+                    implode(PHP_EOL . '* ', $this->availableTopicConsumerNames())
                 )
             );
             return Command::FAILURE;
         }
 
-        $unknownConsumerNames = $this->unknownQueueConsumerNames($input);
+        $unknownConsumerNames = $this->unknownTopicConsumerNames($input);
         if (count($unknownConsumerNames) !== 0) {
             $output->writeln(
                 sprintf(
-                    'The following consumers are unknown:%s* %s',
+                    'The following topic consumers are unknown:%s* %s',
                     PHP_EOL,
                     implode(PHP_EOL . '* ', $unknownConsumerNames)
                 )
@@ -69,11 +71,11 @@ final class ConsumeMessagesCommand extends Command
         }
 
         pcntl_async_signals(true);
-        pcntl_signal(SIGINT, $this->amqpConsumer->stop(...));
-        pcntl_signal(SIGTERM, $this->amqpConsumer->stop(...));
+        pcntl_signal(SIGINT, $this->consumer->stop(...));
+        pcntl_signal(SIGTERM, $this->consumer->stop(...));
 
-        $this->amqpConsumer->start(
-            $this->createQueueConsumer($input, $output)
+        $this->consumer->start(
+            $this->filterSelectedTopicConsumers($input)
         );
 
         return Command::SUCCESS;
@@ -85,38 +87,39 @@ final class ConsumeMessagesCommand extends Command
     private function selectedConsumerNames(InputInterface $input): array
     {
         return $input->getOption('select-all-consumers') ?
-            $this->availableQueueConsumerNames() :
+            $this->availableTopicConsumerNames() :
             $input->getOption('consumer');
     }
 
     /**
      * @return string[]
      */
-    private function availableQueueConsumerNames(): array
+    private function availableTopicConsumerNames(): array
     {
-        return array_keys(iterator_to_array($this->queueConsumers));
+        return array_keys($this->topicConsumers->getProvidedServices());
     }
 
     /**
      * @return string[]
      */
-    private function unknownQueueConsumerNames(InputInterface $input): array
+    private function unknownTopicConsumerNames(InputInterface $input): array
     {
         return array_keys(
             array_diff_key(
                 array_flip($this->selectedConsumerNames($input)),
-                iterator_to_array($this->queueConsumers)
+                $this->topicConsumers->getProvidedServices()
             )
         );
     }
 
-    private function createQueueConsumer(InputInterface $input, OutputInterface $output): QueueConsumer
+    /**
+     * @return array<T>
+     */
+    private function filterSelectedTopicConsumers(InputInterface $input): array
     {
-        return new CompositeQueueConsumer(
-            array_intersect_key(
-                iterator_to_array($this->queueConsumers),
-                array_flip($this->selectedConsumerNames($input))
-            )
+        return array_map(
+            fn(string $topicConsumerName) => $this->topicConsumers->get($topicConsumerName),
+            $this->selectedConsumerNames($input)
         );
     }
 }

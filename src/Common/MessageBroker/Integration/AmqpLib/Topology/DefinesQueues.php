@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 
-interface MultiQueueTopology extends Topology
+interface DefinesQueues
 {
     /**
      * @return iterable<string>

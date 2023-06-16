@@ -2,7 +2,6 @@ services:
 
     chat.command-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
-        public: false
         arguments:
             - 'Chat.CommandListener'
             - 'gaming'
@@ -11,13 +10,12 @@ services:
             - { name: 'gaming.message-broker.topology' }
 
     chat.command-message-handler.consumer:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\SingleQueueConsumer
-        public: false
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueue
         arguments:
             - !service
                 class: Gaming\Chat\Infrastructure\Messaging\CommandMessageHandler
                 arguments:
                     - '@chat.command-bus'
-            - 'Chat.CommandListener'
+            - '@chat.command-message-handler.topology'
         tags:
             - { name: 'gaming.consumer', key: 'chat.command' }
