@@ -31,3 +31,5 @@ services:
             - { name: kernel.event_listener, method: 'messageHandled' }
             - { name: kernel.event_listener, method: 'messageSent' }
             - { name: kernel.event_listener, method: 'messagesFlushed' }
+            - { name: kernel.event_listener, method: 'replySent' }
+            - { name: kernel.event_listener, method: 'requestSent' }

@@ -8,6 +8,8 @@ use Gaming\Common\MessageBroker\Event\MessageHandled;
 use Gaming\Common\MessageBroker\Event\MessageReceived;
 use Gaming\Common\MessageBroker\Event\MessageSent;
 use Gaming\Common\MessageBroker\Event\MessagesFlushed;
+use Gaming\Common\MessageBroker\Event\ReplySent;
+use Gaming\Common\MessageBroker\Event\RequestSent;
 use Psr\Log\LoggerInterface;
 
 final class LoggingListener
@@ -60,6 +62,28 @@ final class LoggingListener
             'Messages flushed.',
             [
                 'numberOfSentMessages' => $event->numberOfSentMessages
+            ]
+        );
+    }
+
+    public function replySent(ReplySent $event): void
+    {
+        $this->logger->debug(
+            'Reply sent.',
+            [
+                'message' => ['name' => $event->message->name(), 'body' => $event->message->body()],
+                'metadata' => $event->metadata
+            ]
+        );
+    }
+
+    public function requestSent(RequestSent $event): void
+    {
+        $this->logger->debug(
+            'Request sent.',
+            [
+                'message' => ['name' => $event->message->name(), 'body' => $event->message->body()],
+                'metadata' => $event->metadata
             ]
         );
     }

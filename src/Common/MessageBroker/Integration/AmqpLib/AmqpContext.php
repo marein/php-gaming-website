@@ -7,7 +7,8 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 use ArrayObject;
 use Gaming\Common\MessageBroker\Context;
 use Gaming\Common\MessageBroker\Event\MessageHandled;
-use Gaming\Common\MessageBroker\Event\MessageSent;
+use Gaming\Common\MessageBroker\Event\ReplySent;
+use Gaming\Common\MessageBroker\Event\RequestSent;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
 use Gaming\Common\MessageBroker\Message;
@@ -49,7 +50,7 @@ final class AmqpContext implements Context
         );
 
         $this->eventDispatcher->dispatch(
-            new MessageSent(
+            new RequestSent(
                 $message,
                 ['queue' => $this->queueName, 'exchange' => $route->exchange, 'routingKey' => $route->routingKey]
             )
@@ -71,7 +72,7 @@ final class AmqpContext implements Context
         );
 
         $this->eventDispatcher->dispatch(
-            new MessageSent(
+            new ReplySent(
                 $message,
                 ['queue' => $this->queueName, 'exchange' => '', 'routingKey' => $routingKey]
             )
