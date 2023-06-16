@@ -7,11 +7,11 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer;
 use Gaming\Common\MessageBroker\MessageHandler;
 use PhpAmqpLib\Channel\AMQPChannel;
 
-final readonly class SingleQueueConsumer implements QueueConsumer
+final class SingleQueueConsumer implements QueueConsumer
 {
     public function __construct(
-        private MessageHandler $messageHandler,
-        private string $queueName
+        private readonly MessageHandler $messageHandler,
+        private readonly string $queueName
     ) {
     }
 

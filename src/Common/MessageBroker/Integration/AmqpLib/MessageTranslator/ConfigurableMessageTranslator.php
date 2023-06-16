@@ -8,13 +8,13 @@ use Gaming\Common\MessageBroker\Message;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Wire\AMQPTable;
 
-final readonly class ConfigurableMessageTranslator implements MessageTranslator
+final class ConfigurableMessageTranslator implements MessageTranslator
 {
     /**
      * @param array<string, mixed> $properties
      */
     public function __construct(
-        private array $properties
+        private readonly array $properties
     ) {
     }
 

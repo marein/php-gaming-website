@@ -6,10 +6,10 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter;
 
 use Gaming\Common\MessageBroker\Message;
 
-final readonly class RouteMessagesToExchange implements MessageRouter
+final class RouteMessagesToExchange implements MessageRouter
 {
     public function __construct(
-        private string $exchange
+        private readonly string $exchange
     ) {
     }
 

@@ -14,11 +14,11 @@ use Throwable;
  * An alternative would be to declare the topology in a separate
  * process during startup, e.g. in the container's entrypoint.
  */
-final readonly class DeclareTopologyConnectionFactory implements ConnectionFactory
+final class DeclareTopologyConnectionFactory implements ConnectionFactory
 {
     public function __construct(
-        private ConnectionFactory $connectionFactory,
-        private Topology $topology
+        private readonly ConnectionFactory $connectionFactory,
+        private readonly Topology $topology
     ) {
     }
 

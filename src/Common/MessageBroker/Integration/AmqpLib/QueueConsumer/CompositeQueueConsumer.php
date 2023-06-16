@@ -6,13 +6,13 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer;
 
 use PhpAmqpLib\Channel\AMQPChannel;
 
-final readonly class CompositeQueueConsumer implements QueueConsumer
+final class CompositeQueueConsumer implements QueueConsumer
 {
     /**
      * @param QueueConsumer[] $queueConsumers
      */
     public function __construct(
-        private array $queueConsumers
+        private readonly array $queueConsumers
     ) {
     }
 

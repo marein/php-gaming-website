@@ -7,17 +7,17 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Wire\AMQPTable;
 
-final readonly class HashExchangeTopology implements MultiQueueTopology
+final class HashExchangeTopology implements MultiQueueTopology
 {
     /**
      * @param string[] $routingKeys
      */
     public function __construct(
-        private string $queueNameTemplate,
-        private string $exchangeName,
-        private array $routingKeys,
-        private int $numberOfShards,
-        private string $hashHeaderName
+        private readonly string $queueNameTemplate,
+        private readonly string $exchangeName,
+        private readonly array $routingKeys,
+        private readonly int $numberOfShards,
+        private readonly string $hashHeaderName
     ) {
     }
 

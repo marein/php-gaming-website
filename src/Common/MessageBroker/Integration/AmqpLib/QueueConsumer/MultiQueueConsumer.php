@@ -17,12 +17,12 @@ use Symfony\Component\Lock\LockFactory;
  * to more consumers should be no problem. Care must be taken when scaling down,
  * as some queues are unlikely to be consumed.
  */
-final readonly class MultiQueueConsumer implements QueueConsumer
+final class MultiQueueConsumer implements QueueConsumer
 {
     public function __construct(
-        private MessageHandler $messageHandler,
-        private MultiQueueTopology $topology,
-        private LockFactory $lockFactory
+        private readonly MessageHandler $messageHandler,
+        private readonly MultiQueueTopology $topology,
+        private readonly LockFactory $lockFactory
     ) {
     }
 

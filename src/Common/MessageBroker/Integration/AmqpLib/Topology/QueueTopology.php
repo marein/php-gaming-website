@@ -6,15 +6,15 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 
 use PhpAmqpLib\Channel\AMQPChannel;
 
-final readonly class QueueTopology implements Topology
+final class QueueTopology implements Topology
 {
     /**
      * @param string[] $routingKeys
      */
     public function __construct(
-        private string $queueName,
-        private string $exchangeName,
-        private array $routingKeys
+        private readonly string $queueName,
+        private readonly string $exchangeName,
+        private readonly array $routingKeys
     ) {
     }
 

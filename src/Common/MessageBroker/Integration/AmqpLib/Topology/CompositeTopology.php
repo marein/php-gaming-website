@@ -6,13 +6,13 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 
 use PhpAmqpLib\Channel\AMQPChannel;
 
-final readonly class CompositeTopology implements Topology
+final class CompositeTopology implements Topology
 {
     /**
      * @param iterable<Topology> $topologies
      */
     public function __construct(
-        private iterable $topologies
+        private readonly iterable $topologies
     ) {
     }
 

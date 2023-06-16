@@ -15,17 +15,17 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-final readonly class ResolvingCallbackFactory implements CallbackFactory
+final class ResolvingCallbackFactory implements CallbackFactory
 {
     /**
      * @param ArrayObject<int, AmqpContext> $pendingMessageToContext
      */
     public function __construct(
-        private MessageRouter $messageRouter,
-        private MessageTranslator $messageTranslator,
-        private ArrayObject $pendingMessageToContext,
-        private AMQPChannel $channel,
-        private EventDispatcherInterface $eventDispatcher
+        private readonly MessageRouter $messageRouter,
+        private readonly MessageTranslator $messageTranslator,
+        private readonly ArrayObject $pendingMessageToContext,
+        private readonly AMQPChannel $channel,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
     }
 
