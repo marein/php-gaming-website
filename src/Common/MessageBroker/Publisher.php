@@ -11,6 +11,8 @@ interface Publisher
     /**
      * As a caller of send, you must call flush after you are done sending.
      *
+     * Implementations must dispatch MessageSent through a PSR-14 compliant event dispatcher.
+     *
      * @throws MessageBrokerException
      */
     public function send(Message $message): void;
@@ -22,6 +24,8 @@ interface Publisher
      * * Make sure that all buffered messages are transferred to the server.
      * * Make sure that all received messages are saved on the disk.
      * * If the loss of messages is acceptable, the implementation can be empty.
+     *
+     * Implementations must dispatch MessagesFlushed through a PSR-14 compliant event dispatcher.
      *
      * @throws MessageBrokerException
      */

@@ -30,3 +30,4 @@ services:
             - { name: kernel.event_listener, method: 'messageReceived' }
             - { name: kernel.event_listener, method: 'messageHandled' }
             - { name: kernel.event_listener, method: 'messageSent' }
+            - { name: kernel.event_listener, method: 'messagesFlushed' }

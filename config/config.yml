@@ -101,6 +101,7 @@ services:
             - '@gaming.message-broker.batch-confirm-reliable-publishing'
             - '@gaming.message-broker.message-translator'
             - '@gaming.message-broker.message-router'
+            - '@event_dispatcher'
 
     gaming.consume-messages-command:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Integration\ConsumeMessagesCommand

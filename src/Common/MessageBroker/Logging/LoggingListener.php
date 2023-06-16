@@ -7,6 +7,7 @@ namespace Gaming\Common\MessageBroker\Logging;
 use Gaming\Common\MessageBroker\Event\MessageHandled;
 use Gaming\Common\MessageBroker\Event\MessageReceived;
 use Gaming\Common\MessageBroker\Event\MessageSent;
+use Gaming\Common\MessageBroker\Event\MessagesFlushed;
 use Psr\Log\LoggerInterface;
 
 final class LoggingListener
@@ -45,6 +46,20 @@ final class LoggingListener
             [
                 'message' => ['name' => $event->message->name(), 'body' => $event->message->body()],
                 'metadata' => $event->metadata
+            ]
+        );
+    }
+
+    public function messagesFlushed(MessagesFlushed $event): void
+    {
+        if ($event->numberOfSentMessages === 0) {
+            return;
+        }
+
+        $this->logger->debug(
+            'Messages flushed.',
+            [
+                'numberOfSentMessages' => $event->numberOfSentMessages
             ]
         );
     }
