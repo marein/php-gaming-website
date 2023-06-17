@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\Symfony;
 
+use Gaming\Common\ForkPool\Channel\NullChannelPairFactory;
+use Gaming\Common\ForkPool\ForkPool;
 use Gaming\Common\MessageBroker\Consumer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,6 +43,13 @@ final class ConsumeMessagesCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'Overwrites individual topic consumers. This is useful for the development environment.'
+            )
+            ->addOption(
+                'fork',
+                'f',
+                InputOption::VALUE_OPTIONAL,
+                'Number of forks. This is useful to share memory among the processes.',
+                1
             );
     }
 
@@ -70,13 +79,20 @@ final class ConsumeMessagesCommand extends Command
             return Command::FAILURE;
         }
 
-        pcntl_async_signals(true);
-        pcntl_signal(SIGINT, $this->consumer->stop(...));
-        pcntl_signal(SIGTERM, $this->consumer->stop(...));
+        $forkPool = new ForkPool(new NullChannelPairFactory());
 
-        $this->consumer->start(
-            $this->filterSelectedTopicConsumers($input)
-        );
+        for ($i = 0, $numberOfWorkers = max(1, (int)$input->getOption('fork')); $i < $numberOfWorkers; $i++) {
+            $forkPool->fork(
+                new ConsumerTask($this->consumer, $this->filterSelectedTopicConsumers($input))
+            );
+        }
+
+        $forkPool->signal()
+            ->enableAsyncDispatch()
+            ->forwardSignalAndWait([SIGINT, SIGTERM]);
+
+        $forkPool->wait()
+            ->killAllWhenAnyExits(SIGTERM);
 
         return Command::SUCCESS;
     }
@@ -113,7 +129,7 @@ final class ConsumeMessagesCommand extends Command
     }
 
     /**
-     * @return array<T>
+     * @return T[]
      */
     private function filterSelectedTopicConsumers(InputInterface $input): array
     {

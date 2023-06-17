@@ -22,7 +22,7 @@ x-php-container:
         APP_IDENTITY_RUN_MIGRATIONS: "1"
         APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
         APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://nchan:81"
-        APP_WEB_INTERFACE_PUBLISH_TO_BROWSER_SHARDS: "1"
+        APP_WEB_INTERFACE_PUBLISH_TO_BROWSER_SHARDS: "2"
     depends_on:
         - mysql
         - proxysql
@@ -177,7 +177,7 @@ services:
         command: bin/console identity:follow-event-store pointer --select-all-subscribers
     consume-messages:
         <<: *php-container
-        command: bin/console gaming:consume-messages --select-all-consumers
+        command: bin/console gaming:consume-messages --select-all-consumers -f 2
     web-interface-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/console web-interface:publish-running-games-count-to-nchan
