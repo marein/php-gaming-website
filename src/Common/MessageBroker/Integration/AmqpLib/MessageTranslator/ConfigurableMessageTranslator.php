@@ -14,7 +14,8 @@ final class ConfigurableMessageTranslator implements MessageTranslator
      * @param array<string, mixed> $properties
      */
     public function __construct(
-        private readonly array $properties
+        private readonly array $properties,
+        private readonly string $streamIdHeader
     ) {
     }
 
@@ -26,7 +27,7 @@ final class ConfigurableMessageTranslator implements MessageTranslator
                 $this->properties,
                 [
                     'type' => $message->name(),
-                    'application_headers' => new AMQPTable($message->headers())
+                    'application_headers' => new AMQPTable([$this->streamIdHeader => $message->streamId()])
                 ]
             )
         );
@@ -34,10 +35,12 @@ final class ConfigurableMessageTranslator implements MessageTranslator
 
     public function createMessageFromAmqpMessage(AMQPMessage $message): Message
     {
+        $headers = $message->has('application_headers') ? $message->get('application_headers')->getNativeData() : [];
+
         return new Message(
             (string)$message->get('type'),
             $message->getBody(),
-            $message->has('application_headers') ? $message->get('application_headers')->getNativeData() : []
+            $headers[$this->streamIdHeader] ?? ''
         );
     }
 }

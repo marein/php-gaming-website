@@ -24,7 +24,7 @@ final class LoggingListener
         $this->logger->debug(
             'Received Message.',
             [
-                'message' => ['name' => $event->message->name(), 'body' => $event->message->body()],
+                'message' => $event->message->toArray(),
                 'metadata' => $event->metadata
             ]
         );
@@ -35,7 +35,7 @@ final class LoggingListener
         $this->logger->debug(
             'Message handled.',
             [
-                'message' => ['name' => $event->message->name(), 'body' => $event->message->body()],
+                'message' => $event->message->toArray(),
                 'metadata' => $event->metadata
             ]
         );
@@ -46,7 +46,7 @@ final class LoggingListener
         $this->logger->debug(
             'Message sent.',
             [
-                'message' => ['name' => $event->message->name(), 'body' => $event->message->body()],
+                'message' => $event->message->toArray(),
                 'metadata' => $event->metadata
             ]
         );
@@ -71,7 +71,7 @@ final class LoggingListener
         $this->logger->debug(
             'Reply sent.',
             [
-                'message' => ['name' => $event->message->name(), 'body' => $event->message->body()],
+                'message' => $event->message->toArray(),
                 'metadata' => $event->metadata
             ]
         );
@@ -82,7 +82,7 @@ final class LoggingListener
         $this->logger->debug(
             'Request sent.',
             [
-                'message' => ['name' => $event->message->name(), 'body' => $event->message->body()],
+                'message' => $event->message->toArray(),
                 'metadata' => $event->metadata
             ]
         );

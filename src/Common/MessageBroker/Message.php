@@ -7,12 +7,12 @@ namespace Gaming\Common\MessageBroker;
 final class Message
 {
     /**
-     * @param array<string, string> $headers
+     * @param string $streamId is used by some implementations to ensure the order of messages within a stream.
      */
     public function __construct(
         private readonly string $name,
         private readonly string $body,
-        private readonly array $headers = []
+        private readonly string $streamId = ''
     ) {
     }
 
@@ -26,11 +26,20 @@ final class Message
         return $this->body;
     }
 
-    /**
-     * @return array<string, string>
-     */
-    public function headers(): array
+    public function streamId(): string
     {
-        return $this->headers;
+        return $this->streamId;
+    }
+
+    /**
+     * @return array{name: string, body: string, streamId: string}
+     */
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'body' => $this->body,
+            'streamId' => $this->streamId
+        ];
     }
 }

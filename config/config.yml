@@ -86,6 +86,7 @@ services:
         arguments:
             -
               delivery_mode: !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT
+            - 'hash-on'
 
     gaming.message-broker.message-router:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\RouteMessagesToExchange

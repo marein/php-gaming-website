@@ -49,7 +49,7 @@ final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventS
                     $this->normalizer->normalize($domainEvent, $domainEvent::class),
                     JSON_THROW_ON_ERROR
                 ),
-                ['hash-on' => $domainEvent->aggregateId()]
+                $domainEvent->aggregateId()
             )
         );
     }
