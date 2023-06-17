@@ -120,6 +120,13 @@ services:
         tags:
             - { name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }
 
+    Gaming\Common\MessageBroker\Integration\Symfony\ResetServicesListener:
+        arguments:
+            - '@services_resetter'
+            - 50
+        tags:
+            - { name: kernel.event_listener, method: 'messageHandled', priority: -50 }
+
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
         public: false
