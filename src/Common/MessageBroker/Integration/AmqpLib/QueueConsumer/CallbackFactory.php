@@ -29,6 +29,9 @@ final class CallbackFactory
     ) {
     }
 
+    /**
+     * @return Closure(AMQPMessage): void
+     */
     public function create(string $queueName, MessageHandler $messageHandler): Closure
     {
         return function (AMQPMessage $amqpMessage) use ($queueName, $messageHandler): void {
