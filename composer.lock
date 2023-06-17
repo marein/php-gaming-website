@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad92f5537349620a1d62bc09a152b133",
+    "content-hash": "2aed8960de2abe0f386c9952180f5ccb",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -5876,16 +5876,16 @@
         },
         {
             "name": "symfony/service-contracts",
-            "version": "v3.2.1",
+            "version": "v3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "a8c9cedf55f314f3a186041d19537303766df09a"
+                "reference": "40da9cc13ec349d9e4966ce18b5fbcd724ab10a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/a8c9cedf55f314f3a186041d19537303766df09a",
-                "reference": "a8c9cedf55f314f3a186041d19537303766df09a",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/40da9cc13ec349d9e4966ce18b5fbcd724ab10a4",
+                "reference": "40da9cc13ec349d9e4966ce18b5fbcd724ab10a4",
                 "shasum": ""
             },
             "require": {
@@ -5895,13 +5895,10 @@
             "conflict": {
                 "ext-psr": "<1.1|>=2"
             },
-            "suggest": {
-                "symfony/service-implementation": ""
-            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.3-dev"
+                    "dev-main": "3.4-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -5941,7 +5938,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/service-contracts/tree/v3.2.1"
+                "source": "https://github.com/symfony/service-contracts/tree/v3.3.0"
             },
             "funding": [
                 {
@@ -5957,7 +5954,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-01T10:32:47+00:00"
+            "time": "2023-05-23T14:45:45+00:00"
         },
         {
             "name": "symfony/stopwatch",
