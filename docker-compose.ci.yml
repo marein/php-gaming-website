@@ -103,7 +103,7 @@ services:
         command: bin/console identity:follow-event-store pointer --select-all-subscribers
     php-consume-messages:
         <<: *php-container
-        command: bin/console gaming:consume-messages --select-all-consumers
+        command: bin/console gaming:consume-messages --select-all-consumers -f 2
     php-web-interface-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/console web-interface:publish-running-games-count-to-nchan
