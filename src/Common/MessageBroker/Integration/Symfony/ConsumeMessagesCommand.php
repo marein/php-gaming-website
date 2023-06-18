@@ -48,7 +48,7 @@ final class ConsumeMessagesCommand extends Command
                 'fork',
                 'f',
                 InputOption::VALUE_OPTIONAL,
-                'Number of forks. This is useful to share memory among the processes.',
+                'Number of forks. This is useful for sharing memory between processes.',
                 1
             );
     }

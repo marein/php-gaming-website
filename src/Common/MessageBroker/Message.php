@@ -7,7 +7,8 @@ namespace Gaming\Common\MessageBroker;
 final class Message
 {
     /**
-     * @param string $streamId is used by some implementations to ensure the order of messages within a stream.
+     * @param string $streamId is used by some implementations to colocate messages,
+     *                         which in turn can help with caching, race conditions, ordering, etc.
      */
     public function __construct(
         private readonly string $name,
