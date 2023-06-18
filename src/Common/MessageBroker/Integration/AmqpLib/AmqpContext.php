@@ -111,6 +111,11 @@ final class AmqpContext implements Context
             (string)$amqpMessage->getExchange(),
             (string)$amqpMessage->getRoutingKey()
         );
+
+        // We cannot dispatch an additional PSR-14 event here, because we don't know
+        // the intent of the message without maintaining an internal map. The nack,
+        // being a RabbitMQ extension of AMQP, happens so rarely, that it isn't worth
+        // wasting CPU cycles.
     }
 
     private function resolveAmqpMessage(AMQPMessage $amqpMessage): void
