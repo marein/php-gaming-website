@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Logging;
+namespace Gaming\Common\MessageBroker\EventListener;
 
 use Gaming\Common\MessageBroker\Event\MessageHandled;
 use Gaming\Common\MessageBroker\Event\MessageReceived;
@@ -12,7 +12,7 @@ use Gaming\Common\MessageBroker\Event\ReplySent;
 use Gaming\Common\MessageBroker\Event\RequestSent;
 use Psr\Log\LoggerInterface;
 
-final class LoggingListener
+final class LogAllEvents
 {
     public function __construct(
         private readonly LoggerInterface $logger
