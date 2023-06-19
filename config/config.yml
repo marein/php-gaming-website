@@ -134,6 +134,12 @@ services:
         tags:
             - { name: kernel.event_listener, method: 'messageReturned', priority: 50 }
 
+    Gaming\Common\MessageBroker\EventListener\ThrowWhenMessageFailed:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, method: 'messageFailed' }
+
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
         public: false
