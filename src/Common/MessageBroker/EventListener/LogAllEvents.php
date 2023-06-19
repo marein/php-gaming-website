@@ -61,7 +61,8 @@ final class LogAllEvents
         $this->logger->debug(
             'Messages flushed.',
             [
-                'numberOfSentMessages' => $event->numberOfSentMessages
+                'numberOfSentMessages' => $event->numberOfSentMessages,
+                'metadata' => $event->metadata
             ]
         );
     }

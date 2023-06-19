@@ -66,7 +66,7 @@ final class AmqpPublisher implements Publisher
 
         $this->reliablePublishing->flush($this->channel);
 
-        $this->eventDispatcher->dispatch(new MessagesFlushed($this->numberOfSentMessages));
+        $this->eventDispatcher->dispatch(new MessagesFlushed($this->numberOfSentMessages, []));
 
         $this->numberOfSentMessages = 0;
     }
