@@ -8,7 +8,7 @@ use ArrayObject;
 use Gaming\Common\MessageBroker\Consumer;
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\ConnectionFactory;
-use Gaming\Common\MessageBroker\Integration\AmqpLib\Exception\MessageReturnedException;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\Event\MessageReturned;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\QueueConsumer;
@@ -98,13 +98,16 @@ final class AmqpConsumer implements Consumer
         string $replyText,
         string $exchange,
         string $routingKey,
-        AMQPMessage $message
+        AMQPMessage $returnedMessage
     ): void {
-        throw new MessageReturnedException(
-            $replyCode,
-            $replyText,
-            $exchange,
-            $routingKey
+        $this->eventDispatcher->dispatch(
+            new MessageReturned(
+                $this->messageTranslator->createMessageFromAmqpMessage($returnedMessage),
+                $replyCode,
+                $replyText,
+                $exchange,
+                $routingKey
+            )
         );
     }
 }

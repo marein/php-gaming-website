@@ -128,6 +128,12 @@ services:
         tags:
             - { name: kernel.event_listener, method: 'messageHandled', priority: -50 }
 
+    Gaming\Common\MessageBroker\Integration\AmqpLib\EventListener\LogMessageReturned:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, method: 'messageReturned', priority: 50 }
+
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
         public: false
