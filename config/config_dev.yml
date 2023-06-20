@@ -23,7 +23,7 @@ services:
             - '@.inner'
             - ['/^SELECT.*FROM event_store .*WHERE.*id >/']
 
-    Gaming\Common\MessageBroker\EventListener\LogAllEvents:
+    Gaming\Common\MessageBroker\EventListener\DebugEvents:
         arguments:
             - '@logger'
         tags:

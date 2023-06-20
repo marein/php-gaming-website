@@ -12,7 +12,7 @@ use Gaming\Common\MessageBroker\Event\ReplySent;
 use Gaming\Common\MessageBroker\Event\RequestSent;
 use Psr\Log\LoggerInterface;
 
-final class LogAllEvents
+final class DebugEvents
 {
     public function __construct(
         private readonly LoggerInterface $logger
