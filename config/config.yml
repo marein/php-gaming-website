@@ -114,8 +114,8 @@ services:
                 arguments:
                     - '@gaming.message-broker.connection-factory'
                     - '%env(key:prefetchCount:query_string:APP_RABBIT_MQ_DSN)%'
-                    - '@gaming.message-broker.message-router'
                     - '@gaming.message-broker.message-translator'
+                    - '@gaming.message-broker.message-router'
                     - '@event_dispatcher'
             - !tagged_locator { tag: 'gaming.consumer', index_by: 'key' }
         tags:

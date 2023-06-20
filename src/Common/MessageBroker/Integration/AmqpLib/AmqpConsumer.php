@@ -33,8 +33,8 @@ final class AmqpConsumer implements Consumer
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
         private readonly int $prefetchCount,
-        private readonly MessageRouter $messageRouter,
         private readonly MessageTranslator $messageTranslator,
+        private readonly MessageRouter $messageRouter,
         private readonly EventDispatcherInterface $eventDispatcher
     ) {
         $this->shouldStop = false;
