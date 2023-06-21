@@ -20,7 +20,7 @@ final class ConsumeQueueWithLeastConsumers implements QueueConsumer
 
     public function register(AMQPChannel $channel, CallbackFactory $callbackFactory): void
     {
-        $lock = $this->lockFactory->createLock($this->lockName . '.lock');
+        $lock = $this->lockFactory->createLock($this->lockName);
         $lock->acquire(true);
 
         try {
