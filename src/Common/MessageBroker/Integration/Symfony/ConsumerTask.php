@@ -10,8 +10,12 @@ use Gaming\Common\MessageBroker\Consumer;
 
 final class ConsumerTask implements Task
 {
+    /**
+     * @param positive-int $parallelism
+     */
     public function __construct(
-        private readonly Consumer $consumer
+        private readonly Consumer $consumer,
+        private readonly int $parallelism
     ) {
     }
 
@@ -21,7 +25,7 @@ final class ConsumerTask implements Task
         pcntl_signal(SIGINT, $this->consumer->stop(...));
         pcntl_signal(SIGTERM, $this->consumer->stop(...));
 
-        $this->consumer->start();
+        $this->consumer->start($this->parallelism);
 
         return 0;
     }

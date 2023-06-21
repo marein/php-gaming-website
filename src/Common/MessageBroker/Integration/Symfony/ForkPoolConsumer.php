@@ -21,10 +21,10 @@ final class ForkPoolConsumer implements Consumer
         $this->forkPool = new ForkPool(new NullChannelPairFactory());
     }
 
-    public function start(): void
+    public function start(int $parallelism): void
     {
         foreach ($this->consumers as $consumer) {
-            $this->forkPool->fork(new ConsumerTask($consumer));
+            $this->forkPool->fork(new ConsumerTask($consumer, $parallelism));
         }
 
         $this->forkPool->signal()->enableAsyncDispatch()->forwardSignalAndWait([SIGINT, SIGTERM]);

@@ -8,6 +8,7 @@ use Gaming\Common\MessageBroker\Consumer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\Service\ServiceProviderInterface;
@@ -30,6 +31,12 @@ final class ConsumeMessagesCommand extends Command
                 'consumer',
                 InputArgument::REQUIRED,
                 'Name of the consumer.'
+            )
+            ->addOption(
+                'parallelism',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'Defines how many messages can be processed in parallel. Not used by all implementations.'
             );
     }
 
@@ -37,6 +44,7 @@ final class ConsumeMessagesCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
+        $parallelism = max(1, (int)$input->getOption('parallelism'));
         $consumer = $this->getConsumerByName($consumerName = $input->getArgument('consumer'));
         if ($consumer === null) {
             $symfonyStyle->error(
@@ -54,7 +62,7 @@ final class ConsumeMessagesCommand extends Command
 
         $symfonyStyle->success('Start consumer "' . $consumerName . '".');
 
-        $consumer->start();
+        $consumer->start($parallelism);
 
         return Command::SUCCESS;
     }

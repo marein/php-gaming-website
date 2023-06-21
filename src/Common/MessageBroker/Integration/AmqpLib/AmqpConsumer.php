@@ -40,7 +40,7 @@ final class AmqpConsumer implements Consumer
         $this->pendingMessageToContext = new ArrayObject();
     }
 
-    public function start(): void
+    public function start(int $parallelism): void
     {
         $connection = $this->connectionFactory->create();
 
