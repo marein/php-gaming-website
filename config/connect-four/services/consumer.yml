@@ -10,12 +10,16 @@ services:
             - { name: 'gaming.message-broker.topology' }
 
     connect-four.referee-message-handler.consumer:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueue
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
+        factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
         arguments:
             - !service
                 class: Gaming\ConnectFour\Port\Adapter\Messaging\RefereeMessageHandler
                 arguments:
                     - '@connect-four.command-bus'
-            - '@connect-four.referee-message-handler.topology'
+            - !service
+                class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
+                arguments:
+                    - '@connect-four.referee-message-handler.topology'
         tags:
             - { name: 'gaming.consumer', key: 'connect-four.referee' }

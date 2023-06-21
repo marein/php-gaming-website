@@ -11,16 +11,13 @@ use Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\Connection
 use Gaming\Common\MessageBroker\Integration\AmqpLib\Event\MessageReturned;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
-use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\QueueConsumer;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\CallbackFactory;
+use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\QueueConsumer;
+use Gaming\Common\MessageBroker\MessageHandler;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
-/**
- * @template T
- * @implements Consumer<QueueConsumer>
- */
 final class AmqpConsumer implements Consumer
 {
     private bool $shouldStop;
@@ -35,13 +32,15 @@ final class AmqpConsumer implements Consumer
         private readonly int $prefetchCount,
         private readonly MessageTranslator $messageTranslator,
         private readonly MessageRouter $messageRouter,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly MessageHandler $messageHandler,
+        private readonly QueueConsumer $queueConsumer
     ) {
         $this->shouldStop = false;
         $this->pendingMessageToContext = new ArrayObject();
     }
 
-    public function start(iterable $topicConsumers): void
+    public function start(): void
     {
         $connection = $this->connectionFactory->create();
 
@@ -53,18 +52,17 @@ final class AmqpConsumer implements Consumer
             $channel->set_nack_handler($this->onNegativeAcknowledgement(...));
             $channel->set_return_listener($this->onReturn(...));
 
-            foreach ($topicConsumers as $topicConsumer) {
-                $topicConsumer->register(
-                    $channel,
-                    new CallbackFactory(
-                        $this->messageRouter,
-                        $this->messageTranslator,
-                        $this->pendingMessageToContext,
-                        $this->eventDispatcher,
-                        $channel
-                    )
-                );
-            }
+            $this->queueConsumer->register(
+                $channel,
+                new CallbackFactory(
+                    $this->messageTranslator,
+                    $this->messageRouter,
+                    $this->pendingMessageToContext,
+                    $this->eventDispatcher,
+                    $this->messageHandler,
+                    $channel
+                )
+            );
 
             while (!$this->shouldStop && $channel->is_consuming()) {
                 $channel->wait();

@@ -22,10 +22,11 @@ final class CallbackFactory
      * @param ArrayObject<int, AmqpContext> $pendingMessageToContext
      */
     public function __construct(
-        private readonly MessageRouter $messageRouter,
         private readonly MessageTranslator $messageTranslator,
+        private readonly MessageRouter $messageRouter,
         private readonly ArrayObject $pendingMessageToContext,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly MessageHandler $messageHandler,
         private readonly AMQPChannel $channel
     ) {
     }
@@ -33,9 +34,9 @@ final class CallbackFactory
     /**
      * @return Closure(AMQPMessage): void
      */
-    public function create(string $queueName, MessageHandler $messageHandler): Closure
+    public function create(string $queueName): Closure
     {
-        return function (AMQPMessage $amqpMessage) use ($queueName, $messageHandler): void {
+        return function (AMQPMessage $amqpMessage) use ($queueName): void {
             $message = $this->messageTranslator->createMessageFromAmqpMessage($amqpMessage);
             $context = new AmqpContext(
                 $this->messageRouter,
@@ -51,7 +52,7 @@ final class CallbackFactory
             $this->eventDispatcher->dispatch(new MessageReceived($message, ['queue' => $queueName]));
 
             try {
-                $messageHandler->handle($message, $context);
+                $this->messageHandler->handle($message, $context);
             } catch (\Throwable $throwable) {
                 $this->eventDispatcher->dispatch(
                     new MessageFailed($message, $throwable, ['queue' => $queueName])

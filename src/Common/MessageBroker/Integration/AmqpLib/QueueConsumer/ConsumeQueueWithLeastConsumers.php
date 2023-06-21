@@ -9,32 +9,25 @@ use Gaming\Common\MessageBroker\MessageHandler;
 use PhpAmqpLib\Channel\AMQPChannel;
 use Symfony\Component\Lock\LockFactory;
 
-/**
- * This queue consumer can be used with sharded queues. It consumes
- * from the queue with the least number of consumers. To consume from all
- * queues, multiple instances of this queue consumer must be started. Scaling up
- * to more consumers should be no problem. Care must be taken when scaling down,
- * as some queues are unlikely to be consumed.
- */
 final class ConsumeQueueWithLeastConsumers implements QueueConsumer
 {
     public function __construct(
-        private readonly MessageHandler $messageHandler,
         private readonly DefinesQueues $definesQueues,
-        private readonly LockFactory $lockFactory
+        private readonly LockFactory $lockFactory,
+        private readonly string $lockName
     ) {
     }
 
     public function register(AMQPChannel $channel, CallbackFactory $callbackFactory): void
     {
-        $lock = $this->lockFactory->createLock(get_class($this->messageHandler) . '.lock');
+        $lock = $this->lockFactory->createLock($this->lockName . '.lock');
         $lock->acquire(true);
 
         try {
             $queueName = $this->selectQueueWithLeastConsumers($channel);
             $channel->basic_consume(
                 queue: $queueName,
-                callback: $callbackFactory->create($queueName, $this->messageHandler)
+                callback: $callbackFactory->create($queueName)
             );
         } finally {
             $lock->release();

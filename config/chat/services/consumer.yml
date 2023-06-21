@@ -10,12 +10,16 @@ services:
             - { name: 'gaming.message-broker.topology' }
 
     chat.command-message-handler.consumer:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueue
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
+        factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
         arguments:
             - !service
                 class: Gaming\Chat\Infrastructure\Messaging\CommandMessageHandler
                 arguments:
                     - '@chat.command-bus'
-            - '@chat.command-message-handler.topology'
+            - !service
+                class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
+                arguments:
+                    - '@chat.command-message-handler.topology'
         tags:
             - { name: 'gaming.consumer', key: 'chat.command' }
