@@ -6,13 +6,13 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Exchange\AMQPExchangeType;
 use Throwable;
 
-final class TopicExchangeTopology implements Topology
+final class ExchangeTopology implements Topology
 {
     public function __construct(
-        private readonly string $exchangeName
+        private readonly string $exchangeName,
+        private readonly string $exchangeType
     ) {
     }
 
@@ -21,7 +21,7 @@ final class TopicExchangeTopology implements Topology
         try {
             $channel->exchange_declare(
                 $this->exchangeName,
-                AMQPExchangeType::TOPIC,
+                $this->exchangeType,
                 false,
                 true,
                 false

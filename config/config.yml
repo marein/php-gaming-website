@@ -63,10 +63,11 @@ services:
             - '@gaming.scheduler'
 
     gaming.message-broker.gaming-exchange-topology:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\TopicExchangeTopology
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\ExchangeTopology
         public: false
         arguments:
             - 'gaming'
+            - !php/const PhpAmqpLib\Exchange\AMQPExchangeType::TOPIC
         tags:
             - { name: 'gaming.message-broker.topology', priority: 100 }
 
