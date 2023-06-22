@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 
-use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use PhpAmqpLib\Channel\AMQPChannel;
-use Throwable;
 
 final class ExchangeTopology implements Topology
 {
@@ -18,16 +16,12 @@ final class ExchangeTopology implements Topology
 
     public function declare(AMQPChannel $channel): void
     {
-        try {
-            $channel->exchange_declare(
-                $this->exchangeName,
-                $this->exchangeType,
-                false,
-                true,
-                false
-            );
-        } catch (Throwable $throwable) {
-            throw MessageBrokerException::fromThrowable($throwable);
-        }
+        $channel->exchange_declare(
+            $this->exchangeName,
+            $this->exchangeType,
+            false,
+            true,
+            false
+        );
     }
 }
