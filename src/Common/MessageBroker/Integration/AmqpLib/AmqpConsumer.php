@@ -27,6 +27,9 @@ final class AmqpConsumer implements Consumer
      */
     private readonly ArrayObject $pendingMessageToContext;
 
+    /**
+     * @param positive-int $prefetchCount
+     */
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
         private readonly int $prefetchCount,

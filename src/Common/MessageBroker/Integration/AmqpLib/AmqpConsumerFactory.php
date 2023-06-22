@@ -14,6 +14,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 final class AmqpConsumerFactory
 {
+    /**
+     * @param positive-int $prefetchCount
+     */
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
         private readonly int $prefetchCount,

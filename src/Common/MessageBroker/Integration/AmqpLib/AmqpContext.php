@@ -24,11 +24,11 @@ final class AmqpContext implements Context
      * @param ArrayObject<int, AmqpContext> $pendingMessageToContext
      */
     public function __construct(
-        private readonly MessageRouter $messageRouter,
         private readonly MessageTranslator $messageTranslator,
+        private readonly MessageRouter $messageRouter,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ArrayObject $pendingMessageToContext,
         private readonly AMQPChannel $channel,
-        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly string $queueName,
         private readonly Message $incomingMessage,
         private readonly AMQPMessage $incomingAmqpMessage

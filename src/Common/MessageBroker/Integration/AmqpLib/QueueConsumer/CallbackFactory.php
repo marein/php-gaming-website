@@ -39,11 +39,11 @@ final class CallbackFactory
         return function (AMQPMessage $amqpMessage) use ($queueName): void {
             $message = $this->messageTranslator->createMessageFromAmqpMessage($amqpMessage);
             $context = new AmqpContext(
-                $this->messageRouter,
                 $this->messageTranslator,
+                $this->messageRouter,
+                $this->eventDispatcher,
                 $this->pendingMessageToContext,
                 $this->channel,
-                $this->eventDispatcher,
                 $queueName,
                 $message,
                 $amqpMessage
