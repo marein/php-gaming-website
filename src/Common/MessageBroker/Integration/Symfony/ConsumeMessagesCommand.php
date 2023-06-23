@@ -19,7 +19,8 @@ final class ConsumeMessagesCommand extends Command
      * @param ServiceProviderInterface<Consumer> $consumers
      */
     public function __construct(
-        private readonly ServiceProviderInterface $consumers
+        private readonly ServiceProviderInterface $consumers,
+        private readonly string $allConsumersName = 'all'
     ) {
         parent::__construct();
     }
@@ -49,7 +50,8 @@ final class ConsumeMessagesCommand extends Command
         if ($consumer === null) {
             $symfonyStyle->error(
                 sprintf(
-                    "Consumer doesn't exist. Available consumers:\n* all (should only be used during dev)\n* %s",
+                    "Consumer doesn't exist. Available consumers:\n* %s (should only be used during dev)\n* %s",
+                    $this->allConsumersName,
                     implode("\n* ", array_keys($this->consumers->getProvidedServices()))
                 )
             );
@@ -69,7 +71,7 @@ final class ConsumeMessagesCommand extends Command
 
     private function getConsumerByName(string $consumerName): ?Consumer
     {
-        if ($consumerName === 'all') {
+        if ($consumerName === $this->allConsumersName) {
             return new ForkPoolConsumer(
                 array_map(
                     fn (string $consumerName): Consumer => $this->consumers->get($consumerName),
