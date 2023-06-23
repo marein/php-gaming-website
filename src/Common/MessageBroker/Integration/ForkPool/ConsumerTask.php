@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Integration\Symfony;
+namespace Gaming\Common\MessageBroker\Integration\ForkPool;
 
 use Gaming\Common\ForkPool\Channel\Channel;
 use Gaming\Common\ForkPool\Task;

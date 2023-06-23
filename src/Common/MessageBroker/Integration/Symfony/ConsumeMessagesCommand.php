@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Common\MessageBroker\Integration\Symfony;
 
 use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\Integration\ForkPool\ForkPoolConsumer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,6 +39,12 @@ final class ConsumeMessagesCommand extends Command
                 'p',
                 InputOption::VALUE_OPTIONAL,
                 'Defines how many messages can be processed in parallel. Not used by all implementations.'
+            )
+            ->addOption(
+                'fork',
+                'f',
+                InputOption::VALUE_OPTIONAL,
+                'Number of forks. This is useful for sharing memory between processes.'
             );
     }
 
@@ -46,6 +53,7 @@ final class ConsumeMessagesCommand extends Command
         $symfonyStyle = new SymfonyStyle($input, $output);
 
         $parallelism = max(1, (int)$input->getOption('parallelism'));
+        $forkCount = max(1, (int)$input->getOption('fork'));
         $consumer = $this->getConsumerByName($consumerName = $input->getArgument('consumer'));
         if ($consumer === null) {
             $symfonyStyle->error(
@@ -62,9 +70,10 @@ final class ConsumeMessagesCommand extends Command
         pcntl_signal(SIGINT, $consumer->stop(...));
         pcntl_signal(SIGTERM, $consumer->stop(...));
 
-        $symfonyStyle->success('Start consumer "' . $consumerName . '".');
+        $symfonyStyle->success('Start consumer "' . $consumerName . '" ' . $forkCount . ' time/s.');
 
-        $consumer->start($parallelism);
+        $this->decorateConsumerWhenForkCountIsGreaterThanOne($consumer, $forkCount)
+            ->start($parallelism);
 
         return Command::SUCCESS;
     }
@@ -81,5 +90,10 @@ final class ConsumeMessagesCommand extends Command
         }
 
         return $this->consumers->has($consumerName) ? $this->consumers->get($consumerName) : null;
+    }
+
+    private function decorateConsumerWhenForkCountIsGreaterThanOne(Consumer $consumer, int $forkCount): Consumer
+    {
+        return $forkCount <= 1 ? $consumer : new ForkPoolConsumer(array_fill(0, $forkCount, $consumer));
     }
 }
