@@ -11,13 +11,15 @@ final class HashExchangeTopology implements Topology, DefinesQueues
 {
     /**
      * @param string[] $routingKeys
+     * @param array<string, bool|int|float|string> $queueArguments
      */
     public function __construct(
         private readonly string $queueNameTemplate,
         private readonly string $exchangeName,
         private readonly array $routingKeys,
         private readonly int $numberOfShards,
-        private readonly string $hashHeaderName
+        private readonly string $hashHeaderName,
+        private readonly array $queueArguments = []
     ) {
     }
 
@@ -63,9 +65,10 @@ final class HashExchangeTopology implements Topology, DefinesQueues
     {
         foreach ($this->queueNames() as $queueName) {
             $channel->queue_declare(
-                queue:       $queueName,
-                durable:     true,
-                auto_delete: false
+                queue: $queueName,
+                durable: true,
+                auto_delete: false,
+                arguments: new AMQPTable($this->queueArguments)
             );
 
             $channel->queue_bind(
