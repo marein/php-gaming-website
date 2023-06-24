@@ -118,7 +118,7 @@ services:
         tags:
             - { name: kernel.event_listener, method: 'messageHandled', priority: -50 }
 
-    Gaming\Common\MessageBroker\Integration\AmqpLib\EventListener\LogMessageReturned:
+    Gaming\Common\MessageBroker\EventListener\ThrowWhenMessageReturned:
         arguments:
             - '@logger'
         tags:

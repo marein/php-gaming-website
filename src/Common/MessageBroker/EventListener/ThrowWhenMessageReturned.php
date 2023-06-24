@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\MessageBroker\Integration\AmqpLib\EventListener;
+namespace Gaming\Common\MessageBroker\EventListener;
 
-use Gaming\Common\MessageBroker\Integration\AmqpLib\Event\MessageReturned;
+use Gaming\Common\MessageBroker\Event\MessageReturned;
+use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-final class LogMessageReturned
+final class ThrowWhenMessageReturned
 {
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -23,13 +24,10 @@ final class LogMessageReturned
             'Message returned.',
             [
                 'message' => $event->message->toArray(),
-                'metadata' => [
-                    'replyCode' => $event->replyCode,
-                    'replyText' => $event->replyText,
-                    'exchange' => $event->exchange,
-                    'routingKey' => $event->routingKey
-                ],
+                'metadata' => $event->metadata
             ]
         );
+
+        throw new MessageBrokerException('Message returned.');
     }
 }

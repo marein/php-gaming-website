@@ -6,9 +6,9 @@ namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 
 use ArrayObject;
 use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\Event\MessageReturned;
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\ConnectionFactory;
-use Gaming\Common\MessageBroker\Integration\AmqpLib\Event\MessageReturned;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\CallbackFactory;
@@ -104,10 +104,12 @@ final class AmqpConsumer implements Consumer
         $this->eventDispatcher->dispatch(
             new MessageReturned(
                 $this->messageTranslator->createMessageFromAmqpMessage($returnedMessage),
-                $replyCode,
-                $replyText,
-                $exchange,
-                $routingKey
+                [
+                    'replyCode' => (string)$replyCode,
+                    'replyText' => $replyText,
+                    'exchange'  => $exchange,
+                    'routingKey' => $routingKey
+                ]
             )
         );
     }
