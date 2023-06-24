@@ -72,9 +72,6 @@ services:
         arguments:
             - !tagged { tag: 'gaming.message-broker.topology' }
 
-    gaming.message-broker.batch-confirm-reliable-publishing:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ReliablePublishing\BatchConfirmReliablePublishing
-
     gaming.message-broker.message-translator:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\ConfigurableMessageTranslator
         arguments:
@@ -90,7 +87,6 @@ services:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpPublisher
         arguments:
             - '@gaming.message-broker.connection-factory'
-            - '@gaming.message-broker.batch-confirm-reliable-publishing'
             - '@gaming.message-broker.message-translator'
             - '@gaming.message-broker.message-router'
             - '@event_dispatcher'

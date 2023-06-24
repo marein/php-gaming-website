@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\AmqpLib;
 
+use Gaming\Common\MessageBroker\Event\MessageReturned;
 use Gaming\Common\MessageBroker\Event\MessageSent;
 use Gaming\Common\MessageBroker\Event\MessagesFlushed;
 use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\ConnectionFactory;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\MessageRouter;
 use Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\MessageTranslator;
-use Gaming\Common\MessageBroker\Integration\AmqpLib\ReliablePublishing\ReliablePublishing;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
 use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Message\AMQPMessage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
@@ -25,7 +26,6 @@ final class AmqpPublisher implements Publisher
 
     public function __construct(
         private readonly ConnectionFactory $connectionFactory,
-        private readonly ReliablePublishing $reliablePublishing,
         private readonly MessageTranslator $messageTranslator,
         private readonly MessageRouter $messageRouter,
         private readonly EventDispatcherInterface $eventDispatcher
@@ -63,8 +63,7 @@ final class AmqpPublisher implements Publisher
     public function flush(): void
     {
         $this->channel ??= $this->createChannel();
-
-        $this->reliablePublishing->flush($this->channel);
+        $this->channel->wait_for_pending_acks_returns();
 
         $this->eventDispatcher->dispatch(new MessagesFlushed($this->numberOfSentMessages, []));
 
@@ -80,12 +79,43 @@ final class AmqpPublisher implements Publisher
 
         try {
             $channel = $connection->channel();
+            $channel->confirm_select();
+            $channel->set_nack_handler($this->onNegativeAcknowledgement(...));
+            $channel->set_return_listener($this->onReturn(...));
         } catch (Throwable $throwable) {
             throw MessageBrokerException::fromThrowable($throwable);
         }
 
-        $this->reliablePublishing->prepareChannel($channel);
-
         return $channel;
+    }
+
+    private function onNegativeAcknowledgement(AMQPMessage $pendingMessage): void
+    {
+        $this->eventDispatcher->dispatch(
+            new MessageReturned(
+                $this->messageTranslator->createMessageFromAmqpMessage($pendingMessage),
+                []
+            )
+        );
+    }
+
+    private function onReturn(
+        int $replyCode,
+        string $replyText,
+        string $exchange,
+        string $routingKey,
+        AMQPMessage $returnedMessage
+    ): void {
+        $this->eventDispatcher->dispatch(
+            new MessageReturned(
+                $this->messageTranslator->createMessageFromAmqpMessage($returnedMessage),
+                [
+                    'replyCode' => (string)$replyCode,
+                    'replyText' => $replyText,
+                    'exchange'  => $exchange,
+                    'routingKey' => $routingKey
+                ]
+            )
+        );
     }
 }

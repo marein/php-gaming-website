@@ -25,7 +25,7 @@ interface Publisher
      * * Make sure that all received messages are saved on the disk.
      * * If the loss of messages is acceptable, the implementation can be empty.
      *
-     * Implementations must dispatch MessagesFlushed through a PSR-14 compliant event dispatcher.
+     * Implementations must dispatch MessagesFlushed and MessageReturned through a PSR-14 compliant event dispatcher.
      *
      * @throws MessageBrokerException
      */
