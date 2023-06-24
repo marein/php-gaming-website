@@ -38,13 +38,18 @@ final class ConsumeMessagesCommand extends Command
                 'parallelism',
                 'p',
                 InputOption::VALUE_OPTIONAL,
-                'Defines how many messages can be processed in parallel. Not used by all implementations.'
+                'Defines how many messages can be processed in parallel.
+                <comment>Not used by all implementations.</comment>'
             )
             ->addOption(
-                'fork',
-                'f',
+                'replicas',
+                'r',
                 InputOption::VALUE_OPTIONAL,
-                'Number of forks. This is useful for sharing memory between processes.'
+                'Defines how many processes will be started with the given configuration.
+                This can be useful for sharing resources between processes.
+                This can also be useful if the deployment environment does not provide a way to create replicas,
+                e.g. in some development environments.
+                <comment>Please use with caution.</comment>'
             );
     }
 
@@ -52,10 +57,11 @@ final class ConsumeMessagesCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
+        $consumerName = (string)$input->getArgument('consumer');
         $parallelism = max(1, (int)$input->getOption('parallelism'));
-        $forkCount = max(1, (int)$input->getOption('fork'));
-        $consumer = $this->getConsumerByName($consumerName = $input->getArgument('consumer'));
-        if ($consumer === null) {
+        $replicas = max(1, (int)$input->getOption('replicas'));
+
+        if (!$this->consumers->has($consumerName) && $consumerName !== $this->allConsumersName) {
             $symfonyStyle->error(
                 sprintf(
                     "Consumer doesn't exist. Available consumers:\n* %s (should only be used during dev)\n* %s",
@@ -66,34 +72,40 @@ final class ConsumeMessagesCommand extends Command
             return Command::FAILURE;
         }
 
+        $consumer = $this->replicateConsumerIfNeeded($this->getConsumerByName($consumerName), $replicas);
+
         pcntl_async_signals(true);
         pcntl_signal(SIGINT, $consumer->stop(...));
         pcntl_signal(SIGTERM, $consumer->stop(...));
 
-        $symfonyStyle->success('Start consumer "' . $consumerName . '" ' . $forkCount . ' time/s.');
+        $symfonyStyle->success(
+            sprintf(
+                'Start consumer "%s" %s time/s with parallelism of %s.',
+                $consumerName,
+                $replicas,
+                $parallelism
+            )
+        );
 
-        $this->decorateConsumerWhenForkCountIsGreaterThanOne($consumer, $forkCount)
-            ->start($parallelism);
+        $consumer->start($parallelism);
 
         return Command::SUCCESS;
     }
 
-    private function getConsumerByName(string $consumerName): ?Consumer
+    private function getConsumerByName(string $consumerName): Consumer
     {
-        if ($consumerName === $this->allConsumersName) {
-            return new ForkPoolConsumer(
+        return $consumerName === $this->allConsumersName
+            ? new ForkPoolConsumer(
                 array_map(
-                    fn (string $consumerName): Consumer => $this->consumers->get($consumerName),
+                    fn(string $consumerName): Consumer => $this->consumers->get($consumerName),
                     array_keys($this->consumers->getProvidedServices())
                 )
-            );
-        }
-
-        return $this->consumers->has($consumerName) ? $this->consumers->get($consumerName) : null;
+            )
+            : $this->consumers->get($consumerName);
     }
 
-    private function decorateConsumerWhenForkCountIsGreaterThanOne(Consumer $consumer, int $forkCount): Consumer
+    private function replicateConsumerIfNeeded(Consumer $consumer, int $replicas): Consumer
     {
-        return $forkCount <= 1 ? $consumer : new ForkPoolConsumer(array_fill(0, $forkCount, $consumer));
+        return $replicas <= 1 ? $consumer : new ForkPoolConsumer(array_fill(0, $replicas, $consumer));
     }
 }
