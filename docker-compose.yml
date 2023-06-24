@@ -68,7 +68,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         restart: on-failure
     node-exporter:
-        image: quay.io/prometheus/node-exporter
+        image: prom/node-exporter:v1.6.0
         labels:
             - "prometheus-job=node"
             - "prometheus-port=9100"
@@ -82,9 +82,10 @@ services:
             - mysql:/var/lib/mysql
         restart: on-failure
     mysql-exporter:
-        image: prom/mysqld-exporter
+        image: prom/mysqld-exporter:v0.15.0
+        command: --mysqld.username=root --mysqld.address mysql:3306
         environment:
-            DATA_SOURCE_NAME: "root:password@(mysql:3306)/"
+            MYSQLD_EXPORTER_PASSWORD: password
         labels:
             - "prometheus-job=mysql"
             - "prometheus-port=9104"
@@ -128,7 +129,7 @@ services:
             - redis:/data
         restart: on-failure
     redis-exporter:
-        image: oliver006/redis_exporter
+        image: oliver006/redis_exporter:v1.51.0
         command:
             - '-redis.addr=redis:6379'
         labels:
@@ -226,7 +227,7 @@ services:
             - ./composer.lock:/project/composer.lock
             - vendor:/project/vendor
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin
+        image: phpmyadmin/phpmyadmin:5.2
         environment:
             PMA_HOST: mysql
             PMA_USER: root
@@ -236,7 +237,7 @@ services:
         depends_on:
             - mysql
     phpredisadmin:
-        image: erikdubbelboer/phpredisadmin
+        image: erikdubbelboer/phpredisadmin:1
         environment:
             REDIS_1_HOST: redis
         ports:
