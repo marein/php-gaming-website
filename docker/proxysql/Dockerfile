@@ -1,4 +1,4 @@
-FROM proxysql/proxysql:2.4.8
+FROM proxysql/proxysql:2.5.3
 
 COPY /docker/proxysql/entrypoint.sh /
 
