@@ -11,7 +11,7 @@ services:
                 constraints:
                     - "node.labels.connect-four-redis==1"
     connect-four-redis-exporter:
-        image: oliver006/redis_exporter
+        image: oliver006/redis_exporter:v1.51.0
         command:
             - '-redis.addr=connect-four-redis:6379'
         deploy:
