@@ -63,7 +63,12 @@ final class AmqpPublisher implements Publisher
     public function flush(): void
     {
         $this->channel ??= $this->createChannel();
-        $this->channel->wait_for_pending_acks_returns();
+
+        try {
+            $this->channel->wait_for_pending_acks_returns();
+        } catch (Throwable $t) {
+            throw MessageBrokerException::fromThrowable($t);
+        }
 
         $this->eventDispatcher->dispatch(new MessagesFlushed($this->numberOfSentMessages, []));
 
