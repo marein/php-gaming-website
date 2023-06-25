@@ -1,9 +1,29 @@
 services:
 
-    web-interface.publish-to-browser-consumer:
-        class: Gaming\WebInterface\Infrastructure\Messaging\PublishRabbitMqEventsToNchanConsumer
-        public: false
+    web-interface.publish-to-browser-message-handler.topology:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\HashExchangeTopology
         arguments:
-            - '@web-interface.browser-notifier'
+            - 'WebInterface.BrowserNotification.%s'
+            - 'gaming'
+            - ['ConnectFour.#', 'Chat.MessageWritten']
+            - '%env(APP_WEB_INTERFACE_PUBLISH_TO_BROWSER_SHARDS)%'
+            - 'hash-on'
+        tags:
+            - { name: 'gaming.message-broker.topology' }
+
+    web-interface.publish-to-browser-message-handler.consumer:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
+        factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
+        arguments:
+            - !service
+                class: Gaming\WebInterface\Infrastructure\Messaging\PublishMessageBrokerEventsToBrowserMessageHandler
+                arguments:
+                    - '@web-interface.browser-notifier'
+            - !service
+                class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueueWithLeastConsumers
+                arguments:
+                    - '@web-interface.publish-to-browser-message-handler.topology'
+                    - '@web-interface.lock-factory'
+                    - 'web-interface.publish-to-browser-message-handler.consumer'
         tags:
             - { name: 'gaming.consumer', key: 'web-interface.publish-to-browser' }
