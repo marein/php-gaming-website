@@ -20,7 +20,7 @@ final class ScheduleHeartbeatOnConnectDriver extends AbstractDriverMiddleware
         parent::__construct($driver);
     }
 
-    public function connect(array $params)
+    public function connect(array $params): TrackActivityConnection
     {
         $trackActivityConnection = new TrackActivityConnection(parent::connect($params));
 

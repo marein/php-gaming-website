@@ -7,8 +7,7 @@ namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
-use Gaming\Common\MessageBroker\Model\Message\Message;
-use Gaming\Common\MessageBroker\Model\Message\Name;
+use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
 use Gaming\Common\Normalizer\Normalizer;
 use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
@@ -45,11 +44,12 @@ final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventS
         // a clearly defined interface with other domains.
         $this->publisher->send(
             new Message(
-                new Name('ConnectFour', $this->nameFromDomainEvent($domainEvent)),
+                'ConnectFour.' . $this->nameFromDomainEvent($domainEvent),
                 json_encode(
                     $this->normalizer->normalize($domainEvent, $domainEvent::class),
                     JSON_THROW_ON_ERROR
-                )
+                ),
+                $domainEvent->aggregateId()
             )
         );
     }

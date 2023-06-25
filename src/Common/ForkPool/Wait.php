@@ -14,7 +14,7 @@ final class Wait
 
     public function all(): ForkPool
     {
-        while (($processId = pcntl_wait($status)) !== -1) {
+        while (($processId = $this->waitForNextProcess()) !== -1) {
             $this->processes->remove($processId);
         }
 
@@ -23,7 +23,7 @@ final class Wait
 
     public function any(): ForkPool
     {
-        $this->processes->remove(pcntl_wait($status));
+        $this->processes->remove($this->waitForNextProcess());
 
         return $this->forkPool;
     }
@@ -31,5 +31,10 @@ final class Wait
     public function killAllWhenAnyExits(int $signal): void
     {
         $this->any()->kill($signal)->wait()->all();
+    }
+
+    private function waitForNextProcess(): int
+    {
+        return pcntl_wait($status);
     }
 }

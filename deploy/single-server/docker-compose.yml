@@ -9,7 +9,7 @@ x-php-container:
         APP_ENVIRONMENT: "prod"
         APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
         APP_WAIT_FOR: "unix:///var/run/proxysql/proxysql.sock,mysql:3306,redis:6379,rabbit-mq:5672,nchan:81"
-        APP_RABBIT_MQ_DSN: "amqp://guest:guest@rabbit-mq:5672?receive_method=basic_consume&qos_prefetch_count=10&heartbeat=60"
+        APP_RABBIT_MQ_DSN: "amqp://guest:guest@rabbit-mq:5672?heartbeat=60&prefetchCount=30"
         APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@localhost/chat?persistent=1&unix_socket=/var/run/proxysql/proxysql.sock"
         APP_CHAT_RUN_MIGRATIONS: "1"
         APP_CHAT_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
@@ -22,6 +22,7 @@ x-php-container:
         APP_IDENTITY_RUN_MIGRATIONS: "1"
         APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
         APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://nchan:81"
+        APP_WEB_INTERFACE_PUBLISH_TO_BROWSER_SHARDS: "1"
     depends_on:
         - mysql
         - proxysql
@@ -70,7 +71,7 @@ services:
             - prometheus:/prometheus
             - /var/run/docker.sock:/var/run/docker.sock
     node-exporter:
-        image: quay.io/prometheus/node-exporter
+        image: prom/node-exporter:v1.6.0
         labels:
             - "prometheus-job=node"
             - "prometheus-port=9100"
@@ -82,9 +83,10 @@ services:
             - mysql:/var/lib/mysql
         restart: on-failure
     mysql-exporter:
-        image: prom/mysqld-exporter
+        image: prom/mysqld-exporter:v0.15.0
+        command: --mysqld.username=root --mysqld.address mysql:3306
         environment:
-            DATA_SOURCE_NAME: "root:password@(mysql:3306)/"
+            MYSQLD_EXPORTER_PASSWORD: password
         labels:
             - "prometheus-job=mysql"
             - "prometheus-port=9104"
@@ -124,7 +126,7 @@ services:
             - redis:/data
         restart: on-failure
     redis-exporter:
-        image: oliver006/redis_exporter
+        image: oliver006/redis_exporter:v1.51.0
         command:
             - '-redis.addr=redis:6379'
         labels:
@@ -176,7 +178,7 @@ services:
         command: bin/console identity:follow-event-store pointer --select-all-subscribers
     consume-messages:
         <<: *php-container
-        command: bin/console gaming:consume-messages --select-all-consumers
+        command: bin/console gaming:consume-messages all
     web-interface-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/console web-interface:publish-running-games-count-to-nchan

@@ -45,24 +45,28 @@ final class Publisher implements Task
             $this->pollableEventStore
         );
 
-        while (true) {
+        $shouldStop = false;
+        pcntl_async_signals(true);
+        pcntl_signal(SIGTERM, static function () use (&$shouldStop): void {
+            $shouldStop = true;
+        });
+
+        while (!$shouldStop) {
             if ($followEventStoreDispatcher->dispatch($this->batchSize) === 0) {
-                $this->ping();
+                $this->sendToChannels('KEEPALIVE');
                 usleep($this->throttleTimeInMicroseconds);
             }
         }
+
+        $this->sendToChannels('STOP');
+
+        return 0;
     }
 
-    public function ping(): void
+    private function sendToChannels(string $message): void
     {
         foreach ($this->channels as $channel) {
-            $channel->send('PING');
-        }
-
-        foreach ($this->channels as $channel) {
-            if ($channel->receive() !== 'PONG') {
-                throw new EventStoreException('No pong from channel.');
-            }
+            $channel->send($message);
         }
     }
 }

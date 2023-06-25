@@ -1,0 +1,9 @@
+services:
+
+    web-interface.lock-factory:
+        class: Symfony\Component\Lock\LockFactory
+        arguments:
+            - !service
+                class: Symfony\Component\Lock\Store\RedisStore
+                arguments:
+                    - '@web-interface.predis'
