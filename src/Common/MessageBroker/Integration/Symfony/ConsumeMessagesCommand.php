@@ -4,22 +4,24 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\Symfony;
 
-use Gaming\Common\MessageBroker\MessageBroker;
-use Gaming\Common\MessageBroker\Model\Consumer\Consumer;
+use Gaming\Common\MessageBroker\Consumer;
+use Gaming\Common\MessageBroker\Integration\ForkPool\ForkPoolConsumer;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Traversable;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\Service\ServiceProviderInterface;
 
 final class ConsumeMessagesCommand extends Command
 {
     /**
-     * @param Traversable<string, Consumer> $consumers
+     * @param ServiceProviderInterface<Consumer> $consumers
      */
     public function __construct(
-        private readonly MessageBroker $messageBroker,
-        private readonly iterable $consumers
+        private readonly ServiceProviderInterface $consumers,
+        private readonly string $allConsumersName = 'all'
     ) {
         parent::__construct();
     }
@@ -27,101 +29,83 @@ final class ConsumeMessagesCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption(
+            ->addArgument(
                 'consumer',
-                'c',
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'List of consumers.'
+                InputArgument::REQUIRED,
+                'Name of the consumer.'
             )
             ->addOption(
-                'select-all-consumers',
-                null,
-                InputOption::VALUE_NONE,
-                'Overwrites individual consumers. This is useful for the development environment.'
+                'parallelism',
+                'p',
+                InputOption::VALUE_OPTIONAL,
+                'Defines how many messages can be processed in parallel.
+                <comment>Not used by all implementations.</comment>'
+            )
+            ->addOption(
+                'replicas',
+                'r',
+                InputOption::VALUE_OPTIONAL,
+                'Defines how many processes will be started with the given configuration.
+                This can be useful for sharing resources between processes.
+                This can also be useful if the deployment environment does not provide a way to create replicas,
+                e.g. in some development environments.
+                <comment>Please use with caution.</comment>'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $selectedConsumerNames = $this->selectedConsumerNames($input);
-        if (count($selectedConsumerNames) === 0) {
-            $output->writeln(
+        $symfonyStyle = new SymfonyStyle($input, $output);
+
+        $consumerName = (string)$input->getArgument('consumer');
+        $parallelism = max(1, (int)$input->getOption('parallelism'));
+        $replicas = max(1, (int)$input->getOption('replicas'));
+
+        if (!$this->consumers->has($consumerName) && $consumerName !== $this->allConsumersName) {
+            $symfonyStyle->error(
                 sprintf(
-                    'Please select one of the following consumers:%s* %s',
-                    PHP_EOL,
-                    implode(PHP_EOL . '* ', $this->availableConsumerNames())
+                    "Consumer doesn't exist. Available consumers:\n* %s (should only be used during dev)\n* %s",
+                    $this->allConsumersName,
+                    implode("\n* ", array_keys($this->consumers->getProvidedServices()))
                 )
             );
             return Command::FAILURE;
         }
 
-        $unknownConsumerNames = $this->unknownConsumerNames($input);
-        if (count($unknownConsumerNames) !== 0) {
-            $output->writeln(
-                sprintf(
-                    'The following consumers are unknown:%s* %s',
-                    PHP_EOL,
-                    implode(PHP_EOL . '* ', $unknownConsumerNames)
-                )
-            );
-            return Command::FAILURE;
-        }
+        $consumer = $this->replicateConsumerIfNeeded($this->getConsumerByName($consumerName), $replicas);
 
-        $this->messageBroker->consume(
-            $this->createConsumers($input, $output)
+        pcntl_async_signals(true);
+        pcntl_signal(SIGINT, $consumer->stop(...));
+        pcntl_signal(SIGTERM, $consumer->stop(...));
+
+        $symfonyStyle->success(
+            sprintf(
+                'Start consumer "%s" %s time/s with parallelism of %s.',
+                $consumerName,
+                $replicas,
+                $parallelism
+            )
         );
+
+        $consumer->start($parallelism);
 
         return Command::SUCCESS;
     }
 
-    /**
-     * @return string[]
-     */
-    private function selectedConsumerNames(InputInterface $input): array
+    private function getConsumerByName(string $consumerName): Consumer
     {
-        return $input->getOption('select-all-consumers') ?
-            $this->availableConsumerNames() :
-            $input->getOption('consumer');
-    }
-
-    /**
-     * @return string[]
-     */
-    private function availableConsumerNames(): array
-    {
-        return array_keys(iterator_to_array($this->consumers));
-    }
-
-    /**
-     * @return string[]
-     */
-    private function unknownConsumerNames(InputInterface $input): array
-    {
-        return array_keys(
-            array_diff_key(
-                array_flip($this->selectedConsumerNames($input)),
-                iterator_to_array($this->consumers)
+        return $consumerName === $this->allConsumersName
+            ? new ForkPoolConsumer(
+                array_map(
+                    fn(string $consumerName): Consumer => $this->consumers->get($consumerName),
+                    array_keys($this->consumers->getProvidedServices())
+                )
             )
-        );
+            : $this->consumers->get($consumerName);
     }
 
-    /**
-     * @return iterable<Consumer>
-     */
-    private function createConsumers(InputInterface $input, OutputInterface $output): iterable
+    private function replicateConsumerIfNeeded(Consumer $consumer, int $replicas): Consumer
     {
-        $consumers = array_intersect_key(
-            iterator_to_array($this->consumers),
-            array_flip($this->selectedConsumerNames($input))
-        );
-
-        if ($output->isVerbose()) {
-            $consumers = array_map(
-                static fn(Consumer $consumer) => new SymfonyConsoleConsumer($consumer, $output),
-                $consumers
-            );
-        }
-
-        return $consumers;
+        return $replicas <= 1 ? $consumer : new ForkPoolConsumer(array_fill(0, $replicas, $consumer));
     }
 }

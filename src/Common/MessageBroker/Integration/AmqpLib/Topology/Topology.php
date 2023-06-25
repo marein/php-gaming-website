@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\AmqpLib\Topology;
 
-use Gaming\Common\MessageBroker\Exception\MessageBrokerException;
 use PhpAmqpLib\Channel\AMQPChannel;
+use Throwable;
 
 interface Topology
 {
     /**
-     * @throws MessageBrokerException
+     * @throws Throwable
      */
     public function declare(AMQPChannel $channel): void;
 }
