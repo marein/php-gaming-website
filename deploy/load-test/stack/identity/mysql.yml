@@ -13,9 +13,10 @@ services:
                 constraints:
                     - "node.labels.identity-mysql==1"
     identity-mysql-exporter:
-        image: prom/mysqld-exporter
+        image: prom/mysqld-exporter:v0.15.0
+        command: --mysqld.username=root --mysqld.address identity-mysql:3306
         environment:
-            DATA_SOURCE_NAME: "root:password@(identity-mysql:3306)/"
+            MYSQLD_EXPORTER_PASSWORD: password
         deploy:
             placement:
                 constraints:

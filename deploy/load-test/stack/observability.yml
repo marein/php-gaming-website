@@ -27,7 +27,7 @@ services:
                 constraints:
                     - "node.labels.prometheus==1"
     node-exporter:
-        image: quay.io/prometheus/node-exporter
+        image: prom/node-exporter:v1.6.0
         deploy:
             mode: global
             labels:

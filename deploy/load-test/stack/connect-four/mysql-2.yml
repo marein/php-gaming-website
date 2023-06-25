@@ -13,9 +13,10 @@ services:
                 constraints:
                     - "node.labels.connect-four-mysql-2==1"
     connect-four-mysql-2-exporter:
-        image: prom/mysqld-exporter
+        image: prom/mysqld-exporter:v0.15.0
+        command: --mysqld.username=root --mysqld.address connect-four-mysql-2:3306
         environment:
-            DATA_SOURCE_NAME: "root:password@(connect-four-mysql-2:3306)/"
+            MYSQLD_EXPORTER_PASSWORD: password
         deploy:
             placement:
                 constraints:

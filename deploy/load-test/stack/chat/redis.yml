@@ -11,7 +11,7 @@ services:
                 constraints:
                     - "node.labels.chat-redis==1"
     chat-redis-exporter:
-        image: oliver006/redis_exporter
+        image: oliver006/redis_exporter:v1.51.0
         command:
             - '-redis.addr=chat-redis:6379'
         deploy:

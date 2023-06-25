@@ -11,7 +11,7 @@ services:
                 constraints:
                     - "node.labels.web-interface-redis==1"
     web-interface-redis-exporter:
-        image: oliver006/redis_exporter
+        image: oliver006/redis_exporter:v1.51.0
         command:
             - '-redis.addr=web-interface-redis:6379'
         deploy:
