@@ -104,9 +104,9 @@ final class AmqpConsumer implements Consumer
         $this->eventDispatcher->dispatch(
             new MessageReturned(
                 $this->messageTranslator->createMessageFromAmqpMessage($returnedMessage),
+                $replyText,
                 [
                     'replyCode' => (string)$replyCode,
-                    'replyText' => $replyText,
                     'exchange'  => $exchange,
                     'routingKey' => $routingKey
                 ]

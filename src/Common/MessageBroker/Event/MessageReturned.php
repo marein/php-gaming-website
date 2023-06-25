@@ -13,6 +13,7 @@ final class MessageReturned
      */
     public function __construct(
         public readonly Message $message,
+        public readonly string $cause,
         public readonly array $metadata
     ) {
     }

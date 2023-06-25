@@ -24,6 +24,7 @@ final class ThrowWhenMessageReturned
             'Message returned.',
             [
                 'message' => $event->message->toArray(),
+                'cause' => $event->cause,
                 'metadata' => $event->metadata
             ]
         );

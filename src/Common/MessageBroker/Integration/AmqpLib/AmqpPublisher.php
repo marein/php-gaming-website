@@ -94,6 +94,7 @@ final class AmqpPublisher implements Publisher
         $this->eventDispatcher->dispatch(
             new MessageReturned(
                 $this->messageTranslator->createMessageFromAmqpMessage($pendingMessage),
+                'NEGATIVE_ACKNOWLEDGEMENT',
                 []
             )
         );
@@ -109,9 +110,9 @@ final class AmqpPublisher implements Publisher
         $this->eventDispatcher->dispatch(
             new MessageReturned(
                 $this->messageTranslator->createMessageFromAmqpMessage($returnedMessage),
+                $replyText,
                 [
                     'replyCode' => (string)$replyCode,
-                    'replyText' => $replyText,
                     'exchange'  => $exchange,
                     'routingKey' => $routingKey
                 ]
