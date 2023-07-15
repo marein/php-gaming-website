@@ -7,16 +7,17 @@ namespace Gaming\Chat\Application\Command;
 final class InitiateChatCommand
 {
     /**
-     * @var string[]
-     */
-    private array $authors;
-
-    /**
      * @param string[] $authors
      */
-    public function __construct(array $authors)
+    public function __construct(
+        private readonly string $idempotencyKey,
+        private readonly array $authors
+    ) {
+    }
+
+    public function idempotencyKey(): string
     {
-        $this->authors = $authors;
+        return $this->idempotencyKey;
     }
 
     /**

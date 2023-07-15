@@ -2,7 +2,7 @@ services:
 
     identity.jms:
         class: JMS\Serializer\Serializer
-        factory: ['Gaming\Common\Port\Adapter\Jms\JmsSerializerFactory', 'create']
+        factory: ['Gaming\Common\JmsSerializer\JmsSerializerFactory', 'create']
         arguments:
             - '%kernel.debug%'
             - '%kernel.cache_dir%/identity/jms'
@@ -10,6 +10,6 @@ services:
             - !tagged_iterator identity.jms.subscriber
 
     identity.normalizer:
-        class: Gaming\Common\Port\Adapter\Normalizer\JmsSerializerNormalizer
+        class: Gaming\Common\Normalizer\Intergration\JmsSerializerNormalizer
         arguments:
             - '@identity.jms'

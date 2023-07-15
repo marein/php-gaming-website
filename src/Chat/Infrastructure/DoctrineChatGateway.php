@@ -6,8 +6,10 @@ namespace Gaming\Chat\Infrastructure;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Gaming\Chat\Application\ChatGateway;
 use Gaming\Chat\Application\ChatId;
+use Gaming\Chat\Application\Exception\ChatAlreadyExistsException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 
 final class DoctrineChatGateway implements ChatGateway
@@ -19,20 +21,25 @@ final class DoctrineChatGateway implements ChatGateway
     ) {
     }
 
-    public function create(array $authors): ChatId
+    public function nextIdentity(): ChatId
     {
-        $chatId = ChatId::generate();
+        return ChatId::generate();
+    }
 
-        $this->connection->insert(
-            $this->chatTableName,
-            [
-                'id' => $chatId->toString(),
-                'authors' => $authors
-            ],
-            ['uuid', 'json']
-        );
-
-        return $chatId;
+    public function create(ChatId $chatId, array $authors): void
+    {
+        try {
+            $this->connection->insert(
+                $this->chatTableName,
+                [
+                    'id' => $chatId->toString(),
+                    'authors' => $authors
+                ],
+                ['uuid', 'json']
+            );
+        } catch (UniqueConstraintViolationException) {
+            throw new ChatAlreadyExistsException();
+        }
     }
 
     public function createMessage(

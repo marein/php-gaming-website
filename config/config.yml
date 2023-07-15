@@ -20,10 +20,12 @@ framework:
 
 monolog:
     handlers:
-        application_error:
+        application_stream:
             type: stream
-            path: "php://stderr"
-            level: error
+            path: 'php://stderr'
+            level: warning
+            process_psr_3_messages: false
+            formatter: 'monolog.formatter.json'
 
 twig:
     strict_variables: '%kernel.debug%'
@@ -48,80 +50,106 @@ services:
         tags:
             - { name: doctrine.middleware }
 
-    gaming.message-broker:
-        class: Gaming\Common\Port\Adapter\Messaging\AmqpTopicExchangeMessageBroker
-        public: false
-        arguments:
-            - '%env(APP_RABBIT_MQ_DSN)%'
-            - 'gaming'
-
     gaming.message-broker.connection-factory:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\AmqpStreamConnectionFactory
-        public: false
         arguments:
             - '%env(APP_RABBIT_MQ_DSN)%'
+
+    gaming.message-broker.declare-topology-connection-factory:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\DeclareTopologyConnectionFactory
+        decorates: gaming.message-broker.connection-factory
+        arguments:
+            - '@.inner'
+            - '@gaming.message-broker.topology'
 
     gaming.message-broker.schedule-periodic-heartbeat-connection-factory:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\SchedulePeriodicHeartbeatConnectionFactory
         decorates: gaming.message-broker.connection-factory
-        public: false
         arguments:
             - '@.inner'
             - '@gaming.scheduler'
 
     gaming.message-broker.gaming-exchange-topology:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\TopicExchangeTopology
-        public: false
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\ExchangeTopology
         arguments:
             - 'gaming'
+            - !php/const PhpAmqpLib\Exchange\AMQPExchangeType::TOPIC
+        tags:
+            - { name: 'gaming.message-broker.topology', priority: 100 }
 
-    gaming.message-broker.batch-confirm-reliable-publishing:
-        class: Gaming\Common\MessageBroker\Integration\AmqpLib\ReliablePublishing\BatchConfirmReliablePublishing
-        public: false
+    gaming.message-broker.topology:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\CompositeTopology
+        arguments:
+            - !tagged { tag: 'gaming.message-broker.topology' }
 
     gaming.message-broker.message-translator:
-        class: Gaming\Common\Port\Adapter\Messaging\GamingMessageTranslator
-        public: false
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\ConfigurableMessageTranslator
         arguments:
-            -
-              delivery_mode: !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT
+            - { delivery_mode: !php/const PhpAmqpLib\Message\AMQPMessage::DELIVERY_MODE_PERSISTENT }
+            - 'hash-on'
+
+    gaming.message-broker.message-router:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\RouteMessagesToExchange
+        arguments:
+            - 'gaming'
 
     gaming.message-broker.gaming-exchange-publisher:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpPublisher
-        public: false
         arguments:
             - '@gaming.message-broker.connection-factory'
-            - '@gaming.message-broker.gaming-exchange-topology'
-            - '@gaming.message-broker.batch-confirm-reliable-publishing'
             - '@gaming.message-broker.message-translator'
-            - 'gaming'
+            - '@gaming.message-broker.message-router'
+            - '@event_dispatcher'
+
+    gaming.message-broker.amqp-consumer-factory:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumerFactory
+        arguments:
+            - '@gaming.message-broker.connection-factory'
+            - '%env(key:prefetchCount:query_string:APP_RABBIT_MQ_DSN)%'
+            - '@gaming.message-broker.message-translator'
+            - '@gaming.message-broker.message-router'
+            - '@event_dispatcher'
 
     gaming.consume-messages-command:
-        class: Gaming\Common\Port\Adapter\Symfony\ConsumeMessagesCommand
-        public: false
+        class: Gaming\Common\MessageBroker\Integration\Symfony\ConsumeMessagesCommand
         arguments:
-            - '@gaming.message-broker'
-            - !tagged { tag: 'gaming.consumer', index_by: 'key' }
+            - !tagged_locator { tag: 'gaming.consumer', index_by: 'key' }
         tags:
             - { name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }
 
+    Gaming\Common\MessageBroker\Integration\Symfony\ResetServicesListener:
+        arguments:
+            - '@services_resetter'
+            - 50
+        tags:
+            - { name: kernel.event_listener, method: 'messageHandled', priority: -50 }
+
+    Gaming\Common\MessageBroker\EventListener\ThrowWhenMessageReturned:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, method: 'messageReturned', priority: 50 }
+
+    Gaming\Common\MessageBroker\EventListener\ThrowWhenMessageFailed:
+        arguments:
+            - '@logger'
+        tags:
+            - { name: kernel.event_listener, method: 'messageFailed' }
+
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
-        public: false
 
     # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.
     # todo: This can be removed as soon as https://github.com/marein/php-gaming-website/issues/34 is done.
     gaming.exception-to-json-listener:
-        class: Gaming\Common\Port\Adapter\Symfony\GamingExceptionListener
-        public: false
+        class: Gaming\Common\ExceptionHandling\GamingExceptionListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: -100 }
 
     # Lower priority so that the profiler is respected.
     gaming.application-exception-to-json-listener:
-        class: Gaming\Common\Port\Adapter\Symfony\TransformApplicationExceptionListener
-        public: false
+        class: Gaming\Common\Bus\Integration\ApplicationExceptionToJsonListener
         arguments:
             - []
         tags:

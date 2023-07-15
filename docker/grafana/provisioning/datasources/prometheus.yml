@@ -6,7 +6,7 @@ datasources:
     isDefault: true
     access: proxy
     uid: prometheus
-    url: http://prometheus:9090
+    url: $GF_DATASOURCE_PROMETHEUS_URL
     jsonData:
       timeInterval: 5s
     version: 1

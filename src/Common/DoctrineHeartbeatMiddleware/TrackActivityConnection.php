@@ -73,6 +73,14 @@ final class TrackActivityConnection implements Connection
         return $this->lastActivity;
     }
 
+    /**
+     * @return resource|object
+     */
+    public function getNativeConnection()
+    {
+        return $this->connection->getNativeConnection();
+    }
+
     private function decorate(Closure $action): mixed
     {
         $this->isQuerying = true;

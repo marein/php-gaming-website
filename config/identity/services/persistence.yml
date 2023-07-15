@@ -7,7 +7,7 @@ services:
         alias: 'doctrine.orm.identity_entity_manager'
 
     identity.event-store:
-        class: Gaming\Common\Port\Adapter\EventStore\DoctrineEventStore
+        class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
         public: false
         arguments:
             - '@identity.doctrine-dbal'
