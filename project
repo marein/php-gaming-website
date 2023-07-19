@@ -48,7 +48,7 @@ build() {
     docker-compose build --pull
     docker-compose up -d composer
     docker cp "$(docker-compose ps -q composer)":/project/vendor ./
-    docker-compose up --remove-orphan
+    docker-compose up --remove-orphans
 }
 
 up() {
