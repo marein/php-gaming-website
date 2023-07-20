@@ -12,6 +12,7 @@ imports:
 
 framework:
     secret: '%env(APP_KERNEL_SECRET)%'
+    trusted_proxies: '%env(APP_TRUSTED_PROXIES)%'
     validation:
         enabled: true
     router:
@@ -28,6 +29,15 @@ monolog:
 
 twig:
     strict_variables: '%kernel.debug%'
+
+artprima_prometheus_metrics:
+    namespace: app
+    ignored_routes: [metrics]
+    storage:
+        type: apcng
+    disable_default_metrics: false
+    disable_default_promphp_metrics: false
+    enable_console_metrics: false
 
 services:
 
