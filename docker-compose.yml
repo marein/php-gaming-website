@@ -170,6 +170,7 @@ services:
     php-fpm:
         <<: *php-container
         volumes:
+            - ./assets:/project/assets:delegated
             - ./config:/project/config:delegated
             - ./src:/project/src:delegated
             - ./tests:/project/tests:delegated

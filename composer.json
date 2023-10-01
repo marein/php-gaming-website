@@ -39,6 +39,7 @@
     "psr/event-dispatcher": "^1.0",
     "psr/log": "^3.0",
     "symfony/asset": "^6.3",
+    "symfony/asset-mapper": "^6.3",
     "symfony/clock": "^6.2",
     "symfony/config": "^6.3",
     "symfony/console": "^6.3",
@@ -78,5 +79,8 @@
       "composer/package-versions-deprecated": true,
       "phpstan/extension-installer": true
     }
+  },
+  "extra": {
+    "public-dir": "/web"
   }
 }
