@@ -122,7 +122,7 @@ If authors are assigned to a chat, only those authors can write and read message
 The public interface is formed by a
 [controller](/src/Chat/Presentation/Http/ChatController.php),
 which can be called up via http, and a
-[message consumer](/src/Chat/Infrastructure/Messaging/CommandConsumer.php),
+[message handler](/src/Chat/Infrastructure/Messaging/CommandMessageHandler.php),
 which serves as an interface to a message broker.
 
 This context publishes
@@ -205,7 +205,7 @@ There's also a
 [Process Manager](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html)
 involved.
 Its name is referee and it's a
-[message consumer](/src/ConnectFour/Port/Adapter/Messaging/RefereeConsumer.php).
+[message handler](/src/ConnectFour/Port/Adapter/Messaging/RefereeMessageHandler.php).
 The referee picks up a player joined event and ensures, that a chat is initiated.
 When the chat is initiated, it assigns the chat to the game.
 This is done, so the storage of games and chats can be on different MySQL instances.
