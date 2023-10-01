@@ -18,6 +18,7 @@ framework:
         resource: "%kernel.project_dir%/config/routing.yml"
     asset_mapper:
         importmap_path: "%kernel.project_dir%/config/importmap.php"
+        importmap_polyfill: false # It's manually added to the base template (with feature detection).
         paths:
             - assets/
 
