@@ -4,6 +4,7 @@ class GameListElement extends HTMLElement
 {
     connectedCallback()
     {
+        this._onDisconnect = [];
         this._games = document.createElement('ul');
         this._games.classList.add('game-list');
 
@@ -18,6 +19,11 @@ class GameListElement extends HTMLElement
 
         this._registerEventHandler();
         this._flushPendingGamesToAdd();
+    }
+
+    disconnectedCallback()
+    {
+        this._onDisconnect.forEach(f => f());
     }
 
     /**
@@ -168,13 +174,13 @@ class GameListElement extends HTMLElement
                     this._scheduleRemovingOfGame(gameId);
                 });
             } else {
-                service.join(gameId).then(() => {
-                    service.redirectTo(gameId);
-                }).catch(() => {
-                    // Remove the game on any error.
-                    button.classList.remove('loading-indicator');
-                    this._scheduleRemovingOfGame(gameId);
-                });
+                service.join(gameId)
+                    .then(() => service.redirectTo(gameId))
+                    .catch(() => {
+                        // Remove the game on any error.
+                        button.classList.remove('loading-indicator');
+                        this._scheduleRemovingOfGame(gameId);
+                    });
             }
         });
 
@@ -223,20 +229,20 @@ class GameListElement extends HTMLElement
 
     _registerEventHandler()
     {
-        window.addEventListener(
-            'ConnectFour.GameOpened',
-            this._onGameOpened.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.GameOpened', this._onGameOpened.bind(this));
 
-        window.addEventListener(
-            'ConnectFour.PlayerJoined',
-            this._onPlayerJoinedOrGameAborted.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.PlayerJoined', this._onPlayerJoinedOrGameAborted.bind(this));
 
-        window.addEventListener(
-            'ConnectFour.GameAborted',
-            this._onPlayerJoinedOrGameAborted.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.GameAborted', this._onPlayerJoinedOrGameAborted.bind(this));
     }
 }
 

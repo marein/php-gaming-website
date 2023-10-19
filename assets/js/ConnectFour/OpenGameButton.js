@@ -4,6 +4,7 @@ class OpenGameButtonElement extends HTMLElement
 {
     connectedCallback()
     {
+        this._onDisconnect = [];
         this._button = document.createElement('button');
         this._button.classList.add('button');
         this._button.setAttribute('data-open-game-button', '');
@@ -14,7 +15,22 @@ class OpenGameButtonElement extends HTMLElement
 
         this._currentOpenGameId = '';
 
-        this._registerEventHandler();
+        this._button.addEventListener('click', this._onButtonClick.bind(this));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.PlayerJoined', this._onPlayerJoined.bind(this));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.GameAborted', this._onGameAborted.bind(this));
+    }
+
+    disconnectedCallback()
+    {
+        this._onDisconnect.forEach(f => f());
     }
 
     _onButtonClick(event)
@@ -50,21 +66,6 @@ class OpenGameButtonElement extends HTMLElement
         if (this._currentOpenGameId === event.detail.gameId) {
             this._currentOpenGameId = '';
         }
-    }
-
-    _registerEventHandler()
-    {
-        this._button.addEventListener('click', this._onButtonClick.bind(this));
-
-        window.addEventListener(
-            'ConnectFour.PlayerJoined',
-            this._onPlayerJoined.bind(this)
-        );
-
-        window.addEventListener(
-            'ConnectFour.GameAborted',
-            this._onGameAborted.bind(this)
-        );
     }
 }
 

@@ -4,6 +4,8 @@ class WidgetElement extends HTMLElement
 {
     connectedCallback()
     {
+        this._onDisconnect = [];
+
         this.classList.add('loading-indicator');
 
         this._messageHolder = document.createElement('ul');
@@ -29,6 +31,11 @@ class WidgetElement extends HTMLElement
         }
 
         this._registerEventHandler();
+    }
+
+    disconnectedCallback()
+    {
+        this._onDisconnect.forEach(f => f());
     }
 
     /**
@@ -159,17 +166,7 @@ class WidgetElement extends HTMLElement
 
     _onChatAssigned(event)
     {
-        this.dispatchEvent(
-            new CustomEvent(
-                'AddSubscription',
-                {
-                    bubbles: true,
-                    detail: {
-                        name: 'chat-' + event.detail.chatId
-                    }
-                }
-            )
-        );
+        window.dispatchEvent(new CustomEvent('sse:addsubscription', {detail: {name: 'chat-' + event.detail.chatId}}));
 
         this._initialize(event.detail.chatId);
     }
@@ -178,15 +175,15 @@ class WidgetElement extends HTMLElement
     {
         this._input.addEventListener('keypress', this._onKeyPress.bind(this));
 
-        window.addEventListener(
-            'Chat.MessageWritten',
-            this._onMessageWritten.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('Chat.MessageWritten', this._onMessageWritten.bind(this));
 
-        window.addEventListener(
-            'ConnectFour.ChatAssigned',
-            this._onChatAssigned.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.ChatAssigned', this._onChatAssigned.bind(this));
     }
 }
 
