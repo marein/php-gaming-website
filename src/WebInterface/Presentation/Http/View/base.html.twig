@@ -3,18 +3,16 @@
 <head>
     <title>Gaming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/icon/apple-touch-icon.png') }}"/>
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/img/icon/favicon-32x32.png') }}"/>
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/img/icon/favicon-16x16.png') }}"/>
-    <link rel="manifest" href="{{ asset('assets/img/icon/site.webmanifest') }}"/>
-    <link rel="mask-icon" href="{{ asset('assets/img/icon/safari-pinned-tab.svg') }}" color="#427280"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('icon/apple-touch-icon.png') }}"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icon/favicon-32x32.png') }}"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('icon/favicon-16x16.png') }}"/>
+    <link rel="manifest" href="{{ asset('icon/site.webmanifest') }}"/>
+    <link rel="mask-icon" href="{{ asset('icon/safari-pinned-tab.svg') }}" color="#427280"/>
     <meta name="msapplication-TileColor" content="#da532c"/>
     <meta name="theme-color" content="#ffffff"/>
-    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}"/>
-    <script type="text/javascript">
-        {# Load polyfills if necessary. #}
-        !function(){function n(n,e,t){var o=document.createElement("script");o.type=e,o.src=n,o.onload=t||function(){},document.head.appendChild(o)}function e(){n("{{ asset('assets/js/main.js') }}","module")}window.EventSource&&window.customElements?e():n("/polyfill/polyfill.min.js?packages=CustomElements,EventSource","text/javascript",e)}();
-    </script>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}"/>
+    <script>if(!HTMLScriptElement.supports||!HTMLScriptElement.supports('importmap')){let t=document.createElement('script');t.setAttribute('async','');t.setAttribute('src','https://ga.jspm.io/npm:es-module-shims@1.8.0/dist/es-module-shims.js');document.currentScript.replaceWith(t)}</script>
+    {{ importmap() }}
 </head>
 <body>
 <notification-list></notification-list>

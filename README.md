@@ -33,19 +33,19 @@ The sections
 [Transition to Microservices](#transition-to-microservices)
 and
 [Scale-Out the application](#scale-out-the-application)
-describe whats done to apply these concepts.
+describe what's done to apply these concepts.
 
 ## Installation and requirements
 
-I recommend to use
-[Docker](https://www.docker.com),
-[Docker Compose](https://docs.docker.com/compose/).
-You can also set up a stack yourself.
+[Docker](https://www.docker.com)
+and
+[Docker Compose](https://docs.docker.com/compose/)
+for deploying the application.
 
-Since I use the latest JavaScript techniques, like ECMAScript 6, it doesn't work in all browsers.
-You could see that I don't use a bundler. This is intentional because I use ECMAScript 6 modules
-and I want to keep the tooling small.
-Please don't look at the front end design, this is by no means my domain.
+A modern browser, as this project uses modern features and doesn't polyfill all of them, e.g.
+[Server-sent events](https://caniuse.com/eventsource)
+and
+[Custom Elements](https://caniuse.com/custom-elementsv1).
 
 ### Development
 
@@ -122,7 +122,7 @@ If authors are assigned to a chat, only those authors can write and read message
 The public interface is formed by a
 [controller](/src/Chat/Presentation/Http/ChatController.php),
 which can be called up via http, and a
-[message consumer](/src/Chat/Infrastructure/Messaging/CommandConsumer.php),
+[message handler](/src/Chat/Infrastructure/Messaging/CommandMessageHandler.php),
 which serves as an interface to a message broker.
 
 This context publishes
@@ -205,7 +205,7 @@ There's also a
 [Process Manager](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html)
 involved.
 Its name is referee and it's a
-[message consumer](/src/ConnectFour/Port/Adapter/Messaging/RefereeConsumer.php).
+[message handler](/src/ConnectFour/Port/Adapter/Messaging/RefereeMessageHandler.php).
 The referee picks up a player joined event and ensures, that a chat is initiated.
 When the chat is initiated, it assigns the chat to the game.
 This is done, so the storage of games and chats can be on different MySQL instances.

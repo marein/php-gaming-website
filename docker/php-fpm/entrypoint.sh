@@ -2,7 +2,12 @@
 
 set -e
 
-bin/console cache:warmup --env="${APP_ENVIRONMENT}"
+bin/console cache:warmup
+
+if [ "${APP_ENVIRONMENT}" = "prod" ]
+then
+    bin/console asset-map:compile
+fi
 
 if [ "${APP_WAIT_FOR}" != "" ]
 then
