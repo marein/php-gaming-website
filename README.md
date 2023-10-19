@@ -33,19 +33,19 @@ The sections
 [Transition to Microservices](#transition-to-microservices)
 and
 [Scale-Out the application](#scale-out-the-application)
-describe whats done to apply these concepts.
+describe what's done to apply these concepts.
 
 ## Installation and requirements
 
-I recommend to use
-[Docker](https://www.docker.com),
-[Docker Compose](https://docs.docker.com/compose/).
-You can also set up a stack yourself.
+[Docker](https://www.docker.com)
+and
+[Docker Compose](https://docs.docker.com/compose/)
+for deploying the application.
 
-Since I use the latest JavaScript techniques, like ECMAScript 6, it doesn't work in all browsers.
-You could see that I don't use a bundler. This is intentional because I use ECMAScript 6 modules
-and I want to keep the tooling small.
-Please don't look at the front end design, this is by no means my domain.
+A modern browser, as this project uses modern features and doesn't polyfill all of them, e.g.
+[Server-sent events](https://caniuse.com/eventsource)
+and
+[Custom Elements](https://caniuse.com/custom-elementsv1).
 
 ### Development
 
