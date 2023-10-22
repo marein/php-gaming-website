@@ -1,22 +1,21 @@
-/**
- * We don't use a bundler.
- * This is intentional because we use ECMAScript 6 modules and we want to keep the tooling small.
- */
-import './Chat/Widget.js'
-
-import './Common/EventSource.js'
-import { client } from './Common/HttpClient.js';
+import { client } from './Common/HttpClient.js'
 import './Common/NotificationList.js'
 
-import './ConnectFour/Game.js'
-import './ConnectFour/GameList.js'
-import './ConnectFour/AbortGameButton.js'
-import './ConnectFour/OpenGameButton.js'
-import './ConnectFour/ResignGameButton.js'
-import './ConnectFour/RunningGames.js'
+window.app = {
+    loadElements: async node => await Promise.allSettled([...node.querySelectorAll(':not(:defined)')]
+        .filter(n => !window.customElements.get(n.localName))
+        .map(async n => await import(n.localName))),
+    showProgress() {
+        document.querySelector('.progress')?.remove();
+        let progress = document.createElement('div');
+        progress.classList.add('progress');
+        const timeout = setTimeout(() => document.head.after(progress), 250);
+        return () => clearTimeout(timeout) || progress.classList.add('progress--finish');
+    }
+}
 
-const notificationListElement = document.querySelector('notification-list');
+client.onError = response => document.querySelector('notification-list').appendMessage(response.message);
 
-client.onError = (response) => {
-    notificationListElement.appendMessage(response.message);
-};
+await window.app.loadElements(document.body).finally(window.app.showProgress());
+
+window.dispatchEvent(new CustomEvent('app:load'));

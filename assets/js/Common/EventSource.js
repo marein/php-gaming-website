@@ -13,7 +13,10 @@ class EventSourceElement extends HTMLElement
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('sse:addsubscription', this._onAddSubscription.bind(this));
 
-        this._connect();
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('app:load', this._connect.bind(this));
     }
 
     disconnectedCallback()
