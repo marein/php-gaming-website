@@ -89,7 +89,7 @@ acceptance() {
 
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci build --pull
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci up -d
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run php bash -c 'wait-for-tcp-server php-fpm:80 120 && vendor/bin/codecept run acceptance'
+    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run php bash -c 'wait-for-tcp-server php-fpm:80,selenium:4444 120 && vendor/bin/codecept run acceptance'
     docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci down -v
 }
 

@@ -112,7 +112,11 @@ services:
     #          CI helper         #
     ##############################
     selenium:
-        image: selenium/standalone-chrome:3.14
+        image: selenium/standalone-chrome:4.11
+        environment:
+            SE_NODE_MAX_SESSIONS: 20
+            SE_NODE_OVERRIDE_MAX_SESSIONS: 'true'
+        shm_size: '2gb'
     php:
         build:
             context: .
