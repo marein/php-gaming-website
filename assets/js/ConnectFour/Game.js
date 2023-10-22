@@ -9,6 +9,8 @@ class GameElement extends HTMLElement
 {
     connectedCallback()
     {
+        this._onDisconnect = [];
+
         let game = JSON.parse(this.getAttribute('game'));
 
         this._gameHolder = document.createElement('div');
@@ -58,6 +60,11 @@ class GameElement extends HTMLElement
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
 
         this._registerEventHandler();
+    }
+
+    disconnectedCallback()
+    {
+        this._onDisconnect.forEach(f => f());
     }
 
     /**
@@ -190,10 +197,10 @@ class GameElement extends HTMLElement
     {
         this._game.onMoveAppended(this._onMoveAppendedToGame.bind(this));
 
-        window.addEventListener(
-            'ConnectFour.PlayerMoved',
-            this._onPlayerMoved.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.PlayerMoved', this._onPlayerMoved.bind(this));
 
         this._fields.forEach((field) => {
             field.addEventListener('click', this._onFieldClick.bind(this));
