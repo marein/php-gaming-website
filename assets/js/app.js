@@ -2,9 +2,9 @@ import { client } from './Common/HttpClient.js'
 import './Common/NotificationList.js'
 
 window.app = {
-    loadElements: async node => await Promise.allSettled([...node.querySelectorAll(':not(:defined)')]
+    loadElements: node => Promise.allSettled([...node.querySelectorAll(':not(:defined)')]
         .filter(n => !window.customElements.get(n.localName))
-        .map(async n => await import(n.localName))),
+        .map(n => import(n.localName))),
     showProgress() {
         document.querySelector('.progress')?.remove();
         let progress = document.createElement('div');
