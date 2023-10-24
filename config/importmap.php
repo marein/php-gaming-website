@@ -16,7 +16,9 @@ namespace {
         ->name('importmap.php');
 
     $map = [
-        'app' => ['path' => 'js/app.js', 'preload' => true]
+        'app' => ['path' => 'js/app.js', 'preload' => true],
+        'event-source' => ['path' => 'js/Common/EventSource.js', 'preload' => true],
+        'notification-list' => ['path' => 'js/Common/NotificationList.js', 'preload' => true]
     ];
 
     foreach ($finder as $file) {
