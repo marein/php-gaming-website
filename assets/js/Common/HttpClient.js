@@ -66,7 +66,7 @@ class HttpClient
      */
     redirectTo(url)
     {
-        top.location.href = url;
+        window.app.navigate(url);
     }
 
     /**
