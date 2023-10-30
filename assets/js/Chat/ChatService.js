@@ -1,12 +1,10 @@
-import { client } from '../Common/HttpClient.js'
+import {client} from '../Common/HttpClient.js'
 
-class ChatService
-{
+class ChatService {
     /**
      * @param {HttpClient} httpClient
      */
-    constructor(httpClient)
-    {
+    constructor(httpClient) {
         this.httpClient = httpClient;
     }
 
@@ -15,13 +13,10 @@ class ChatService
      * @param {String} message
      * @returns {Promise}
      */
-    writeMessage(chatId, message)
-    {
+    writeMessage(chatId, message) {
         return this.httpClient.post(
             '/api/chat/chats/' + chatId + '/write-message',
-            {
-                message: message
-            }
+            {message}
         );
     }
 
@@ -29,8 +24,7 @@ class ChatService
      * @param {String} chatId
      * @returns {Promise}
      */
-    messages(chatId)
-    {
+    messages(chatId) {
         return this.httpClient.get(
             '/api/chat/chats/' + chatId + '/messages'
         );

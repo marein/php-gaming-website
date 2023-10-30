@@ -1,9 +1,7 @@
-import { service } from './GameService.js'
+import {service} from './GameService.js'
 
-class GameListElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('connect-four-game-list', class extends HTMLElement {
+    connectedCallback() {
         this._onDisconnect = [];
         this._games = document.createElement('ul');
         this._games.classList.add('game-list');
@@ -21,8 +19,7 @@ class GameListElement extends HTMLElement
         this._flushPendingGamesToAdd();
     }
 
-    disconnectedCallback()
-    {
+    disconnectedCallback() {
         this._onDisconnect.forEach(f => f());
     }
 
@@ -30,8 +27,7 @@ class GameListElement extends HTMLElement
      * @param {String} gameId
      * @param {String} playerId
      */
-    _addGame(gameId, playerId)
-    {
+    _addGame(gameId, playerId) {
         if (this._currentGamesInList.indexOf(gameId) === -1) {
             let isCurrentUserThePlayer = this._playerId === playerId;
 
@@ -44,8 +40,7 @@ class GameListElement extends HTMLElement
     /**
      * @param {String} gameId
      */
-    _removeGame(gameId)
-    {
+    _removeGame(gameId) {
         if (this._currentGamesInList.indexOf(gameId) !== -1) {
             let node = this._games.querySelector('[data-game-id="' + gameId + '"]');
             this._games.removeChild(node);
@@ -55,8 +50,7 @@ class GameListElement extends HTMLElement
     /**
      * @param {String} gameId
      */
-    _scheduleRemovingOfGame(gameId)
-    {
+    _scheduleRemovingOfGame(gameId) {
         let indexOfGameInList = this._currentGamesInList.indexOf(gameId);
 
         if (indexOfGameInList !== -1) {
@@ -76,8 +70,7 @@ class GameListElement extends HTMLElement
     /**
      * @param {String} gameId
      */
-    _markGameAsToBeRemovedSoon(gameId)
-    {
+    _markGameAsToBeRemovedSoon(gameId) {
         if (this._currentGamesInList.indexOf(gameId) !== -1) {
             let node = this._games.querySelector('[data-game-id="' + gameId + '"]');
             node.classList.add('game-list__game--remove-soon');
@@ -85,8 +78,7 @@ class GameListElement extends HTMLElement
         }
     }
 
-    _flushPendingGamesToAdd()
-    {
+    _flushPendingGamesToAdd() {
         // Limited by the maximum number of games in list.
         let limit = Math.min(
             this._pendingGamesToAdd.length,
@@ -103,8 +95,7 @@ class GameListElement extends HTMLElement
         }
     }
 
-    _flushPendingGamesToRemove()
-    {
+    _flushPendingGamesToRemove() {
         let gamesToRemove = this._currentGamesInList.filter((gameId) => {
             let indexOfGameIdInRemoveList = this._pendingGamesToRemove.indexOf(gameId);
             return indexOfGameIdInRemoveList !== -1;
@@ -122,8 +113,7 @@ class GameListElement extends HTMLElement
         this._pendingGamesToRemove = [];
     }
 
-    _renderList()
-    {
+    _renderList() {
         this._renderListTimeout = null;
         this._games.classList.add('loading-indicator');
 
@@ -140,8 +130,7 @@ class GameListElement extends HTMLElement
      * @param {Boolean} isCurrentUserThePlayer
      * @returns {Node}
      */
-    _createGameNode(gameId, isCurrentUserThePlayer)
-    {
+    _createGameNode(gameId, isCurrentUserThePlayer) {
         let span = document.createElement('span');
         span.innerText = 'Anonymous';
 
@@ -187,8 +176,7 @@ class GameListElement extends HTMLElement
         return li;
     }
 
-    _onGameOpened(event)
-    {
+    _onGameOpened(event) {
         let gameId = event.detail.gameId;
         let playerId = event.detail.playerId;
         let pendingGameToAdd = {
@@ -222,13 +210,11 @@ class GameListElement extends HTMLElement
         }
     }
 
-    _onPlayerJoinedOrGameAborted(event)
-    {
+    _onPlayerJoinedOrGameAborted(event) {
         this._scheduleRemovingOfGame(event.detail.gameId);
     }
 
-    _registerEventHandler()
-    {
+    _registerEventHandler() {
         ((n, f) => {
             window.addEventListener(n, f);
             this._onDisconnect.push(() => window.removeEventListener(n, f));
@@ -244,6 +230,4 @@ class GameListElement extends HTMLElement
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('ConnectFour.GameAborted', this._onPlayerJoinedOrGameAborted.bind(this));
     }
-}
-
-customElements.define('connect-four-game-list', GameListElement);
+});

@@ -1,9 +1,7 @@
-import { service } from './GameService.js'
+import {service} from './GameService.js'
 
-class OpenGameButtonElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('connect-four-open-button', class extends HTMLElement {
+    connectedCallback() {
         this._onDisconnect = [];
         this._button = document.createElement('button');
         this._button.classList.add('button');
@@ -28,13 +26,11 @@ class OpenGameButtonElement extends HTMLElement
         })('ConnectFour.GameAborted', this._onGameAborted.bind(this));
     }
 
-    disconnectedCallback()
-    {
+    disconnectedCallback() {
         this._onDisconnect.forEach(f => f());
     }
 
-    _onButtonClick(event)
-    {
+    _onButtonClick(event) {
         event.preventDefault();
 
         this._button.disabled = true;
@@ -54,19 +50,15 @@ class OpenGameButtonElement extends HTMLElement
         });
     }
 
-    _onPlayerJoined(event)
-    {
+    _onPlayerJoined(event) {
         if (this._currentOpenGameId === event.detail.gameId) {
             service.redirectTo(this._currentOpenGameId);
         }
     }
 
-    _onGameAborted(event)
-    {
+    _onGameAborted(event) {
         if (this._currentOpenGameId === event.detail.gameId) {
             this._currentOpenGameId = '';
         }
     }
-}
-
-customElements.define('open-game-button', OpenGameButtonElement);
+});

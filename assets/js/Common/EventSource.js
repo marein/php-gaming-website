@@ -1,7 +1,5 @@
-class EventSourceElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('event-source', class extends HTMLElement {
+    connectedCallback() {
         this._eventSource = null;
         this._lastEventId = null;
         this._subscriptions = this.getAttribute('subscriptions').split(',');
@@ -19,13 +17,11 @@ class EventSourceElement extends HTMLElement
         })('app:load', this._connect.bind(this));
     }
 
-    disconnectedCallback()
-    {
+    disconnectedCallback() {
         this._onDisconnect.forEach(f => f());
     }
 
-    _connect()
-    {
+    _connect() {
         if (this._eventSource) this._eventSource.close();
 
         let url = '/sse/sub?id=' + this._subscriptions.join(',');
@@ -35,8 +31,7 @@ class EventSourceElement extends HTMLElement
         this._eventSource.onmessage = this._onMessage.bind(this);
     }
 
-    _onMessage(message)
-    {
+    _onMessage(message) {
         this._lastEventId = message.lastEventId;
 
         let payload = JSON.parse(message.data);
@@ -48,13 +43,10 @@ class EventSourceElement extends HTMLElement
         if (this._verbose) console.log(eventName, payload);
     }
 
-    _onAddSubscription(event)
-    {
+    _onAddSubscription(event) {
         if (this._subscriptions.indexOf(event.detail.name) !== -1) return;
 
         this._subscriptions.push(event.detail.name);
         this._connect();
     }
-}
-
-customElements.define('event-source', EventSourceElement);
+});

@@ -1,4 +1,4 @@
-import { client } from './Common/HttpClient.js'
+import {client} from './Common/HttpClient.js'
 import './Common/NotificationList.js'
 
 window.app = {

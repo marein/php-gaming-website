@@ -1,11 +1,9 @@
-export class Game
-{
+export class Game {
     /**
      * @param {String} gameId
      * @param {{x:Number, y:Number, color:Number}[]} moves
      */
-    constructor(gameId, moves)
-    {
+    constructor(gameId, moves) {
         this.gameId = gameId;
         this.moves = moves;
         this.onMoveAppendedObservers = [];
@@ -16,8 +14,7 @@ export class Game
      *
      * @returns {Number}
      */
-    numberOfMoves()
-    {
+    numberOfMoves() {
         return this.moves.length;
     }
 
@@ -26,8 +23,7 @@ export class Game
      *
      * @param {{x:Number, y:Number, color:Number}} move
      */
-    appendMove(move)
-    {
+    appendMove(move) {
         if (!this.hasMove(move)) {
             this.moves.push(move);
 
@@ -44,8 +40,7 @@ export class Game
      *
      * @returns {boolean}
      */
-    hasMove(move)
-    {
+    hasMove(move) {
         // this.moves.indexOf(move) doesn't work due === check.
         return JSON.stringify(this.moves).indexOf(JSON.stringify(move)) !== -1;
     }
@@ -55,8 +50,7 @@ export class Game
      *
      * @param {Function} callback
      */
-    onMoveAppended(callback)
-    {
+    onMoveAppended(callback) {
         this.onMoveAppendedObservers.push(callback);
     }
 
@@ -65,8 +59,7 @@ export class Game
      *
      * @param {{gameId:String, moves:{x:Number, y:Number, color:Number}[]}} object
      */
-    static fromObject(object)
-    {
+    static fromObject(object) {
         return new this(
             object.gameId,
             object.moves

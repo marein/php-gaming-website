@@ -1,7 +1,5 @@
-class HttpClient
-{
-    constructor()
-    {
+class HttpClient {
+    constructor() {
         this.onError = (response) => {
 
         };
@@ -11,8 +9,7 @@ class HttpClient
      * @param {String} url
      * @returns {Promise}
      */
-    get(url)
-    {
+    get(url) {
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
             request.open('GET', url);
@@ -36,8 +33,7 @@ class HttpClient
      * @param {Object} [postParameters]
      * @returns {Promise}
      */
-    post(url, postParameters)
-    {
+    post(url, postParameters) {
         postParameters = postParameters || {};
 
         return new Promise((resolve, reject) => {
@@ -64,8 +60,7 @@ class HttpClient
     /**
      * @param {String} url
      */
-    redirectTo(url)
-    {
+    redirectTo(url) {
         window.app.navigate(url);
     }
 
@@ -73,8 +68,7 @@ class HttpClient
      * @param {Object} postParameters
      * @returns {String}
      */
-    _preparePostParameters(postParameters)
-    {
+    _preparePostParameters(postParameters) {
         let preparedPostParameters = [];
 
         for (let name in postParameters) {
