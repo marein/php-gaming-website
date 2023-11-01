@@ -1,9 +1,7 @@
-import { service } from './GameService.js'
+import {service} from './GameService.js'
 
-class AbortGameButtonElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('connect-four-abort-button', class extends HTMLElement {
+    connectedCallback() {
         this._button = document.createElement('button');
         this._button.setAttribute('id', 'abort-game');
         this._button.classList.add('button');
@@ -17,8 +15,7 @@ class AbortGameButtonElement extends HTMLElement
         this._registerEventHandler();
     }
 
-    _onButtonClick(event)
-    {
+    _onButtonClick(event) {
         event.preventDefault();
 
         this._button.disabled = true;
@@ -34,10 +31,7 @@ class AbortGameButtonElement extends HTMLElement
         });
     }
 
-    _registerEventHandler()
-    {
+    _registerEventHandler() {
         this._button.addEventListener('click', this._onButtonClick.bind(this));
     }
-}
-
-customElements.define('abort-game-button', AbortGameButtonElement);
+});

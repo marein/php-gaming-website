@@ -1,7 +1,5 @@
-class RunningGamesElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('connect-four-running-games', class extends HTMLElement {
+    connectedCallback() {
         this._onDisconnect = [];
 
         ((n, f) => {
@@ -10,15 +8,11 @@ class RunningGamesElement extends HTMLElement
         })('ConnectFour.RunningGamesUpdated', this._onRunningGamesUpdated.bind(this));
     }
 
-    disconnectedCallback()
-    {
+    disconnectedCallback() {
         this._onDisconnect.forEach(f => f());
     }
 
-    _onRunningGamesUpdated(event)
-    {
+    _onRunningGamesUpdated(event) {
         this.innerText = event.detail.count;
     }
-}
-
-customElements.define('running-games', RunningGamesElement);
+});
