@@ -14,11 +14,14 @@ use Gaming\Common\Sharding\Shards;
  * It's therefore not suitable for every use case and should be used with caution.
  * A better alternative would be to use a consistent hashing algorithm,
  * which would reduce the likelihood of values being reassigned to another shard.
+ *
+ * @template T
+ * @implements Shards<T>
  */
 final class Crc32ModShards implements Shards
 {
     /**
-     * @param string[] $shards
+     * @param T[] $shards
      *
      * @throws ShardingException
      */
@@ -30,7 +33,7 @@ final class Crc32ModShards implements Shards
         }
     }
 
-    public function lookup(string $value): string
+    public function lookup(string $value): mixed
     {
         return $this->shards[crc32($value) % count($this->shards)];
     }

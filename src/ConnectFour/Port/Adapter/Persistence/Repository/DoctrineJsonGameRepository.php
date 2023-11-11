@@ -21,6 +21,9 @@ use Gaming\ConnectFour\Domain\Game\Games;
 
 final class DoctrineJsonGameRepository implements Games, GameFinder
 {
+    /**
+     * @param Shards<string> $shards
+     */
     public function __construct(
         private readonly Connection $connection,
         private readonly string $tableName,
