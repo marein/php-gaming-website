@@ -25,9 +25,11 @@ ARG environment=development
 
 WORKDIR /project
 
-COPY /docker/php-fpm/entrypoint.sh /
+COPY /docker/php-fpm/entrypoint.sh /docker/php-fpm/warmup.sh /
 
 COPY --from=builder /project /project
+
+RUN /warmup.sh
 
 COPY /docker/php-fpm/${environment}.ini /etc/php/8.2/fpm/conf.d/
 
