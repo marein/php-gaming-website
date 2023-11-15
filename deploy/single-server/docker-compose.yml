@@ -44,7 +44,6 @@ services:
             - "80:80"
         depends_on:
             - nchan
-            - service-js-polyfill
             - web-interface-http
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
@@ -151,15 +150,6 @@ services:
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
             - "prometheus-job=nchan"
             - "prometheus-port=81"
-    service-js-polyfill:
-        image: gamingplatform/service-js-polyfill
-        restart: on-failure
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.service-js-polyfill.priority=20"
-            - "traefik.http.routers.service-js-polyfill.rule=PathPrefix(`/polyfill`)"
-            - "traefik.http.routers.service-js-polyfill.middlewares=service-js-polyfill-stripprefix"
-            - "traefik.http.middlewares.service-js-polyfill-stripprefix.stripprefix.prefixes=/polyfill"
     web-interface-http:
         <<: *php-container
         labels:

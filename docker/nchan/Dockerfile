@@ -1,4 +1,4 @@
-FROM safesecurity/nginx-nchan:1.2.15
+FROM darkflib/nginx-nchan:1.24.0
 
 ENV NCHAN_SHARED_MEMORY_SIZE=256M \
     NCHAN_MESSAGE_BUFFER_LENGTH=10 \

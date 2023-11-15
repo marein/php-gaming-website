@@ -2,8 +2,6 @@
 
 set -e
 
-bin/console cache:warmup --env="${APP_ENVIRONMENT}"
-
 if [ "${APP_WAIT_FOR}" != "" ]
 then
     wait-for-tcp-server "${APP_WAIT_FOR}" 120

@@ -239,6 +239,31 @@ chat-widget {
     background-color: rgba(255, 255, 255, .3);
 }
 
+:not(:defined):not(notification-list) {
+    display: inline-block;
+    min-height: 1px;
+}
+
+.progress {
+    top: 0;
+    left: 0;
+    position: fixed;
+    height: 3px;
+    width: 0;
+    background-color: #0078ff;
+    animation: progress 10s infinite;
+}
+
+.progress--finish {
+    width: 100%;
+    transition: opacity .25s ease .2s;
+    opacity: 0;
+}
+
+@keyframes progress {
+    to { width: 100%; }
+}
+
 @media screen and (min-width: 960px) {
     .left {
         width: 25%;

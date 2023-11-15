@@ -1,7 +1,5 @@
-class NotificationListElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('notification-list', class extends HTMLElement {
+    connectedCallback() {
         this._ul = document.createElement('ul');
         this._ul.classList.add('notification');
 
@@ -11,8 +9,7 @@ class NotificationListElement extends HTMLElement
     /**
      * @param {String} message
      */
-    appendMessage(message)
-    {
+    appendMessage(message) {
         let messageNode = this._createMessageNode(message);
 
         this._ul.insertBefore(messageNode, this._ul.childNodes[0]);
@@ -30,8 +27,7 @@ class NotificationListElement extends HTMLElement
      * @param {String} message
      * @returns {Node}
      */
-    _createMessageNode(message)
-    {
+    _createMessageNode(message) {
         let smiley = document.createTextNode('¯\\_(ツ)_/¯');
         let br = document.createElement('br');
         let text = document.createTextNode(message);
@@ -45,6 +41,4 @@ class NotificationListElement extends HTMLElement
 
         return li;
     }
-}
-
-customElements.define('notification-list', NotificationListElement);
+});

@@ -1,9 +1,7 @@
-import { service } from './GameService.js'
+import {service} from './GameService.js'
 
-class ResignGameButtonElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('connect-four-resign-button', class extends HTMLElement {
+    connectedCallback() {
         this._button = document.createElement('button');
         this._button.classList.add('button');
         this._button.innerHTML = this.innerHTML;
@@ -16,8 +14,7 @@ class ResignGameButtonElement extends HTMLElement
         this._registerEventHandler();
     }
 
-    _onButtonClick(event)
-    {
+    _onButtonClick(event) {
         event.preventDefault();
 
         this._button.disabled = true;
@@ -33,10 +30,7 @@ class ResignGameButtonElement extends HTMLElement
         });
     }
 
-    _registerEventHandler()
-    {
+    _registerEventHandler() {
         this._button.addEventListener('click', this._onButtonClick.bind(this));
     }
-}
-
-customElements.define('resign-game-button', ResignGameButtonElement);
+});

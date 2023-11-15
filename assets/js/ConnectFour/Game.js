@@ -1,14 +1,14 @@
-import { service } from './GameService.js'
-import { Game as GameModel } from './Model/Game.js'
+import {service} from './GameService.js'
+import {Game as GameModel} from './Model/Game.js'
 
 /**
  * todo: Render the game within <canvas>, see https://github.com/marein/php-gaming-website/issues/19.
  */
 
-class GameElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('connect-four-game', class extends HTMLElement {
+    connectedCallback() {
+        this._onDisconnect = [];
+
         let game = JSON.parse(this.getAttribute('game'));
 
         this._gameHolder = document.createElement('div');
@@ -60,11 +60,14 @@ class GameElement extends HTMLElement
         this._registerEventHandler();
     }
 
+    disconnectedCallback() {
+        this._onDisconnect.forEach(f => f());
+    }
+
     /**
      * @param {Number} index
      */
-    _showMovesUpTo(index)
-    {
+    _showMovesUpTo(index) {
         // Clear fields
         this._fields.forEach((field) => {
             field.classList.remove('game__field--flash');
@@ -81,8 +84,7 @@ class GameElement extends HTMLElement
      *
      * @param {{x:Number, y:Number, color:Number}} move
      */
-    _showMove(move)
-    {
+    _showMove(move) {
         let field = this._gameHolder.querySelector('.game__field[data-point="' + move.x + ' ' + move.y + '"]');
         field.classList.add(
             this._colorToClass[move.color]
@@ -98,8 +100,7 @@ class GameElement extends HTMLElement
      * Updates the previous move, next move und follow moves button according to the state of
      * the number of the current move in view.
      */
-    _updateNavigationButtons()
-    {
+    _updateNavigationButtons() {
         let isCurrentMoveTheLastMove = this._numberOfCurrentMoveInView === this._game.numberOfMoves();
         let isCurrentMoveBeforeTheFirstMove = this._numberOfCurrentMoveInView === 0;
 
@@ -123,8 +124,7 @@ class GameElement extends HTMLElement
      *
      * @param {{x:Number, y:Number, color:Number}} move
      */
-    _onMoveAppendedToGame(move)
-    {
+    _onMoveAppendedToGame(move) {
         // Only show if the the user follow the moves. Otherwise notify user that a new move is available.
         if (this._followMovesButton.disabled === true) {
             this._showMove(move);
@@ -136,8 +136,7 @@ class GameElement extends HTMLElement
         }
     }
 
-    _onFieldClick(event)
-    {
+    _onFieldClick(event) {
         let cell = event.target;
 
         this._gameHolder.classList.add('loading-indicator');
@@ -153,8 +152,7 @@ class GameElement extends HTMLElement
         });
     }
 
-    _onPlayerMoved(event)
-    {
+    _onPlayerMoved(event) {
         this._game.appendMove({
             x: event.detail.x,
             y: event.detail.y,
@@ -162,38 +160,34 @@ class GameElement extends HTMLElement
         });
     }
 
-    _onPreviousMoveClick(event)
-    {
+    _onPreviousMoveClick(event) {
         event.preventDefault();
 
         this._numberOfCurrentMoveInView--;
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
 
-    _onNextMoveClick(event)
-    {
+    _onNextMoveClick(event) {
         event.preventDefault();
 
         this._numberOfCurrentMoveInView++;
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
 
-    _onFollowMovesClick(event)
-    {
+    _onFollowMovesClick(event) {
         event.preventDefault();
 
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
 
-    _registerEventHandler()
-    {
+    _registerEventHandler() {
         this._game.onMoveAppended(this._onMoveAppendedToGame.bind(this));
 
-        window.addEventListener(
-            'ConnectFour.PlayerMoved',
-            this._onPlayerMoved.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.PlayerMoved', this._onPlayerMoved.bind(this));
 
         this._fields.forEach((field) => {
             field.addEventListener('click', this._onFieldClick.bind(this));
@@ -203,6 +197,4 @@ class GameElement extends HTMLElement
         this._nextMoveButton.addEventListener('click', this._onNextMoveClick.bind(this));
         this._followMovesButton.addEventListener('click', this._onFollowMovesClick.bind(this));
     }
-}
-
-customElements.define('connect-four-game', GameElement);
+});

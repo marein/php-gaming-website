@@ -1,20 +1,17 @@
-import { client } from '../Common/HttpClient.js'
+import {client} from '../Common/HttpClient.js'
 
-class GameService
-{
+class GameService {
     /**
      * @param {HttpClient} httpClient
      */
-    constructor(httpClient)
-    {
+    constructor(httpClient) {
         this.httpClient = httpClient;
     }
 
     /**
      * @param {String} gameId
      */
-    redirectTo(gameId)
-    {
+    redirectTo(gameId) {
         this.httpClient.redirectTo(
             '/game/' + gameId
         );
@@ -25,21 +22,17 @@ class GameService
      * @param {int} column
      * @returns {Promise}
      */
-    move(gameId, column)
-    {
+    move(gameId, column) {
         return this.httpClient.post(
             '/api/connect-four/games/' + gameId + '/move',
-            {
-                column: column
-            }
+            {column}
         );
     }
 
     /**
      * @returns {Promise}
      */
-    open()
-    {
+    open() {
         return this.httpClient.post(
             '/api/connect-four/games/open'
         );
@@ -49,8 +42,7 @@ class GameService
      * @param {String} gameId
      * @returns {Promise}
      */
-    abort(gameId)
-    {
+    abort(gameId) {
         return this.httpClient.post(
             '/api/connect-four/games/' + gameId + '/abort',
         );
@@ -60,8 +52,7 @@ class GameService
      * @param {String} gameId
      * @returns {Promise}
      */
-    resign(gameId)
-    {
+    resign(gameId) {
         return this.httpClient.post(
             '/api/connect-four/games/' + gameId + '/resign',
         );
@@ -71,8 +62,7 @@ class GameService
      * @param {String} gameId
      * @returns {Promise}
      */
-    join(gameId)
-    {
+    join(gameId) {
         return this.httpClient.post(
             '/api/connect-four/games/' + gameId + '/join',
         );

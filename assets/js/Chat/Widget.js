@@ -1,9 +1,9 @@
-import { service } from './ChatService.js'
+import {service} from './ChatService.js'
 
-class WidgetElement extends HTMLElement
-{
-    connectedCallback()
-    {
+customElements.define('chat-widget', class extends HTMLElement {
+    connectedCallback() {
+        this._onDisconnect = [];
+
         this.classList.add('loading-indicator');
 
         this._messageHolder = document.createElement('ul');
@@ -31,11 +31,14 @@ class WidgetElement extends HTMLElement
         this._registerEventHandler();
     }
 
+    disconnectedCallback() {
+        this._onDisconnect.forEach(f => f());
+    }
+
     /**
      * @param {String} chatId
      */
-    _initialize(chatId)
-    {
+    _initialize(chatId) {
         if (this._chatId === '') {
             this._chatId = chatId;
 
@@ -46,8 +49,7 @@ class WidgetElement extends HTMLElement
     /**
      * @param {String} chatId
      */
-    _loadMessages(chatId)
-    {
+    _loadMessages(chatId) {
         service.messages(chatId).then((messages) => {
             messages.messages.forEach((message) => {
                 this._appendMessage(message);
@@ -69,8 +71,7 @@ class WidgetElement extends HTMLElement
     /**
      * @param {Object} message
      */
-    _appendMessage(message)
-    {
+    _appendMessage(message) {
         if (!this._isDuplicate(message)) {
             this._messageHolder.append(
                 this._createMessageNode(message)
@@ -84,13 +85,11 @@ class WidgetElement extends HTMLElement
      * @param {Object} message
      * @returns {Boolean}
      */
-    _isDuplicate(message)
-    {
+    _isDuplicate(message) {
         return this._messageHolder.querySelector(['[data-id="' + message.messageId + '"]']) !== null;
     }
 
-    _flushMessageBuffer()
-    {
+    _flushMessageBuffer() {
         this._messageBuffer.forEach((message) => {
             this._appendMessage(message);
         });
@@ -102,8 +101,7 @@ class WidgetElement extends HTMLElement
      * @param {Object} message
      * @returns {Node}
      */
-    _createMessageNode(message)
-    {
+    _createMessageNode(message) {
         let writtenAt = new Date(message.writtenAt);
         let hours = ('0' + writtenAt.getHours()).slice(-2);
         let minutes = ('0' + writtenAt.getMinutes()).slice(-2);
@@ -124,13 +122,11 @@ class WidgetElement extends HTMLElement
         return li;
     }
 
-    _clearInput()
-    {
+    _clearInput() {
         this._input.value = '';
     }
 
-    _onKeyPress(event)
-    {
+    _onKeyPress(event) {
         if (event.which === 13 && !event.shiftKey) {
             event.preventDefault();
             let message = this._input.value;
@@ -146,8 +142,7 @@ class WidgetElement extends HTMLElement
         }
     }
 
-    _onMessageWritten(event)
-    {
+    _onMessageWritten(event) {
         let message = event.detail;
 
         if (!this._isAlreadyInitialized) {
@@ -157,37 +152,23 @@ class WidgetElement extends HTMLElement
         }
     }
 
-    _onChatAssigned(event)
-    {
-        this.dispatchEvent(
-            new CustomEvent(
-                'AddSubscription',
-                {
-                    bubbles: true,
-                    detail: {
-                        name: 'chat-' + event.detail.chatId
-                    }
-                }
-            )
-        );
+    _onChatAssigned(event) {
+        window.dispatchEvent(new CustomEvent('sse:addsubscription', {detail: {name: 'chat-' + event.detail.chatId}}));
 
         this._initialize(event.detail.chatId);
     }
 
-    _registerEventHandler()
-    {
+    _registerEventHandler() {
         this._input.addEventListener('keypress', this._onKeyPress.bind(this));
 
-        window.addEventListener(
-            'Chat.MessageWritten',
-            this._onMessageWritten.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('Chat.MessageWritten', this._onMessageWritten.bind(this));
 
-        window.addEventListener(
-            'ConnectFour.ChatAssigned',
-            this._onChatAssigned.bind(this)
-        );
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.ChatAssigned', this._onChatAssigned.bind(this));
     }
-}
-
-customElements.define('chat-widget', WidgetElement);
+});
