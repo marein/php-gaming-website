@@ -38,9 +38,9 @@ describe what's done to apply these concepts.
 ## Installation and requirements
 
 [Docker](https://www.docker.com)
-and
+with
 [Docker Compose](https://docs.docker.com/compose/)
-for deploying the application.
+plugin for deploying the application.
 
 A modern browser, as this project uses modern features and doesn't polyfill all of them, e.g.
 [Server-sent events](https://caniuse.com/eventsource)
@@ -85,8 +85,8 @@ You can run them as follows.
 ```
 git clone https://github.com/marein/php-gaming-website
 cd php-gaming-website
-docker-compose -f deploy/single-server/docker-compose.yml pull
-docker-compose -f deploy/single-server/docker-compose.yml up
+docker compose -f deploy/single-server/docker-compose.yml pull
+docker compose -f deploy/single-server/docker-compose.yml up
 ```
 
 Or you can try out

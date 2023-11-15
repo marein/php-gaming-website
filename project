@@ -43,26 +43,26 @@ help() {
 }
 
 build() {
-    docker-compose pull
-    docker-compose down --volumes
-    docker-compose build --pull
-    docker-compose up -d composer
-    docker cp "$(docker-compose ps -q composer)":/project/vendor ./
-    docker-compose up --remove-orphans
+    docker compose pull
+    docker compose down --volumes
+    docker compose build --pull
+    docker compose up -d composer
+    docker cp "$(docker compose ps -q composer)":/project/vendor ./
+    docker compose up --remove-orphans
 }
 
 up() {
-    docker-compose up
+    docker compose up
 }
 
 down() {
-    docker-compose down
+    docker compose down
 }
 
 composer() {
-    docker-compose up -d composer
-    docker-compose run composer composer "$@"
-    docker cp "$(docker-compose ps -q composer)":/project/vendor ./
+    docker compose up -d composer
+    docker compose run composer composer "$@"
+    docker cp "$(docker compose ps -q composer)":/project/vendor ./
 }
 
 tests() {
@@ -73,24 +73,24 @@ tests() {
 }
 
 unit() {
-    docker-compose run php vendor/bin/codecept run --skip acceptance --coverage-html
+    docker compose run --rm php vendor/bin/codecept run --skip acceptance --coverage-html
 }
 
 sniffer() {
-    docker-compose run php vendor/bin/phpcs
+    docker compose run --rm php vendor/bin/phpcs
 }
 
 analyzer() {
-    docker-compose run php vendor/bin/phpstan analyse
+    docker compose run --rm php vendor/bin/phpstan analyse
 }
 
 acceptance() {
     buildProductionImages
 
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci build --pull
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci up -d
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci run php bash -c 'wait-for-tcp-server php-fpm:80,selenium:4444 120 && vendor/bin/codecept run acceptance'
-    docker-compose -f docker-compose.ci.yml -p php-gaming-website-ci down -v
+    docker compose -f docker-compose.ci.yml -p php-gaming-website-ci build --pull
+    docker compose -f docker-compose.ci.yml -p php-gaming-website-ci up -d
+    docker compose -f docker-compose.ci.yml -p php-gaming-website-ci run --rm php bash -c 'wait-for-tcp-server php-fpm:80,selenium:4444 120 && vendor/bin/codecept run acceptance'
+    docker compose -f docker-compose.ci.yml -p php-gaming-website-ci down -v
 }
 
 buildProductionImages() {
