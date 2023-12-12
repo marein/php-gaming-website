@@ -79,8 +79,5 @@
       "composer/package-versions-deprecated": true,
       "phpstan/extension-installer": true
     }
-  },
-  "extra": {
-    "public-dir": "/web"
   }
 }
