@@ -251,9 +251,9 @@ acts like an
 [Backend For Frontend](https://samnewman.io/patterns/architectural/bff/).
 All browser interactions go through this context. The main responsibilities are the session management
 and the aggregation of the data from the other contexts. The
-[JavaScript](/web/assets/js)
+[JavaScript](/assets/js)
 and
-[StyleSheet](/web/assets/css)
+[StyleSheet](/assets/css)
 are also defined here.
 
 There're currently three pages.
