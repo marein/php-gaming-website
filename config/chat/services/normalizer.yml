@@ -10,6 +10,6 @@ services:
             - !tagged_iterator chat.jms.subscriber
 
     chat.normalizer:
-        class: Gaming\Common\Normalizer\Intergration\JmsSerializerNormalizer
+        class: Gaming\Common\Normalizer\Integration\JmsSerializerNormalizer
         arguments:
             - '@chat.jms'
