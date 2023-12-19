@@ -29,6 +29,6 @@ services:
             - !tagged { tag: 'connect-four.migrating-normalizer.migrations', index_by: 'key' }
 
     connect-four.normalizer:
-        class: Gaming\Common\Normalizer\Intergration\JmsSerializerNormalizer
+        class: Gaming\Common\Normalizer\Integration\JmsSerializerNormalizer
         arguments:
             - '@connect-four.jms'

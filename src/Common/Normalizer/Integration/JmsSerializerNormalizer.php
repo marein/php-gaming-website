@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\Normalizer\Intergration;
+namespace Gaming\Common\Normalizer\Integration;
 
 use Gaming\Common\Normalizer\Exception\NormalizerException;
 use Gaming\Common\Normalizer\Normalizer;
