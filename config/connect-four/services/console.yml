@@ -9,7 +9,7 @@ services:
                 class: Gaming\Common\EventStore\Integration\Predis\PredisEventStorePointerFactory
                 arguments:
                     - '@connect-four.predis'
-            - !tagged { tag: 'connect-four.stored-event-subscriber', index_by: 'key' }
-            - '@connect-four.normalizer'
+            - !tagged_locator { tag: 'connect-four.stored-event-subscriber', index_by: 'key' }
+            - '@event_dispatcher'
         tags:
             - { name: console.command, command: connect-four:follow-event-store, description: 'Publish events to subscribers.' }

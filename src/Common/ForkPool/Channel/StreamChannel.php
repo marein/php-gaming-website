@@ -10,21 +10,10 @@ final class StreamChannel implements Channel
 {
     /**
      * @param resource $resource
-     *
-     * @throws ForkPoolException
      */
     public function __construct(
-        private $resource,
-        int $sendReceiveTimeoutInSeconds
+        private $resource
     ) {
-        if (!stream_set_timeout($this->resource, $sendReceiveTimeoutInSeconds)) {
-            throw new ForkPoolException(
-                sprintf(
-                    'Cannot set timeout to %s seconds.',
-                    $sendReceiveTimeoutInSeconds
-                )
-            );
-        }
     }
 
     public function send(mixed $message): void
@@ -45,6 +34,8 @@ final class StreamChannel implements Channel
 
     public function receive(): mixed
     {
+        while (!$this->canReadFromResource());
+
         $message = @fgets($this->resource);
         if ($message === false || !str_ends_with($message, "\n")) {
             throw new ForkPoolException(
@@ -56,6 +47,17 @@ final class StreamChannel implements Channel
         }
 
         return unserialize(base64_decode($message));
+    }
+
+    private function canReadFromResource(): bool
+    {
+        set_error_handler(fn() => true);
+        $read = [$this->resource];
+        $write = $except = null;
+        $canReadFromResource = stream_select($read, $write, $except, 120, null) === 1;
+        restore_error_handler();
+
+        return $canReadFromResource;
     }
 
     public function __destruct()
