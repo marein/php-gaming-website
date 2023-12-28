@@ -3,7 +3,7 @@ version: '3.4'
 services:
     connect-four-follow-event-store-message-broker-2:
         image: marein/php-gaming-website:php-fpm
-        command: bin/console connect-four:follow-event-store message-broker-2 -s publish-to-message-broker -w 1
+        command: bin/console connect-four:follow-event-store message-broker-2 publish-to-message-broker
         env_file: ../app.env
         environment:
             APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four-2"
@@ -15,7 +15,7 @@ services:
                     - "node.labels.long-running==1"
     connect-four-follow-event-store-projection-2:
         image: marein/php-gaming-website:php-fpm
-        command: bin/console connect-four:follow-event-store projection-2 -s game-projection -s games-by-player-projection -s running-games-projection -s open-games-projection -w 8
+        command: bin/console connect-four:follow-event-store projection-2 game-projection,games-by-player-projection,running-games-projection,open-games-projection -p 8
         env_file: ../app.env
         environment:
             APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four-2"

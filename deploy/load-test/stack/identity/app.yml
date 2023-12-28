@@ -3,7 +3,7 @@ version: '3.4'
 services:
     identity-follow-event-store:
         image: marein/php-gaming-website:php-fpm
-        command: bin/console identity:follow-event-store pointer --select-all-subscribers
+        command: bin/console identity:follow-event-store pointer all
         env_file: ../app.env
         volumes:
                 - proxysql.sock:/var/run/proxysql
