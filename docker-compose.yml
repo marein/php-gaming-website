@@ -179,13 +179,13 @@ services:
     ##############################
     php-connect-four-follow-event-store:
         <<: *php-container
-        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer --select-all-subscribers -v
+        command: bin/restartOnChange bin/console connect-four:follow-event-store pointer all
     php-chat-follow-event-store:
         <<: *php-container
-        command: bin/restartOnChange bin/console chat:follow-event-store pointer --select-all-subscribers -v
+        command: bin/restartOnChange bin/console chat:follow-event-store pointer all
     php-identity-follow-event-store:
         <<: *php-container
-        command: bin/restartOnChange bin/console identity:follow-event-store pointer --select-all-subscribers -v
+        command: bin/restartOnChange bin/console identity:follow-event-store pointer all
     php-consume-messages:
         <<: *php-container
         command: bin/restartOnChange bin/console gaming:consume-messages all

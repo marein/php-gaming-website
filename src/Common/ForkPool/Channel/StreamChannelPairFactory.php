@@ -8,11 +8,6 @@ use Gaming\Common\ForkPool\Exception\ForkPoolException;
 
 final class StreamChannelPairFactory implements ChannelPairFactory
 {
-    public function __construct(
-        private readonly int $sendReceiveTimeoutInSeconds
-    ) {
-    }
-
     public function create(): ChannelPair
     {
         $streamPair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
@@ -23,8 +18,8 @@ final class StreamChannelPairFactory implements ChannelPairFactory
         }
 
         return new ChannelPair(
-            new StreamChannel($streamPair[0], $this->sendReceiveTimeoutInSeconds),
-            new StreamChannel($streamPair[1], $this->sendReceiveTimeoutInSeconds)
+            new StreamChannel($streamPair[0]),
+            new StreamChannel($streamPair[1])
         );
     }
 }

@@ -131,6 +131,13 @@ services:
         tags:
             - { name: kernel.event_listener, method: 'messageFailed' }
 
+    Gaming\Common\EventStore\Integration\Symfony\ResetServicesListener:
+        arguments:
+            - '@services_resetter'
+            - 10
+        tags:
+            - { name: kernel.event_listener, method: 'eventsCommitted', priority: -50 }
+
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
 
