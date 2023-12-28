@@ -19,8 +19,6 @@ final class Worker implements Task
     {
         while ($message = $channel->receive()) {
             match ($message) {
-                'KEEPALIVE' => true,
-                'STOP' => exit(0),
                 'COMMIT' => $this->handleCommit($channel),
                 default => $this->storedEventSubscriber->handle($message)
             };

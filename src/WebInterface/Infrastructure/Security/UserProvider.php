@@ -7,6 +7,9 @@ namespace Gaming\WebInterface\Infrastructure\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ */
 final class UserProvider implements UserProviderInterface
 {
     public function refreshUser(UserInterface $user): UserInterface

@@ -6,30 +6,34 @@ namespace Gaming\Common\EventStore\Integration\Symfony;
 
 use Gaming\Common\EventStore\CompositeStoredEventSubscriber;
 use Gaming\Common\EventStore\EventStorePointerFactory;
+use Gaming\Common\EventStore\FollowEventStoreDispatcher;
+use Gaming\Common\EventStore\Integration\ForkPool\ForwardToChannelStoredEventSubscriber;
 use Gaming\Common\EventStore\Integration\ForkPool\Publisher;
 use Gaming\Common\EventStore\Integration\ForkPool\Worker;
 use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkPool\Channel\StreamChannelPairFactory;
 use Gaming\Common\ForkPool\ForkPool;
-use Gaming\Common\Normalizer\Normalizer;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Traversable;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\Service\ServiceProviderInterface;
 
 final class FollowEventStoreCommand extends Command
 {
     /**
-     * @param Traversable<string, StoredEventSubscriber> $storedEventSubscribers
+     * @param ServiceProviderInterface<StoredEventSubscriber> $storedEventSubscribers
      */
     public function __construct(
         private readonly PollableEventStore $pollableEventStore,
         private readonly EventStorePointerFactory $eventStorePointerFactory,
-        private readonly Traversable $storedEventSubscribers,
-        private readonly Normalizer $normalizer
+        private readonly ServiceProviderInterface $storedEventSubscribers,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly string $allSubscribersName = 'all'
     ) {
         parent::__construct();
     }
@@ -42,84 +46,83 @@ final class FollowEventStoreCommand extends Command
                 InputArgument::REQUIRED,
                 'Name of the event store pointer.'
             )
-            ->addOption(
-                'subscriber',
-                's',
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'List of subscribers.'
-            )
-            ->addOption(
-                'select-all-subscribers',
-                null,
-                InputOption::VALUE_NONE,
-                'Overwrites individual subscribers. This is useful for the development environment.'
+            ->addArgument(
+                'subscribers',
+                InputArgument::REQUIRED,
+                'Comma separated list of subscribers.'
             )
             ->addOption(
                 'throttle',
                 't',
                 InputOption::VALUE_OPTIONAL,
-                'Throttle time after an empty run in milliseconds.',
+                'Defines throttle time after an empty batch in milliseconds.',
                 200
             )
             ->addOption(
                 'batch',
                 'b',
                 InputOption::VALUE_OPTIONAL,
-                'Batch size per run.',
+                'Defines how many events are fetched per batch.',
                 1000
             )
             ->addOption(
-                'worker',
-                'w',
+                'parallelism',
+                'p',
                 InputOption::VALUE_OPTIONAL,
-                'Number of workers.',
-                3
+                'Defines how many events can be processed in parallel.',
+                1
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $selectedSubscriberNames = $this->selectedSubscriberNames($input);
-        if (count($selectedSubscriberNames) === 0) {
-            $output->writeln(
+        $symfonyStyle = new SymfonyStyle($input, $output);
+
+        $subscriberNames = explode(',', (string)$input->getArgument('subscribers'));
+        $parallelism = max(1, (int)$input->getOption('parallelism'));
+
+        $unknownSubscriberNames = $this->getUnknownSubscriberNames($subscriberNames);
+        if (count($unknownSubscriberNames) !== 0) {
+            $symfonyStyle->error(
                 sprintf(
-                    'Please select one of the following subscribers:%s* %s',
-                    PHP_EOL,
-                    implode(PHP_EOL . '* ', $this->availableSubscriberNames())
+                    "The following subscribers don't exist:\n* %s\n\nAvailable subscribers:\n* %s\n* %s",
+                    implode("\n* ", $unknownSubscriberNames),
+                    $this->allSubscribersName . ' (ignores individual subscribers)',
+                    implode("\n* ", array_keys($this->storedEventSubscribers->getProvidedServices()))
                 )
             );
             return Command::FAILURE;
         }
 
-        $unknownSubscriberNames = $this->unknownSubscriberNames($input);
-        if (count($unknownSubscriberNames) !== 0) {
-            $output->writeln(
-                sprintf(
-                    'The following subscribers are unknown:%s* %s',
-                    PHP_EOL,
-                    implode(PHP_EOL . '* ', $unknownSubscriberNames)
-                )
-            );
-            return Command::FAILURE;
-        }
+        $symfonyStyle->success(
+            sprintf(
+                'Start subscribers "%s" with parallelism of %s.',
+                implode('", "', $subscriberNames),
+                $parallelism
+            )
+        );
 
         $forkPool = new ForkPool(
-            new StreamChannelPairFactory(10)
+            new StreamChannelPairFactory()
         );
 
         $publisher = $forkPool->fork(
             new Publisher(
-                array_map(
-                    fn() => $forkPool->fork(
-                        new Worker($this->createStoredEventSubscriber($input, $output))
-                    )->channel(),
-                    range(1, max(1, (int)$input->getOption('worker')))
-                ),
-                $this->pollableEventStore,
-                $this->eventStorePointerFactory,
-                (string)$input->getArgument('pointer'),
-                max(1, (int)$input->getOption('throttle')) * 1000,
-                (int)$input->getOption('batch')
+                new FollowEventStoreDispatcher(
+                    $this->pollableEventStore,
+                    $this->eventStorePointerFactory->withName((string)$input->getArgument('pointer')),
+                    new ForwardToChannelStoredEventSubscriber(
+                        array_map(
+                            fn() => $forkPool->fork(
+                                new Worker($this->getStoredEventSubscriber($subscriberNames))
+                            )->channel(),
+                            range(1, $parallelism)
+                        )
+                    ),
+                    max(1, (int)$input->getOption('batch')),
+                    max(1, (int)$input->getOption('throttle')),
+                    $this->eventDispatcher
+                )
             )
         );
 
@@ -129,61 +132,43 @@ final class FollowEventStoreCommand extends Command
                 [SIGINT, SIGTERM],
                 static function () use ($forkPool, $publisher): void {
                     $publisher->kill(SIGTERM);
-                    $forkPool->wait()->all();
+                    $forkPool->wait()->killAllWhenAnyExits(SIGTERM);
 
                     exit(0);
                 },
                 false
             );
 
-        $forkPool->wait()
-            ->killAllWhenAnyExits(SIGTERM);
+        $forkPool->wait()->killAllWhenAnyExits(SIGTERM);
 
         return Command::SUCCESS;
     }
 
     /**
-     * @return string[]
+     * @param string[] $names
      */
-    private function selectedSubscriberNames(InputInterface $input): array
+    private function getStoredEventSubscriber(array $names): StoredEventSubscriber
     {
-        return $input->getOption('select-all-subscribers') ?
-            $this->availableSubscriberNames() :
-            $input->getOption('subscriber');
-    }
-
-    /**
-     * @return string[]
-     */
-    private function availableSubscriberNames(): array
-    {
-        return array_keys(iterator_to_array($this->storedEventSubscribers));
-    }
-
-    /**
-     * @return string[]
-     */
-    private function unknownSubscriberNames(InputInterface $input): array
-    {
-        return array_keys(
-            array_diff_key(
-                array_flip($this->selectedSubscriberNames($input)),
-                iterator_to_array($this->storedEventSubscribers)
+        return new CompositeStoredEventSubscriber(
+            array_map(
+                fn(string $name): StoredEventSubscriber => $this->storedEventSubscribers->get($name),
+                in_array($this->allSubscribersName, $names)
+                    ? array_keys($this->storedEventSubscribers->getProvidedServices())
+                    : $names
             )
         );
     }
 
-    private function createStoredEventSubscriber(InputInterface $input, OutputInterface $output): StoredEventSubscriber
+    /**
+     * @param string[] $subscriberNames
+     *
+     * @return string[]
+     */
+    private function getUnknownSubscriberNames(array $subscriberNames): array
     {
-        $storedEventSubscribers = array_intersect_key(
-            iterator_to_array($this->storedEventSubscribers),
-            array_flip($this->selectedSubscriberNames($input))
+        return array_filter(
+            $subscriberNames,
+            fn(string $name): bool => !$this->storedEventSubscribers->has($name) && $name !== $this->allSubscribersName
         );
-
-        if ($output->isVerbose()) {
-            $storedEventSubscribers[] = new SymfonyConsoleDebugSubscriber($output, $this->normalizer);
-        }
-
-        return new CompositeStoredEventSubscriber($storedEventSubscribers);
     }
 }

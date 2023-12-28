@@ -28,7 +28,7 @@ final class ForkPool
 
         return match ($forkPid) {
             -1 => throw new ForkPoolException('Unable to fork.'),
-            0 => exit($task->execute($channelPair->parent())),
+            0 => exit((new SessionLeaderTask($task))->execute($channelPair->parent())),
             default => $this->processes->add($forkPid, $channelPair->fork())
         };
     }

@@ -10,7 +10,7 @@ services:
                 arguments:
                     - '@chat.doctrine-dbal'
                     - 'event_store_pointer'
-            - !tagged { tag: 'chat.stored-event-subscriber', index_by: 'key' }
-            - '@chat.normalizer'
+            - !tagged_locator { tag: 'chat.stored-event-subscriber', index_by: 'key' }
+            - '@event_dispatcher'
         tags:
             - { name: console.command, command: chat:follow-event-store, description: 'Publish events to subscribers.' }

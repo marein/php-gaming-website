@@ -159,13 +159,13 @@ services:
             - "traefik.http.services.web-interface-http.loadbalancer.server.port=80"
     connect-four-follow-event-store:
         <<: *php-container
-        command: bin/console connect-four:follow-event-store pointer --select-all-subscribers
+        command: bin/console connect-four:follow-event-store pointer all
     chat-follow-event-store:
         <<: *php-container
-        command: bin/console chat:follow-event-store pointer --select-all-subscribers
+        command: bin/console chat:follow-event-store pointer all
     identity-follow-event-store:
         <<: *php-container
-        command: bin/console identity:follow-event-store pointer --select-all-subscribers
+        command: bin/console identity:follow-event-store pointer all
     consume-messages:
         <<: *php-container
         command: bin/console gaming:consume-messages all
