@@ -46,8 +46,8 @@ build() {
     docker compose pull
     docker compose down --volumes
     docker compose build --pull
-    docker compose up -d composer
-    docker cp "$(docker compose ps -q composer)":/project/vendor ./
+    docker compose up -d php
+    docker cp "$(docker compose ps -aq php | head -n 1)":/project/vendor ./
     docker compose up --remove-orphans
 }
 
@@ -60,9 +60,9 @@ down() {
 }
 
 composer() {
-    docker compose up -d composer
-    docker compose run composer composer "$@"
-    docker cp "$(docker compose ps -q composer)":/project/vendor ./
+    docker compose up -d php
+    docker compose run --rm php composer "$@"
+    docker cp "$(docker compose ps -aq php | head -n 1)":/project/vendor ./
 }
 
 tests() {
