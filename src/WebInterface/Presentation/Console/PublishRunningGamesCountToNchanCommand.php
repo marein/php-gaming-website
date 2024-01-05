@@ -30,13 +30,8 @@ final class PublishRunningGamesCountToNchanCommand extends Command
             if ($lastRunningGamesCount !== $currentRunningGamesCount) {
                 $this->browserNotifier->publish(
                     ['lobby'],
-                    json_encode(
-                        [
-                            'eventName' => 'ConnectFour.RunningGamesUpdated',
-                            'count' => $currentRunningGamesCount
-                        ],
-                        JSON_THROW_ON_ERROR
-                    )
+                    'ConnectFour.RunningGamesUpdated',
+                    json_encode(['count' => $currentRunningGamesCount], JSON_THROW_ON_ERROR)
                 );
 
                 $lastRunningGamesCount = $currentRunningGamesCount;

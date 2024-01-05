@@ -9,5 +9,5 @@ interface BrowserNotifier
     /**
      * @param string[] $channels
      */
-    public function publish(array $channels, string $message): void;
+    public function publish(array $channels, string $name, string $message): void;
 }
