@@ -33,7 +33,7 @@ final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventS
         $this->publisher->flush();
     }
 
-    public function handleMessageWritten(MessageWritten $event): void
+    private function handleMessageWritten(MessageWritten $event): void
     {
         $this->publisher->send(
             new Message(
