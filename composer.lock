@@ -1488,16 +1488,16 @@
         },
         {
             "name": "gaming-platform/api",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gaming-platform/api.git",
-                "reference": "a148f042f46148c81a72dc2272d0bd5f4879deb3"
+                "reference": "031c68801c63dad14a99f07a76156c9a0a486352"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gaming-platform/api/zipball/a148f042f46148c81a72dc2272d0bd5f4879deb3",
-                "reference": "a148f042f46148c81a72dc2272d0bd5f4879deb3",
+                "url": "https://api.github.com/repos/gaming-platform/api/zipball/031c68801c63dad14a99f07a76156c9a0a486352",
+                "reference": "031c68801c63dad14a99f07a76156c9a0a486352",
                 "shasum": ""
             },
             "require": {
@@ -1521,10 +1521,10 @@
             ],
             "description": "API definitions for the platform with generated code in various languages.",
             "support": {
-                "source": "https://github.com/gaming-platform/api/tree/1.0.0",
+                "source": "https://github.com/gaming-platform/api/tree/1.1.0",
                 "issues": "https://github.com/gaming-platform/api/issues"
             },
-            "time": "2024-01-07T13:34:15+00:00"
+            "time": "2024-01-10T11:46:19+00:00"
         },
         {
             "name": "jms/metadata",

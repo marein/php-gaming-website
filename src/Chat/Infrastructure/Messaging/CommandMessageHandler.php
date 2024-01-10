@@ -9,7 +9,7 @@ use Gaming\Common\Bus\Bus;
 use Gaming\Common\MessageBroker\Context;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\MessageHandler;
-use GamingPlatform\Api\Chat\V1\InitiateChat;
+use GamingPlatform\Api\Chat\V1\ChatV1Factory;
 use GamingPlatform\Api\Chat\V1\InitiateChatResponse;
 
 final class CommandMessageHandler implements MessageHandler
@@ -21,8 +21,7 @@ final class CommandMessageHandler implements MessageHandler
 
     public function handle(Message $message, Context $context): void
     {
-        $request = new InitiateChat();
-        $request->mergeFromString($message->body());
+        $request = ChatV1Factory::createInitiateChat($message->body());
 
         $chatId = $this->commandBus->handle(
             new InitiateChatCommand(

@@ -8,7 +8,7 @@ use Gaming\Common\MessageBroker\Context;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\MessageHandler;
 use Gaming\WebInterface\Application\BrowserNotifier;
-use GamingPlatform\Api\Chat\V1\MessageWritten;
+use GamingPlatform\Api\Chat\V1\ChatV1Factory;
 
 final class PublishMessageBrokerEventsToBrowserMessageHandler implements MessageHandler
 {
@@ -40,20 +40,12 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
                 $message->name(),
                 $message->body()
             ),
-            'Chat.MessageWritten' => $this->handleMessageWritten($message),
+            'Chat.MessageWritten' => $this->browserNotifier->publish(
+                ['chat-' . $message->streamId()],
+                $message->name(),
+                ChatV1Factory::createMessageWritten($message->body())->serializeToJsonString()
+            ),
             default => true
         };
-    }
-
-    private function handleMessageWritten(Message $message): void
-    {
-        $event = new MessageWritten();
-        $event->mergeFromString($message->body());
-
-        $this->browserNotifier->publish(
-            ['chat-' . $message->streamId()],
-            $message->name(),
-            $event->serializeToJsonString()
-        );
     }
 }

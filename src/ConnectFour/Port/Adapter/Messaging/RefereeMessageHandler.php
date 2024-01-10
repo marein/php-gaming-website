@@ -9,8 +9,8 @@ use Gaming\Common\MessageBroker\Context;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\MessageHandler;
 use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
+use GamingPlatform\Api\Chat\V1\ChatV1Factory;
 use GamingPlatform\Api\Chat\V1\InitiateChat;
-use GamingPlatform\Api\Chat\V1\InitiateChatResponse;
 
 final class RefereeMessageHandler implements MessageHandler
 {
@@ -30,8 +30,7 @@ final class RefereeMessageHandler implements MessageHandler
 
     private function handleInitiateChatResponse(Message $message): void
     {
-        $response = new InitiateChatResponse();
-        $response->mergeFromString($message->body());
+        $response = ChatV1Factory::createInitiateChatResponse($message->body());
 
         $this->commandBus->handle(
             new AssignChatCommand(
