@@ -38,7 +38,7 @@ services:
             - mysql:/var/lib/mysql
         restart: on-failure
     proxysql:
-        image: marein/php-gaming-website:proxysql
+        image: ghcr.io/gaming-platform/docker-proxysql:2.5
         environment:
             PROXYSQL_CONFIG: |
                 admin_variables: {

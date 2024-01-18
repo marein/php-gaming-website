@@ -94,9 +94,7 @@ services:
             - "prometheus-job=mysql"
             - "prometheus-port=9104"
     proxysql:
-        build:
-            context: .
-            dockerfile: ./docker/proxysql/Dockerfile
+        image: ghcr.io/gaming-platform/docker-proxysql:2.5
         environment:
             PROXYSQL_CONFIG: |
                 admin_variables: {
