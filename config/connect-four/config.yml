@@ -7,7 +7,7 @@ doctrine:
             connect-four:
                 url: '%env(APP_CONNECT_FOUR_DOCTRINE_DBAL_URL)%'
                 dbname: '%env(APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE)%'
-                server_version: 8.0
+                server_version: 8.2
                 charset: utf8mb4
                 default_table_options:
                      charset: utf8mb4

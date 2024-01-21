@@ -75,9 +75,7 @@ services:
             - "prometheus-job=node"
             - "prometheus-port=9100"
     mysql:
-        image: marein/php-gaming-website:mysql
-        environment:
-            MYSQL_ROOT_PASSWORD: password
+        image: ghcr.io/gaming-platform/docker-mysql:8.2
         volumes:
             - mysql:/var/lib/mysql
         restart: on-failure
@@ -95,10 +93,11 @@ services:
             PROXYSQL_CONFIG: |
                 admin_variables: {
                     restapi_enabled="true"
+                    hash_passwords="false"
                 }
                 mysql_variables: {
                     interfaces="/var/run/proxysql/proxysql.sock"
-                    server_version="8.0"
+                    server_version="8.2"
                     monitor_username="root"
                     monitor_password="password"
                     auto_increment_delay_multiplex=0
