@@ -20,7 +20,7 @@ x-php-container:
         - mysql
         - proxysql
         - redis
-        - rabbit-mq
+        - rabbitmq
         - nchan
     restart: on-failure
 
@@ -134,13 +134,11 @@ services:
         labels:
             - "prometheus-job=redis"
             - "prometheus-port=9121"
-    rabbit-mq:
-        build:
-            context: .
-            dockerfile: ./docker/rabbit-mq/Dockerfile
-        hostname: rabbit-mq
+    rabbitmq:
+        image: ghcr.io/gaming-platform/docker-rabbitmq:3.12
+        hostname: rabbitmq
         volumes:
-            - rabbit-mq:/var/lib/rabbitmq/mnesia
+            - rabbitmq:/var/lib/rabbitmq/mnesia
         labels:
             - "prometheus-job=rabbitmq"
             - "prometheus-port=15692"
@@ -218,5 +216,5 @@ volumes:
     mysql:
     proxysql.sock:
     redis:
-    rabbit-mq:
+    rabbitmq:
     prometheus:

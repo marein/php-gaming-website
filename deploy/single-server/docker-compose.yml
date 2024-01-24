@@ -8,8 +8,8 @@ x-php-container:
     environment:
         APP_ENVIRONMENT: "prod"
         APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
-        APP_WAIT_FOR: "unix:///var/run/proxysql/proxysql.sock,mysql:3306,redis:6379,rabbit-mq:5672,nchan:81"
-        APP_RABBIT_MQ_DSN: "amqp://guest:guest@rabbit-mq:5672?heartbeat=60&prefetchCount=30"
+        APP_WAIT_FOR: "unix:///var/run/proxysql/proxysql.sock,mysql:3306,redis:6379,rabbitmq:5672,nchan:81"
+        APP_RABBIT_MQ_DSN: "amqp://guest:guest@rabbitmq:5672?heartbeat=60&prefetchCount=30"
         APP_CHAT_DOCTRINE_DBAL_URL: "mysqli://root:password@localhost/chat?persistent=1&unix_socket=/var/run/proxysql/proxysql.sock"
         APP_CHAT_RUN_MIGRATIONS: "1"
         APP_CHAT_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
@@ -27,7 +27,7 @@ x-php-container:
         - mysql
         - proxysql
         - redis
-        - rabbit-mq
+        - rabbitmq
         - nchan
     volumes:
         - proxysql.sock:/var/run/proxysql
@@ -130,11 +130,11 @@ services:
         labels:
             - "prometheus-job=redis"
             - "prometheus-port=9121"
-    rabbit-mq:
-        image: marein/php-gaming-website:rabbit-mq
-        hostname: rabbit-mq
+    rabbitmq:
+        image: ghcr.io/gaming-platform/docker-rabbitmq:3.12
+        hostname: rabbitmq
         volumes:
-            - rabbit-mq:/var/lib/rabbitmq/mnesia
+            - rabbitmq:/var/lib/rabbitmq/mnesia
         labels:
             - "prometheus-job=rabbitmq"
             - "prometheus-port=15692"
@@ -176,5 +176,5 @@ volumes:
     mysql:
     proxysql.sock:
     redis:
-    rabbit-mq:
+    rabbitmq:
     prometheus:

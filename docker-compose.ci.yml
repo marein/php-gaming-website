@@ -10,7 +10,7 @@ x-php-container:
         - mysql
         - proxysql
         - redis
-        - rabbit-mq
+        - rabbitmq
         - nchan
     volumes:
         - proxysql.sock:/var/run/proxysql
@@ -67,11 +67,11 @@ services:
         volumes:
             - redis:/data
         restart: on-failure
-    rabbit-mq:
-        image: marein/php-gaming-website:rabbit-mq
-        hostname: rabbit-mq
+    rabbitmq:
+        image: ghcr.io/gaming-platform/docker-rabbitmq:3.12
+        hostname: rabbitmq
         volumes:
-            - rabbit-mq:/var/lib/rabbitmq/mnesia
+            - rabbitmq:/var/lib/rabbitmq/mnesia
         restart: on-failure
     nchan:
         image: marein/php-gaming-website:nchan
@@ -129,4 +129,4 @@ volumes:
     mysql:
     proxysql.sock:
     redis:
-    rabbit-mq:
+    rabbitmq:
