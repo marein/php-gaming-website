@@ -62,8 +62,7 @@ services:
             - proxysql.sock:/var/run/proxysql
         restart: on-failure
     redis:
-        image: marein/php-gaming-website:redis
-        command: redis-server --appendonly yes
+        image: ghcr.io/gaming-platform/docker-redis:7.2
         volumes:
             - redis:/data
         restart: on-failure
