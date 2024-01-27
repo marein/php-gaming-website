@@ -98,7 +98,6 @@ buildProductionImages() {
     docker build --file docker/traefik/Dockerfile --tag marein/php-gaming-website:traefik .
     docker build --file docker/nchan/Dockerfile --tag marein/php-gaming-website:nchan .
     docker build --file docker/redis/Dockerfile --tag marein/php-gaming-website:redis .
-    docker build --file docker/grafana/Dockerfile --tag marein/php-gaming-website:grafana .
     docker build --file docker/prometheus/Dockerfile --tag marein/php-gaming-website:prometheus .
 }
 
@@ -109,7 +108,6 @@ pushProductionImages() {
     docker push marein/php-gaming-website:traefik
     docker push marein/php-gaming-website:nchan
     docker push marein/php-gaming-website:redis
-    docker push marein/php-gaming-website:grafana
     docker push marein/php-gaming-website:prometheus
 }
 
