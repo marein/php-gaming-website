@@ -51,12 +51,8 @@ services:
             - "prometheus-job=traefik"
             - "prometheus-port=8080"
     grafana:
-        image: marein/php-gaming-website:grafana
+        image: ghcr.io/gaming-platform/docker-grafana:10.0
         restart: on-failure
-        environment:
-            GF_AUTH_DISABLE_LOGIN_FORM: 1
-            GF_AUTH_ANONYMOUS_ENABLED: 1
-            GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
         ports:
             - "8083:3000"
     prometheus:
