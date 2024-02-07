@@ -5,6 +5,5 @@ services:
         public: false
         arguments:
             - '@gaming.message-broker.gaming-exchange-publisher'
-            - '@chat.normalizer'
         tags:
             - { name: 'chat.stored-event-subscriber', key: 'publish-to-message-broker' }

@@ -34,9 +34,8 @@ customElements.define('event-source', class extends HTMLElement {
     _onMessage(message) {
         this._lastEventId = message.lastEventId;
 
-        let payload = JSON.parse(message.data);
-        let eventName = payload.eventName;
-        delete payload.eventName;
+        let [, eventName, eventData] = message.data.split(/([^:]+):(.*)/);
+        let payload = JSON.parse(eventData);
 
         this.dispatchEvent(new CustomEvent(eventName, {bubbles: true, detail: payload}));
 

@@ -13,6 +13,5 @@ services:
         public: false
         arguments:
             - '@gaming.message-broker.gaming-exchange-publisher'
-            - '@identity.normalizer'
         tags:
             - { name: 'identity.stored-event-subscriber', key: 'publish-to-message-broker' }

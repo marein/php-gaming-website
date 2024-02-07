@@ -1,22 +1,27 @@
 version: '3.4'
 
+x-php-container-volumes:
+    &php-container-volumes
+        volumes:
+            - ./:/project:delegated
+            - vendor:/project/vendor
+            - proxysql.sock:/var/run/proxysql
+            - type: tmpfs
+              target: /project/var
+
 x-php-container:
     &php-container
+    <<: *php-container-volumes
     build:
         context: .
-        dockerfile: ./docker/php-fpm/Dockerfile
+        dockerfile: ./docker/Dockerfile
     env_file: ./.env
     depends_on:
         - mysql
         - proxysql
         - redis
-        - rabbit-mq
+        - rabbitmq
         - nchan
-    volumes:
-        - ./config:/project/config:delegated
-        - ./src:/project/src:delegated
-        - vendor:/project/vendor
-        - proxysql.sock:/var/run/proxysql
     restart: on-failure
 
 services:
@@ -24,9 +29,7 @@ services:
     #  Database and application  #
     ##############################
     traefik:
-        build:
-            context: .
-            dockerfile: ./docker/traefik/Dockerfile
+        image: traefik:2.10
         command:
             - --metrics.prometheus=true
             - --providers.docker
@@ -42,26 +45,12 @@ services:
             - "prometheus-job=traefik"
             - "prometheus-port=8080"
     grafana:
-        build:
-            context: .
-            dockerfile: ./docker/grafana/Dockerfile
-        environment:
-            GF_AUTH_DISABLE_LOGIN_FORM: 1
-            GF_AUTH_ANONYMOUS_ENABLED: 1
-            GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+        image: ghcr.io/gaming-platform/docker-grafana:10.0
         ports:
             - "8083:3000"
-        volumes:
-            - ./docker/grafana/provisioning:/etc/grafana/provisioning
-            - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
     prometheus:
-        build:
-            context: .
-            dockerfile: ./docker/prometheus/Dockerfile
-        user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
-        command:
-            - '--config.file=/etc/prometheus/prometheus-docker.yml'
-            - '--storage.tsdb.path=/prometheus'
+        image: ghcr.io/gaming-platform/docker-prometheus:2.45
+        command: --config.file=/etc/prometheus/docker.yml
         volumes:
             - prometheus:/prometheus
             - /var/run/docker.sock:/var/run/docker.sock
@@ -72,11 +61,7 @@ services:
             - "prometheus-job=node"
             - "prometheus-port=9100"
     mysql:
-        build:
-            context: .
-            dockerfile: ./docker/mysql/Dockerfile
-        environment:
-            MYSQL_ROOT_PASSWORD: password
+        image: ghcr.io/gaming-platform/docker-mysql:8.2
         volumes:
             - mysql:/var/lib/mysql
         restart: on-failure
@@ -89,17 +74,16 @@ services:
             - "prometheus-job=mysql"
             - "prometheus-port=9104"
     proxysql:
-        build:
-            context: .
-            dockerfile: ./docker/proxysql/Dockerfile
+        image: ghcr.io/gaming-platform/docker-proxysql:2.5
         environment:
             PROXYSQL_CONFIG: |
                 admin_variables: {
                     restapi_enabled="true"
+                    hash_passwords="false"
                 }
                 mysql_variables: {
                     interfaces="/var/run/proxysql/proxysql.sock"
-                    server_version="8.0"
+                    server_version="8.2"
                     monitor_username="root"
                     monitor_password="password"
                     auto_increment_delay_multiplex=0
@@ -117,13 +101,9 @@ services:
         labels:
             - "prometheus-job=proxysql"
             - "prometheus-port=6070"
-            - "prometheus-path=/metrics"
         restart: on-failure
     redis:
-        build:
-            context: .
-            dockerfile: ./docker/redis/Dockerfile
-        command: redis-server --appendonly yes
+        image: ghcr.io/gaming-platform/docker-redis:7.2
         volumes:
             - redis:/data
         restart: on-failure
@@ -134,40 +114,29 @@ services:
         labels:
             - "prometheus-job=redis"
             - "prometheus-port=9121"
-    rabbit-mq:
-        build:
-            context: .
-            dockerfile: ./docker/rabbit-mq/Dockerfile
-        hostname: rabbit-mq
+    rabbitmq:
+        image: ghcr.io/gaming-platform/docker-rabbitmq:3.12
+        hostname: rabbitmq
         volumes:
-            - rabbit-mq:/var/lib/rabbitmq/mnesia
+            - rabbitmq:/var/lib/rabbitmq/mnesia
         labels:
             - "prometheus-job=rabbitmq"
             - "prometheus-port=15692"
             - "prometheus-path=/metrics/per-object"
         restart: on-failure
     nchan:
-        build:
-            context: .
-            dockerfile: ./docker/nchan/Dockerfile
+        image: ghcr.io/gaming-platform/docker-nchan:1.3
         restart: on-failure
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nchan.priority=20"
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
+            - "traefik.http.routers.nchan.middlewares=nchan-stripprefix"
+            - "traefik.http.middlewares.nchan-stripprefix.stripprefix.prefixes=/sse"
             - "prometheus-job=nchan"
             - "prometheus-port=81"
     php-fpm:
         <<: *php-container
-        volumes:
-            - ./assets:/project/assets:delegated
-            - ./config:/project/config:delegated
-            - ./src:/project/src:delegated
-            - ./tests:/project/tests:delegated
-            - ./var:/project/var:delegated
-            - ./web:/project/web:delegated
-            - vendor:/project/vendor
-            - proxysql.sock:/var/run/proxysql
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.php-fpm.priority=10"
@@ -197,26 +166,12 @@ services:
     #     Development helper     #
     ##############################
     php:
+        <<: *php-container-volumes
         build:
             context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
+            dockerfile: ./docker/Dockerfile
         entrypoint: ''
         command: 'true'
-        volumes:
-            - ./src:/project/src:delegated
-            - ./tests:/project/tests:delegated
-            - vendor:/project/vendor
-    composer:
-        build:
-            context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
-            target: builder
-        entrypoint: ''
-        command: 'true'
-        volumes:
-            - ./composer.json:/project/composer.json
-            - ./composer.lock:/project/composer.lock
-            - vendor:/project/vendor
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:5.2
         environment:
@@ -241,5 +196,5 @@ volumes:
     mysql:
     proxysql.sock:
     redis:
-    rabbit-mq:
+    rabbitmq:
     prometheus:

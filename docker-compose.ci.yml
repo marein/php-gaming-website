@@ -10,7 +10,7 @@ x-php-container:
         - mysql
         - proxysql
         - redis
-        - rabbit-mq
+        - rabbitmq
         - nchan
     volumes:
         - proxysql.sock:/var/run/proxysql
@@ -21,7 +21,7 @@ services:
     #  Database and application  #
     ##############################
     traefik:
-        image: marein/php-gaming-website:traefik
+        image: traefik:2.10
         command:
             - --providers.docker
             - --providers.docker.exposedbydefault=false
@@ -31,22 +31,21 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
     mysql:
-        image: marein/php-gaming-website:mysql
-        environment:
-            MYSQL_ROOT_PASSWORD: password
+        image: ghcr.io/gaming-platform/docker-mysql:8.2
         volumes:
             - mysql:/var/lib/mysql
         restart: on-failure
     proxysql:
-        image: marein/php-gaming-website:proxysql
+        image: ghcr.io/gaming-platform/docker-proxysql:2.5
         environment:
             PROXYSQL_CONFIG: |
                 admin_variables: {
                     restapi_enabled="true"
+                    hash_passwords="false"
                 }
                 mysql_variables: {
                     interfaces="/var/run/proxysql/proxysql.sock"
-                    server_version="8.0"
+                    server_version="8.2"
                     monitor_username="root"
                     monitor_password="password"
                     auto_increment_delay_multiplex=0
@@ -63,24 +62,25 @@ services:
             - proxysql.sock:/var/run/proxysql
         restart: on-failure
     redis:
-        image: marein/php-gaming-website:redis
-        command: redis-server --appendonly yes
+        image: ghcr.io/gaming-platform/docker-redis:7.2
         volumes:
             - redis:/data
         restart: on-failure
-    rabbit-mq:
-        image: marein/php-gaming-website:rabbit-mq
-        hostname: rabbit-mq
+    rabbitmq:
+        image: ghcr.io/gaming-platform/docker-rabbitmq:3.12
+        hostname: rabbitmq
         volumes:
-            - rabbit-mq:/var/lib/rabbitmq/mnesia
+            - rabbitmq:/var/lib/rabbitmq/mnesia
         restart: on-failure
     nchan:
-        image: marein/php-gaming-website:nchan
+        image: ghcr.io/gaming-platform/docker-nchan:1.3
         restart: on-failure
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nchan.priority=20"
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
+            - "traefik.http.routers.nchan.middlewares=nchan-stripprefix"
+            - "traefik.http.middlewares.nchan-stripprefix.stripprefix.prefixes=/sse"
     php-fpm:
         <<: *php-container
         labels:
@@ -120,7 +120,7 @@ services:
     php:
         build:
             context: .
-            dockerfile: ./docker/php-fpm/Dockerfile
+            dockerfile: ./docker/Dockerfile
         entrypoint: ''
         command: 'true'
         volumes:
@@ -130,4 +130,4 @@ volumes:
     mysql:
     proxysql.sock:
     redis:
-    rabbit-mq:
+    rabbitmq:

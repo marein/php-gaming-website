@@ -9,6 +9,8 @@ use Gaming\Common\Bus\Bus;
 use Gaming\Common\MessageBroker\Context;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\MessageHandler;
+use GamingPlatform\Api\Chat\V1\ChatV1Factory;
+use GamingPlatform\Api\Chat\V1\InitiateChatResponse;
 
 final class CommandMessageHandler implements MessageHandler
 {
@@ -19,12 +21,12 @@ final class CommandMessageHandler implements MessageHandler
 
     public function handle(Message $message, Context $context): void
     {
-        $payload = json_decode($message->body(), true, 512, JSON_THROW_ON_ERROR);
+        $request = ChatV1Factory::createInitiateChat($message->body());
 
         $chatId = $this->commandBus->handle(
             new InitiateChatCommand(
-                $payload['idempotencyKey'],
-                $payload['authors']
+                $request->getIdempotencyKey(),
+                iterator_to_array($request->getAuthors())
             )
         );
         assert(is_string($chatId));
@@ -32,13 +34,10 @@ final class CommandMessageHandler implements MessageHandler
         $context->reply(
             new Message(
                 'Chat.InitiateChatResponse',
-                json_encode(
-                    [
-                        'chatId' => $chatId,
-                        'correlationId' => $payload['correlationId']
-                    ],
-                    JSON_THROW_ON_ERROR
-                )
+                (new InitiateChatResponse())
+                    ->setChatId($chatId)
+                    ->setCorrelationId($request->getCorrelationId())
+                    ->serializeToString()
             )
         );
     }

@@ -8,6 +8,12 @@
       "email": "markusreinhold@icloud.com"
     }
   ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://gaming-platform.github.io/satis/"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Gaming\\": "src/"
@@ -28,6 +34,7 @@
     "doctrine/doctrine-migrations-bundle": "^3.2",
     "doctrine/migrations": "^3.5",
     "doctrine/orm": "^2.12",
+    "gaming-platform/api": "^1.0",
     "jms/serializer": "^3.17",
     "marein/php-nchan-client": "^3.1",
     "marein/symfony-lock-doctrine-migrations-bundle": "^1.0",
