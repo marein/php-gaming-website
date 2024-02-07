@@ -95,7 +95,6 @@ acceptance() {
 
 buildProductionImages() {
     docker build --build-arg environment=production --file docker/php-fpm/Dockerfile --tag marein/php-gaming-website:php-fpm .
-    docker build --file docker/traefik/Dockerfile --tag marein/php-gaming-website:traefik .
     docker build --file docker/nchan/Dockerfile --tag marein/php-gaming-website:nchan .
 }
 
@@ -103,7 +102,6 @@ pushProductionImages() {
     echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
     docker push marein/php-gaming-website:php-fpm
-    docker push marein/php-gaming-website:traefik
     docker push marein/php-gaming-website:nchan
 }
 

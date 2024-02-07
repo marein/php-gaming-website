@@ -29,9 +29,7 @@ services:
     #  Database and application  #
     ##############################
     traefik:
-        build:
-            context: .
-            dockerfile: ./docker/traefik/Dockerfile
+        image: traefik:2.10
         command:
             - --metrics.prometheus=true
             - --providers.docker
