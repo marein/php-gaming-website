@@ -132,12 +132,14 @@ services:
             - "prometheus-path=/metrics/per-object"
         restart: on-failure
     nchan:
-        image: marein/php-gaming-website:nchan
+        image: ghcr.io/gaming-platform/docker-nchan:1.3
         restart: on-failure
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.nchan.priority=20"
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
+            - "traefik.http.routers.nchan.middlewares=nchan-stripprefix"
+            - "traefik.http.middlewares.nchan-stripprefix.stripprefix.prefixes=/sse"
             - "prometheus-job=nchan"
             - "prometheus-port=81"
     web-interface-http:
