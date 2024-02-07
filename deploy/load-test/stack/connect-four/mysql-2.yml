@@ -2,10 +2,7 @@ version: '3.4'
 
 services:
     connect-four-mysql-2:
-        image: marein/php-gaming-website:mysql
-        command: mysqld --max-connections=1000
-        environment:
-            MYSQL_ROOT_PASSWORD: password
+        image: ghcr.io/gaming-platform/docker-mysql:8.2
         volumes:
             - connect-four-mysql-2:/var/lib/mysql
         deploy:
