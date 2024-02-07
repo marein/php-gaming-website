@@ -51,13 +51,8 @@ services:
         ports:
             - "8083:3000"
     prometheus:
-        build:
-            context: .
-            dockerfile: ./docker/prometheus/Dockerfile
-        user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
-        command:
-            - '--config.file=/etc/prometheus/prometheus-docker.yml'
-            - '--storage.tsdb.path=/prometheus'
+        image: ghcr.io/gaming-platform/docker-prometheus:2.45
+        command: --config.file=/etc/prometheus/docker.yml
         volumes:
             - prometheus:/prometheus
             - /var/run/docker.sock:/var/run/docker.sock
@@ -108,7 +103,6 @@ services:
         labels:
             - "prometheus-job=proxysql"
             - "prometheus-port=6070"
-            - "prometheus-path=/metrics"
         restart: on-failure
     redis:
         image: ghcr.io/gaming-platform/docker-redis:7.2

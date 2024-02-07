@@ -56,15 +56,12 @@ services:
         ports:
             - "8083:3000"
     prometheus:
-        image: marein/php-gaming-website:prometheus
-        restart: on-failure
-        user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
-        command:
-            - '--config.file=/etc/prometheus/prometheus-docker.yml'
-            - '--storage.tsdb.path=/prometheus'
+        image: ghcr.io/gaming-platform/docker-prometheus:2.45
+        command: --config.file=/etc/prometheus/docker.yml
         volumes:
             - prometheus:/prometheus
             - /var/run/docker.sock:/var/run/docker.sock
+        restart: on-failure
     node-exporter:
         image: prom/node-exporter:v1.6.0
         labels:
@@ -111,7 +108,6 @@ services:
         labels:
             - "prometheus-job=proxysql"
             - "prometheus-port=6070"
-            - "prometheus-path=/metrics"
         restart: on-failure
     redis:
         image: ghcr.io/gaming-platform/docker-redis:7.2
