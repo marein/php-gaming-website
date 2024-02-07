@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
     traefik:
-        image: marein/php-gaming-website:traefik
+        image: traefik:2.10
         command:
             - --metrics.prometheus=true
             - --providers.docker

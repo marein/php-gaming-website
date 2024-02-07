@@ -2,8 +2,7 @@ version: '3.4'
 
 services:
     web-interface-redis:
-        image: marein/php-gaming-website:redis
-        command: redis-server --appendonly yes
+        image: ghcr.io/gaming-platform/docker-redis:7.2
         volumes:
             - web-interface-redis:/data
         deploy:

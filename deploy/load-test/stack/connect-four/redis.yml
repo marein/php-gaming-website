@@ -2,8 +2,7 @@ version: '3.4'
 
 services:
     connect-four-redis:
-        image: marein/php-gaming-website:redis
-        command: redis-server --appendonly yes
+        image: ghcr.io/gaming-platform/docker-redis:7.2
         volumes:
             - connect-four-redis:/data
         deploy:

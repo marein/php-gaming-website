@@ -1,19 +1,19 @@
 version: '3.4'
 
 services:
-    rabbit-mq:
-        image: marein/php-gaming-website:rabbit-mq
-        hostname: rabbit-mq
+    rabbitmq:
+        image: ghcr.io/gaming-platform/docker-rabbitmq:3.12
+        hostname: rabbitmq
         volumes:
-            - rabbit-mq:/var/lib/rabbitmq/mnesia
+            - rabbitmq:/var/lib/rabbitmq/mnesia
         deploy:
             placement:
                 constraints:
-                    - "node.labels.rabbit-mq==1"
+                    - "node.labels.rabbitmq==1"
             labels:
                 - "prometheus-job=rabbitmq"
                 - "prometheus-port=15692"
                 - "prometheus-path=/metrics/per-object"
 
 volumes:
-    rabbit-mq:
+    rabbitmq:

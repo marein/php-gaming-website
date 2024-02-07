@@ -2,11 +2,7 @@ version: '3.4'
 
 services:
     grafana:
-        image: marein/php-gaming-website:grafana
-        environment:
-            GF_AUTH_DISABLE_LOGIN_FORM: 1
-            GF_AUTH_ANONYMOUS_ENABLED: 1
-            GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+        image: ghcr.io/gaming-platform/docker-grafana:10.0
         ports:
             - "8083:3000"
         deploy:
@@ -14,11 +10,8 @@ services:
                 constraints:
                     - "node.labels.grafana==1"
     prometheus:
-        image: marein/php-gaming-website:prometheus
-        user: root # Needed for accessing docker.sock. In prod, it may be handled via file permissions.
-        command:
-            - '--config.file=/etc/prometheus/prometheus-dockerswarm.yml'
-            - '--storage.tsdb.path=/prometheus'
+        image: ghcr.io/gaming-platform/docker-prometheus:2.45
+        command: --config.file=/etc/prometheus/dockerswarm.yml
         volumes:
             - prometheus:/prometheus
             - /var/run/docker.sock:/var/run/docker.sock
