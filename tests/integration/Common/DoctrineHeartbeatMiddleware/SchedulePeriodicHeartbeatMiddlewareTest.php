@@ -78,7 +78,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
         LoggerInterface $logger
     ): Connection {
         return DriverManager::getConnection(
-            ['url' => $url],
+            ['url' => $url, 'driver' => 'pdo_sqlite'],
             (new Configuration())
                 ->setMiddlewares(
                     [
