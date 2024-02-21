@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "54771d6f5cfe43b6eab348d67862db35",
+    "content-hash": "3b7307541f82e04c0c5854f466e4072e",
     "packages": [
         {
             "name": "composer/semver",
@@ -1630,7 +1630,7 @@
         },
         {
             "name": "marein/symfony-lock-doctrine-migrations-bundle",
-            "version": "dev-master",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marein/symfony-lock-doctrine-migrations-bundle.git",
@@ -1659,7 +1659,6 @@
                 "squizlabs/php_codesniffer": "3.6.1",
                 "symfony/framework-bundle": "^5.2 || ^6.0 || ^7.0"
             },
-            "default-branch": true,
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
@@ -1679,7 +1678,7 @@
             "description": "Perform concurrent doctrine migrations safely.",
             "support": {
                 "issues": "https://github.com/marein/symfony-lock-doctrine-migrations-bundle/issues",
-                "source": "https://github.com/marein/symfony-lock-doctrine-migrations-bundle/tree/master"
+                "source": "https://github.com/marein/symfony-lock-doctrine-migrations-bundle/tree/1.0.3"
             },
             "time": "2024-02-19T19:50:18+00:00"
         },
@@ -10483,7 +10482,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "marein/symfony-lock-doctrine-migrations-bundle": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
