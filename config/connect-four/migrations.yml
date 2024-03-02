@@ -3,4 +3,3 @@ migrations_paths:
 table_storage:
     table_name: migration_versions
 connection: connect_four
-all_or_nothing: true
