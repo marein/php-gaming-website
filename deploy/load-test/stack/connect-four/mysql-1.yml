@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+    connect-four-mysql-1:
+        image: ghcr.io/gaming-platform/docker-mysql:8.2
+        volumes:
+            - connect-four-mysql-1:/var/lib/mysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.connect-four-mysql-1==1"
+    connect-four-mysql-1-exporter:
+        image: prom/mysqld-exporter:v0.15.0
+        command: --mysqld.username=root --mysqld.address connect-four-mysql-1:3306
+        environment:
+            MYSQLD_EXPORTER_PASSWORD: password
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.connect-four-mysql-1==1"
+            labels:
+                - "prometheus-job=mysql"
+                - "prometheus-port=9104"
+
+volumes:
+    connect-four-mysql-1:

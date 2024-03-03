@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+    identity-follow-event-store:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console identity:follow-event-store pointer all
+        env_file: ../app.env
+        volumes:
+                - proxysql.sock:/var/run/proxysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+
+volumes:
+    proxysql.sock:
