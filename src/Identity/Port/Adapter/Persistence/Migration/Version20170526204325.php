@@ -16,8 +16,8 @@ final class Version20170526204325 extends AbstractMigration
         $table->addColumn('id', 'uuid');
         $table->addColumn('version', 'integer', ['default' => 1]);
         $table->addColumn('is_signed_up', 'boolean');
-        $table->addColumn('credentials_username', 'string', ['notNull' => false]);
-        $table->addColumn('credentials_password', 'string', ['notNull' => false]);
+        $table->addColumn('credentials_username', 'string', ['notNull' => false, 'length' => 255]);
+        $table->addColumn('credentials_password', 'string', ['notNull' => false, 'length' => 255]);
 
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['credentials_username']);

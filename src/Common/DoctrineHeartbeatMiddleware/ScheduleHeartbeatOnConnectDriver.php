@@ -28,7 +28,7 @@ final class ScheduleHeartbeatOnConnectDriver extends AbstractDriverMiddleware
             time() + $this->heartbeat,
             new ConnectionHeartbeatHandler(
                 $trackActivityConnection,
-                $this->getDatabasePlatform()->getDummySelectSQL(),
+                $this->getDatabasePlatform($trackActivityConnection)->getDummySelectSQL(),
                 $this->heartbeat,
                 $this->clock
             )

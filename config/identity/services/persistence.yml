@@ -14,3 +14,12 @@ services:
             - 'event_store'
             - '@identity.normalizer'
             - '@clock'
+
+    identity.orm.publish-domain-events-listener:
+        class: Gaming\Common\Domain\Integration\Doctrine\PublishDomainEventsListener
+        arguments:
+            - '@identity.domain-event-publisher'
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, entity_manager: identity }
+            - { name: doctrine.event_listener, event: postUpdate, entity_manager: identity }
+            - { name: doctrine.event_listener, event: postRemove, entity_manager: identity }

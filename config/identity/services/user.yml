@@ -17,7 +17,6 @@ services:
         public: false
         arguments:
             - '@identity.doctrine-orm'
-            - '@identity.domain-event-publisher'
 
     identity.hash-algorithm:
         class: Gaming\Identity\Port\Adapter\HashAlgorithm\Argon2iHashAlgorithm

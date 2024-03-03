@@ -8,6 +8,7 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\Middleware as LoggerMiddleware;
+use Doctrine\DBAL\Tools\DsnParser;
 use Gaming\Common\DoctrineHeartbeatMiddleware\SchedulePeriodicHeartbeatMiddleware;
 use Gaming\Common\Scheduler\TestScheduler;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +26,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
         $scheduler = new TestScheduler();
         $clock = new MockClock();
         $logger = $this->createMock(LoggerInterface::class);
-        $connection = $this->createConnectionWithMiddleware('sqlite:///:memory:', $scheduler, 5, $clock, $logger);
+        $connection = $this->createConnectionWithMiddleware('pdo-sqlite:///:memory:', $scheduler, 5, $clock, $logger);
 
         // The logger is used to check how many queries have been made.
         // The first expectation is when opening, the second is the heartbeat that is triggered.
@@ -78,7 +79,7 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
         LoggerInterface $logger
     ): Connection {
         return DriverManager::getConnection(
-            ['url' => $url],
+            (new DsnParser())->parse($url),
             (new Configuration())
                 ->setMiddlewares(
                     [
@@ -92,8 +93,8 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
     private function withoutHeartbeatDataProvider(): array
     {
         return [
-            ['sqlite:///:memory:', 0],
-            ['sqlite:///:memory:', -1]
+            ['pdo-sqlite:///:memory:', 0],
+            ['pdo-sqlite:///:memory:', -1]
         ];
     }
 }

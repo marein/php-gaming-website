@@ -33,34 +33,34 @@ final class TrackActivityConnection implements Connection
         return $this->decorate(fn() => $this->connection->query($sql));
     }
 
-    public function quote($value, $type = ParameterType::STRING): mixed
+    public function quote(string $value): string
     {
-        return $this->connection->quote($value, $type);
+        return $this->connection->quote($value);
     }
 
-    public function exec(string $sql): int
+    public function exec(string $sql): int|string
     {
         return $this->decorate(fn() => $this->connection->exec($sql));
     }
 
-    public function lastInsertId($name = null): string|int|false
+    public function lastInsertId(): int|string
     {
-        return $this->decorate(fn() => $this->connection->lastInsertId($name));
+        return $this->decorate(fn() => $this->connection->lastInsertId());
     }
 
-    public function beginTransaction(): bool
+    public function beginTransaction(): void
     {
-        return $this->decorate(fn() => $this->connection->beginTransaction());
+        $this->decorate(fn() => $this->connection->beginTransaction());
     }
 
-    public function commit(): bool
+    public function commit(): void
     {
-        return $this->decorate(fn() => $this->connection->commit());
+        $this->decorate(fn() => $this->connection->commit());
     }
 
-    public function rollBack(): bool
+    public function rollBack(): void
     {
-        return $this->decorate(fn() => $this->connection->rollBack());
+        $this->decorate(fn() => $this->connection->rollBack());
     }
 
     public function isQuerying(): bool
@@ -79,6 +79,11 @@ final class TrackActivityConnection implements Connection
     public function getNativeConnection()
     {
         return $this->connection->getNativeConnection();
+    }
+
+    public function getServerVersion(): string
+    {
+        return $this->connection->getServerVersion();
     }
 
     private function decorate(Closure $action): mixed
