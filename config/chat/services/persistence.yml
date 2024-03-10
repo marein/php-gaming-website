@@ -10,6 +10,7 @@ services:
         class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
         arguments:
             - '@chat.doctrine-dbal'
+            - '@chat.doctrine-dbal'
             - 'event_store'
             - !service
                 class: Gaming\Common\EventStore\Integration\JmsSerializer\JmsContentSerializer
