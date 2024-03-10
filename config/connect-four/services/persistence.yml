@@ -15,7 +15,20 @@ services:
         class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
         public: false
         arguments:
+            - '@connect-four.shards'
             - '@connect-four.doctrine-dbal'
             - 'event_store'
             - '@connect-four.normalizer'
             - '@clock'
+
+    connect-four.shards:
+        class: Gaming\Common\Sharding\Integration\Crc32ModShards
+        arguments:
+            - '%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%'
+
+    connect-four.doctrine-schema-shards:
+        class: Gaming\Common\Sharding\Integration\DoctrineSchemaShards
+        decorates: 'connect-four.shards'
+        arguments:
+            - '@.inner'
+            - '@connect-four.doctrine-dbal'

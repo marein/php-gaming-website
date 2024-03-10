@@ -22,15 +22,14 @@ use Gaming\ConnectFour\Domain\Game\Games;
 final class DoctrineJsonGameRepository implements Games, GameFinder
 {
     /**
-     * @param Shards<string> $shards
+     * @param Shards<Connection> $shards
      */
     public function __construct(
-        private readonly Connection $connection,
+        private readonly Shards $shards,
         private readonly string $tableName,
         private readonly DomainEventPublisher $domainEventPublisher,
         private readonly EventStore $eventStore,
-        private readonly Normalizer $normalizer,
-        private readonly Shards $shards
+        private readonly Normalizer $normalizer
     ) {
     }
 
@@ -41,26 +40,26 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
 
     public function add(Game $game): void
     {
-        $this->switchShard($game->id());
+        $connection = $this->shards->lookup($game->id()->toString());
 
-        $this->connection->transactional(function () use ($game) {
-            $this->domainEventPublisher->publish($game->flushDomainEvents());
-
-            $this->connection->insert(
+        $connection->transactional(function (Connection $connection) use ($game) {
+            $connection->insert(
                 $this->tableName,
                 ['id' => $game->id()->toString(), 'aggregate' => $this->normalizeGame($game), 'version' => 1],
                 ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
             );
+
+            $this->domainEventPublisher->publish($game->flushDomainEvents());
         });
     }
 
     public function update(GameId $gameId, Closure $operation): void
     {
-        $this->switchShard($gameId);
+        $connection = $this->shards->lookup($gameId->toString());
 
-        $this->connection->transactional(function () use ($gameId, $operation) {
+        $connection->transactional(function (Connection $connection) use ($gameId, $operation) {
             $id = $gameId->toString();
-            $row = $this->connection->fetchAssociative(
+            $row = $connection->fetchAssociative(
                 'SELECT * FROM ' . $this->tableName . ' g WHERE g.id = ?',
                 [$id],
                 ['uuid']
@@ -69,21 +68,19 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
             $game = $this->denormalizeGame($row['aggregate']);
             $operation($game);
 
-            $this->domainEventPublisher->publish($game->flushDomainEvents());
-
-            $this->connection->update(
+            $connection->update(
                 $this->tableName,
                 ['aggregate' => $this->normalizeGame($game), 'version' => $row['version'] + 1],
                 ['id' => $id, 'version' => $row['version']],
                 ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
             ) ?: throw new ConcurrencyException();
+
+            $this->domainEventPublisher->publish($game->flushDomainEvents());
         });
     }
 
     public function find(GameId $gameId): GameQueryModel
     {
-        $this->switchShard($gameId);
-
         $domainEvents = $this->eventStore->byAggregateId(
             $gameId->toString()
         ) ?: throw new GameNotFoundException();
@@ -94,13 +91,6 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
         }
 
         return $game;
-    }
-
-    private function switchShard(GameId $gameId): void
-    {
-        $this->connection->executeStatement(
-            'USE ' . $this->connection->quoteIdentifier($this->shards->lookup($gameId->toString()))
-        );
     }
 
     private function normalizeGame(Game $game): mixed

@@ -11,6 +11,7 @@ services:
         public: false
         arguments:
             - '@identity.doctrine-dbal'
+            - '@identity.doctrine-dbal'
             - 'event_store'
             - '@identity.normalizer'
             - '@clock'

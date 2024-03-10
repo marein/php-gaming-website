@@ -14,6 +14,8 @@ use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventFilters;
 use Gaming\Common\Normalizer\Normalizer;
+use Gaming\Common\Sharding\Integration\DoctrineSingleShards;
+use Gaming\Common\Sharding\Shards;
 use Psr\Clock\ClockInterface;
 use Throwable;
 
@@ -21,16 +23,26 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
 {
     private const SELECT = 'e.id, e.event, e.occurredOn';
 
+    /**
+     * @var Shards<Connection>
+     */
+    private readonly Shards $shards;
+
     private readonly GapDetection $gapDetection;
 
+    /**
+     * @param Shards<Connection>|Connection $shards
+     */
     public function __construct(
-        private readonly Connection $connection,
+        Shards|Connection $shards,
+        private readonly Connection $pollingConnection,
         private readonly string $table,
         private readonly Normalizer $normalizer,
         private readonly ClockInterface $clock
     ) {
+        $this->shards = $shards instanceof Shards ? $shards : new DoctrineSingleShards($shards);
         $this->gapDetection = new DoctrineWaitForUncommittedStoredEventsGapDetection(
-            $this->connection,
+            $this->pollingConnection,
             $this->table,
             'id'
         );
@@ -39,7 +51,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     public function byAggregateId(string $aggregateId): array
     {
         try {
-            $rows = $this->connection->createQueryBuilder()
+            $rows = $this->shards->lookup($aggregateId)->createQueryBuilder()
                 ->select(self::SELECT)
                 ->from($this->table, 'e')
                 ->where('e.aggregateId = :aggregateId')
@@ -63,7 +75,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     public function append(DomainEvent $domainEvent): void
     {
         try {
-            $this->connection->insert(
+            $this->shards->lookup($domainEvent->aggregateId())->insert(
                 $this->table,
                 [
                     'aggregateId' => $domainEvent->aggregateId(),
@@ -88,7 +100,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     public function since(int $id, int $limit): array
     {
         try {
-            $rows = $this->connection->createQueryBuilder()
+            $rows = $this->pollingConnection->createQueryBuilder()
                 ->select(self::SELECT)
                 ->from($this->table, 'e')
                 ->where('e.id > :id')

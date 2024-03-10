@@ -15,6 +15,7 @@ services:
         public: false
         arguments:
             - '@chat.doctrine-dbal'
+            - '@chat.doctrine-dbal'
             - 'event_store'
             - '@chat.normalizer'
             - '@clock'
