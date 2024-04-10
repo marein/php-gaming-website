@@ -5,7 +5,7 @@ services:
         public: false
         arguments:
             - '%env(APP_CHAT_PREDIS_CLIENT_URL)%'
-            - { prefix: 'chat.' }
+            - { prefix: 'chat:' }
 
     chat.doctrine-dbal:
         alias: 'doctrine.dbal.chat_connection'
