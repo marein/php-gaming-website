@@ -10,20 +10,15 @@ use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class InMemoryCacheGameStore implements GameStore
 {
-    private GameStore $gameStore;
-
-    private int $cacheSize;
-
     /**
      * @var Game[]
      */
-    private array $cachedGames;
+    private array $cachedGames = [];
 
-    public function __construct(GameStore $gameStore, int $cacheSize)
-    {
-        $this->gameStore = $gameStore;
-        $this->cacheSize = $cacheSize;
-        $this->cachedGames = [];
+    public function __construct(
+        private readonly GameStore $gameStore,
+        private readonly int $cacheSize
+    ) {
     }
 
     public function find(GameId $gameId): Game
@@ -31,7 +26,7 @@ final class InMemoryCacheGameStore implements GameStore
         return $this->cachedGames[$gameId->toString()] ?? $this->gameStore->find($gameId);
     }
 
-    public function save(Game $game): void
+    public function persist(Game $game): void
     {
         if ($game->finished()) {
             unset($this->cachedGames[$game->id()]);
@@ -39,9 +34,14 @@ final class InMemoryCacheGameStore implements GameStore
 
         $this->removeFirstElementIfLimitHasBeenExceeded();
 
-        $this->gameStore->save($game);
+        $this->gameStore->persist($game);
 
         $this->cachedGames[$game->id()] = $game;
+    }
+
+    public function flush(): void
+    {
+        $this->gameStore->flush();
     }
 
     private function removeFirstElementIfLimitHasBeenExceeded(): void
