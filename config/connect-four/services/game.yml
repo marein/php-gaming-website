@@ -32,7 +32,7 @@ services:
         public: false
         arguments:
             - '@connect-four.predis'
-            - 'game.'
+            - 'game:'
             - '@connect-four.normalizer'
             - '@connect-four.game-repository'
 
@@ -41,7 +41,7 @@ services:
         public: false
         arguments:
             - '@connect-four.predis'
-            - 'games-by-player.'
+            - 'games-by-player:'
 
     connect-four.open-game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisOpenGameStore

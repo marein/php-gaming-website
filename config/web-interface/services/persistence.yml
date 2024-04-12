@@ -5,12 +5,11 @@ services:
         public: false
         arguments:
             - '%env(APP_WEB_INTERFACE_PREDIS_CLIENT_URL)%'
-            -
-                prefix: 'web-interface.'
+            - { prefix: 'web-interface:' }
 
     web-interface.session-handler:
         class: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
         public: false
         arguments:
             - '@web-interface.predis'
-            - { prefix: 'session_', ttl: 86400 }
+            - { prefix: 'session:', ttl: 86400 }

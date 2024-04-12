@@ -19,17 +19,16 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
 
     public function addToPlayer(string $playerId, string $gameId): void
     {
-        $this->predis->lpush(
+        $this->predis->zadd(
             $this->storageKeyForPlayer($playerId),
-            [$gameId]
+            [$gameId => microtime(true)]
         );
     }
 
     public function removeFromPlayer(string $playerId, string $gameId): void
     {
-        $this->predis->lrem(
+        $this->predis->zrem(
             $this->storageKeyForPlayer($playerId),
-            0,
             $gameId
         );
     }
@@ -39,7 +38,7 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
         return new GamesByPlayer(
             array_map(
                 static fn($value): GameByPlayer => new GameByPlayer($value),
-                $this->predis->lrange($this->storageKeyForPlayer($playerId), 0, 100)
+                $this->predis->zrevrange($this->storageKeyForPlayer($playerId), 0, 100)
             )
         );
     }
