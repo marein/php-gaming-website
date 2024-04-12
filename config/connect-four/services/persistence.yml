@@ -5,8 +5,7 @@ services:
         public: false
         arguments:
             - '%env(APP_CONNECT_FOUR_PREDIS_CLIENT_URL)%'
-            -
-                prefix: 'connect-four.'
+            - { prefix: 'connect-four:' }
 
     connect-four.doctrine-dbal:
         alias: 'doctrine.dbal.connect_four_connection'
