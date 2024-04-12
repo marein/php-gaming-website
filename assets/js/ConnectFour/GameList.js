@@ -86,7 +86,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         );
 
         for (let i = 0; i < limit; i++) {
-            let pendingGameToAdd = this._pendingGamesToAdd.pop();
+            let pendingGameToAdd = this._pendingGamesToAdd.shift();
             this._addGame(
                 pendingGameToAdd.gameId,
                 pendingGameToAdd.playerId
