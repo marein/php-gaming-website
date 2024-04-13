@@ -16,7 +16,9 @@ interface EventStore
     public function byAggregateId(string $aggregateId): array;
 
     /**
+     * @param DomainEvent[] $domainEvents
+     *
      * @throws EventStoreException
      */
-    public function append(DomainEvent $domainEvent): void;
+    public function append(array $domainEvents): void;
 }

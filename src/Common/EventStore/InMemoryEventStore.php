@@ -18,8 +18,10 @@ final class InMemoryEventStore implements EventStore
         return $this->domainEvents[$aggregateId] ?? [];
     }
 
-    public function append(DomainEvent $domainEvent): void
+    public function append(array $domainEvents): void
     {
-        $this->domainEvents[$domainEvent->aggregateId()][] = $domainEvent;
+        foreach ($domainEvents as $domainEvent) {
+            $this->domainEvents[$domainEvent->aggregateId()][] = $domainEvent;
+        }
     }
 }

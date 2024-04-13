@@ -43,9 +43,7 @@ final class ChatService
 
         try {
             $this->chatGateway->create($chatId, $initiateChatCommand->authors());
-            $this->eventStore->append(
-                new ChatInitiated($chatId)
-            );
+            $this->eventStore->append([new ChatInitiated($chatId)]);
         } catch (ChatAlreadyExistsException) {
             // This happens when a command with the same idempotency key is executed more than once.
             // In this case we can safely ignore the exception. However, if we cannot trust our chat id
@@ -84,9 +82,7 @@ final class ChatService
 
         $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
 
-        $this->eventStore->append(
-            new MessageWritten($chatId, $messageId, $authorId, $message, $writtenAt)
-        );
+        $this->eventStore->append([new MessageWritten($chatId, $messageId, $authorId, $message, $writtenAt)]);
     }
 
     /**
