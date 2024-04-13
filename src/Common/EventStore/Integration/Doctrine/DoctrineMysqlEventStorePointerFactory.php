@@ -7,6 +7,7 @@ namespace Gaming\Common\EventStore\Integration\Doctrine;
 use Doctrine\DBAL\Connection;
 use Gaming\Common\EventStore\EventStorePointer;
 use Gaming\Common\EventStore\EventStorePointerFactory;
+use Gaming\Common\EventStore\InMemoryCacheEventStorePointer;
 
 final class DoctrineMysqlEventStorePointerFactory implements EventStorePointerFactory
 {
@@ -18,10 +19,12 @@ final class DoctrineMysqlEventStorePointerFactory implements EventStorePointerFa
 
     public function withName(string $name): EventStorePointer
     {
-        return new DoctrineMysqlEventStorePointer(
-            $this->connection,
-            $this->tableName,
-            $name
+        return new InMemoryCacheEventStorePointer(
+            new DoctrineMysqlEventStorePointer(
+                $this->connection,
+                $this->tableName,
+                $name
+            )
         );
     }
 }
