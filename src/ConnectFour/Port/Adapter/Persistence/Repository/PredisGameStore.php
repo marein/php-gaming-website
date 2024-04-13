@@ -9,15 +9,22 @@ use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
 use Gaming\ConnectFour\Domain\Game\GameId;
-use Predis\ClientInterface;
+use Predis\Client;
+use Predis\ClientContextInterface;
 
 final class PredisGameStore implements GameStore
 {
+    /**
+     * @var array<string, Game>
+     */
+    private array $pendingGames = [];
+
     public function __construct(
-        private readonly ClientInterface $predis,
+        private readonly Client $predis,
         private readonly string $storageKeyPrefix,
         private readonly Normalizer $normalizer,
-        private readonly GameFinder $fallbackGameFinder
+        private readonly GameFinder $fallbackGameFinder,
+        private readonly int $maxNumberOfPendingGamesBeforeFlush = 32
     ) {
     }
 
@@ -28,12 +35,25 @@ final class PredisGameStore implements GameStore
         return $storedGame ? $this->deserializeGame($storedGame) : $this->fallbackGameFinder->find($gameId);
     }
 
-    public function save(Game $game): void
+    public function persist(Game $game): void
     {
-        $this->predis->set(
-            $this->storageKeyPrefix . $game->id(),
-            $this->serializeGame($game)
-        );
+        $this->pendingGames[$game->id()] = $game;
+
+        if (count($this->pendingGames) === $this->maxNumberOfPendingGamesBeforeFlush) {
+            $this->flush();
+        }
+    }
+
+    public function flush(): void
+    {
+        $this->predis->pipeline(function (ClientContextInterface $pipeline): void {
+            foreach (array_splice($this->pendingGames, 0) as $game) {
+                $pipeline->set(
+                    $this->storageKeyPrefix . $game->id(),
+                    $this->serializeGame($game)
+                );
+            }
+        });
     }
 
     private function serializeGame(Game $game): string
