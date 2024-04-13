@@ -6,6 +6,7 @@ namespace Gaming\Common\EventStore\Integration\Doctrine;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
@@ -60,21 +61,29 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
         }
     }
 
-    public function append(DomainEvent $domainEvent): void
+    public function append(array $domainEvents): void
     {
+        if (count($domainEvents) === 0) {
+            return;
+        }
+
+        $params = $types = [];
+        foreach ($domainEvents as $domainEvent) {
+            $params[] = $domainEvent->aggregateId();
+            $params[] = $this->normalizer->normalize($domainEvent, DomainEvent::class);
+            $params[] = $this->clock->now();
+            array_push($types, 'uuid', Types::JSON, Types::DATETIME_IMMUTABLE);
+        }
+
         try {
-            $this->connection->insert(
-                $this->table,
-                [
-                    'aggregateId' => $domainEvent->aggregateId(),
-                    'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
-                    'occurredOn' => $this->clock->now()
-                ],
-                [
-                    'uuid',
-                    'json',
-                    'datetime_immutable'
-                ]
+            $this->connection->executeStatement(
+                sprintf(
+                    'INSERT INTO %s (aggregateId, event, occurredOn) VALUES %s',
+                    $this->table,
+                    implode(', ', array_map(static fn(DomainEvent $domainEvent): string => '(?, ?, ?)', $domainEvents))
+                ),
+                $params,
+                $types
             );
         } catch (Throwable $e) {
             throw new EventStoreException(
@@ -122,7 +131,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
         return array_map(
             fn(array $row): StoredEvent => new StoredEvent(
                 (int)$row['id'],
-                new DateTimeImmutable($row['occurredOn']),
+                $this->connection->convertToPHPValue($row['occurredOn'], Types::DATETIME_IMMUTABLE),
                 $this->transformRowToDomainEvent($row)
             ),
             $rows
@@ -135,12 +144,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     private function transformRowToDomainEvent(array $row): DomainEvent
     {
         return $this->normalizer->denormalize(
-            json_decode(
-                $row['event'],
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            ),
+            $this->connection->convertToPHPValue($row['event'], Types::JSON),
             DomainEvent::class
         );
     }

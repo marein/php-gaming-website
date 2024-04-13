@@ -19,6 +19,6 @@ final class StoreDomainEventsSubscriber implements DomainEventSubscriber
 
     public function handle(DomainEvent $domainEvent): void
     {
-        $this->eventStore->append($domainEvent);
+        $this->eventStore->append([$domainEvent]);
     }
 }
