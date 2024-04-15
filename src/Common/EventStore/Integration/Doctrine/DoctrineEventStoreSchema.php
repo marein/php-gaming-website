@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Common\EventStore\Integration\Doctrine;
 
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Types;
 
 final class DoctrineEventStoreSchema
 {
@@ -12,10 +13,10 @@ final class DoctrineEventStoreSchema
     {
         $table = $schema->createTable($tableName);
 
-        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('id', Types::BIGINT, ['autoincrement' => true, 'unsigned' => true]);
         $table->addColumn('aggregateId', 'uuid');
-        $table->addColumn('event', 'json');
-        $table->addColumn('occurredOn', 'datetime_immutable');
+        $table->addColumn('event', Types::JSON);
+        $table->addColumn('occurredOn', Types::DATETIME_IMMUTABLE);
 
         $table->setPrimaryKey(['id']);
         $table->addIndex(['aggregateId']);
