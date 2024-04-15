@@ -13,6 +13,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * If there are multiple streaming process, this command can be used to safely
+ * clean up the EventStore based on the given EventStorePointers.
+ */
 final class CleanUpEventStoreCommand extends Command
 {
     public function __construct(
@@ -59,7 +63,7 @@ final class CleanUpEventStoreCommand extends Command
 
         $this->cleanableEventStore->cleanUpTo($smallestPointerValue);
 
-        $io->success('Cleaned events up to id ' . $smallestPointerValue . '.');
+        $io->success('EventStore cleaned up to id "' . $smallestPointerValue . '".');
 
         return Command::SUCCESS;
     }

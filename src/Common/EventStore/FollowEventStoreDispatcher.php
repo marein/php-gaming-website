@@ -15,12 +15,13 @@ final class FollowEventStoreDispatcher
 
     public function __construct(
         private readonly PollableEventStore $pollableEventStore,
-        private readonly EventStorePointer $eventStorePointer,
+        private EventStorePointer $eventStorePointer,
         private readonly StoredEventSubscriber $storedEventSubscriber,
         private readonly int $batchSize,
         private readonly int $throttleTimeInMilliseconds,
         private readonly EventDispatcherInterface $eventDispatcher
     ) {
+        $this->eventStorePointer = new InMemoryCacheEventStorePointer($eventStorePointer);
         $this->shouldStop = false;
     }
 

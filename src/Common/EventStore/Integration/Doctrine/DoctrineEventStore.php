@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore\Integration\Doctrine;
 
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\TransactionIsolationLevel;
 use Doctrine\DBAL\Types\Types;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\CleanableEventStore;
-use Gaming\Common\EventStore\Event\EventsCommitted;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\GapDetection;
@@ -21,17 +18,23 @@ use Gaming\Common\Normalizer\Normalizer;
 use Psr\Clock\ClockInterface;
 use Throwable;
 
-final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore, GapDetection
+final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore
 {
     private const SELECT = 'e.id, e.event, e.occurredOn';
+
+    private readonly GapDetection $gapDetection;
 
     public function __construct(
         private readonly Connection $connection,
         private readonly string $table,
         private readonly Normalizer $normalizer,
-        private readonly ClockInterface $clock,
-        private readonly bool $enableGapDetection = true
+        private readonly ClockInterface $clock
     ) {
+        $this->gapDetection = new DoctrineWaitForUncommittedStoredEventsGapDetection(
+            $this->connection,
+            $this->table,
+            'id'
+        );
     }
 
     public function byAggregateId(string $aggregateId): array
@@ -103,11 +106,11 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
                 ->executeQuery()
                 ->fetchAllAssociative();
 
-            return $this->enableGapDetection ? StoredEventFilters::untilGapIsFound(
+            return StoredEventFilters::untilGapIsFound(
                 $this->transformRowsToStoredEvents($rows),
                 $id,
-                $this
-            ) : $this->transformRowsToStoredEvents($rows);
+                $this->gapDetection
+            );
         } catch (Throwable $e) {
             throw new EventStoreException(
                 $e->getMessage(),
@@ -124,58 +127,6 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
                 ->delete($this->table)
                 ->where('id <= :id')
                 ->setParameter('id', $id)
-                ->executeStatement();
-        } catch (Throwable $e) {
-            throw new EventStoreException(
-                $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
-    }
-
-    public function shouldWaitForStoredEventWithId(int $id): bool
-    {
-        $currentIsolationLevel = $this->connection->getTransactionIsolation();
-
-        $this->connection->setTransactionIsolation(TransactionIsolationLevel::READ_UNCOMMITTED);
-
-        $hasStoredEvent = $this->connection->createQueryBuilder()
-                ->select('COUNT(e.id)')
-                ->from($this->table, 'e')
-                ->andWhere('e.id = :id')
-                ->setParameter('id', $id)
-                ->executeQuery()
-                ->fetchOne() > 0;
-
-        $this->connection->setTransactionIsolation($currentIsolationLevel);
-
-        return $hasStoredEvent;
-    }
-
-    /**
-     * This method can be registered as a listener. This is particularly useful
-     * if there is only one streaming process, the EventStore is to be cleaned
-     * up immediately and no GapDetection is used.
-     */
-    public function deleteStoredEventsWhenCommitted(EventsCommitted $eventsCommitted): void
-    {
-        if (count($eventsCommitted->storedEvents) === 0) {
-            return;
-        }
-
-        try {
-            $this->connection->createQueryBuilder()
-                ->delete($this->table)
-                ->where('id in (:ids)')
-                ->setParameter(
-                    'ids',
-                    array_map(
-                        static fn(StoredEvent $storedEvent): int => $storedEvent->id(),
-                        $eventsCommitted->storedEvents
-                    ),
-                    ArrayParameterType::INTEGER
-                )
                 ->executeStatement();
         } catch (Throwable $e) {
             throw new EventStoreException(
