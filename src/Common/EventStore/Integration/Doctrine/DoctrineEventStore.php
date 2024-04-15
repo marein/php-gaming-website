@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Common\EventStore\Integration\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\TransactionIsolationLevel;
 use Doctrine\DBAL\Types\Types;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\CleanableEventStore;
@@ -18,11 +19,9 @@ use Gaming\Common\Normalizer\Normalizer;
 use Psr\Clock\ClockInterface;
 use Throwable;
 
-final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore
+final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore, GapDetection
 {
     private const SELECT = 'e.id, e.event, e.occurredOn';
-
-    private readonly GapDetection $gapDetection;
 
     public function __construct(
         private readonly Connection $connection,
@@ -30,11 +29,6 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
         private readonly Normalizer $normalizer,
         private readonly ClockInterface $clock
     ) {
-        $this->gapDetection = new DoctrineWaitForUncommittedStoredEventsGapDetection(
-            $this->connection,
-            $this->table,
-            'id'
-        );
     }
 
     public function byAggregateId(string $aggregateId): array
@@ -109,7 +103,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
             return StoredEventFilters::untilGapIsFound(
                 $this->transformRowsToStoredEvents($rows),
                 $id,
-                $this->gapDetection
+                $this
             );
         } catch (Throwable $e) {
             throw new EventStoreException(
@@ -135,6 +129,25 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
                 $e
             );
         }
+    }
+
+    public function shouldWaitForStoredEventWithId(int $id): bool
+    {
+        $currentIsolationLevel = $this->connection->getTransactionIsolation();
+
+        $this->connection->setTransactionIsolation(TransactionIsolationLevel::READ_UNCOMMITTED);
+
+        $hasStoredEvent = $this->connection->createQueryBuilder()
+                ->select('COUNT(id)')
+                ->from($this->table, 'e')
+                ->where('e.id = :id')
+                ->setParameter('id', $id)
+                ->executeQuery()
+                ->fetchOne() > 0;
+
+        $this->connection->setTransactionIsolation($currentIsolationLevel);
+
+        return $hasStoredEvent;
     }
 
     /**
