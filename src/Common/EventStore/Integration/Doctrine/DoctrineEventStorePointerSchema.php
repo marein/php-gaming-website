@@ -14,7 +14,7 @@ final class DoctrineEventStorePointerSchema
         $table = $schema->createTable($tableName);
 
         $table->addColumn('name', Types::STRING, ['length' => 64]);
-        $table->addColumn('value', Types::INTEGER);
+        $table->addColumn('value', Types::BIGINT, ['unsigned' => true]);
 
         $table->setPrimaryKey(['name']);
     }
