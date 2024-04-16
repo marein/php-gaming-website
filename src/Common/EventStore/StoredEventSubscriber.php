@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-interface StoredEventSubscriber
-{
-    public function handle(StoredEvent $storedEvent): void;
+use Gaming\Common\Domain\DomainEventSubscriber;
 
+interface StoredEventSubscriber extends DomainEventSubscriber
+{
     public function commit(): void;
 }

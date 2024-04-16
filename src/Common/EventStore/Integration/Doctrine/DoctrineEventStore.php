@@ -16,18 +16,16 @@ use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventFilters;
 use Gaming\Common\Normalizer\Normalizer;
-use Psr\Clock\ClockInterface;
 use Throwable;
 
 final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore, GapDetection
 {
-    private const SELECT = 'e.id, e.event, e.occurredOn';
+    private const SELECT = 'e.id, e.event';
 
     public function __construct(
         private readonly Connection $connection,
         private readonly string $table,
-        private readonly Normalizer $normalizer,
-        private readonly ClockInterface $clock
+        private readonly Normalizer $normalizer
     ) {
     }
 
@@ -65,16 +63,15 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
         foreach ($domainEvents as $domainEvent) {
             $params[] = $domainEvent->aggregateId();
             $params[] = $this->normalizer->normalize($domainEvent, DomainEvent::class);
-            $params[] = $this->clock->now();
-            array_push($types, 'uuid', Types::JSON, Types::DATETIME_IMMUTABLE);
+            array_push($types, 'uuid', Types::JSON);
         }
 
         try {
             $this->connection->executeStatement(
                 sprintf(
-                    'INSERT INTO %s (aggregateId, event, occurredOn) VALUES %s',
+                    'INSERT INTO %s (aggregateId, event) VALUES %s',
                     $this->table,
-                    implode(', ', array_map(static fn(DomainEvent $domainEvent): string => '(?, ?, ?)', $domainEvents))
+                    implode(', ', array_map(static fn(DomainEvent $domainEvent): string => '(?, ?)', $domainEvents))
                 ),
                 $params,
                 $types
@@ -161,7 +158,6 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
         return array_map(
             fn(array $row): StoredEvent => new StoredEvent(
                 (int)$row['id'],
-                $this->connection->convertToPHPValue($row['occurredOn'], Types::DATETIME_IMMUTABLE),
                 $this->transformRowToDomainEvent($row)
             ),
             $rows

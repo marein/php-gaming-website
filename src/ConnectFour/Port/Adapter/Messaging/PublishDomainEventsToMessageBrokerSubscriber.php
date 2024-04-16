@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
 use Gaming\Common\Domain\DomainEvent;
-use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
@@ -20,7 +19,7 @@ use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use RuntimeException;
 
-final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventSubscriber
+final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventSubscriber
 {
     public function __construct(
         private readonly Publisher $publisher,
@@ -28,10 +27,8 @@ final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventS
     ) {
     }
 
-    public function handle(StoredEvent $storedEvent): void
+    public function handle(DomainEvent $domainEvent): void
     {
-        $domainEvent = $storedEvent->domainEvent();
-
         // We should definitely filter the events we are going to publish,
         // since that belongs to our public interface for the other contexts.
         // However, it's not done for simplicity in this sample project.

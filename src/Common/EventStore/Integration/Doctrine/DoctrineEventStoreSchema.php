@@ -16,7 +16,6 @@ final class DoctrineEventStoreSchema
         $table->addColumn('id', Types::BIGINT, ['autoincrement' => true, 'unsigned' => true]);
         $table->addColumn('aggregateId', 'uuid');
         $table->addColumn('event', Types::JSON);
-        $table->addColumn('occurredOn', Types::DATETIME_IMMUTABLE);
 
         $table->setPrimaryKey(['id']);
         $table->addIndex(['aggregateId']);
