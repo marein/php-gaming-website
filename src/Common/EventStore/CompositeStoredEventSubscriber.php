@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
+use Gaming\Common\Domain\DomainEvent;
+
 final class CompositeStoredEventSubscriber implements StoredEventSubscriber
 {
     /**
@@ -14,10 +16,10 @@ final class CompositeStoredEventSubscriber implements StoredEventSubscriber
     ) {
     }
 
-    public function handle(StoredEvent $storedEvent): void
+    public function handle(DomainEvent $domainEvent): void
     {
         foreach ($this->subscribers as $subscriber) {
-            $subscriber->handle($storedEvent);
+            $subscriber->handle($domainEvent);
         }
     }
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 
-use Gaming\Common\EventStore\StoredEvent;
+use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameStore;
@@ -24,10 +24,8 @@ final class GameProjection implements StoredEventSubscriber
         );
     }
 
-    public function handle(StoredEvent $storedEvent): void
+    public function handle(DomainEvent $domainEvent): void
     {
-        $domainEvent = $storedEvent->domainEvent();
-
         $game = match ($domainEvent::class) {
             GameOpened::class => new Game(),
             default => $this->gameStore->find(GameId::fromString($domainEvent->aggregateId()))

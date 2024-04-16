@@ -13,7 +13,6 @@ services:
             - '@identity.doctrine-dbal'
             - 'event_store'
             - '@identity.normalizer'
-            - '@clock'
 
     identity.orm.publish-domain-events-listener:
         class: Gaming\Common\Domain\Integration\Doctrine\PublishDomainEventsListener
