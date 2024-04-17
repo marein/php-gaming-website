@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 
-use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\NoCommit;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerStore;
@@ -22,9 +22,11 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
 
     public function handle(DomainEvent $domainEvent): void
     {
-        match ($domainEvent::class) {
-            PlayerJoined::class => $this->handlePlayerJoined($domainEvent),
-            GameAborted::class => $this->handleGameAborted($domainEvent),
+        $content = $domainEvent->content;
+
+        match ($content::class) {
+            PlayerJoined::class => $this->handlePlayerJoined($content),
+            GameAborted::class => $this->handleGameAborted($content),
             default => true
         };
     }

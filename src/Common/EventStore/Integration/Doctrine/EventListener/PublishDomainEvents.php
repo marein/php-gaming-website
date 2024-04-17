@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\Domain\Integration\Doctrine;
+namespace Gaming\Common\EventStore\Integration\Doctrine\EventListener;
 
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
-use Gaming\Common\Domain\AggregateRoot;
-use Gaming\Common\Domain\DomainEventPublisher;
+use Gaming\Common\EventStore\CollectsDomainEvents;
+use Gaming\Common\EventStore\DomainEventSubscriber;
 
-final class PublishDomainEventsListener
+final class PublishDomainEvents
 {
     public function __construct(
-        private readonly DomainEventPublisher $domainEventPublisher
+        private readonly DomainEventSubscriber $domainEventSubscriber
     ) {
     }
 
@@ -34,8 +34,12 @@ final class PublishDomainEventsListener
 
     private function publishDomainEvents(object $object): void
     {
-        if ($object instanceof AggregateRoot) {
-            $this->domainEventPublisher->publish($object->flushDomainEvents());
+        if (!$object instanceof CollectsDomainEvents) {
+            return;
+        }
+
+        foreach ($object->flushDomainEvents() as $domainEvent) {
+            $this->domainEventSubscriber->handle($domainEvent);
         }
     }
 }

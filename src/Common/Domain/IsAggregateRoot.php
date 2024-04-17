@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Domain;
 
+/**
+ * @deprecated
+ */
 trait IsAggregateRoot
 {
     /**
@@ -16,10 +19,6 @@ trait IsAggregateRoot
      */
     public function flushDomainEvents(): array
     {
-        $domainEvents = $this->domainEvents;
-
-        $this->domainEvents = [];
-
-        return $domainEvents;
+        return array_splice($this->domainEvents, 0);
     }
 }

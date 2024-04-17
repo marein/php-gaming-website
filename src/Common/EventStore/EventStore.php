@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\Exception\DuplicateVersionInStreamException;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 
 interface EventStore
@@ -13,12 +13,11 @@ interface EventStore
      * @return DomainEvent[]
      * @throws EventStoreException
      */
-    public function byAggregateId(string $aggregateId): array;
+    public function byStreamId(string $streamId, int $fromStreamVersion = 0): array;
 
     /**
-     * @param DomainEvent[] $domainEvents
-     *
+     * @throws DuplicateVersionInStreamException
      * @throws EventStoreException
      */
-    public function append(array $domainEvents): void;
+    public function append(DomainEvent ...$domainEvents): void;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore\Integration\ForkPool;
 
-use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkPool\Channel\Channel;
@@ -27,7 +27,7 @@ final class ForwardToChannelStoredEventSubscriber implements StoredEventSubscrib
 
     public function handle(DomainEvent $domainEvent): void
     {
-        $shardId = crc32($domainEvent->aggregateId()) % count($this->channels);
+        $shardId = crc32($domainEvent->streamId) % count($this->channels);
         $this->channels[$shardId]->send($domainEvent);
     }
 

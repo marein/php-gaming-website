@@ -7,8 +7,8 @@ namespace Gaming\ConnectFour\Port\Adapter\Persistence\Repository;
 use Closure;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
-use Gaming\Common\Domain\DomainEventPublisher;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
+use Gaming\Common\EventStore\DomainEvents;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\Common\Normalizer\Normalizer;
 use Gaming\Common\Sharding\Shards;
@@ -27,7 +27,6 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
     public function __construct(
         private readonly Connection $connection,
         private readonly string $tableName,
-        private readonly DomainEventPublisher $domainEventPublisher,
         private readonly EventStore $eventStore,
         private readonly Normalizer $normalizer,
         private readonly Shards $shards
@@ -44,13 +43,17 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
         $this->switchShard($game->id());
 
         $this->connection->transactional(function () use ($game) {
-            $this->domainEventPublisher->publish($game->flushDomainEvents());
+            $id = $game->id()->toString();
+
+            $domainEvents = (new DomainEvents($id))->append(...$game->flushDomainEvents());
 
             $this->connection->insert(
                 $this->tableName,
-                ['id' => $game->id()->toString(), 'aggregate' => $this->normalizeGame($game), 'version' => 1],
+                ['id' => $id, 'aggregate' => $this->normalizeGame($game), 'version' => $domainEvents->streamVersion()],
                 ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
             );
+
+            $this->eventStore->append(...$domainEvents->flush());
         });
     }
 
@@ -69,14 +72,19 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
             $game = $this->denormalizeGame($row['aggregate']);
             $operation($game);
 
-            $this->domainEventPublisher->publish($game->flushDomainEvents());
+            $domainEvents = (new DomainEvents($id, $row['version']))->append(...$game->flushDomainEvents());
+            if ($row['version'] === $domainEvents->streamVersion()) {
+                return;
+            }
 
             $this->connection->update(
                 $this->tableName,
-                ['aggregate' => $this->normalizeGame($game), 'version' => $row['version'] + 1],
+                ['aggregate' => $this->normalizeGame($game), 'version' => $domainEvents->streamVersion()],
                 ['id' => $id, 'version' => $row['version']],
                 ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
             ) ?: throw new ConcurrencyException();
+
+            $this->eventStore->append(...$domainEvents->flush());
         });
     }
 
@@ -84,13 +92,13 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
     {
         $this->switchShard($gameId);
 
-        $domainEvents = $this->eventStore->byAggregateId(
+        $domainEvents = $this->eventStore->byStreamId(
             $gameId->toString()
         ) ?: throw new GameNotFoundException();
 
         $game = new GameQueryModel();
         foreach ($domainEvents as $domainEvent) {
-            $game->apply($domainEvent);
+            $game->apply($domainEvent->content);
         }
 
         return $game;

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-use Gaming\Common\Domain\DomainEvent;
-
 final class StoredEvent
 {
     public function __construct(
