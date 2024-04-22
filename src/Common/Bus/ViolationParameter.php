@@ -6,14 +6,10 @@ namespace Gaming\Common\Bus;
 
 final class ViolationParameter
 {
-    private string $name;
-
-    private bool|int|float|string $value;
-
-    public function __construct(string $name, bool|int|float|string $value)
-    {
-        $this->name = $name;
-        $this->value = $value;
+    public function __construct(
+        private readonly string $name,
+        private readonly bool|int|float|string $value
+    ) {
     }
 
     public function name(): string

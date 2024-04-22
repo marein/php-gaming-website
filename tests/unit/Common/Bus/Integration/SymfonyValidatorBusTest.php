@@ -7,6 +7,7 @@ namespace Gaming\Tests\Unit\Common\Bus\Integration;
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Integration\SymfonyValidatorBus;
+use Gaming\Common\Bus\Request;
 use Gaming\Common\Bus\Violation;
 use Gaming\Common\Bus\ViolationParameter;
 use PHPUnit\Framework\TestCase;
@@ -21,18 +22,18 @@ class SymfonyValidatorBusTest extends TestCase
     /**
      * @test
      */
-    public function itShouldForwardMessageToHandlerAndReturnItsValueWithoutException(): void
+    public function itShouldForwardRequestToHandlerAndReturnItsValue(): void
     {
-        $requestMessage = $this->createMessage('Request');
-        $responseMessage = $this->createMessage('Response');
+        $request = $this->createRequest('Request');
+        $response = $this->createRequest('Response');
         $innerBus = $this->createMock(Bus::class);
         $validator = $this->createMock(ValidatorInterface::class);
 
         $innerBus
             ->expects($this->once())
             ->method('handle')
-            ->with($requestMessage)
-            ->willReturn($responseMessage);
+            ->with($request)
+            ->willReturn($response);
 
         $validator
             ->expects($this->once())
@@ -43,9 +44,8 @@ class SymfonyValidatorBusTest extends TestCase
             $innerBus,
             $validator
         );
-        $response = $bus->handle($requestMessage);
 
-        $this->assertSame('Response', $response->value);
+        $this->assertSame($response, $bus->handle($request));
     }
 
     /**
@@ -55,7 +55,7 @@ class SymfonyValidatorBusTest extends TestCase
     {
         $this->expectException(ApplicationException::class);
 
-        $requestMessage = $this->createMessage('Request');
+        $request = $this->createRequest('Request');
         $innerBus = $this->createMock(Bus::class);
         $validator = $this->createMock(ValidatorInterface::class);
 
@@ -96,7 +96,7 @@ class SymfonyValidatorBusTest extends TestCase
         );
 
         try {
-            $bus->handle($requestMessage);
+            $bus->handle($request);
         } catch (ApplicationException $e) {
             $this->assertEquals(
                 [
@@ -116,15 +116,14 @@ class SymfonyValidatorBusTest extends TestCase
         }
     }
 
-    private function createMessage(string $value): object
+    private function createRequest(string $value): Request
     {
-        $message = new class () {
-            public $value;
+        return new class ($value) implements Request {
+            public function __construct(
+                public readonly string $value
+            ) {
+            }
         };
-
-        $message->value = $value;
-
-        return $message;
     }
 
     /**

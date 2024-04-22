@@ -29,7 +29,6 @@ final class CommandMessageHandler implements MessageHandler
                 iterator_to_array($request->getAuthors())
             )
         );
-        assert(is_string($chatId));
 
         $context->reply(
             new Message(

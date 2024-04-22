@@ -36,16 +36,7 @@ final class DoctrineUserRepository implements Users
 
     public function get(UserId $userId): User
     {
-        $repository = $this->manager->getRepository(User::class);
-
-        $user = $repository->find($userId);
-
-        if ($user === null) {
-            throw new UserNotFoundException();
-        }
-
-        assert($user instanceof User);
-
-        return $user;
+        return $this->manager->getRepository(User::class)
+            ->find($userId) ?? throw new UserNotFoundException();
     }
 }
