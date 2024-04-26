@@ -6,6 +6,7 @@ namespace Gaming\Common\Bus\Integration;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Exception\ApplicationException;
+use Gaming\Common\Bus\Request;
 use Gaming\Common\Bus\Violation;
 use Gaming\Common\Bus\ViolationParameter;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -14,19 +15,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class SymfonyValidatorBus implements Bus
 {
-    private Bus $bus;
-
-    private ValidatorInterface $validator;
-
-    public function __construct(Bus $bus, ValidatorInterface $validator)
-    {
-        $this->bus = $bus;
-        $this->validator = $validator;
+    public function __construct(
+        private readonly Bus $bus,
+        private readonly ValidatorInterface $validator
+    ) {
     }
 
-    public function handle(object $message): mixed
+    public function handle(Request $request): mixed
     {
-        $symfonyViolations = $this->validator->validate($message);
+        $symfonyViolations = $this->validator->validate($request);
 
         if ($symfonyViolations->count() > 0) {
             throw new ApplicationException(
@@ -34,7 +31,7 @@ final class SymfonyValidatorBus implements Bus
             );
         }
 
-        return $this->bus->handle($message);
+        return $this->bus->handle($request);
     }
 
     /**

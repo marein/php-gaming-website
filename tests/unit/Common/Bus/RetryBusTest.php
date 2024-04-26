@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\Common\Bus;
 
 use Gaming\Common\Bus\Bus;
+use Gaming\Common\Bus\Request;
 use Gaming\Common\Bus\RetryBus;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -34,10 +35,6 @@ final class RetryBusTest extends TestCase
      */
     public function itShouldRetry(): void
     {
-        $actionToCall = static function (): void {
-            // No op
-        };
-
         $bus = $this->createMock(Bus::class);
 
         // The first two times when "handle" is called, an exception is thrown.
@@ -61,7 +58,7 @@ final class RetryBusTest extends TestCase
             RuntimeException::class
         );
 
-        $retryBus->handle($actionToCall);
+        $retryBus->handle($this->createRequest());
     }
 
     /**
@@ -93,11 +90,7 @@ final class RetryBusTest extends TestCase
             RuntimeException::class
         );
 
-        $retryBus->handle(
-            static function (): void {
-                // No op
-            }
-        );
+        $retryBus->handle($this->createRequest());
     }
 
     /**
@@ -129,10 +122,12 @@ final class RetryBusTest extends TestCase
             InvalidArgumentException::class
         );
 
-        $retryBus->handle(
-            static function (): void {
-                // No op
-            }
-        );
+        $retryBus->handle($this->createRequest());
+    }
+
+    private function createRequest(): Request
+    {
+        return new class () implements Request {
+        };
     }
 }

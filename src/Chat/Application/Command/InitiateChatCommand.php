@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Command;
 
-final class InitiateChatCommand
+use Gaming\Common\Bus\Request;
+
+/**
+ * @implements Request<string>
+ */
+final class InitiateChatCommand implements Request
 {
     /**
      * @param string[] $authors

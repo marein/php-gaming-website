@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Command;
 
-final class WriteMessageCommand
+use Gaming\Common\Bus\Request;
+
+/**
+ * @implements Request<void>
+ */
+final class WriteMessageCommand implements Request
 {
-    private string $chatId;
-
-    private string $authorId;
-
-    private string $message;
-
-    public function __construct(string $chatId, string $authorId, string $message)
-    {
-        $this->chatId = $chatId;
-        $this->authorId = $authorId;
-        $this->message = $message;
+    public function __construct(
+        private readonly string $chatId,
+        private readonly string $authorId,
+        private readonly string $message
+    ) {
     }
 
     public function chatId(): string

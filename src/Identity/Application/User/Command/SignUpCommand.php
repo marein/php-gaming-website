@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Application\User\Command;
 
-final class SignUpCommand
+use Gaming\Common\Bus\Request;
+
+/**
+ * @implements Request<void>
+ */
+final class SignUpCommand implements Request
 {
-    private string $userId;
-
-    private string $username;
-
-    private string $password;
-
-    public function __construct(string $userId, string $username, string $password)
-    {
-        $this->userId = $userId;
-        $this->username = $username;
-        $this->password = $password;
+    public function __construct(
+        private readonly string $userId,
+        private readonly string $username,
+        private readonly string $password
+    ) {
     }
 
     public function userId(): string

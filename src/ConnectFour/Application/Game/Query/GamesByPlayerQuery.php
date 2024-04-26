@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query;
 
-final class GamesByPlayerQuery
-{
-    private string $playerId;
+use Gaming\Common\Bus\Request;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 
-    public function __construct(string $playerId)
-    {
-        $this->playerId = $playerId;
+/**
+ * @implements Request<GamesByPlayer>
+ */
+final class GamesByPlayerQuery implements Request
+{
+    public function __construct(
+        private readonly string $playerId
+    ) {
     }
 
     public function playerId(): string

@@ -8,4 +8,8 @@ use Exception;
 
 class BusException extends Exception
 {
+    public static function missingHandler(string $requestClass): self
+    {
+        return new self(sprintf('Missing handler for "%s".', $requestClass));
+    }
 }
