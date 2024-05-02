@@ -15,6 +15,7 @@ use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\ChatAlreadyExistsException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
 use Gaming\Chat\Application\Query\MessagesQuery;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\InMemoryEventStore;
 use Gaming\Common\IdempotentStorage\InMemoryIdempotentStorage;
 use PHPUnit\Framework\TestCase;
@@ -62,9 +63,9 @@ final class ChatServiceTest extends TestCase
         $this->assertSame($expectedChatId->toString(), $chatId);
 
         self::assertEquals(
-            $eventStore->byAggregateId($expectedChatId->toString()),
+            $eventStore->byStreamId($expectedChatId->toString()),
             [
-                new ChatInitiated($expectedChatId)
+                new DomainEvent($expectedChatId->toString(), new ChatInitiated($expectedChatId))
             ]
         );
     }
@@ -169,14 +170,11 @@ final class ChatServiceTest extends TestCase
         );
 
         self::assertEquals(
-            $eventStore->byAggregateId($chatId->toString()),
+            $eventStore->byStreamId($chatId->toString()),
             [
-                new MessageWritten(
-                    $chatId,
-                    $messageId,
-                    $authorId,
-                    $message,
-                    $writtenAt
+                new DomainEvent(
+                    $chatId->toString(),
+                    new MessageWritten($chatId, $messageId, $authorId, $message, $writtenAt)
                 )
             ]
         );

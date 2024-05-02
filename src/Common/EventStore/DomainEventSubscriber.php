@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\Domain;
+namespace Gaming\Common\EventStore;
 
 interface DomainEventSubscriber
 {

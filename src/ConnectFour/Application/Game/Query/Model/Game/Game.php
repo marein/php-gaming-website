@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-use Gaming\Common\Domain\DomainEvent;
 use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
@@ -73,7 +72,7 @@ final class Game implements JsonSerializable
      * Apply a domain event. The game can project this to its state.
      * The order of events must be the same as the sequence added to the event store.
      */
-    public function apply(DomainEvent $domainEvent): void
+    public function apply(object $domainEvent): void
     {
         match ($domainEvent::class) {
             GameOpened::class => $this->handleGameOpened($domainEvent),

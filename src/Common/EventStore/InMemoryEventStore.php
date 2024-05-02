@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-use Gaming\Common\Domain\DomainEvent;
-
 final class InMemoryEventStore implements EventStore
 {
     /**
@@ -13,13 +11,20 @@ final class InMemoryEventStore implements EventStore
      */
     private array $domainEvents = [];
 
-    public function byAggregateId(string $aggregateId): array
+    public function byStreamId(string $streamId, int $fromStreamVersion = 0): array
     {
-        return $this->domainEvents[$aggregateId] ?? [];
+        return array_values(
+            array_filter(
+                $this->domainEvents[$streamId] ?? [],
+                static fn(DomainEvent $domainEvent): bool => $domainEvent->streamVersion >= $fromStreamVersion
+            )
+        );
     }
 
-    public function append(DomainEvent $domainEvent): void
+    public function append(DomainEvent ...$domainEvents): void
     {
-        $this->domainEvents[$domainEvent->aggregateId()][] = $domainEvent;
+        foreach ($domainEvents as $domainEvent) {
+            $this->domainEvents[$domainEvent->streamId][] = $domainEvent;
+        }
     }
 }

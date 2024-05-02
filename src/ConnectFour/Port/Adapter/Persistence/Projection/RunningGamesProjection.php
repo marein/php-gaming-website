@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\NoCommit;
-use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGameStore;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
@@ -23,27 +23,17 @@ final class RunningGamesProjection implements StoredEventSubscriber
     ) {
     }
 
-    public function handle(StoredEvent $storedEvent): void
+    public function handle(DomainEvent $domainEvent): void
     {
-        $domainEvent = $storedEvent->domainEvent();
+        $content = $domainEvent->content;
 
-        match ($domainEvent::class) {
-            PlayerJoined::class => $this->addGame($domainEvent->aggregateId()),
+        match ($content::class) {
+            PlayerJoined::class => $this->runningGameStore->add($domainEvent->streamId),
             GameAborted::class,
             GameDrawn::class,
             GameResigned::class,
-            GameWon::class => $this->removeGame($domainEvent->aggregateId()),
+            GameWon::class => $this->runningGameStore->remove($domainEvent->streamId),
             default => true
         };
-    }
-
-    private function addGame(string $gameId): void
-    {
-        $this->runningGameStore->add($gameId);
-    }
-
-    private function removeGame(string $gameId): void
-    {
-        $this->runningGameStore->remove($gameId);
     }
 }

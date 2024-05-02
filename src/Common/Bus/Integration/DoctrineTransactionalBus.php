@@ -6,6 +6,7 @@ namespace Gaming\Common\Bus\Integration;
 
 use Doctrine\DBAL\Connection;
 use Gaming\Common\Bus\Bus;
+use Gaming\Common\Bus\Request;
 
 final class DoctrineTransactionalBus implements Bus
 {
@@ -15,10 +16,10 @@ final class DoctrineTransactionalBus implements Bus
     ) {
     }
 
-    public function handle(object $message): mixed
+    public function handle(Request $request): mixed
     {
         return $this->connection->transactional(
-            fn() => $this->bus->handle($message)
+            fn() => $this->bus->handle($request)
         );
     }
 }

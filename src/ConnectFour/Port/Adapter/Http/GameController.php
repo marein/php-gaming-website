@@ -12,12 +12,8 @@ use Gaming\ConnectFour\Application\Game\Command\OpenCommand;
 use Gaming\ConnectFour\Application\Game\Command\ResignCommand;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
-use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GameByPlayer;
-use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
-use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
-use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGames;
 use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
 use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,22 +21,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GameController
 {
-    private Bus $commandBus;
-
-    private Bus $queryBus;
-
     public function __construct(
-        Bus $commandBus,
-        Bus $queryBus
+        private readonly Bus $commandBus,
+        private readonly Bus $queryBus
     ) {
-        $this->commandBus = $commandBus;
-        $this->queryBus = $queryBus;
     }
 
     public function openGamesAction(Request $request): JsonResponse
     {
         $openGames = $this->queryBus->handle(new OpenGamesQuery());
-        assert($openGames instanceof OpenGames);
 
         $games = array_map(
             static fn(OpenGame $openGame): array => [
@@ -60,7 +49,6 @@ class GameController
     public function runningGamesAction(Request $request): JsonResponse
     {
         $runningGames = $this->queryBus->handle(new RunningGamesQuery());
-        assert($runningGames instanceof RunningGames);
 
         return new JsonResponse(
             [
@@ -76,7 +64,6 @@ class GameController
                 (string)$request->query->get('playerId')
             )
         );
-        assert($gamesByPlayer instanceof GamesByPlayer);
 
         $games = array_map(
             static fn(GameByPlayer $openGame): string => $openGame->gameId(),
@@ -97,7 +84,6 @@ class GameController
                 (string)$request->query->get('gameId')
             )
         );
-        assert($game instanceof Game);
 
         return new JsonResponse($game);
     }

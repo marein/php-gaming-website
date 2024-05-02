@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
 
-final class OpenCommand
-{
-    private string $playerId;
+use Gaming\Common\Bus\Request;
 
-    public function __construct(string $playerId)
-    {
-        $this->playerId = $playerId;
+/**
+ * @implements Request<string>
+ */
+final class OpenCommand implements Request
+{
+    public function __construct(
+        private readonly string $playerId
+    ) {
     }
 
     public function playerId(): string

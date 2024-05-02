@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User;
 
-use Gaming\Common\Domain\AggregateRoot;
-use Gaming\Common\Domain\IsAggregateRoot;
+use Gaming\Common\EventStore\CollectsDomainEvents;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Identity\Domain\HashAlgorithm;
 use Gaming\Identity\Domain\Model\User\Event\UserArrived;
 use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 
-class User implements AggregateRoot
+class User implements CollectsDomainEvents
 {
-    use IsAggregateRoot;
-
     private UserId $userId;
+
+    /**
+     * @var DomainEvent[]
+     */
+    private array $domainEvents = [];
 
     /**
      * This version is for optimistic concurrency control.
@@ -38,8 +41,9 @@ class User implements AggregateRoot
     {
         $user = new self($userId);
 
-        $user->domainEvents[] = new UserArrived(
-            $user->userId
+        $user->domainEvents[] = new DomainEvent(
+            $user->userId->toString(),
+            new UserArrived($user->userId)
         );
 
         return $user;
@@ -57,9 +61,9 @@ class User implements AggregateRoot
         $this->isSignedUp = true;
         $this->credentials = $credentials;
 
-        $this->domainEvents[] = new UserSignedUp(
-            $this->userId,
-            $this->credentials->username()
+        $this->domainEvents[] = new DomainEvent(
+            $this->userId->toString(),
+            new UserSignedUp($this->userId, $this->credentials->username())
         );
     }
 
@@ -73,5 +77,10 @@ class User implements AggregateRoot
         }
 
         return $this->credentials->matches($password, $hashAlgorithm);
+    }
+
+    public function flushDomainEvents(): array
+    {
+        return array_splice($this->domainEvents, 0);
     }
 }

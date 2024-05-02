@@ -4,46 +4,44 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore\Integration\Doctrine;
 
-use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
-use Gaming\Common\Domain\DomainEvent;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\TransactionIsolationLevel;
+use Doctrine\DBAL\Types\Types;
+use Gaming\Common\EventStore\CleanableEventStore;
+use Gaming\Common\EventStore\ContentSerializer;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\Exception\DuplicateVersionInStreamException;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\GapDetection;
 use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventFilters;
-use Gaming\Common\Normalizer\Normalizer;
-use Psr\Clock\ClockInterface;
 use Throwable;
 
-final class DoctrineEventStore implements EventStore, PollableEventStore
+final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore, GapDetection
 {
-    private const SELECT = 'e.id, e.event, e.occurredOn';
-
-    private readonly GapDetection $gapDetection;
-
+    /**
+     * @param ContentSerializer $contentSerializer Must serialize into and deserialize from valid JSON.
+     */
     public function __construct(
         private readonly Connection $connection,
         private readonly string $table,
-        private readonly Normalizer $normalizer,
-        private readonly ClockInterface $clock
+        private readonly ContentSerializer $contentSerializer
     ) {
-        $this->gapDetection = new DoctrineWaitForUncommittedStoredEventsGapDetection(
-            $this->connection,
-            $this->table,
-            'id'
-        );
     }
 
-    public function byAggregateId(string $aggregateId): array
+    public function byStreamId(string $streamId, int $fromStreamVersion = 0): array
     {
         try {
             $rows = $this->connection->createQueryBuilder()
-                ->select(self::SELECT)
+                ->select('e.*')
                 ->from($this->table, 'e')
-                ->where('e.aggregateId = :aggregateId')
-                ->setParameter('aggregateId', $aggregateId, 'uuid')
+                ->where('e.streamId = :streamId')
+                ->andWhere('e.streamVersion >= :streamVersion')
+                ->setParameter('streamId', $streamId, 'uuid')
+                ->setParameter('streamVersion', $fromStreamVersion, Types::INTEGER)
                 ->executeQuery()
                 ->fetchAllAssociative();
 
@@ -60,21 +58,36 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
         }
     }
 
-    public function append(DomainEvent $domainEvent): void
+    public function append(DomainEvent ...$domainEvents): void
     {
+        if (count($domainEvents) === 0) {
+            return;
+        }
+
+        $params = $types = [];
+        foreach ($domainEvents as $domainEvent) {
+            $params[] = $domainEvent->streamId;
+            $params[] = $domainEvent->streamVersion;
+            $params[] = $this->contentSerializer->serialize($domainEvent->content);
+            $params[] = $domainEvent->headers;
+            array_push($types, 'uuid', Types::INTEGER, Types::STRING, Types::JSON);
+        }
+
         try {
-            $this->connection->insert(
-                $this->table,
-                [
-                    'aggregateId' => $domainEvent->aggregateId(),
-                    'event' => $this->normalizer->normalize($domainEvent, DomainEvent::class),
-                    'occurredOn' => $this->clock->now()
-                ],
-                [
-                    'uuid',
-                    'json',
-                    'datetime_immutable'
-                ]
+            $this->connection->executeStatement(
+                sprintf(
+                    'INSERT INTO %s (streamId, streamVersion, content, headers) VALUES %s',
+                    $this->table,
+                    implode(', ', array_fill(0, count($domainEvents), '(?, ?, ?, ?)'))
+                ),
+                $params,
+                $types
+            );
+        } catch (UniqueConstraintViolationException $e) {
+            throw new DuplicateVersionInStreamException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
             );
         } catch (Throwable $e) {
             throw new EventStoreException(
@@ -89,7 +102,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
     {
         try {
             $rows = $this->connection->createQueryBuilder()
-                ->select(self::SELECT)
+                ->select('e.*')
                 ->from($this->table, 'e')
                 ->where('e.id > :id')
                 ->setParameter('id', $id)
@@ -100,7 +113,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
             return StoredEventFilters::untilGapIsFound(
                 $this->transformRowsToStoredEvents($rows),
                 $id,
-                $this->gapDetection
+                $this
             );
         } catch (Throwable $e) {
             throw new EventStoreException(
@@ -109,6 +122,42 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
                 $e
             );
         }
+    }
+
+    public function cleanUpTo(int $id): void
+    {
+        try {
+            $this->connection->createQueryBuilder()
+                ->delete($this->table)
+                ->where('id <= :id')
+                ->setParameter('id', $id)
+                ->executeStatement();
+        } catch (Throwable $e) {
+            throw new EventStoreException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+    }
+
+    public function shouldWaitForStoredEventWithId(int $id): bool
+    {
+        $currentIsolationLevel = $this->connection->getTransactionIsolation();
+
+        $this->connection->setTransactionIsolation(TransactionIsolationLevel::READ_UNCOMMITTED);
+
+        $hasStoredEvent = $this->connection->createQueryBuilder()
+                ->select('COUNT(id)')
+                ->from($this->table, 'e')
+                ->where('e.id = :id')
+                ->setParameter('id', $id)
+                ->executeQuery()
+                ->fetchOne() > 0;
+
+        $this->connection->setTransactionIsolation($currentIsolationLevel);
+
+        return $hasStoredEvent;
     }
 
     /**
@@ -122,7 +171,6 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
         return array_map(
             fn(array $row): StoredEvent => new StoredEvent(
                 (int)$row['id'],
-                new DateTimeImmutable($row['occurredOn']),
                 $this->transformRowToDomainEvent($row)
             ),
             $rows
@@ -134,14 +182,11 @@ final class DoctrineEventStore implements EventStore, PollableEventStore
      */
     private function transformRowToDomainEvent(array $row): DomainEvent
     {
-        return $this->normalizer->denormalize(
-            json_decode(
-                $row['event'],
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            ),
-            DomainEvent::class
+        return new DomainEvent(
+            (string)$this->connection->convertToPHPValue($row['streamId'], 'uuid'),
+            $this->contentSerializer->deserialize((string)$row['content']),
+            $this->connection->convertToPHPValue($row['streamVersion'], Types::INTEGER),
+            $this->connection->convertToPHPValue($row['headers'], Types::JSON)
         );
     }
 }

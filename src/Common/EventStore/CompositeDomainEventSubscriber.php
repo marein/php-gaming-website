@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\Common\EventStore;
 
-final class CompositeStoredEventSubscriber implements StoredEventSubscriber
+final class CompositeDomainEventSubscriber implements DomainEventSubscriber
 {
     /**
-     * @param StoredEventSubscriber[] $subscribers
+     * @param DomainEventSubscriber[] $subscribers
      */
     public function __construct(
         private readonly array $subscribers
@@ -18,13 +18,6 @@ final class CompositeStoredEventSubscriber implements StoredEventSubscriber
     {
         foreach ($this->subscribers as $subscriber) {
             $subscriber->handle($domainEvent);
-        }
-    }
-
-    public function commit(): void
-    {
-        foreach ($this->subscribers as $subscriber) {
-            $subscriber->commit();
         }
     }
 }

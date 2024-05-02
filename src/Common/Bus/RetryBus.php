@@ -9,44 +9,36 @@ use InvalidArgumentException;
 
 final class RetryBus implements Bus
 {
-    private Bus $bus;
-
-    private int $numberOfRetries;
-
-    private string $retryOnException;
-
     /**
      * @throws InvalidArgumentException
      */
     public function __construct(
-        Bus $bus,
-        int $numberOfRetries,
-        string $retryOnException
+        private readonly Bus $bus,
+        private readonly int $numberOfRetries,
+        private readonly string $retryOnException
     ) {
         if ($numberOfRetries < 1) {
             throw new InvalidArgumentException('Number of retries must be greater than 0.');
         }
-
-        $this->bus = $bus;
-        $this->numberOfRetries = $numberOfRetries;
-        $this->retryOnException = $retryOnException;
     }
 
-    public function handle(object $message): mixed
+    public function handle(Request $request): mixed
     {
-        return $this->handleOrThrow($message);
+        return $this->handleOrThrow($request);
     }
 
     /**
+     * @param Request<mixed> $request
+     *
      * @throws Exception
      */
-    private function handleOrThrow(object $message, int $currentTry = 1): mixed
+    private function handleOrThrow(Request $request, int $currentTry = 1): mixed
     {
         try {
-            return $this->bus->handle($message);
+            return $this->bus->handle($request);
         } catch (Exception $exception) {
             if ($exception instanceof $this->retryOnException && $currentTry < $this->numberOfRetries) {
-                return $this->handleOrThrow($message, $currentTry + 1);
+                return $this->handleOrThrow($request, $currentTry + 1);
             }
 
             throw $exception;

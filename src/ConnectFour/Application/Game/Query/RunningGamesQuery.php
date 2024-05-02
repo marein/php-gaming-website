@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query;
 
-final class RunningGamesQuery
+use Gaming\Common\Bus\Request;
+use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGames;
+
+/**
+ * @implements Request<RunningGames>
+ */
+final class RunningGamesQuery implements Request
 {
 }

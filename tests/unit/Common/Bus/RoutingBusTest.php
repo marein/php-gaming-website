@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\Bus;
 
-use Gaming\Common\Bus\Exception\MissingHandlerException;
+use Gaming\Common\Bus\Exception\BusException;
+use Gaming\Common\Bus\Request;
 use Gaming\Common\Bus\RoutingBus;
 use PHPUnit\Framework\TestCase;
 
@@ -15,40 +16,39 @@ final class RoutingBusTest extends TestCase
      */
     public function itShouldThrowMissingHandlerException(): void
     {
-        $this->expectException(MissingHandlerException::class);
+        $this->expectException(BusException::class);
 
         (new RoutingBus([]))->handle(
-            $this->createMessage('value')
+            $this->createRequest('value')
         );
     }
 
     /**
      * @test
      */
-    public function itShouldRouteMessageToHandlerAndReturnItsValue(): void
+    public function itShouldRouteRequestToHandlerAndReturnItsValue(): void
     {
-        $requestMessage = $this->createMessage('Hello');
+        $request = $this->createRequest('Hello');
 
         $bus = new RoutingBus(
             [
-                get_class($requestMessage) => fn(object $message): object => $this->createMessage(
-                    $message->value . ' World!'
+                $request::class => fn(Request $request): object => $this->createRequest(
+                    $request->value . ' World!'
                 )
             ]
         );
-        $response = $bus->handle($requestMessage);
+        $response = $bus->handle($request);
 
         $this->assertSame('Hello World!', $response->value);
     }
 
-    private function createMessage(string $value): object
+    private function createRequest(string $value): Request
     {
-        $message = new class () {
-            public $value;
+        return new class ($value) implements Request {
+            public function __construct(
+                public readonly string $value
+            ) {
+            }
         };
-
-        $message->value = $value;
-
-        return $message;
     }
 }

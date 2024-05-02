@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
 
-final class AssignChatCommand
+use Gaming\Common\Bus\Request;
+
+/**
+ * @implements Request<void>
+ */
+final class AssignChatCommand implements Request
 {
-    private string $gameId;
-
-    private string $chatId;
-
-    public function __construct(string $gameId, string $chatId)
-    {
-        $this->gameId = $gameId;
-        $this->chatId = $chatId;
+    public function __construct(
+        private readonly string $gameId,
+        private readonly string $chatId
+    ) {
     }
 
     public function gameId(): string

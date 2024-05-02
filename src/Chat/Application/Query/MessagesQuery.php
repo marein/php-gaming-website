@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Query;
 
-final class MessagesQuery
+use Gaming\Common\Bus\Request;
+
+/**
+ * @implements Request<array{messageId: string, authorId: string, message: string, writtenAt: string}[]>
+ */
+final class MessagesQuery implements Request
 {
-    private string $chatId;
-
-    private string $authorId;
-
-    private int $offset;
-
-    private int $limit;
-
-    public function __construct(string $chatId, string $authorId, int $offset, int $limit)
-    {
-        $this->chatId = $chatId;
-        $this->authorId = $authorId;
-        $this->offset = $offset;
-        $this->limit = $limit;
+    public function __construct(
+        private readonly string $chatId,
+        private readonly string $authorId,
+        private readonly int $offset,
+        private readonly int $limit
+    ) {
     }
 
     public function chatId(): string

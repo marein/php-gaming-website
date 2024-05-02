@@ -4,31 +4,22 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Bus;
 
-use Gaming\Common\Bus\Exception\MissingHandlerException;
+use Gaming\Common\Bus\Exception\BusException;
 
 final class RoutingBus implements Bus
 {
     /**
-     * @var callable[]
+     * @param callable[] $requestToHandlerMap
      */
-    private array $messageClassToHandlerMap;
-
-    /**
-     * @param callable[] $messageClassToHandlerMap
-     */
-    public function __construct(array $messageClassToHandlerMap)
-    {
-        $this->messageClassToHandlerMap = $messageClassToHandlerMap;
+    public function __construct(
+        private readonly array $requestToHandlerMap
+    ) {
     }
 
-    public function handle(object $message): mixed
+    public function handle(Request $request): mixed
     {
-        $messageClass = get_class($message);
-
-        if (!isset($this->messageClassToHandlerMap[$messageClass])) {
-            throw new MissingHandlerException(sprintf('Given "%s"', $messageClass));
-        }
-
-        return $this->messageClassToHandlerMap[$messageClass]($message);
+        return ($this->requestToHandlerMap[$request::class] ?? throw BusException::missingHandler($request::class))(
+            $request
+        );
     }
 }

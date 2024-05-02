@@ -58,7 +58,7 @@ final class FollowEventStoreDispatcher
         }
 
         foreach ($storedEvents as $storedEvent) {
-            $this->storedEventSubscriber->handle($storedEvent);
+            $this->storedEventSubscriber->handle($storedEvent->domainEvent());
         }
 
         $this->storedEventSubscriber->commit();

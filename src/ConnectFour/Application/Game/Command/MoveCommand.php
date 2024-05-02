@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
 
-final class MoveCommand
+use Gaming\Common\Bus\Request;
+
+/**
+ * @implements Request<void>
+ */
+final class MoveCommand implements Request
 {
-    private string $gameId;
-
-    private string $playerId;
-
-    private int $column;
-
-    public function __construct(string $gameId, string $playerId, int $column)
-    {
-        $this->gameId = $gameId;
-        $this->playerId = $playerId;
-        $this->column = $column;
+    public function __construct(
+        private readonly string $gameId,
+        private readonly string $playerId,
+        private readonly int $column
+    ) {
     }
 
     public function gameId(): string

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
-use Gaming\Common\Domain\DomainEvent;
-use Gaming\Common\EventStore\StoredEvent;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
@@ -20,7 +19,7 @@ use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use RuntimeException;
 
-final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventSubscriber
+final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventSubscriber
 {
     public function __construct(
         private readonly Publisher $publisher,
@@ -28,9 +27,9 @@ final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventS
     ) {
     }
 
-    public function handle(StoredEvent $storedEvent): void
+    public function handle(DomainEvent $domainEvent): void
     {
-        $domainEvent = $storedEvent->domainEvent();
+        $content = $domainEvent->content;
 
         // We should definitely filter the events we are going to publish,
         // since that belongs to our public interface for the other contexts.
@@ -44,12 +43,12 @@ final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventS
         // a clearly defined interface with other domains.
         $this->publisher->send(
             new Message(
-                'ConnectFour.' . $this->nameFromDomainEvent($domainEvent),
+                'ConnectFour.' . $this->nameFromDomainEvent($content),
                 json_encode(
-                    $this->normalizer->normalize($domainEvent, $domainEvent::class),
+                    $this->normalizer->normalize($content, $content::class),
                     JSON_THROW_ON_ERROR
                 ),
-                $domainEvent->aggregateId()
+                $domainEvent->streamId
             )
         );
     }
@@ -59,7 +58,7 @@ final class PublishStoredEventsToMessageBrokerSubscriber implements StoredEventS
         $this->publisher->flush();
     }
 
-    private function nameFromDomainEvent(DomainEvent $domainEvent): string
+    private function nameFromDomainEvent(object $domainEvent): string
     {
         return match ($domainEvent::class) {
             GameOpened::class => 'GameOpened',

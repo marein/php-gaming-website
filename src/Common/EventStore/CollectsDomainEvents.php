@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\Domain;
+namespace Gaming\Common\EventStore;
 
-/**
- * @deprecated
- */
-interface AggregateRoot
+interface CollectsDomainEvents
 {
     /**
      * @return DomainEvent[]
