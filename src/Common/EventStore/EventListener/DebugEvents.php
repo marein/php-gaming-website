@@ -22,8 +22,10 @@ final class DebugEvents
                 'Event fetched.',
                 [
                     'id' => $storedEvent->id(),
-                    'domainEvent' => $storedEvent->domainEvent()::class,
-                    'aggregateId' => $storedEvent->domainEvent()->aggregateId()
+                    'streamId' => $storedEvent->domainEvent()->streamId,
+                    'streamVersion' => $storedEvent->domainEvent()->streamVersion,
+                    'content' => $storedEvent->domainEvent()->content::class,
+                    'headers' => $storedEvent->domainEvent()->headers
                 ]
             );
         }

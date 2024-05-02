@@ -5,38 +5,43 @@ declare(strict_types=1);
 namespace Gaming\Common\EventStore\Integration\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Doctrine\DBAL\Types\Types;
-use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\EventStore\CleanableEventStore;
+use Gaming\Common\EventStore\ContentSerializer;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\Exception\DuplicateVersionInStreamException;
 use Gaming\Common\EventStore\Exception\EventStoreException;
 use Gaming\Common\EventStore\GapDetection;
 use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventFilters;
-use Gaming\Common\Normalizer\Normalizer;
 use Throwable;
 
 final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore, GapDetection
 {
-    private const SELECT = 'e.id, e.event';
-
+    /**
+     * @param ContentSerializer $contentSerializer Must serialize into and deserialize from valid JSON.
+     */
     public function __construct(
         private readonly Connection $connection,
         private readonly string $table,
-        private readonly Normalizer $normalizer
+        private readonly ContentSerializer $contentSerializer
     ) {
     }
 
-    public function byAggregateId(string $aggregateId): array
+    public function byStreamId(string $streamId, int $fromStreamVersion = 0): array
     {
         try {
             $rows = $this->connection->createQueryBuilder()
-                ->select(self::SELECT)
+                ->select('e.*')
                 ->from($this->table, 'e')
-                ->where('e.aggregateId = :aggregateId')
-                ->setParameter('aggregateId', $aggregateId, 'uuid')
+                ->where('e.streamId = :streamId')
+                ->andWhere('e.streamVersion >= :streamVersion')
+                ->setParameter('streamId', $streamId, 'uuid')
+                ->setParameter('streamVersion', $fromStreamVersion, Types::INTEGER)
                 ->executeQuery()
                 ->fetchAllAssociative();
 
@@ -53,7 +58,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
         }
     }
 
-    public function append(array $domainEvents): void
+    public function append(DomainEvent ...$domainEvents): void
     {
         if (count($domainEvents) === 0) {
             return;
@@ -61,20 +66,28 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
 
         $params = $types = [];
         foreach ($domainEvents as $domainEvent) {
-            $params[] = $domainEvent->aggregateId();
-            $params[] = $this->normalizer->normalize($domainEvent, DomainEvent::class);
-            array_push($types, 'uuid', Types::JSON);
+            $params[] = $domainEvent->streamId;
+            $params[] = $domainEvent->streamVersion;
+            $params[] = $this->contentSerializer->serialize($domainEvent->content);
+            $params[] = $domainEvent->headers;
+            array_push($types, 'uuid', Types::INTEGER, Types::STRING, Types::JSON);
         }
 
         try {
             $this->connection->executeStatement(
                 sprintf(
-                    'INSERT INTO %s (aggregateId, event) VALUES %s',
+                    'INSERT INTO %s (streamId, streamVersion, content, headers) VALUES %s',
                     $this->table,
-                    implode(', ', array_map(static fn(DomainEvent $domainEvent): string => '(?, ?)', $domainEvents))
+                    implode(', ', array_fill(0, count($domainEvents), '(?, ?, ?, ?)'))
                 ),
                 $params,
                 $types
+            );
+        } catch (UniqueConstraintViolationException $e) {
+            throw new DuplicateVersionInStreamException(
+                $e->getMessage(),
+                $e->getCode(),
+                $e
             );
         } catch (Throwable $e) {
             throw new EventStoreException(
@@ -89,7 +102,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
     {
         try {
             $rows = $this->connection->createQueryBuilder()
-                ->select(self::SELECT)
+                ->select('e.*')
                 ->from($this->table, 'e')
                 ->where('e.id > :id')
                 ->setParameter('id', $id)
@@ -169,9 +182,11 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
      */
     private function transformRowToDomainEvent(array $row): DomainEvent
     {
-        return $this->normalizer->denormalize(
-            $this->connection->convertToPHPValue($row['event'], Types::JSON),
-            DomainEvent::class
+        return new DomainEvent(
+            (string)$this->connection->convertToPHPValue($row['streamId'], 'uuid'),
+            $this->contentSerializer->deserialize((string)$row['content']),
+            $this->connection->convertToPHPValue($row['streamVersion'], Types::INTEGER),
+            $this->connection->convertToPHPValue($row['headers'], Types::JSON)
         );
     }
 }

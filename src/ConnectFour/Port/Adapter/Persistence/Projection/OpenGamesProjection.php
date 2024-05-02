@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Persistence\Projection;
 
-use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\NoCommit;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
@@ -24,10 +24,12 @@ final class OpenGamesProjection implements StoredEventSubscriber
 
     public function handle(DomainEvent $domainEvent): void
     {
-        match ($domainEvent::class) {
-            GameOpened::class => $this->saveGame($domainEvent->aggregateId(), $domainEvent->playerId()),
+        $content = $domainEvent->content;
+
+        match ($content::class) {
+            GameOpened::class => $this->saveGame($content->aggregateId(), $content->playerId()),
             GameAborted::class,
-            PlayerJoined::class => $this->removeGame($domainEvent->aggregateId()),
+            PlayerJoined::class => $this->removeGame($content->aggregateId()),
             default => true
         };
     }

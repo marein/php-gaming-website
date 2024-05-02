@@ -16,4 +16,8 @@ services:
         arguments:
             - '@chat.doctrine-dbal'
             - 'event_store'
-            - '@chat.normalizer'
+            - !service
+                class: Gaming\Common\EventStore\Integration\JmsSerializer\JmsContentSerializer
+                arguments:
+                    - '@chat.jms'
+                    - 'Gaming\Common\Domain\DomainEvent'

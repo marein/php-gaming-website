@@ -6,7 +6,7 @@ namespace Gaming\Chat\Infrastructure\Messaging;
 
 use DateTimeInterface;
 use Gaming\Chat\Application\Event\MessageWritten;
-use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
@@ -20,8 +20,10 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
 
     public function handle(DomainEvent $domainEvent): void
     {
-        match ($domainEvent::class) {
-            MessageWritten::class => $this->handleMessageWritten($domainEvent),
+        $content = $domainEvent->content;
+
+        match ($content::class) {
+            MessageWritten::class => $this->handleMessageWritten($content),
             default => true
         };
     }

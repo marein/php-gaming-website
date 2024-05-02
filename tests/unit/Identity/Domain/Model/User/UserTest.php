@@ -26,8 +26,8 @@ final class UserTest extends TestCase
         $domainEvents = $user->flushDomainEvents();
         self::assertCount(1, $domainEvents);
 
-        assert($domainEvents[0] instanceof UserArrived);
-        self::assertEquals($userId->toString(), $domainEvents[0]->aggregateId());
+        assert($domainEvents[0]->content instanceof UserArrived);
+        self::assertEquals($userId->toString(), $domainEvents[0]->content->aggregateId());
     }
 
     /**
@@ -50,9 +50,9 @@ final class UserTest extends TestCase
         $domainEvents = $user->flushDomainEvents();
         self::assertCount(2, $domainEvents);
 
-        assert($domainEvents[1] instanceof UserSignedUp);
-        self::assertEquals($userId->toString(), $domainEvents[1]->aggregateId());
-        self::assertEquals('marein', $domainEvents[1]->username());
+        assert($domainEvents[1]->content instanceof UserSignedUp);
+        self::assertEquals($userId->toString(), $domainEvents[1]->content->aggregateId());
+        self::assertEquals('marein', $domainEvents[1]->content->username());
 
         $this->assertTrue($user->authenticate('correctPassword', $hashAlgorithm));
         $this->assertFalse($user->authenticate('wrongPassword', $hashAlgorithm));

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Messaging;
 
-use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
@@ -20,9 +20,11 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
 
     public function handle(DomainEvent $domainEvent): void
     {
-        match ($domainEvent::class) {
-            UserArrived::class => $this->handleUserArrived($domainEvent),
-            UserSignedUp::class => $this->handleUserSignedUp($domainEvent),
+        $content = $domainEvent->content;
+
+        match ($content::class) {
+            UserArrived::class => $this->handleUserArrived($content),
+            UserSignedUp::class => $this->handleUserSignedUp($content),
             default => true
         };
     }

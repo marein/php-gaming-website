@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Port\Adapter\Messaging;
 
-use Gaming\Common\Domain\DomainEvent;
+use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
@@ -29,6 +29,8 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
 
     public function handle(DomainEvent $domainEvent): void
     {
+        $content = $domainEvent->content;
+
         // We should definitely filter the events we are going to publish,
         // since that belongs to our public interface for the other contexts.
         // However, it's not done for simplicity in this sample project.
@@ -41,12 +43,12 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
         // a clearly defined interface with other domains.
         $this->publisher->send(
             new Message(
-                'ConnectFour.' . $this->nameFromDomainEvent($domainEvent),
+                'ConnectFour.' . $this->nameFromDomainEvent($content),
                 json_encode(
-                    $this->normalizer->normalize($domainEvent, $domainEvent::class),
+                    $this->normalizer->normalize($content, $content::class),
                     JSON_THROW_ON_ERROR
                 ),
-                $domainEvent->aggregateId()
+                $domainEvent->streamId
             )
         );
     }
@@ -56,7 +58,7 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
         $this->publisher->flush();
     }
 
-    private function nameFromDomainEvent(DomainEvent $domainEvent): string
+    private function nameFromDomainEvent(object $domainEvent): string
     {
         return match ($domainEvent::class) {
             GameOpened::class => 'GameOpened',

@@ -114,7 +114,7 @@ by Eric Evans.
 
 To organize the business logic, the
 [Chat](/src/Chat)
-uses the 
+context uses the 
 [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html)
 pattern. The tasks are to initiate chats, list messages from a chat, and allow authors to write messages in a chat.
 If authors are assigned to a chat, only those authors can write and read messages.
@@ -138,24 +138,13 @@ I've chosen MySQL as the storage.
 
 ### Common
 
-This
 [Common](/src/Common)
-folder provides reusable components. If the project is more advanced, I'll outsource them as libraries.
-But there're already battle tested implementations out there (like a
-[Bus](https://tactician.thephpleague.com)
-by Tactician, or an
-[Event Store](https://github.com/prooph/event-store)
-by prooph). You may use them, instead of mine. The
-[Event Store](/src/Common/EventStore)
-implementation inside
-[Common](/src/Common)
-isn't used to be a storage for an
-[Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
-model. It's really just a storage for events.
+provides a set of reusable libraries that can be swapped out at some point, but there are also already similar
+libraries available through
+[Packagist](https://packagist.org).
 
 ### Connect Four
 
-The
 [Connect Four](/src/ConnectFour)
 is the context where I put the most effort in. The business logic is definitely worth building a proper
 [Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html).

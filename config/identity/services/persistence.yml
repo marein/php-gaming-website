@@ -12,12 +12,16 @@ services:
         arguments:
             - '@identity.doctrine-dbal'
             - 'event_store'
-            - '@identity.normalizer'
+            - !service
+                class: Gaming\Common\EventStore\Integration\JmsSerializer\JmsContentSerializer
+                arguments:
+                    - '@identity.jms'
+                    - 'Gaming\Common\Domain\DomainEvent'
 
     identity.orm.publish-domain-events-listener:
-        class: Gaming\Common\Domain\Integration\Doctrine\PublishDomainEventsListener
+        class: Gaming\Common\EventStore\Integration\Doctrine\EventListener\AppendDomainEvents
         arguments:
-            - '@identity.domain-event-publisher'
+            - '@identity.event-store'
         tags:
             - { name: doctrine.event_listener, event: postPersist, entity_manager: identity }
             - { name: doctrine.event_listener, event: postUpdate, entity_manager: identity }
