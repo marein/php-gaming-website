@@ -3,10 +3,6 @@ import {service} from './GameService.js'
 customElements.define('connect-four-game-list', class extends HTMLElement {
     connectedCallback() {
         this._onDisconnect = [];
-        this._games = document.createElement('ul');
-        this._games.classList.add('game-list');
-
-        this.append(this._games);
 
         this._playerId = this.getAttribute('player-id');
         this._maximumNumberOfGamesInList = parseInt(this.getAttribute('maximum-number-of-games'));
@@ -29,10 +25,8 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
      */
     _addGame(gameId, playerId) {
         if (this._currentGamesInList.indexOf(gameId) === -1) {
-            let isCurrentUserThePlayer = this._playerId === playerId;
-
-            this._games.appendChild(
-                this._createGameNode(gameId, isCurrentUserThePlayer)
+            this.querySelector('tbody').appendChild(
+                this._createGameNode(gameId, this._playerId === playerId)
             );
         }
     }
@@ -42,8 +36,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
      */
     _removeGame(gameId) {
         if (this._currentGamesInList.indexOf(gameId) !== -1) {
-            let node = this._games.querySelector('[data-game-id="' + gameId + '"]');
-            this._games.removeChild(node);
+            this.querySelector('tbody').removeChild(this.querySelector('[data-game-id="' + gameId + '"]'));
         }
     }
 
@@ -72,9 +65,9 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
      */
     _markGameAsToBeRemovedSoon(gameId) {
         if (this._currentGamesInList.indexOf(gameId) !== -1) {
-            let node = this._games.querySelector('[data-game-id="' + gameId + '"]');
-            node.classList.add('game-list__game--remove-soon');
-            node.classList.remove('game-list__game--user-game');
+            const row = this.querySelector('[data-game-id="' + gameId + '"]');
+            row.classList.add('table-secondary', 'cursor-default');
+            row.classList.remove('table-success', 'table-light');
         }
     }
 
@@ -113,16 +106,16 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         this._pendingGamesToRemove = [];
     }
 
-    _renderList() {
+    async _renderList() {
         this._renderListTimeout = null;
-        this._games.classList.add('loading-indicator');
 
-        // Freeze the screen.
-        setTimeout(() => {
-            this._flushPendingGamesToRemove();
-            this._flushPendingGamesToAdd();
-            this._games.classList.remove('loading-indicator');
-        }, 250);
+        this.querySelector('tbody').classList.add('gp-loading');
+
+        await new Promise(r => setTimeout(r, 250));
+
+        this._flushPendingGamesToRemove();
+        this._flushPendingGamesToAdd();
+        this.querySelector('tbody').classList.remove('gp-loading');
     }
 
     /**
@@ -131,49 +124,39 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
      * @returns {Node}
      */
     _createGameNode(gameId, isCurrentUserThePlayer) {
-        let span = document.createElement('span');
-        span.innerText = 'Anonymous';
+        let row = document.createElement('tr');
+        row.dataset.gameId = gameId;
+        row.innerHTML = '<td>Anonymous</td><td>???</td>';
 
-        let button = document.createElement('button');
-        button.dataset.gameId = gameId;
+        row.classList.toggle('table-success', isCurrentUserThePlayer);
+        row.classList.toggle('table-light', !isCurrentUserThePlayer);
 
-        let li = document.createElement('li');
-        li.classList.add('game-list__game');
-        li.dataset.gameId = gameId;
-
-        if (isCurrentUserThePlayer) {
-            li.classList.add('game-list__game--user-game');
-        }
-
-        button.append(span);
-        li.append(button);
-
-        button.addEventListener('click', (event) => {
+        row.addEventListener('click', (event) => {
             event.preventDefault();
 
-            button.disabled = true;
-            button.classList.add('loading-indicator');
+            if (row.classList.contains('table-secondary') || row.closest('.gp-loading')) return;
+
+            row.classList.add('table-secondary', 'cursor-default');
+            row.classList.remove('table-success', 'table-light');
 
             if (isCurrentUserThePlayer) {
-                service.abort(gameId).then(() => {
-                    button.classList.remove('loading-indicator');
-                }).catch(() => {
-                    // Remove the game on any error.
-                    button.classList.remove('loading-indicator');
-                    this._scheduleRemovingOfGame(gameId);
-                });
+                service.abort(gameId)
+                    .then(() => true)
+                    .catch(() => {
+                        // Remove the game on any error.
+                        this._scheduleRemovingOfGame(gameId);
+                    });
             } else {
                 service.join(gameId)
                     .then(() => service.redirectTo(gameId))
                     .catch(() => {
                         // Remove the game on any error.
-                        button.classList.remove('loading-indicator');
                         this._scheduleRemovingOfGame(gameId);
                     });
             }
         });
 
-        return li;
+        return row;
     }
 
     _onGameOpened(event) {

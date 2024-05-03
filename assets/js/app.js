@@ -7,11 +7,11 @@ window.app = {
         .filter(n => !window.customElements.get(n.localName))
         .map(n => import(n.localName))),
     showProgress(delay) {
-        document.querySelector('.progress')?.remove();
+        document.querySelector('.gp-page-progress')?.remove();
         let progress = document.createElement('div');
-        progress.classList.add('progress');
+        progress.classList.add('gp-page-progress');
         const timeout = setTimeout(() => document.head.after(progress), delay ?? 250);
-        return () => clearTimeout(timeout) || progress.classList.add('progress--finish');
+        return () => clearTimeout(timeout) || progress.classList.add('gp-page-progress--finish');
     },
     peInit() {
         if (!window.pe) return window.addEventListener('pe:init', window.app.peInit);

@@ -11,7 +11,7 @@ class GameCest
     {
         $gameId = $this->prepareOpenGameScenario($I);
 
-        $I->click('.game-list__game--user-game');
+        $I->click('.table-success');
         $I->waitForElementNotVisible('[data-game-id="' . $gameId . '"]', 5);
     }
 
@@ -30,7 +30,7 @@ class GameCest
         $this->prepareRunningGameScenario($I, $jane);
 
         $I->waitForElementNotVisible(
-            ['xpath' => '//*[contains(@class, "loading-indicator") and @id="chat"]'],
+            '#chat .gp-loading',
             3
         );
 
@@ -52,9 +52,9 @@ class GameCest
     {
         $I->amOnPage('/');
         $I->click('[data-open-game-button]');
-        $I->waitForElement('.game-list__game--user-game', 2);
+        $I->waitForElement('.table-success', 2);
 
-        return $I->grabAttributeFrom('.game-list__game--user-game', 'data-game-id');
+        return $I->grabAttributeFrom('.table-success', 'data-game-id');
     }
 
     private function prepareRunningGameScenario(AcceptanceTester $I, Friend $friend): string

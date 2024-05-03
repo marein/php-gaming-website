@@ -1,31 +1,55 @@
 {% extends '@web-interface/base.html.twig' %}
 
+{% set page_title = 'Lobby' %}
+
 {% block content %}
-    <section class="left">
-        <div class="box">
-            <p>
-                <connect-four-running-games>
-                    {{ runningGames.count }}
-                </connect-four-running-games>
-                running games
-            </p>
+    <div class="row row-cards">
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-body">
+                    <p>
+                        <span class="badge bg-blue text-blue-fg">
+                            <connect-four-running-games>
+                                {{ runningGames.count }}
+                            </connect-four-running-games>
+                        </span>
+                        running games
+                    </p>
+                    <p>
+                        <span class="badge bg-blue text-blue-fg">
+                            ?
+                        </span>
+                        players online
+                    </p>
+                </div>
+            </div>
         </div>
-    </section>
-    <section class="middle">
-        <connect-four-game-list open-games="{{ openGames|json_encode|e('html_attr') }}"
-                                player-id="{{ user.userIdentifier|e('html_attr') }}"
-                                maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
-        </connect-four-game-list>
-    </section>
-    <section class="right">
-        <div class="box">
-            <p>
-                <connect-four-open-button>
-                    + Open a new game
-                </connect-four-open-button>
-            </p>
+        <div class="col-lg-6">
+            <connect-four-game-list open-games="{{ openGames|json_encode|e('html_attr') }}"
+                                    player-id="{{ user.userIdentifier|e('html_attr') }}"
+                                    maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
+                <table class="table table-nowrap mb-0">
+                    <thead>
+                        <tr>
+                            <th class="w-75">Player</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody class="cursor-pointer border-0">
+                    </tbody>
+                </table>
+            </connect-four-game-list>
         </div>
-    </section>
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-body">
+                    <connect-four-open-button>
+                        Open a new game
+                    </connect-four-open-button>
+                </div>
+            </div>
+        </div>
+    </div>
     <event-source subscriptions="lobby"
                   {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>

@@ -4,7 +4,7 @@ customElements.define('connect-four-open-button', class extends HTMLElement {
     connectedCallback() {
         this._onDisconnect = [];
         this._button = document.createElement('button');
-        this._button.classList.add('button');
+        this._button.classList.add('btn', 'btn-primary', 'w-100');
         this._button.setAttribute('data-open-game-button', '');
         this._button.innerHTML = this.innerHTML;
 
@@ -30,11 +30,11 @@ customElements.define('connect-four-open-button', class extends HTMLElement {
         this._onDisconnect.forEach(f => f());
     }
 
-    _onButtonClick(event) {
+    async _onButtonClick(event) {
         event.preventDefault();
 
         this._button.disabled = true;
-        this._button.classList.add('loading-indicator');
+        this._button.classList.add('btn-loading');
 
         if (this._currentOpenGameId) {
             service.abort(this._currentOpenGameId);
@@ -43,10 +43,10 @@ customElements.define('connect-four-open-button', class extends HTMLElement {
         service.open().then((game) => {
             this._currentOpenGameId = game.gameId;
             this._button.disabled = false;
-            this._button.classList.remove('loading-indicator');
+            this._button.classList.remove('btn-loading');
         }).catch(() => {
             this._button.disabled = false;
-            this._button.classList.remove('loading-indicator');
+            this._button.classList.remove('btn-loading');
         });
     }
 

@@ -4,7 +4,7 @@ customElements.define('connect-four-abort-button', class extends HTMLElement {
     connectedCallback() {
         this._button = document.createElement('button');
         this._button.setAttribute('id', 'abort-game');
-        this._button.classList.add('button');
+        this._button.classList.add('btn', 'btn-outline-danger', 'w-100');
         this._button.innerHTML = this.innerHTML;
 
         this.innerHTML = '';
@@ -19,16 +19,14 @@ customElements.define('connect-four-abort-button', class extends HTMLElement {
         event.preventDefault();
 
         this._button.disabled = true;
-        this._button.classList.add('loading-indicator');
+        this._button.classList.add('btn-loading');
 
-        service.abort(this._gameId).then(() => {
-            this._button.disabled = false;
-            this._button.classList.remove('loading-indicator');
-        }).catch(() => {
-            // todo: Handle exception based on error.
-            this._button.disabled = false;
-            this._button.classList.remove('loading-indicator');
-        });
+        service.abort(this._gameId)
+            .then(() => true)
+            .finally(() => {
+                this._button.disabled = false;
+                this._button.classList.remove('btn-loading');
+            });
     }
 
     _registerEventHandler() {
