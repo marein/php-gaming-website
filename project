@@ -19,6 +19,9 @@ help() {
     echo composer
     echo Shorthand for interacting with composer during development.
     echo
+    echo installAssets
+    echo Shorthand for installing assets defined in importmap.php.
+    echo
     echo tests
     echo Run unit tests, code sniffer, static analyzer and acceptance tests.
     echo
@@ -48,6 +51,7 @@ build() {
     docker compose build --pull
     docker compose up -d php
     docker cp "$(docker compose ps -aq php | head -n 1)":/project/vendor ./
+    docker cp "$(docker compose ps -aq php | head -n 1)":/project/assets/vendor ./assets
     docker compose up --remove-orphans
 }
 
@@ -63,6 +67,12 @@ composer() {
     docker compose up -d php
     docker compose run --rm php composer "$@"
     docker cp "$(docker compose ps -aq php | head -n 1)":/project/vendor ./
+}
+
+installAssets() {
+    docker compose up -d php
+    docker compose run --rm php bin/console importmap:install
+    docker cp "$(docker compose ps -aq php | head -n 1)":/project/assets/vendor ./assets
 }
 
 tests() {

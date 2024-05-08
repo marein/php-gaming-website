@@ -1,15 +1,14 @@
 import {service} from './GameService.js'
+import {html} from 'uhtml/node.js'
 
 customElements.define('connect-four-open-button', class extends HTMLElement {
     connectedCallback() {
         this._onDisconnect = [];
-        this._button = document.createElement('button');
-        this._button.classList.add('btn', 'btn-primary', 'w-100');
-        this._button.setAttribute('data-open-game-button', '');
-        this._button.innerHTML = this.innerHTML;
+        this._button = html`
+            <button id="abort-game" class="btn btn-primary w-100" data-open-game-button>${this.innerHTML}</button>
+        `;
 
-        this.innerHTML = '';
-        this.append(this._button);
+        this.replaceChildren(this._button);
 
         this._currentOpenGameId = '';
 

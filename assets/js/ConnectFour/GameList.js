@@ -1,9 +1,24 @@
 import {service} from './GameService.js'
+import {html} from 'uhtml/node.js'
 
 customElements.define('connect-four-game-list', class extends HTMLElement {
     connectedCallback() {
         this._onDisconnect = [];
 
+        this.append(html`
+            <table class="table table-nowrap mb-0">
+                <thead>
+                <tr>
+                    <th class="w-75">Player</th>
+                    <th>Rating</th>
+                </tr>
+                </thead>
+                <tbody class="cursor-pointer border-0">
+                </tbody>
+            </table>
+        `);
+
+        this._games = this.querySelector('tbody');
         this._playerId = this.getAttribute('player-id');
         this._maximumNumberOfGamesInList = parseInt(this.getAttribute('maximum-number-of-games'));
         this._currentGamesInList = [];
@@ -25,7 +40,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
      */
     _addGame(gameId, playerId) {
         if (this._currentGamesInList.indexOf(gameId) === -1) {
-            this.querySelector('tbody').appendChild(
+            this._games.appendChild(
                 this._createGameNode(gameId, this._playerId === playerId)
             );
         }
@@ -36,7 +51,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
      */
     _removeGame(gameId) {
         if (this._currentGamesInList.indexOf(gameId) !== -1) {
-            this.querySelector('tbody').removeChild(this.querySelector('[data-game-id="' + gameId + '"]'));
+            this._games.removeChild(this.querySelector('[data-game-id="' + gameId + '"]'));
         }
     }
 
@@ -109,13 +124,13 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     async _renderList() {
         this._renderListTimeout = null;
 
-        this.querySelector('tbody').classList.add('gp-loading');
+        this._games.classList.add('gp-loading');
 
         await new Promise(r => setTimeout(r, 250));
 
         this._flushPendingGamesToRemove();
         this._flushPendingGamesToAdd();
-        this.querySelector('tbody').classList.remove('gp-loading');
+        this._games.classList.remove('gp-loading');
     }
 
     /**
@@ -124,12 +139,12 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
      * @returns {Node}
      */
     _createGameNode(gameId, isCurrentUserThePlayer) {
-        let row = document.createElement('tr');
-        row.dataset.gameId = gameId;
-        row.innerHTML = '<td>Anonymous</td><td>???</td>';
-
-        row.classList.toggle('table-success', isCurrentUserThePlayer);
-        row.classList.toggle('table-light', !isCurrentUserThePlayer);
+        let row = html`
+            <tr data="${{gameId}}"
+                class="${isCurrentUserThePlayer ? 'table-success' : 'table-light'}">
+                <td>Anonymous</td><td>???</td>
+            </tr>
+        `;
 
         row.addEventListener('click', (event) => {
             event.preventDefault();

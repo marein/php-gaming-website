@@ -1,5 +1,6 @@
 import {service} from './GameService.js'
 import {Game as GameModel} from './Model/Game.js'
+import {html} from 'uhtml/node.js'
 
 customElements.define('connect-four-game', class extends HTMLElement {
     connectedCallback() {
@@ -7,28 +8,17 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         let game = JSON.parse(this.getAttribute('game'));
 
-        this._gameNode = document.createElement('table');
-        this._gameNode.classList.add('gp-game');
-
-        let tbody = document.createElement('tbody');
-
-        for (let y = 1; y <= game.height; y++) {
-            let tr = document.createElement('tr');
-
-            for (let x = 1; x <= game.width; x++) {
-                let td = document.createElement('td');
-                td.classList.add('gp-game__field');
-                td.setAttribute('data-column', x.toString());
-                td.setAttribute('data-point', x.toString() + ' ' + y.toString());
-
-                tr.append(td);
-            }
-
-            tbody.append(tr);
-        }
-
-        this._gameNode.append(tbody);
-        this.append(this._gameNode);
+        this.append(this._gameNode = html`
+            <table class="gp-game">
+                <tbody>${[...Array(game.height).keys()].map(y => y + 1).map(y => html`
+                    <tr>${[...Array(game.width).keys()].map(x => x + 1).map(x => html`
+                        <td class="gp-game__field"
+                            data-column="${x}"
+                            data-point="${x + ' ' + y}"></td>`)}
+                    </tr>`)}
+                </tbody>
+            </table>
+        `);
 
         this._previousMoveButton = document.querySelector(this.getAttribute('previous-move-selector'));
         this._nextMoveButton = document.querySelector(this.getAttribute('next-move-selector'));
@@ -157,7 +147,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('ConnectFour.PlayerMoved', this._onPlayerMoved.bind(this));
 
-        this._fields.forEach((field) => {
+        this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
         });
 

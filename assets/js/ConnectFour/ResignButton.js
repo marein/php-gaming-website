@@ -1,13 +1,13 @@
 import {service} from './GameService.js'
+import {html} from 'uhtml/node.js'
 
 customElements.define('connect-four-resign-button', class extends HTMLElement {
     connectedCallback() {
-        this._button = document.createElement('button');
-        this._button.classList.add('btn', 'w-100');
-        this._button.innerHTML = this.innerHTML;
+        this._button = html`
+            <button id="abort-game" class="btn w-100">${this.innerHTML}</button>
+        `;
 
-        this.innerHTML = '';
-        this.append(this._button);
+        this.replaceChildren(this._button);
 
         this._gameId = this.getAttribute('game-id');
 

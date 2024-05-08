@@ -1,26 +1,27 @@
 import {service} from './ChatService.js'
+import {html} from 'uhtml/node.js'
 
 customElements.define('chat-widget', class extends HTMLElement {
     connectedCallback() {
         this._onDisconnect = [];
 
-        this.innerHTML = `
-        <div class="card gp-loading" style="height: 400px" id="chat">
-            <div class="card-body scrollable">
-                <div class="chat">
-                    <div class="chat-bubbles">
+        this.append(this._rootElement = html`
+            <div class="card gp-loading" style="height: 400px" id="chat">
+                <div class="card-body scrollable">
+                    <div class="chat">
+                        <div class="chat-bubbles">
+                        </div>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <input type="text"
+                           name="message"
+                           class="form-control"
+                           autocomplete="off"
+                           placeholder="Type message">
+                </div>
             </div>
-            <div class="card-footer">
-                <input type="text"
-                       name="message"
-                       class="form-control"
-                       autocomplete="off"
-                       placeholder="Type message">
-            </div>
-        </div>
-        `;
+        `);
 
         this._chatId = '';
         this._authorId = this.getAttribute('author-id');
@@ -66,7 +67,7 @@ customElements.define('chat-widget', class extends HTMLElement {
 
                 this._flushMessageBuffer();
 
-                this.querySelector('.card').classList.remove('gp-loading');
+                this._rootElement.classList.remove('gp-loading');
             })
             .catch((e) => {
                 // Automatic retry after x seconds.
@@ -115,30 +116,25 @@ customElements.define('chat-widget', class extends HTMLElement {
         let minutes = ('0' + writtenAt.getMinutes()).slice(-2);
         let isSameAuthor = this._authorId === message.authorId;
 
-        let node = document.createElement('div');
-        node.classList.add('chat-item');
-        node.dataset.id = message.messageId;
-        node.innerHTML = `
-        <div class="row${isSameAuthor ? ' align-items-end justify-content-end' : ''}">
-            <div class="col-11">
-                <div class="chat-bubble${isSameAuthor ? ' chat-bubble-me' : ''}">
-                    <div class="chat-bubble-title">
-                        <div class="row">
-                            <div class="col chat-bubble-author"></div>
-                            <div class="col-auto chat-bubble-date"></div>
+        return html`
+            <div class="chat-item" data-id="${message.messageId}">
+                <div class="${isSameAuthor ? 'row align-items-end justify-content-end' : 'row'}">
+                    <div class="col-11">
+                        <div class="${isSameAuthor ? 'chat-bubble chat-bubble-me' : 'chat-bubble'}">
+                            <div class="chat-bubble-title">
+                                <div class="row">
+                                    <div class="col chat-bubble-author">${'Anonymous'}</div>
+                                    <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
+                                </div>
+                            </div>
+                            <div class="chat-bubble-body">
+                                <p>${message.message}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="chat-bubble-body">
-                        <p></p>
                     </div>
                 </div>
             </div>
-        </div>`;
-        node.querySelector('.chat-bubble-author').append(document.createTextNode('Anonymous'));
-        node.querySelector('.chat-bubble-date').append(document.createTextNode(hours + ':' + minutes));
-        node.querySelector('p').append(document.createTextNode(message.message));
-
-        return node;
+        `;
     }
 
     _clearInput() {

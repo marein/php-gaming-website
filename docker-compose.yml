@@ -4,7 +4,8 @@ x-php-container-volumes:
     &php-container-volumes
         volumes:
             - ./:/project:delegated
-            - vendor:/project/vendor
+            - php-vendor:/project/vendor
+            - asset-vendor:/project/assets/vendor
             - proxysql.sock:/var/run/proxysql
             - type: tmpfs
               target: /project/var
@@ -172,6 +173,7 @@ services:
             dockerfile: ./docker/Dockerfile
         entrypoint: ''
         command: 'true'
+        env_file: ./.env
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:5.2
         environment:
@@ -192,7 +194,8 @@ services:
             - redis
 
 volumes:
-    vendor:
+    asset-vendor:
+    php-vendor:
     mysql:
     proxysql.sock:
     redis:
