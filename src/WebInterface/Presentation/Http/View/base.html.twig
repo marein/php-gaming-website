@@ -15,6 +15,7 @@
     <script>if(!HTMLScriptElement.supports||!HTMLScriptElement.supports('importmap')){let t=document.createElement('script');t.setAttribute('async','');t.setAttribute('src','https://ga.jspm.io/npm:es-module-shims@1.8.0/dist/es-module-shims.js');document.currentScript.replaceWith(t)}</script>
     {{ importmap() }}
     <script type="module" src="{{ asset('js/pe.js') }}"></script>
+    <script>window.matchMedia("(prefers-color-scheme:dark)").matches && document.documentElement.setAttribute('data-bs-theme', 'dark');</script>
 </head>
 <body class="layout-fluid">
 <notification-list></notification-list>

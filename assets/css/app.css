@@ -87,8 +87,7 @@ notification-list {
 }
 
 [data-bs-theme=dark] .gp-game {
-    background-color: var(--tblr-body-bg);
-    border: 1px solid var(--tblr-blue);
+    background-color: var(--tblr-gray-800);
 
     .gp-game__field {
         border-color: var(--tblr-blue);
