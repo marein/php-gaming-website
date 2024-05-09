@@ -9,7 +9,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         let game = JSON.parse(this.getAttribute('game'));
 
         this.append(this._gameNode = html`
-            <table class="gp-game">
+            <table class="gp-game user-select-none">
                 <tbody>${[...Array(game.height).keys()].map(y => y + 1).map(y => html`
                     <tr>${[...Array(game.width).keys()].map(x => x + 1).map(x => html`
                         <td class="gp-game__field"

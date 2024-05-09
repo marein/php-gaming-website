@@ -6,7 +6,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         this._onDisconnect = [];
 
         this.append(html`
-            <table class="table table-nowrap mb-0">
+            <table class="table table-nowrap mb-0 user-select-none cursor-default">
                 <thead>
                 <tr>
                     <th class="w-75">Player</th>
