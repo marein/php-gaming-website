@@ -94,15 +94,3 @@ notification-list {
         border-color: var(--tblr-blue);
     }
 }
-
-/**
- * tabler.io overrides
- */
-.chat-bubble {
-    width: 95%;
-
-    &.chat-bubble-me {
-        margin-left: auto;
-        margin-right: 0;
-    }
-}

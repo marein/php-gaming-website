@@ -111,21 +111,26 @@ customElements.define('chat-widget', class extends HTMLElement {
      * @returns {Node}
      */
     _createMessageNode(message) {
-        let writtenAt = new Date(message.writtenAt);
-        let hours = ('0' + writtenAt.getHours()).slice(-2);
-        let minutes = ('0' + writtenAt.getMinutes()).slice(-2);
+        const writtenAt = new Date(message.writtenAt);
+        const hours = ('0' + writtenAt.getHours()).slice(-2);
+        const minutes = ('0' + writtenAt.getMinutes()).slice(-2);
+        const isSameAuthor = this._authorId === message.authorId;
 
         return html`
             <div class="chat-item" data-id="${message.messageId}">
-                <div class="${`chat-bubble ${this._authorId === message.authorId ? ' chat-bubble-me' : ''}`}">
-                    <div class="chat-bubble-title">
-                        <div class="row">
-                            <div class="col chat-bubble-author">${'Anonymous'}</div>
-                            <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
+                <div class="${`row${isSameAuthor ? ' align-items-end justify-content-end' : ''}`}">
+                    <div class="col-11">
+                        <div class="${`chat-bubble${isSameAuthor ? ' chat-bubble-me' : ''}`}">
+                            <div class="chat-bubble-title">
+                                <div class="row">
+                                    <div class="col chat-bubble-author">${'Anonymous'}</div>
+                                    <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
+                                </div>
+                            </div>
+                            <div class="chat-bubble-body">
+                                <p>${message.message}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="chat-bubble-body">
-                        <p>${message.message}</p>
                     </div>
                 </div>
             </div>
