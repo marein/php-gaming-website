@@ -142,7 +142,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         let row = html`
             <tr data="${{gameId}}"
                 class="${isCurrentUserThePlayer ? 'table-success' : 'table-light'}">
-                <td>Anonymous</td><td>???</td>
+                <td>Anonymous</td><td></td>
             </tr>
         `;
 
