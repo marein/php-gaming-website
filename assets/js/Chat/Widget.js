@@ -114,23 +114,18 @@ customElements.define('chat-widget', class extends HTMLElement {
         let writtenAt = new Date(message.writtenAt);
         let hours = ('0' + writtenAt.getHours()).slice(-2);
         let minutes = ('0' + writtenAt.getMinutes()).slice(-2);
-        let isSameAuthor = this._authorId === message.authorId;
 
         return html`
             <div class="chat-item" data-id="${message.messageId}">
-                <div class="${isSameAuthor ? 'row align-items-end justify-content-end' : 'row'}">
-                    <div class="col-11">
-                        <div class="${isSameAuthor ? 'chat-bubble chat-bubble-me' : 'chat-bubble'}">
-                            <div class="chat-bubble-title">
-                                <div class="row">
-                                    <div class="col chat-bubble-author">${'Anonymous'}</div>
-                                    <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
-                                </div>
-                            </div>
-                            <div class="chat-bubble-body">
-                                <p>${message.message}</p>
-                            </div>
+                <div class="${`chat-bubble ${this._authorId === message.authorId ? ' chat-bubble-me' : ''}`}">
+                    <div class="chat-bubble-title">
+                        <div class="row">
+                            <div class="col chat-bubble-author">${'Anonymous'}</div>
+                            <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
                         </div>
+                    </div>
+                    <div class="chat-bubble-body">
+                        <p>${message.message}</p>
                     </div>
                 </div>
             </div>
