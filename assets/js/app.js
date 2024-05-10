@@ -1,5 +1,7 @@
 import {client} from './Common/HttpClient.js'
 import './Common/NotificationList.js'
+import '@tabler/core/dist/css/tabler.min.css'
+import '../css/app.css'
 
 window.app = {
     navigate: url => top.location.href = url,
