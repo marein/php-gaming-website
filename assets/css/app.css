@@ -59,6 +59,7 @@ notification-list {
     width: 100%;
     border-collapse: initial;
     background-color: var(--tblr-blue);
+    border: 1px solid var(--tblr-border-color-translucent);
     border-radius: var(--tblr-border-radius);
     padding: .25rem .25rem;
     border-spacing: .5rem;
