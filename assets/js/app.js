@@ -31,11 +31,11 @@ window.addEventListener('pe:navigate', e => {
     e.detail.finally.push(window.app.showProgress(0));
 });
 
-await window.app.loadElements(document.body).finally(window.app.showProgress());
-
-window.dispatchEvent(new CustomEvent('app:load'));
-
 window.matchMedia("(prefers-color-scheme:dark)").addEventListener(
     'change',
     e => document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light')
 );
+
+await window.app.loadElements(document.body).finally(window.app.showProgress());
+
+window.dispatchEvent(new CustomEvent('app:load'));
