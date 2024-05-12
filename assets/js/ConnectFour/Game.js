@@ -26,10 +26,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._game = GameModel.fromObject(game);
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
         this._fields = this._gameNode.querySelectorAll('.gp-game__field');
-        this._colorToClass = {
-            1: 'gp-game__field--red',
-            2: 'gp-game__field--yellow'
-        };
+        this._colorToClass = {1: 'bg-red', 2: 'bg-yellow'};
 
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
 
@@ -44,12 +41,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {Number} index
      */
     _showMovesUpTo(index) {
-        // Clear fields
-        this._fields.forEach(field => {
-            field.classList.remove('gp-heartbeat');
-            field.classList.remove('gp-game__field--red');
-            field.classList.remove('gp-game__field--yellow');
-        });
+        this._fields.forEach(field => field.classList.remove('gp-heartbeat', 'bg-red', 'bg-yellow'));
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
         this._updateNavigationButtons();
