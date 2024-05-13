@@ -119,7 +119,7 @@ customElements.define('chat-widget', class extends HTMLElement {
         return html`
             <div class="chat-item" data-id="${message.messageId}">
                 <div class="${`row${isSameAuthor ? ' align-items-end justify-content-end' : ''}`}">
-                    <div class="col-xl-11">
+                    <div class="col-xl-11 col-lg-12 col-11">
                         <div class="${`chat-bubble${isSameAuthor ? ' chat-bubble-me' : ''}`}">
                             <div class="chat-bubble-title">
                                 <div class="row">
