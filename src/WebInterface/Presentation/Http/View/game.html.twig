@@ -3,46 +3,50 @@
 {% set page_title = 'Anonymous vs. Anonymous' %}
 
 {% block content %}
-    <div class="row row-cards">
-        <div class="col-sm">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row row-gap-2">
-                        <div class="col-6 col-lg-12">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="icon icon-filled text-red">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
-                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-                            </svg>
-                            Anonymous
-                        </div>
-                        <div class="col-6 col-lg-12">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="icon icon-filled text-yellow">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
-                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-                            </svg>
-                            Anonymous
+    <div class="row row-gap-2">
+        <div class="col-md-7 col-xl-9">
+            <div class="row row-gap-2">
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row row-gap-2">
+                                <div class="col-6 col-xl-12">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="icon icon-filled text-red">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
+                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
+                                    </svg>
+                                    Anonymous
+                                </div>
+                                <div class="col-6 col-xl-12">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="icon icon-filled text-yellow">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
+                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
+                                    </svg>
+                                    Anonymous
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-8">
+                    <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
+                                       previous-move-selector="#previous-move"
+                                       next-move-selector="#next-move"
+                                       follow-moves-selector="#follow-moves">
+                    </connect-four-game>
+                </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
-                               previous-move-selector="#previous-move"
-                               next-move-selector="#next-move"
-                               follow-moves-selector="#follow-moves">
-            </connect-four-game>
-        </div>
-        <div class="col-sm">
+        <div class="col-md-5 col-xl-3">
             <div class="card mb-2">
                 <div class="card-body">
-                    <div class="row mb-2">
+                    <div class="row row-gap-2">
                         <div class="col-3">
                             <button class="btn btn-icon w-100" id="previous-move">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -73,8 +77,6 @@
                                 </svg>
                             </button>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-6">
                             <connect-four-abort-button game-id="{{ game.gameId }}">
                                 Abort
