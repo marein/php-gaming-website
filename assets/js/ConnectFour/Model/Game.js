@@ -27,9 +27,7 @@ export class Game {
         if (!this.hasMove(move)) {
             this.moves.push(move);
 
-            this.onMoveAppendedObservers.forEach((callback) => {
-                callback(move);
-            });
+            this.onMoveAppendedObservers.forEach(callback => callback(move));
         }
     }
 

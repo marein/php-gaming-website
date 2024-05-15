@@ -11,8 +11,8 @@ class GameCest
     {
         $gameId = $this->prepareOpenGameScenario($I);
 
-        $I->click('.game-list__game--user-game');
-        $I->waitForElementNotVisible('[data-game-id="' . $gameId . '"]', 5);
+        $I->click('.table-success');
+        $I->waitForElementNotVisible('[data-game-id="' . $gameId . '"]');
     }
 
     public function iCanAbortAGameWithAJoinedFriend(AcceptanceTester $I): void
@@ -29,32 +29,29 @@ class GameCest
         $jane = $I->haveFriend('jane');
         $this->prepareRunningGameScenario($I, $jane);
 
-        $I->waitForElementNotVisible(
-            ['xpath' => '//*[contains(@class, "loading-indicator") and @id="chat"]'],
-            3
-        );
+        $I->waitForElementNotVisible('#chat .gp-loading');
 
         $I->fillField('message', 'Hi Jane.');
         $I->pressKey('[name="message"]', WebDriverKeys::ENTER);
 
         $jane->does(
             static function (AcceptanceTester $I): void {
-                $I->waitForText('Hi Jane.', 3, '#chat');
+                $I->waitForText('Hi Jane.', 10, '#chat');
                 $I->fillField('message', 'Hi.');
                 $I->pressKey('[name="message"]', WebDriverKeys::ENTER);
             }
         );
 
-        $I->waitForText('Hi.', 3, '#chat');
+        $I->waitForText('Hi.', 10, '#chat');
     }
 
     private function prepareOpenGameScenario(AcceptanceTester $I): string
     {
         $I->amOnPage('/');
         $I->click('[data-open-game-button]');
-        $I->waitForElement('.game-list__game--user-game', 2);
+        $I->waitForElement('.table-success');
 
-        return $I->grabAttributeFrom('.game-list__game--user-game', 'data-game-id');
+        return $I->grabAttributeFrom('.table-success', 'data-game-id');
     }
 
     private function prepareRunningGameScenario(AcceptanceTester $I, Friend $friend): string
@@ -64,14 +61,14 @@ class GameCest
         $friend->does(
             static function (AcceptanceTester $I) use ($gameId): void {
                 $I->amOnPage('/');
-                $I->waitForElement('[data-game-id="' . $gameId . '"]', 2);
+                $I->waitForElement('[data-game-id="' . $gameId . '"]');
                 $I->click('[data-game-id="' . $gameId . '"]');
-                $I->retry(10, 200);
+                $I->retry(10);
                 $I->retrySeeCurrentUrlEquals('/game/' . $gameId);
             }
         );
 
-        $I->retry(10, 200);
+        $I->retry(10);
         $I->retrySeeCurrentUrlEquals('/game/' . $gameId);
 
         return $gameId;

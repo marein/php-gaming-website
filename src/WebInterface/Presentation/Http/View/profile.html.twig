@@ -1,17 +1,17 @@
 {% extends '@web-interface/base.html.twig' %}
 
+{% set page_title = 'Profile' %}
+
 {% block content %}
-    <div class="box">
-        <table>
+    <div class="card">
+        <div class="card-body">
             {% for game in games %}
-                <tr>
-                    <td>
-                        <a href="{{ path('game', {id: game}) }}">
-                            Anonymous - Anonymous
-                        </a>
-                    </td>
-                </tr>
+                <p>
+                    <a href="{{ path('game', {id: game}) }}">
+                        Anonymous - Anonymous
+                    </a>
+                </p>
             {% endfor %}
-        </table>
+        </div>
     </div>
 {% endblock %}

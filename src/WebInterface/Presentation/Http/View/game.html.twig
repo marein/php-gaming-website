@@ -1,48 +1,101 @@
 {% extends '@web-interface/base.html.twig' %}
 
+{% set page_title = 'Anonymous vs. Anonymous' %}
+
 {% block content %}
-    <div class="left">
-        <div class="box">
-            <p>
-                Anonymous - Anonymous
-            </p>
+    <div class="row row-gap-2">
+        <div class="col-md-7 col-xl-9">
+            <div class="row row-gap-2">
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row row-gap-2">
+                                <div class="col-6 col-xl-12">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="icon icon-filled text-red">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
+                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
+                                    </svg>
+                                    Anonymous
+                                </div>
+                                <div class="col-6 col-xl-12">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="icon icon-filled text-yellow">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
+                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
+                                    </svg>
+                                    Anonymous
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-8">
+                    <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
+                                       previous-move-selector="#previous-move"
+                                       next-move-selector="#next-move"
+                                       follow-moves-selector="#follow-moves">
+                    </connect-four-game>
+                </div>
+            </div>
         </div>
-    </div>
-    <section class="middle">
-        <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
-                           previous-move-selector="#previous-move"
-                           next-move-selector="#next-move"
-                           follow-moves-selector="#follow-moves">
-        </connect-four-game>
-    </section>
-    <div class="right">
-        <div class="box">
-            <p>
-                <connect-four-abort-button game-id="{{ game.gameId }}">
-                    x Abort game
-                </connect-four-abort-button>
-                <connect-four-resign-button game-id="{{ game.gameId }}">
-                    x Resign game
-                </connect-four-resign-button>
-            </p>
+        <div class="col-md-5 col-xl-3">
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="row row-gap-2">
+                        <div class="col-3">
+                            <button class="btn btn-icon w-100" id="previous-move">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="icon">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M15 6l-6 6l6 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="col-3">
+                            <button class="btn btn-icon w-100" id="next-move">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="icon">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M9 6l6 6l-6 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-icon w-100" id="follow-moves">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="icon">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M7 4v16l13 -8z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <connect-four-abort-button game-id="{{ game.gameId }}">
+                                Abort
+                            </connect-four-abort-button>
+                        </div>
+                        <div class="col-6">
+                            <connect-four-resign-button game-id="{{ game.gameId }}">
+                                Resign
+                            </connect-four-resign-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <chat-widget id="chat"
+                         chat-id="{{ game.chatId|e('html_attr') }}"
+                         author-id="{{ user.userIdentifier|e('html_attr') }}"
+                         seconds-before-retry="3">
+            </chat-widget>
         </div>
-        <div class="box">
-            <p>
-                <button class="button" id="previous-move">
-                    &lt;
-                </button>
-                <button class="button" id="next-move">
-                    &gt;
-                </button>
-                <button class="button" id="follow-moves">
-                    Follow moves
-                </button>
-            </p>
-        </div>
-        <chat-widget id="chat"
-                     chat-id="{{ game.chatId }}"
-                     seconds-before-retry="3">
-        </chat-widget>
     </div>
     <event-source subscriptions="connect-four-{{ game.gameId }}{% if game.chatId %},chat-{{ game.chatId }}{% endif %}"
                   {% if app.environment == 'dev' %}verbose{% endif %}>

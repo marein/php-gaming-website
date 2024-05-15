@@ -1,286 +1,90 @@
-/**
- * Don't look at this. CSS is not my domain.
- * Feel free to contribute and structure properly :).
- */
-@keyframes flash {
-    0%, 100% {
-        filter: brightness(0.9);
-    }
-    20% {
-        filter: brightness(1.1);
-    }
-}
-
-body, ul, p, a, button {
-    margin: 0;
-    padding: 0;
-    color: rgb(173, 173, 173);
-    font-family: "Verdana";
-    font-size: 15px;
-}
-
-body {
-    background-color: rgb(70, 100, 100);
-}
-
-button {
-    border: none;
-}
-
-button:hover {
-    cursor: pointer;
-}
-
-.button {
-    text-decoration: none;
-    border: none;
-    padding: 15px 15px;
-    color: rgb(173, 173, 173);
-    background-color: rgb(32, 32, 32);
-    font-size: 15px;
-    display: inline-block;
-}
-
-.button:hover {
-    cursor: pointer;
-}
-
-.button--yellow {
-    background-color: rgb(171, 171, 105);
-    color: rgb(230, 230, 230);
-}
-
-.button--flash {
-    animation: flash 1s infinite;
-}
-
-.left, .middle, .right {
-    float: none;
-    width: 100%;
-}
-
-.main-navigation {
-    margin: 15px 15px 15px 15px;
-    color: rgb(0, 0, 0);
-}
-
-.main-navigation a {
-    color: rgb(0, 0, 0);
-}
-
-.box {
-    margin: 0 15px 15px 15px;
-    padding: 10px;
-    background-color: rgb(46, 48, 50);
-}
-
-.notification {
-    z-index: 100;
-    position: fixed;
-    right: 15px;
-    list-style-type: none;
-}
-
-.notification__message {
-    width: 200px;
-    max-width: 100%;
-    min-height: 20px;
-    margin-bottom: 15px;
-    padding: 15px;
-    color: rgb(0, 0, 0);
-    background-color: rgb(200, 101, 85);
-    border: 1px solid rgb(200, 81, 85);
-    opacity: 0.9;
-    border-radius: 20px;
+.gp-page-progress {
+    z-index: 10000;
     top: 0;
-    position: relative;
+    left: 0;
+    position: fixed;
+    height: 0.2em;
+    width: 0;
+    background-color: var(--tblr-primary);
+    animation: gp-page-progress 10s infinite;
 }
 
-.notification__message--close {
-    transition: all 0.25s ease-in-out;
-    top: 25px;
+.gp-page-progress--finish {
+    width: 100%;
+    transition: opacity .25s ease .2s;
     opacity: 0;
 }
 
-chat-widget {
-    display: block;
-    margin: 0 15px 15px 15px;
-    padding: 10px;
-    background-color: rgb(46, 48, 50);
-    color: rgb(173, 173, 173);
+@keyframes gp-page-progress {
+    to {
+        width: 100%;
+    }
 }
 
-.chat__messages {
-    list-style: none;
-    margin-bottom: 15px;
-    height: 300px;
-    overflow: scroll;
-    overflow-wrap: break-word;
+.gp-heartbeat {
+    animation: gp-heartbeat 1s infinite;
 }
 
-.chat__messages__message {
-    margin-bottom: 5px;
-    font-size: 14px;
+@keyframes gp-heartbeat {
+    0%, 100% {
+        filter: brightness(0.95);
+    }
+    20% {
+        filter: brightness(1.15);
+    }
 }
 
-.chat__input {
+.gp-loading {
+    filter: brightness(0.85);
+    cursor: wait !important;
+}
+
+.gp-loading * {
+    cursor: wait !important;
+}
+
+.gp-fadeout {
+    transition: all 0.25s ease-in-out;
+    opacity: 0;
+}
+
+notification-list {
+    width: 325px;
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 10000;
+}
+
+.gp-game {
     width: 100%;
-    max-width: 100%;
-    height: 50px;
-    max-height: 50px;
-    color: rgb(173, 173, 173);
-    background-color: rgb(32, 32, 32);
-    border: 3px solid rgb(50, 50, 50);
+    background-color: var(--tblr-blue);
+    border: var(--tblr-border-width) solid var(--tblr-border-color-translucent);
+    border-radius: var(--tblr-border-radius);
+    border-collapse: initial;
+    border-spacing: .5rem;
+    padding: .25rem .25rem;
 }
 
-.chat__messages__message span {
-    display: block;
-    font-size: 12px;
-    margin-bottom: 3px;
-}
-
-.game-list {
-    list-style: none;
-    height: 400px;
-    margin: 0 15px 15px 15px;
-    background-color: rgb(46, 48, 50);
-}
-
-.game-list__game {
-    height: 40px;
-}
-
-.game-list__game button {
-    display: block;
-    height: 100%;
-    width: 100%;
-    text-align: left;
-    background-color: rgb(46, 48, 50);
-}
-
-.game-list__game button span {
-    margin-left: 30px;
-}
-
-.game-list__game--user-game button {
-    background-color: rgb(85, 131, 131);
-}
-
-.game-list__game--remove-soon button {
-    background-color: rgb(37, 38, 40);
-}
-
-.game {
-    width: 100%;
-}
-
-.game__field {
-    background-color: rgb(32, 32, 32);
-    border: 3px solid rgb(50, 50, 50);
+.gp-game__field {
+    border: var(--tblr-border-width) solid #323232;
     border-radius: 50%;
     cursor: pointer;
+    background-color: var(--tblr-body-bg);
 }
 
-.game__field--red {
-    background-color: rgb(171, 111, 85);
-}
-
-.game__field--yellow {
-    background-color: rgb(171, 171, 105);
-}
-
-.game__field--flash {
-    animation: flash 1s infinite;
-}
-
-.loading-indicator .game__field--flash {
-    animation: paused;
-}
-
-.game__field::before {
+.gp-game__field::before {
     display: block;
     content: "";
     padding-top: 100%;
     position: relative;
 }
 
-.loading-indicator {
-    z-index: 0;
-    position: relative
+[data-bs-theme=dark] .gp-game {
+    background-color: var(--tblr-bg-surface);
+    border-color: var(--tblr-blue);
 }
 
-.loading-indicator:before {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    content: "";
-    display: block;
-    background-color: rgba(255, 255, 255, .3);
-    background-image: url("../img/loading-indicator.svg");
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.disabled {
-    z-index: 0;
-    position: relative
-}
-
-.disabled:before {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    content: "";
-    display: block;
-    background-color: rgba(255, 255, 255, .3);
-}
-
-:not(:defined):not(notification-list) {
-    display: inline-block;
-    min-height: 1px;
-}
-
-.progress {
-    top: 0;
-    left: 0;
-    position: fixed;
-    height: 3px;
-    width: 0;
-    background-color: #0078ff;
-    animation: progress 10s infinite;
-}
-
-.progress--finish {
-    width: 100%;
-    transition: opacity .25s ease .2s;
-    opacity: 0;
-}
-
-@keyframes progress {
-    to { width: 100%; }
-}
-
-@media screen and (min-width: 960px) {
-    .left {
-        width: 25%;
-        float: left;
-    }
-
-    .middle {
-        width: 50%;
-        float: left;
-    }
-
-    .right {
-        width: 25%;
-        float: left;
-    }
-
-    .game-list {
-        margin: 0;
-    }
+[data-bs-theme=dark] .gp-game__field {
+    border-color: var(--tblr-blue);
 }

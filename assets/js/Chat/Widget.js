@@ -1,29 +1,38 @@
 import {service} from './ChatService.js'
+import {html} from 'uhtml/node.js'
 
 customElements.define('chat-widget', class extends HTMLElement {
     connectedCallback() {
         this._onDisconnect = [];
 
-        this.classList.add('loading-indicator');
-
-        this._messageHolder = document.createElement('ul');
-        this._messageHolder.classList.add('chat__messages');
-
-        this._input = document.createElement('textarea');
-        this._input.classList.add('chat__input');
-        this._input.setAttribute('type', 'text');
-        this._input.setAttribute('name', 'message');
-
-        this.append(this._messageHolder);
-        this.append(this._input);
+        this.append(this._rootElement = html`
+            <div class="card gp-loading" style="height: 400px" id="chat">
+                <div class="card-body scrollable">
+                    <div class="chat">
+                        <div class="chat-bubbles">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="text"
+                           name="message"
+                           class="form-control"
+                           autocomplete="off"
+                           placeholder="Type message">
+                </div>
+            </div>
+        `);
 
         this._chatId = '';
+        this._authorId = this.getAttribute('author-id');
+        this._input = this.querySelector('[name="message"]');
+        this._messageHolder = this.querySelector('.chat-bubbles');
+        this._scrollElement = this.querySelector('.card-body');
         this._messageBuffer = [];
         this._isAlreadyInitialized = false;
         this._secondsBeforeRetryAfterLoadMessageFailure = parseInt(this.getAttribute('seconds-before-retry'));
 
-        let chatId = this.getAttribute('chat-id');
-
+        const chatId = this.getAttribute('chat-id');
         if (chatId) {
             this._initialize(chatId);
         }
@@ -50,22 +59,22 @@ customElements.define('chat-widget', class extends HTMLElement {
      * @param {String} chatId
      */
     _loadMessages(chatId) {
-        service.messages(chatId).then((messages) => {
-            messages.messages.forEach((message) => {
-                this._appendMessage(message);
+        service.messages(chatId)
+            .then((messages) => {
+                messages.messages.forEach(message => this._appendMessage(message));
+
+                this._isAlreadyInitialized = true;
+
+                this._flushMessageBuffer();
+
+                this._rootElement.classList.remove('gp-loading');
+            })
+            .catch((e) => {
+                // Automatic retry after x seconds.
+                setTimeout(() => {
+                    this._loadMessages(chatId);
+                }, this._secondsBeforeRetryAfterLoadMessageFailure * 1000);
             });
-
-            this._isAlreadyInitialized = true;
-
-            this._flushMessageBuffer();
-
-            this.classList.remove('loading-indicator');
-        }).catch(() => {
-            // Automatic retry after x seconds.
-            setTimeout(() => {
-                this._loadMessages(chatId);
-            }, this._secondsBeforeRetryAfterLoadMessageFailure * 1000);
-        });
     }
 
     /**
@@ -77,7 +86,7 @@ customElements.define('chat-widget', class extends HTMLElement {
                 this._createMessageNode(message)
             );
 
-            this._messageHolder.scrollTop = this._messageHolder.scrollHeight;
+            this._scrollElement.scrollTop = this._scrollElement.scrollHeight;
         }
     }
 
@@ -102,24 +111,30 @@ customElements.define('chat-widget', class extends HTMLElement {
      * @returns {Node}
      */
     _createMessageNode(message) {
-        let writtenAt = new Date(message.writtenAt);
-        let hours = ('0' + writtenAt.getHours()).slice(-2);
-        let minutes = ('0' + writtenAt.getMinutes()).slice(-2);
+        const writtenAt = new Date(message.writtenAt);
+        const hours = ('0' + writtenAt.getHours()).slice(-2);
+        const minutes = ('0' + writtenAt.getMinutes()).slice(-2);
+        const isSameAuthor = this._authorId === message.authorId;
 
-        let author = 'Anonymous';
-
-        let span = document.createElement('span');
-        span.innerText = hours + ':' + minutes + ' - ' + author;
-
-        let text = document.createTextNode(message.message);
-
-        let li = document.createElement('li');
-        li.dataset.id = message.messageId;
-        li.classList.add('chat__messages__message');
-        li.append(span);
-        li.append(text);
-
-        return li;
+        return html`
+            <div class="chat-item" data-id="${message.messageId}">
+                <div class="${`row${isSameAuthor ? ' align-items-end justify-content-end' : ''}`}">
+                    <div class="col-11">
+                        <div class="${`chat-bubble${isSameAuthor ? ' chat-bubble-me' : ''}`}">
+                            <div class="chat-bubble-title">
+                                <div class="row">
+                                    <div class="col chat-bubble-author">${'Anonymous'}</div>
+                                    <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
+                                </div>
+                            </div>
+                            <div class="chat-bubble-body">
+                                <p>${message.message}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 
     _clearInput() {
@@ -127,18 +142,15 @@ customElements.define('chat-widget', class extends HTMLElement {
     }
 
     _onKeyPress(event) {
-        if (event.which === 13 && !event.shiftKey) {
-            event.preventDefault();
-            let message = this._input.value;
+        if (event.which !== 13) return;
 
-            this._clearInput();
+        event.preventDefault();
+        let message = this._input.value;
 
-            if (message.trim() !== '') {
-                service.writeMessage(
-                    this._chatId,
-                    message
-                );
-            }
+        this._clearInput();
+
+        if (message.trim() !== '') {
+            service.writeMessage(this._chatId, message);
         }
     }
 

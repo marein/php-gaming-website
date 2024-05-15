@@ -1,31 +1,39 @@
 {% extends '@web-interface/base.html.twig' %}
 
+{% set page_title = 'Lobby' %}
+
 {% block content %}
-    <section class="left">
-        <div class="box">
-            <p>
-                <connect-four-running-games>
-                    {{ runningGames.count }}
-                </connect-four-running-games>
-                running games
-            </p>
+    <div class="row row-cards">
+        <div class="col-lg-3 order-first">
+            <div class="card">
+                <div class="card-body">
+                    <p>
+                        <span class="badge bg-blue text-blue-fg">
+                            <connect-four-running-games>
+                                {{ runningGames.count }}
+                            </connect-four-running-games>
+                        </span>
+                        running games
+                    </p>
+                </div>
+            </div>
         </div>
-    </section>
-    <section class="middle">
-        <connect-four-game-list open-games="{{ openGames|json_encode|e('html_attr') }}"
-                                player-id="{{ user.userIdentifier|e('html_attr') }}"
-                                maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
-        </connect-four-game-list>
-    </section>
-    <section class="right">
-        <div class="box">
-            <p>
-                <connect-four-open-button>
-                    + Open a new game
-                </connect-four-open-button>
-            </p>
+        <div class="col-lg-6">
+            <connect-four-game-list open-games="{{ openGames|json_encode|e('html_attr') }}"
+                                    player-id="{{ user.userIdentifier|e('html_attr') }}"
+                                    maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
+            </connect-four-game-list>
         </div>
-    </section>
+        <div class="col-lg-3 order-first order-lg-last">
+            <div class="card">
+                <div class="card-body">
+                    <connect-four-open-button>
+                        Open a new game
+                    </connect-four-open-button>
+                </div>
+            </div>
+        </div>
+    </div>
     <event-source subscriptions="lobby"
                   {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>

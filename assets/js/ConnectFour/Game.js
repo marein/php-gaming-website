@@ -1,9 +1,6 @@
 import {service} from './GameService.js'
 import {Game as GameModel} from './Model/Game.js'
-
-/**
- * todo: Render the game within <canvas>, see https://github.com/marein/php-gaming-website/issues/19.
- */
+import {html} from 'uhtml/node.js'
 
 customElements.define('connect-four-game', class extends HTMLElement {
     connectedCallback() {
@@ -11,49 +8,25 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         let game = JSON.parse(this.getAttribute('game'));
 
-        this._gameHolder = document.createElement('div');
-        this._gameHolder.classList.add('box');
+        this.append(this._gameNode = html`
+            <table class="gp-game user-select-none">
+                <tbody>${[...Array(game.height).keys()].map(y => y + 1).map(y => html`
+                    <tr>${[...Array(game.width).keys()].map(x => x + 1).map(x => html`
+                        <td class="gp-game__field"
+                            data-column="${x}"
+                            data-point="${x + ' ' + y}"></td>`)}
+                    </tr>`)}
+                </tbody>
+            </table>
+        `);
 
-        let table = document.createElement('table');
-        table.classList.add('game');
-
-        let tbody = document.createElement('tbody');
-
-        for (let y = 1; y <= game.height; y++) {
-            let tr = document.createElement('tr');
-
-            for (let x = 1; x <= game.width; x++) {
-                let td = document.createElement('td');
-                td.classList.add('game__field');
-                td.setAttribute('data-column', x.toString());
-                td.setAttribute('data-point', x.toString() + ' ' + y.toString());
-
-                tr.append(td);
-            }
-
-            tbody.append(tr);
-        }
-
-        table.append(tbody);
-        this._gameHolder.append(table);
-        this.append(this._gameHolder);
-
-        this._previousMoveButton = document.querySelector(
-            this.getAttribute('previous-move-selector')
-        );
-        this._nextMoveButton = document.querySelector(
-            this.getAttribute('next-move-selector')
-        );
-        this._followMovesButton = document.querySelector(
-            this.getAttribute('follow-moves-selector')
-        );
+        this._previousMoveButton = document.querySelector(this.getAttribute('previous-move-selector'));
+        this._nextMoveButton = document.querySelector(this.getAttribute('next-move-selector'));
+        this._followMovesButton = document.querySelector(this.getAttribute('follow-moves-selector'));
         this._game = GameModel.fromObject(game);
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
-        this._fields = this._gameHolder.querySelectorAll('.game__field');
-        this._colorToClass = {
-            1: 'game__field--red',
-            2: 'game__field--yellow'
-        };
+        this._fields = this._gameNode.querySelectorAll('.gp-game__field');
+        this._colorToClass = {1: 'bg-red', 2: 'bg-yellow'};
 
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
 
@@ -68,12 +41,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {Number} index
      */
     _showMovesUpTo(index) {
-        // Clear fields
-        this._fields.forEach((field) => {
-            field.classList.remove('game__field--flash');
-            field.classList.remove('game__field--red');
-            field.classList.remove('game__field--yellow');
-        });
+        this._fields.forEach(field => field.classList.remove('gp-heartbeat', 'bg-red', 'bg-yellow'));
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
         this._updateNavigationButtons();
@@ -85,15 +53,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {{x:Number, y:Number, color:Number}} move
      */
     _showMove(move) {
-        let field = this._gameHolder.querySelector('.game__field[data-point="' + move.x + ' ' + move.y + '"]');
-        field.classList.add(
-            this._colorToClass[move.color]
-        );
+        let field = this._gameNode.querySelector(`.gp-game__field[data-point="${move.x} ${move.y}"]`);
+        field.classList.add(this._colorToClass[move.color]);
 
-        this._fields.forEach((field) => {
-            field.classList.remove('game__field--flash');
-        });
-        field.classList.add('game__field--flash');
+        this._fields.forEach(field => field.classList.remove('gp-heartbeat'));
+        field.classList.add('gp-heartbeat');
     }
 
     /**
@@ -102,20 +66,14 @@ customElements.define('connect-four-game', class extends HTMLElement {
      */
     _updateNavigationButtons() {
         let isCurrentMoveTheLastMove = this._numberOfCurrentMoveInView === this._game.numberOfMoves();
-        let isCurrentMoveBeforeTheFirstMove = this._numberOfCurrentMoveInView === 0;
 
+        this._previousMoveButton.disabled = this._numberOfCurrentMoveInView === 0;
         this._nextMoveButton.disabled = isCurrentMoveTheLastMove;
         this._followMovesButton.disabled = isCurrentMoveTheLastMove;
-        this._previousMoveButton.disabled = isCurrentMoveBeforeTheFirstMove;
-
-        this._nextMoveButton.classList.toggle('disabled', isCurrentMoveTheLastMove);
-        this._followMovesButton.classList.toggle('disabled', isCurrentMoveTheLastMove);
-        this._previousMoveButton.classList.toggle('disabled', isCurrentMoveBeforeTheFirstMove);
 
         // Remove flashing if the user follow the moves.
         if (isCurrentMoveTheLastMove) {
-            this._followMovesButton.classList.remove('button--yellow');
-            this._followMovesButton.classList.remove('button--flash');
+            this._followMovesButton.classList.remove('btn-warning', 'gp-heartbeat');
         }
     }
 
@@ -125,39 +83,31 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {{x:Number, y:Number, color:Number}} move
      */
     _onMoveAppendedToGame(move) {
-        // Only show if the the user follow the moves. Otherwise notify user that a new move is available.
+        // Only show if the user follow the moves. Otherwise notify user that a new move is available.
         if (this._followMovesButton.disabled === true) {
             this._showMove(move);
             this._numberOfCurrentMoveInView++;
             this._updateNavigationButtons();
         } else {
-            this._followMovesButton.classList.add('button--yellow');
-            this._followMovesButton.classList.add('button--flash');
+            this._followMovesButton.classList.add('btn-warning', 'gp-heartbeat');
         }
     }
 
     _onFieldClick(event) {
         let cell = event.target;
 
-        this._gameHolder.classList.add('loading-indicator');
+        let loadingTimeout = setTimeout(() => this._gameNode.classList.add('gp-loading'), 250);
 
-        service.move(
-            this._game.gameId,
-            cell.dataset.column
-        ).then(() => {
-            this._gameHolder.classList.remove('loading-indicator');
-        }).catch(() => {
-            // todo: Handle exception based on error
-            this._gameHolder.classList.remove('loading-indicator');
-        });
+        service.move(this._game.gameId, cell.dataset.column)
+            .catch(() => true)
+            .finally(() => {
+                if (loadingTimeout) clearTimeout(loadingTimeout);
+                this._gameNode.classList.remove('gp-loading');
+            });
     }
 
     _onPlayerMoved(event) {
-        this._game.appendMove({
-            x: event.detail.x,
-            y: event.detail.y,
-            color: event.detail.color,
-        });
+        this._game.appendMove(event.detail);
     }
 
     _onPreviousMoveClick(event) {
@@ -189,7 +139,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('ConnectFour.PlayerMoved', this._onPlayerMoved.bind(this));
 
-        this._fields.forEach((field) => {
+        this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
         });
 

@@ -35,7 +35,8 @@ final class PageController
     {
         return new Response(
             $this->twig->render('@web-interface/game.html.twig', [
-                'game' => $this->connectFourService->game($id)
+                'game' => $this->connectFourService->game($id),
+                'user' => $this->security->getUser()
             ])
         );
     }
