@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+    chat-redis:
+        image: ghcr.io/gaming-platform/docker-redis:7.2
+        volumes:
+            - chat-redis:/data
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.chat-redis==1"
+    chat-redis-exporter:
+        image: oliver006/redis_exporter:v1.51.0
+        command:
+            - '-redis.addr=chat-redis:6379'
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.chat-redis==1"
+            labels:
+                - "prometheus-job=redis"
+                - "prometheus-port=9121"
+
+volumes:
+    chat-redis:

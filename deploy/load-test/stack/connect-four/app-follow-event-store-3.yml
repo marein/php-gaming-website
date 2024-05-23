@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+    connect-four-follow-event-store-message-broker-3:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console connect-four:follow-event-store message-broker-3 publish-to-message-broker
+        env_file: ../app.env
+        environment:
+            APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four-3"
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+    connect-four-follow-event-store-projection-3:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console connect-four:follow-event-store projection-3 game-projection,games-by-player-projection,running-games-projection,open-games-projection -p 3
+        env_file: ../app.env
+        environment:
+            APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four-3"
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+
+volumes:
+    proxysql.sock:

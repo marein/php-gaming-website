@@ -1,0 +1,60 @@
+version: '3.4'
+
+services:
+    proxysql-sidecar:
+        image: ghcr.io/gaming-platform/docker-proxysql:2.5
+        environment:
+            PROXYSQL_CONFIG: |
+                admin_variables: {
+                    restapi_enabled="true"
+                    hash_passwords="false"
+                }
+                mysql_variables: {
+                    interfaces="/var/run/proxysql/proxysql.sock"
+                    server_version="8.2"
+                    monitor_username="root"
+                    monitor_password="password"
+                    auto_increment_delay_multiplex=0
+                    threads=8
+                }
+                mysql_servers: (
+                    {hostgroup=1,address="connect-four-mysql-1",port=3306,max_connections=100},
+                    {hostgroup=2,address="connect-four-mysql-2",port=3306,max_connections=100},
+                    {hostgroup=3,address="connect-four-mysql-3",port=3306,max_connections=100},
+                    {hostgroup=4,address="connect-four-mysql-4",port=3306,max_connections=100},
+                    {hostgroup=5,address="connect-four-mysql-5",port=3306,max_connections=100},
+                    {hostgroup=6,address="chat-mysql",port=3306,max_connections=100},
+                    {hostgroup=7,address="identity-mysql",port=3306,max_connections=100}
+                )
+                mysql_users: (
+                    {username="root",password="password",default_hostgroup=1}
+                )
+                mysql_query_rules: (
+                    {rule_id=1,schemaname="connect-four-1",destination_hostgroup=1,apply=1},
+                    {rule_id=2,schemaname="connect-four-2",destination_hostgroup=2,apply=1},
+                    {rule_id=3,schemaname="connect-four-3",destination_hostgroup=3,apply=1},
+                    {rule_id=4,schemaname="connect-four-4",destination_hostgroup=4,apply=1},
+                    {rule_id=5,schemaname="connect-four-5",destination_hostgroup=5,apply=1},
+                    {rule_id=6,schemaname="chat",destination_hostgroup=6,apply=1},
+                    {rule_id=7,schemaname="identity",destination_hostgroup=7,apply=1},
+                    {rule_id=8,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-1`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-1`",destination_hostgroup=1,apply=1},
+                    {rule_id=9,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-2`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-2`",destination_hostgroup=2,apply=1},
+                    {rule_id=10,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-3`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-3`",destination_hostgroup=3,apply=1},
+                    {rule_id=11,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-4`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-4`",destination_hostgroup=4,apply=1},
+                    {rule_id=12,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `connect-four-5`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `connect-four-5`",destination_hostgroup=5,apply=1},
+                    {rule_id=13,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `chat`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `chat`",destination_hostgroup=6,apply=1},
+                    {rule_id=14,match_pattern="^CREATE DATABASE(?: IF NOT EXISTS)? `identity`$$",replace_pattern="CREATE DATABASE IF NOT EXISTS `identity`",destination_hostgroup=7,apply=1}
+                )
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            mode: global
+            placement:
+                constraints:
+                    - "node.labels.needs-proxysql-sidecar==1"
+            labels:
+                - "prometheus-job=proxysql"
+                - "prometheus-port=6070"
+
+volumes:
+    proxysql.sock:
