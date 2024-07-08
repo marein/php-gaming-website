@@ -22,8 +22,8 @@ final class IdentityController
         return new JsonResponse(
             $this->identityService->signUp(
                 $this->security->getUser()->getUserIdentifier(),
-                (string)$request->request->get('username', uniqid()),
-                (string)$request->request->get('password', 'password')
+                (string)$request->request->get('email'),
+                (string)$request->request->get('username')
             )
         );
     }

@@ -14,5 +14,5 @@ interface IdentityService
     /**
      * @return array<string, mixed>
      */
-    public function signUp(string $userId, string $username, string $password): array;
+    public function signUp(string $userId, string $email, string $username): array;
 }

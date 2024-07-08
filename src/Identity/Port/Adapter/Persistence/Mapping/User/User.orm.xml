@@ -7,13 +7,18 @@
         <embedded name="userId"
                   class="Gaming\Identity\Domain\Model\User\UserId"
                   use-column-prefix="false"/>
-        <embedded name="credentials"
-                  class="Gaming\Identity\Domain\Model\User\Credentials"/>
         <field name="version"
                type="integer"
                version="true"/>
-        <field name="isSignedUp"
-               column="is_signed_up"
-               type="boolean"/>
+        <field name="email"
+               type="string"
+               length="255"
+               nullable="true"
+               unique="true"/>
+        <field name="username"
+               type="string"
+               length="255"
+               nullable="true"
+               unique="true"/>
     </entity>
 </doctrine-mapping>

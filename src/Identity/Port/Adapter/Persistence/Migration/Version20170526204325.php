@@ -15,12 +15,12 @@ final class Version20170526204325 extends AbstractMigration
 
         $table->addColumn('id', 'uuid');
         $table->addColumn('version', 'integer', ['default' => 1]);
-        $table->addColumn('is_signed_up', 'boolean');
-        $table->addColumn('credentials_username', 'string', ['notNull' => false, 'length' => 255]);
-        $table->addColumn('credentials_password', 'string', ['notNull' => false, 'length' => 255]);
+        $table->addColumn('email', 'string', ['notNull' => false, 'length' => 255]);
+        $table->addColumn('username', 'string', ['notNull' => false, 'length' => 255]);
 
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['credentials_username']);
+        $table->addUniqueIndex(['email'], 'uniq_email');
+        $table->addUniqueIndex(['username'], 'uniq_username');
     }
 
     public function down(Schema $schema): void

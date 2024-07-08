@@ -12,24 +12,9 @@ use Gaming\Common\Bus\Request;
 final class SignUpCommand implements Request
 {
     public function __construct(
-        private readonly string $userId,
-        private readonly string $username,
-        private readonly string $password
+        public readonly string $userId,
+        public readonly string $email,
+        public readonly string $username
     ) {
-    }
-
-    public function userId(): string
-    {
-        return $this->userId;
-    }
-
-    public function username(): string
-    {
-        return $this->username;
-    }
-
-    public function password(): string
-    {
-        return $this->password;
     }
 }
