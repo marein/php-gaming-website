@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User\Exception;
 
-class DuplicateEmailException extends UserException
+final class UsernameAlreadyExistsException extends UserException
 {
 }
