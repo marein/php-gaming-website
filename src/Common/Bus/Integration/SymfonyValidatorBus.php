@@ -44,7 +44,7 @@ final class SymfonyValidatorBus implements Bus
         return array_map(
             fn(ConstraintViolationInterface $constraintViolation): Violation => new Violation(
                 $constraintViolation->getPropertyPath(),
-                $constraintViolation->getMessageTemplate(),
+                (string)$constraintViolation->getMessage(),
                 $this->mapFromSymfonyParameters($constraintViolation->getParameters())
             ),
             iterator_to_array($symfonyViolations)

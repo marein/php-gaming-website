@@ -6,6 +6,12 @@ imports:
     - { resource: services/subscriber.yml }
     - { resource: services/user.yml }
 
+framework:
+    validation:
+        mapping:
+            paths:
+                - "%kernel.project_dir%/src/Identity/Port/Adapter/Validation/"
+
 doctrine:
     dbal:
         connections:

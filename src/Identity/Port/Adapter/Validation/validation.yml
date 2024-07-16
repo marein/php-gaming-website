@@ -1,0 +1,22 @@
+Gaming\Identity\Application\User\Command\SignUpCommand:
+  constraints:
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        entityClass: 'Gaming\Identity\Domain\Model\User\User'
+        fields: email
+        message: This value already exists for another account.
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        entityClass: 'Gaming\Identity\Domain\Model\User\User'
+        fields: username
+        message: This value is already taken by another user.
+  properties:
+    email:
+      - NotBlank: ~
+      - Email: ~
+      - Length: { max: 255 }
+    username:
+      - Length: { min: 3, max: 20 }
+      - Regex:
+          pattern: '/\s/'
+          match: false
+          message: This value contains spaces. It should not include any spaces.
+      - NoSuspiciousCharacters: ~
