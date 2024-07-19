@@ -30,6 +30,11 @@ window.addEventListener('pe:navigate', e => {
     e.detail.succeed.push(() => window.dispatchEvent(new CustomEvent('app:load')));
     e.detail.finally.push(window.app.showProgress(0));
 });
+window.addEventListener('pe:form', e => {
+    e.detail.parsed.push(dom => window.app.loadElements(dom.body));
+    e.detail.succeed.push(() => window.dispatchEvent(new CustomEvent('app:load')));
+    e.detail.finally.push(window.app.showProgress(0));
+});
 
 window.matchMedia("(prefers-color-scheme:dark)").addEventListener(
     'change',
