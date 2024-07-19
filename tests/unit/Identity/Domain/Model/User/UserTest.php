@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Identity\Domain\Model\User;
 
-use Gaming\Identity\Domain\Model\User\Credentials;
 use Gaming\Identity\Domain\Model\User\Event\UserArrived;
 use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 use Gaming\Identity\Domain\Model\User\User;
 use Gaming\Identity\Domain\Model\User\UserId;
-use Gaming\Identity\Port\Adapter\HashAlgorithm\NotSecureHashAlgorithm;
 use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
@@ -33,42 +31,19 @@ final class UserTest extends TestCase
     /**
      * @test
      */
-    public function itShouldSignUpAndAuthenticate(): void
+    public function itShouldSignUp(): void
     {
-        $hashAlgorithm = new NotSecureHashAlgorithm();
-
         $userId = UserId::generate();
         $user = User::arrive($userId);
-        $user->signUp(
-            new Credentials(
-                'marein',
-                'correctPassword',
-                $hashAlgorithm
-            )
-        );
+        $user->signUp('marein@example.com', 'marein');
 
         $domainEvents = $user->flushDomainEvents();
         self::assertCount(2, $domainEvents);
 
         assert($domainEvents[1]->content instanceof UserSignedUp);
         self::assertEquals($userId->toString(), $domainEvents[1]->content->aggregateId());
-        self::assertEquals('marein', $domainEvents[1]->content->username());
-
-        $this->assertTrue($user->authenticate('correctPassword', $hashAlgorithm));
-        $this->assertFalse($user->authenticate('wrongPassword', $hashAlgorithm));
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldNotAuthenticateWhenNotSignedUp(): void
-    {
-        $user = User::arrive(
-            UserId::generate()
-        );
-        $authenticate = $user->authenticate('password', new NotSecureHashAlgorithm());
-
-        self::assertFalse($authenticate);
+        self::assertEquals('marein@example.com', $domainEvents[1]->content->email);
+        self::assertEquals('marein', $domainEvents[1]->content->username);
     }
 
     /**
@@ -78,16 +53,8 @@ final class UserTest extends TestCase
     {
         $this->expectException(UserAlreadySignedUpException::class);
 
-        $credentials = new Credentials(
-            'marein',
-            'password',
-            new NotSecureHashAlgorithm()
-        );
-
-        $user = User::arrive(
-            UserId::generate()
-        );
-        $user->signUp($credentials);
-        $user->signUp($credentials);
+        $user = User::arrive(UserId::generate());
+        $user->signUp('marein@example.com', 'marein');
+        $user->signUp('any@example.com', 'any');
     }
 }

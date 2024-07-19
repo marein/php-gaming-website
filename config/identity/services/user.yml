@@ -12,13 +12,8 @@ services:
         arguments:
             - '@identity.doctrine-orm'
 
-    identity.hash-algorithm:
-        class: Gaming\Identity\Port\Adapter\HashAlgorithm\Argon2iHashAlgorithm
-        public: false
-
     identity.user-service:
         class: Gaming\Identity\Application\User\UserService
         public: false
         arguments:
             - '@identity.user-repository'
-            - '@identity.hash-algorithm'

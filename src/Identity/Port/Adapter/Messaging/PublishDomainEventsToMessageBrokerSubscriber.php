@@ -54,7 +54,8 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
                 'Identity.UserSignedUp',
                 (new \GamingPlatform\Api\Identity\V1\UserSignedUp())
                     ->setUserId($event->aggregateId())
-                    ->setUsername($event->username())
+                    ->setEmail($event->email)
+                    ->setUsername($event->username)
                     ->serializeToString(),
                 $event->aggregateId()
             )

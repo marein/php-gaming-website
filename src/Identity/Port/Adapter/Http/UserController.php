@@ -39,8 +39,8 @@ final class UserController
         $this->commandBus->handle(
             new SignUpCommand(
                 $userId,
-                (string)$request->request->get('username'),
-                (string)$request->request->get('password')
+                (string)$request->request->get('email'),
+                (string)$request->request->get('username')
             )
         );
 

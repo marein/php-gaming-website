@@ -141,8 +141,8 @@ class SymfonyValidatorBusTest extends TestCase
         array $context
     ): ConstraintViolationInterface {
         return new ConstraintViolation(
-            '',
             $message,
+            '',
             $context,
             '',
             $propertyPath,
