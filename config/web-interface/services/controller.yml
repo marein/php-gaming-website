@@ -9,6 +9,18 @@ services:
         tags:
             - 'controller.service_arguments'
 
+    web-interface.signup-controller:
+        class: Gaming\WebInterface\Presentation\Http\SignupController
+        arguments:
+            - '@uri_signer'
+            - '@web-interface.security'
+            - '@web-interface.identity-service'
+            - '@Gaming\Common\Bus\Integration\FormViolationMapper'
+        calls: [ [ setContainer, [ '@Psr\Container\ContainerInterface' ] ] ]
+        tags:
+            - 'controller.service_arguments'
+            - 'container.service_subscriber'
+
     web-interface.chat-controller:
         class: Gaming\WebInterface\Presentation\Http\ChatController
         arguments:
@@ -21,14 +33,6 @@ services:
         class: Gaming\WebInterface\Presentation\Http\ConnectFourController
         arguments:
             - '@web-interface.connect-four-service'
-            - '@web-interface.security'
-        tags:
-            - 'controller.service_arguments'
-
-    web-interface.identity-controller:
-        class: Gaming\WebInterface\Presentation\Http\IdentityController
-        arguments:
-            - '@web-interface.identity-service'
             - '@web-interface.security'
         tags:
             - 'controller.service_arguments'

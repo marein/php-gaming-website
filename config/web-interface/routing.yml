@@ -23,6 +23,23 @@ game:
     defaults:
         _controller: web-interface.page-controller::gameAction
 
+signup:
+    path: /signup
+    methods: [ GET, POST ]
+    controller: web-interface.signup-controller::indexAction
+
+signup_verify_email:
+    path: /signup/verify-email
+    methods: [ GET ]
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: '@web-interface/signup/verify-email.html.twig'
+
+signup_confirm:
+    path: /signup/confirm
+    methods: [ GET, POST ]
+    controller: web-interface.signup-controller::confirmAction
+
 ###############################################
 #                Chat Service                 #
 ###############################################
@@ -93,16 +110,4 @@ game_json:
         - GET
     defaults:
         _controller: web-interface.connect-four-controller::showAction
-        _format: json
-
-###############################################
-#               Identity Service              #
-###############################################
-
-sign_up:
-    path: /api/identity/users/sign-up
-    methods:
-        - POST
-    defaults:
-        _controller: web-interface.identity-controller::signUpAction
         _format: json

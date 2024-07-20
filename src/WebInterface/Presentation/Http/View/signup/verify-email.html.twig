@@ -1,0 +1,17 @@
+{% extends '@web-interface/signup/layout/base.html.twig' %}
+
+{% set page_title = 'Confirm and play!' %}
+{% set step = 2 %}
+
+{% block card %}
+    <h2 class="text-center mb-4">Verify your email!</h2>
+    <p>
+        We've sent a verification link to your email. Please check your inbox.
+        If you don't see the email, check your spam folder or
+        <a href="{{ path('signup', {'username': app.request.get('username')}) }}">click here to try again</a>.
+    </p>
+    <p class="text-danger">
+        No email has been sent because this feature is still in development,
+        <a href="{{ app.request.get('confirmUrl', '/') }}">click here</a> to continue.
+    </p>
+{% endblock %}

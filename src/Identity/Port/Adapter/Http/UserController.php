@@ -12,11 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class UserController
 {
-    private Bus $commandBus;
-
-    public function __construct(Bus $commandBus)
-    {
-        $this->commandBus = $commandBus;
+    public function __construct(
+        private readonly Bus $commandBus
+    ) {
     }
 
     public function arriveAction(): JsonResponse
@@ -40,7 +38,8 @@ final class UserController
             new SignUpCommand(
                 $userId,
                 (string)$request->request->get('email'),
-                (string)$request->request->get('username')
+                (string)$request->request->get('username'),
+                $request->request->getBoolean('dryRun')
             )
         );
 

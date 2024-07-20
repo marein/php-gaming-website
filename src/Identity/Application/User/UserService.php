@@ -42,6 +42,10 @@ final class UserService
 
         $user->signUp($command->email, $command->username);
 
+        if ($command->dryRun) {
+            return;
+        }
+
         $this->users->save($user);
     }
 
