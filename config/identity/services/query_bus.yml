@@ -1,0 +1,12 @@
+services:
+
+    identity.query-bus:
+        class: Gaming\Common\Bus\RoutingBus
+        arguments:
+            -
+                'Gaming\Identity\Application\User\Query\UserQuery': [ '@identity.user-service', 'user' ]
+
+    identity.symfony-validator-query-bus:
+        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
+        decorates: identity.query-bus
+        arguments: [ '@.inner', '@validator' ]

@@ -6,6 +6,8 @@ namespace Gaming\Identity\Application\User;
 
 use Gaming\Identity\Application\User\Command\ArriveCommand;
 use Gaming\Identity\Application\User\Command\SignUpCommand;
+use Gaming\Identity\Application\User\Query\User as UserResponse;
+use Gaming\Identity\Application\User\Query\UserQuery;
 use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use Gaming\Identity\Domain\Model\User\User;
@@ -41,5 +43,16 @@ final class UserService
         $user->signUp($command->email, $command->username);
 
         $this->users->save($user);
+    }
+
+    public function user(UserQuery $query): UserResponse
+    {
+        $user = $this->users->get(UserId::fromString($query->userId));
+
+        return new UserResponse(
+            $query->userId,
+            $user->username(),
+            $user->isSignedUp()
+        );
     }
 }
