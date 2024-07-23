@@ -7,8 +7,11 @@ framework:
     session:
         handler_id: web-interface.session-handler
         cookie_samesite: lax
+    form:
+        csrf_protection: false # CSRF protection is handled by marein/symfony-standard-headers-csrf-bundle.
 
 twig:
+    form_themes: [ 'bootstrap_5_layout.html.twig' ]
     paths:
         "%kernel.project_dir%/src/WebInterface/Presentation/Http/View": web-interface
 

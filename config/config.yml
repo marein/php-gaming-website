@@ -138,6 +138,8 @@ services:
         tags:
             - { name: kernel.event_listener, method: 'eventsCommitted', priority: -50 }
 
+    Gaming\Common\Bus\Integration\FormViolationMapper: ~
+
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
 
