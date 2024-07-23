@@ -31,9 +31,7 @@ signup:
 signup_verify_email:
     path: /signup/verify-email
     methods: [ GET ]
-    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
-    defaults:
-        template: '@web-interface/signup/verify-email.html.twig'
+    controller: web-interface.signup-controller::verifyEmailAction
 
 signup_confirm:
     path: /signup/confirm

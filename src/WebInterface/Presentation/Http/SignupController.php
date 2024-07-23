@@ -27,6 +27,10 @@ final class SignupController extends AbstractController
 
     public function indexAction(Request $request): Response
     {
+        if ($this->security->getUser()->isSignedUp) {
+            return $this->redirectToRoute('lobby');
+        }
+
         $form = $this->createForm(SignupType::class, $request->query->all())
             ->handleRequest($request);
 
@@ -53,8 +57,21 @@ final class SignupController extends AbstractController
         return $this->render('@web-interface/signup/index.html.twig', ['form' => $form]);
     }
 
+    public function verifyEmailAction(Request $request): Response
+    {
+        if ($this->security->getUser()->isSignedUp) {
+            return $this->redirectToRoute('lobby');
+        }
+
+        return $this->render('@web-interface/signup/verify-email.html.twig');
+    }
+
     public function confirmAction(Request $request): Response
     {
+        if ($this->security->getUser()->isSignedUp) {
+            return $this->redirectToRoute('lobby');
+        }
+
         if (!$this->uriSigner->checkRequest($request)) {
             $this->addFlash(
                 'danger',
