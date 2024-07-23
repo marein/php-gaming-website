@@ -28,13 +28,13 @@ final class UserProvider implements UserProviderInterface
     /**
      * As this UserProvider is based on an external API, the user is only refreshed at the configured interval.
      * This can cause the data in the session to be stale, e.g. the username.
-     * If critical data is changed by the user themselves, they must be logged in again programmatically.
+     * If critical data is changed by the user themselves, the security's user must be refreshed manually.
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
         assert($user instanceof User);
 
-        return $user->refreshAt >= $this->clock->now()
+        return $user->refreshAt() >= $this->clock->now()
             ? $user
             : $this->loadUserByIdentifier($user->getUserIdentifier());
     }

@@ -4,7 +4,6 @@ services:
     class: Gaming\WebInterface\Infrastructure\Security\Security
     arguments:
       - '@security.helper'
-      - '@web-interface.security.user_provider'
 
   web-interface.security.user_provider:
     class: Gaming\WebInterface\Infrastructure\Security\UserProvider

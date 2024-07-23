@@ -13,8 +13,18 @@ final class User implements UserInterface
         private readonly string $userIdentifier,
         public readonly string $username = '',
         public readonly bool $isSignedUp = false,
-        public readonly DateTimeImmutable $refreshAt = new DateTimeImmutable()
+        private DateTimeImmutable $refreshAt = new DateTimeImmutable()
     ) {
+    }
+
+    public function forceRefreshAtNextRequest(): void
+    {
+        $this->refreshAt = new DateTimeImmutable('-1 year');
+    }
+
+    public function refreshAt(): DateTimeImmutable
+    {
+        return $this->refreshAt;
     }
 
     public function getRoles(): array
