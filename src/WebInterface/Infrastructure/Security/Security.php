@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Security;
 
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bundle\SecurityBundle\Security as SymfonySecurity;
 use Symfony\Component\Uid\NilUuid;
 
 final class Security
 {
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage
+        private readonly SymfonySecurity $security
     ) {
     }
 
-    public function getUser(): UserInterface
+    public function getUser(): User
     {
-        return $this->tokenStorage->getToken()?->getUser() ?? new User(
-            (new NilUuid())->toRfc4122()
-        );
+        if ($this->security->getUser() instanceof User) {
+            return $this->security->getUser();
+        }
+
+        return new User((new NilUuid())->toRfc4122());
     }
 }

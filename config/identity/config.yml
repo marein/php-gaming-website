@@ -1,10 +1,5 @@
 imports:
-    - { resource: services/command_bus.yml }
-    - { resource: services/console.yml }
-    - { resource: services/normalizer.yml }
-    - { resource: services/persistence.yml }
-    - { resource: services/subscriber.yml }
-    - { resource: services/user.yml }
+    - { resource: services/ }
 
 framework:
     validation:

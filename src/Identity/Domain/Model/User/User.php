@@ -53,7 +53,7 @@ class User implements CollectsDomainEvents
      */
     public function signUp(string $email, string $username): void
     {
-        if ($this->email !== null) {
+        if ($this->isSignedUp()) {
             throw new UserAlreadySignedUpException();
         }
 
@@ -64,6 +64,16 @@ class User implements CollectsDomainEvents
             $this->userId->toString(),
             new UserSignedUp($this->userId, $this->email, $this->username)
         );
+    }
+
+    public function username(): string
+    {
+        return (string)$this->username;
+    }
+
+    public function isSignedUp(): bool
+    {
+        return $this->email !== null && $this->username !== null;
     }
 
     public function flushDomainEvents(): array
