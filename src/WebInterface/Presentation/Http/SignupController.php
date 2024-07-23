@@ -76,6 +76,8 @@ final class SignupController extends AbstractController
                     (string)$form->get('username')->getData()
                 );
 
+                $this->security->getUser()->forceRefreshAtNextRequest();
+
                 return $this->redirectToRoute('lobby');
             } catch (ApplicationException $e) {
                 $this->formViolationMapper->mapViolations($form, $e->violations());
