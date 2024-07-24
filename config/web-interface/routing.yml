@@ -1,3 +1,7 @@
+_symfony_logout:
+    resource: security.route_loader.logout
+    type: service
+
 ###############################################
 #                    Pages                    #
 ###############################################

@@ -27,3 +27,5 @@ security:
             pattern: ^/
             custom_authenticators:
                 - 'web-interface.security.arrival_authenticator'
+            logout:
+                path: /logout
