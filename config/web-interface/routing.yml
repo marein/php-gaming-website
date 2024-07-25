@@ -1,3 +1,7 @@
+_symfony_logout:
+    resource: security.route_loader.logout
+    type: service
+
 ###############################################
 #                    Pages                    #
 ###############################################
@@ -22,6 +26,21 @@ game:
         - GET
     defaults:
         _controller: web-interface.page-controller::gameAction
+
+signup:
+    path: /signup
+    methods: [ GET, POST ]
+    controller: web-interface.signup-controller::indexAction
+
+signup_verify_email:
+    path: /signup/verify-email
+    methods: [ GET ]
+    controller: web-interface.signup-controller::verifyEmailAction
+
+signup_confirm:
+    path: /signup/confirm
+    methods: [ GET, POST ]
+    controller: web-interface.signup-controller::confirmAction
 
 ###############################################
 #                Chat Service                 #
@@ -93,16 +112,4 @@ game_json:
         - GET
     defaults:
         _controller: web-interface.connect-four-controller::showAction
-        _format: json
-
-###############################################
-#               Identity Service              #
-###############################################
-
-sign_up:
-    path: /api/identity/users/sign-up
-    methods:
-        - POST
-    defaults:
-        _controller: web-interface.identity-controller::signUpAction
         _format: json

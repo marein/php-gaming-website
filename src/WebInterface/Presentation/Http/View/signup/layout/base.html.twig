@@ -1,0 +1,17 @@
+{% extends '@web-interface/layout/center-tight.html.twig' %}
+
+{% block content %}
+    <ul class="steps steps-counter my-3">
+        <li class="step-item{{ step == 1 ? ' active' }}">Get Started</li>
+        <li class="step-item{{ step == 2 ? ' active' }}">Verify Email</li>
+        <li class="step-item{{ step == 3 ? ' active' }}">Confirm</li>
+    </ul>
+    <div class="card card-md">
+        <div class="card-body">
+            {% block card %}{% endblock %}
+        </div>
+    </div>
+    <div class="text-center text-secondary my-3">
+        Already have an account? <a href="{{ path('lobby') }}">Sign in</a>
+    </div>
+{% endblock %}

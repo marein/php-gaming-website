@@ -23,12 +23,12 @@ final class DirectControllerInvocationIdentityService implements IdentityService
         return $this->sendRequest('arrive');
     }
 
-    public function signUp(string $userId, string $email, string $username): array
+    public function signUp(string $userId, string $email, string $username, bool $dryRun = false): array
     {
         return $this->sendRequest(
             'signUp',
             ['userId' => $userId],
-            ['email' => $email, 'username' => $username]
+            ['email' => $email, 'username' => $username, 'dryRun' => $dryRun]
         );
     }
 
