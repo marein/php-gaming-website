@@ -1,0 +1,12 @@
+{% extends '@web-interface/layout/center-tight.html.twig' %}
+
+{% block content %}
+    <div class="card card-md">
+        <div class="card-body">
+            {% block card %}{% endblock %}
+        </div>
+    </div>
+    <div class="text-center text-secondary my-3">
+        Don't have account yet? <a href="{{ path('signup') }}">Sign up</a>
+    </div>
+{% endblock %}

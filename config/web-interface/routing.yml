@@ -42,6 +42,19 @@ signup_confirm:
     methods: [ GET, POST ]
     controller: web-interface.signup-controller::confirmAction
 
+login:
+    path: /login
+    methods: [ GET, POST ]
+    controller: web-interface.login-controller::indexAction
+
+login_check_inbox:
+    path: /login/check-inbox
+    methods: [ GET ]
+    controller: web-interface.login-controller::checkInboxAction
+
+login_check:
+    path: /login/check
+
 ###############################################
 #                Chat Service                 #
 ###############################################

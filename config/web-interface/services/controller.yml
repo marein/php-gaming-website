@@ -21,6 +21,19 @@ services:
             - 'controller.service_arguments'
             - 'container.service_subscriber'
 
+    web-interface.login-controller:
+        class: Gaming\WebInterface\Presentation\Http\LoginController
+        arguments:
+            - '@web-interface.security'
+            - '@security.authentication_utils'
+            - '@security.authenticator.firewall_aware_login_link_handler'
+            - '@identity.query-bus'
+            - '@Gaming\Common\Bus\Integration\FormViolationMapper'
+        calls: [ [ setContainer, [ '@Psr\Container\ContainerInterface' ] ] ]
+        tags:
+            - 'controller.service_arguments'
+            - 'container.service_subscriber'
+
     web-interface.chat-controller:
         class: Gaming\WebInterface\Presentation\Http\ChatController
         arguments:

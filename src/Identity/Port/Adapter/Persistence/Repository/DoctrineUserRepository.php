@@ -48,4 +48,10 @@ final class DoctrineUserRepository implements Users
         return $this->manager->getRepository(User::class)
             ->find($userId) ?? throw new UserNotFoundException();
     }
+
+    public function getByEmail(string $email): ?User
+    {
+        return $this->manager->getRepository(User::class)
+            ->findOneBy(['email' => $email]);
+    }
 }

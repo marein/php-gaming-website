@@ -18,3 +18,10 @@ Gaming\Identity\Application\User\Command\SignUpCommand:
       - Regex:
           pattern: '/^(?!_)(?!.*__)[a-zA-Z0-9_]+(?<!_)+$/'
           message: Use only letters, numbers and underscores (no leading, trailing, or consecutive underscores).
+
+Gaming\Identity\Application\User\Query\UserByEmailQuery:
+  properties:
+    email:
+      - NotBlank: ~
+      - Email: ~
+      - Length: { max: 255 }
