@@ -14,6 +14,8 @@ use Gaming\WebInterface\Presentation\Http\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
@@ -23,6 +25,7 @@ final class LoginController extends AbstractController
         private readonly Security $security,
         private readonly AuthenticationUtils $authenticationUtils,
         private readonly LoginLinkHandlerInterface $loginLinkHandler,
+        private readonly UriSigner $uriSigner,
         private readonly Bus $identityQueryBus,
         private readonly FormViolationMapper $formViolationMapper
     ) {
@@ -39,13 +42,15 @@ final class LoginController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $user = $this->identityQueryBus->handle(
-                    new UserByEmailQuery((string)$form->get('email')->getData())
-                );
+                $email = (string)$form->get('email')->getData();
+                $user = $this->identityQueryBus->handle(new UserByEmailQuery($email));
 
                 return $this->redirectToRoute('login_check_inbox', [
                     'loginUrl' => $user === null ? null : $this->loginLinkHandler->createLoginLink(
                         new User($user->userId)
+                    ),
+                    'signupUrl' => $user !== null ? null : $this->uriSigner->sign(
+                        $this->generateUrl('signup_confirm', ['email' => $email], UrlGeneratorInterface::ABSOLUTE_URL)
                     )
                 ]);
             } catch (ApplicationException $e) {

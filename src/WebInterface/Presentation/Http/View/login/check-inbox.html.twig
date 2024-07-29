@@ -17,13 +17,17 @@
         We’ve sent a login link to your inbox. Click the link in the email to log in.
         If you don't see the email, check your spam folder or
         <a href="{{ path('login') }}">click here to try again</a>.
-        If you don't have an account yet,
-        <a href="{{ path('signup') }}">sign up here</a>.
     </p>
     {% if app.request.get('loginUrl') %}
         <p class="text-danger text-center fw-bolder">
             No email has been sent because this feature is still in development,
             <a href="{{ app.request.get('loginUrl') }}">click here</a> to login.
+        </p>
+    {% endif %}
+    {% if app.request.get('signupUrl') %}
+        <p class="text-danger text-center fw-bolder">
+            No email has been sent because this feature is still in development,
+            <a href="{{ app.request.get('signupUrl') }}">click here</a> to sign up.
         </p>
     {% endif %}
 {% endblock %}
