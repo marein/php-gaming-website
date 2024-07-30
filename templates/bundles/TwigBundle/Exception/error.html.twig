@@ -1,0 +1,38 @@
+{% extends '@web-interface/layout/center-tight.html.twig' %}
+
+{% set page_title = 'Internal server error' %}
+
+{% block content %}
+    <div class="card card-md">
+        <div class="card-body">
+            <h2 class="text-center mb-4">Oops, a server error occurred!</h2>
+            <p class="text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="icon icon-md">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
+                    <path d="M9 10l.01 0"/>
+                    <path d="M15 10l.01 0"/>
+                    <path d="M9.5 15.25a3.5 3.5 0 0 1 5 0"/>
+                </svg>
+            </p>
+            <p class="text-center">
+                We are sorry, but our server encountered an internal error.
+            </p>
+            <p class="text-center">
+                <a href="{{ path('lobby') }}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="icon">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M5 12l14 0"></path>
+                        <path d="M5 12l6 6"></path>
+                        <path d="M5 12l6 -6"></path>
+                    </svg>
+                    Take me home
+                </a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
