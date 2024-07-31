@@ -22,6 +22,12 @@
                     </div>
                 {% endfor %}
             {% endfor %}
+            {% if lastAuthenticationError is defined and lastAuthenticationError %}
+                <div class="alert alert-important alert-danger mb-4">
+                    Oops!
+                    {{ lastAuthenticationError.messageKey|trans(lastAuthenticationError.messageData, 'security') }}
+                </div>
+            {% endif %}
             {% block content %}{% endblock %}
             <ul class="text-center list-inline list-inline-dots my-5">
                 {% include '@web-interface/layout/partial/footer-links.html.twig' %}

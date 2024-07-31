@@ -66,6 +66,11 @@ class User implements CollectsDomainEvents
         );
     }
 
+    public function id(): UserId
+    {
+        return $this->userId;
+    }
+
     public function username(): string
     {
         return (string)$this->username;

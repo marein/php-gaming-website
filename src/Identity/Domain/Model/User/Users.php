@@ -26,4 +26,6 @@ interface Users
      * @throws UserNotFoundException
      */
     public function get(UserId $userId): User;
+
+    public function getByEmail(string $email): ?User;
 }
