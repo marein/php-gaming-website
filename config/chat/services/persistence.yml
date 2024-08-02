@@ -1,23 +1,16 @@
 services:
-
     chat.predis:
         class: Predis\Client
-        public: false
-        arguments:
-            - '%env(APP_CHAT_PREDIS_CLIENT_URL)%'
-            - { prefix: 'chat:' }
+        arguments: ['%env(APP_CHAT_PREDIS_CLIENT_URL)%', { prefix: 'chat:' }]
 
     chat.doctrine-dbal:
         alias: 'doctrine.dbal.chat_connection'
 
     chat.event-store:
         class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
-        public: false
         arguments:
             - '@chat.doctrine-dbal'
             - 'event_store'
             - !service
                 class: Gaming\Common\EventStore\Integration\JmsSerializer\JmsContentSerializer
-                arguments:
-                    - '@chat.jms'
-                    - 'Gaming\Common\Domain\DomainEvent'
+                arguments: ['@chat.jms', 'Gaming\Common\Domain\DomainEvent']

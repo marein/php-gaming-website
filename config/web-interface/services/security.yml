@@ -1,18 +1,12 @@
 services:
+    web-interface.security:
+        class: Gaming\WebInterface\Infrastructure\Security\Security
+        arguments: ['@security.helper']
 
-  web-interface.security:
-    class: Gaming\WebInterface\Infrastructure\Security\Security
-    arguments:
-      - '@security.helper'
+    web-interface.security.user_provider:
+        class: Gaming\WebInterface\Infrastructure\Security\UserProvider
+        arguments: ['@identity.query-bus', '@clock']
 
-  web-interface.security.user_provider:
-    class: Gaming\WebInterface\Infrastructure\Security\UserProvider
-    arguments:
-      - '@identity.query-bus'
-      - '@clock'
-
-  web-interface.security.arrival_authenticator:
-    class: Gaming\WebInterface\Infrastructure\Security\ArrivalAuthenticator
-    arguments:
-      - '@web-interface.identity-service'
-      - '@security.token_storage'
+    web-interface.security.arrival_authenticator:
+        class: Gaming\WebInterface\Infrastructure\Security\ArrivalAuthenticator
+        arguments: ['@web-interface.identity-service', '@security.token_storage']

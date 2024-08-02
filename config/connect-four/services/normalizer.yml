@@ -1,5 +1,4 @@
 services:
-
     connect-four.jms:
         class: JMS\Serializer\Serializer
         factory: ['Gaming\Common\JmsSerializer\JmsSerializerFactory', 'create']
@@ -9,26 +8,20 @@ services:
             - { 'Gaming': '%kernel.project_dir%/src/ConnectFour/Port/Adapter/Persistence/Jms' }
             - !tagged_iterator connect-four.jms.subscriber
 
-    connect-four.jms.subscriber.game-id:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\GameIdSubscriber
+    Gaming\ConnectFour\Port\Adapter\Persistence\Jms\GameIdSubscriber:
         tags: ['connect-four.jms.subscriber']
 
-    connect-four.jms.subscriber.field:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\FieldSubscriber
+    Gaming\ConnectFour\Port\Adapter\Persistence\Jms\FieldSubscriber:
         tags: ['connect-four.jms.subscriber']
 
-    connect-four.jms.subscriber.stone:
-        class: Gaming\ConnectFour\Port\Adapter\Persistence\Jms\StoneSubscriber
+    Gaming\ConnectFour\Port\Adapter\Persistence\Jms\StoneSubscriber:
         tags: ['connect-four.jms.subscriber']
+
+    connect-four.normalizer:
+        class: Gaming\Common\Normalizer\Integration\JmsSerializerNormalizer
+        arguments: ['@connect-four.jms']
 
     connect-four.migrating-normalizer:
         class: Gaming\Common\Normalizer\MigratingNormalizer
         decorates: connect-four.normalizer
-        arguments:
-            - '@.inner'
-            - !tagged { tag: 'connect-four.migrating-normalizer.migrations', index_by: 'key' }
-
-    connect-four.normalizer:
-        class: Gaming\Common\Normalizer\Integration\JmsSerializerNormalizer
-        arguments:
-            - '@connect-four.jms'
+        arguments: ['@.inner', !tagged { tag: 'connect-four.migrating-normalizer.migrations', index_by: 'key' }]

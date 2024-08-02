@@ -1,42 +1,25 @@
 services:
-
     connect-four.game-projection:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\GameProjection
-        public: false
-        arguments:
-            - '@connect-four.game-store'
-        tags:
-            - { name: 'connect-four.stored-event-subscriber', key: 'game-projection' }
+        arguments: ['@connect-four.game-store']
+        tags: [{ name: 'connect-four.stored-event-subscriber', key: 'game-projection' }]
 
     connect-four.open-games-projection:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\OpenGamesProjection
-        public: false
-        arguments:
-            - '@connect-four.open-game-store'
-        tags:
-            - { name: 'connect-four.stored-event-subscriber', key: 'open-games-projection' }
+        arguments: ['@connect-four.open-game-store']
+        tags: [{ name: 'connect-four.stored-event-subscriber', key: 'open-games-projection' }]
 
     connect-four.running-games-projection:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\RunningGamesProjection
-        public: false
-        arguments:
-            - '@connect-four.running-games-store'
-        tags:
-            - { name: 'connect-four.stored-event-subscriber', key: 'running-games-projection' }
+        arguments: ['@connect-four.running-games-store']
+        tags: [{ name: 'connect-four.stored-event-subscriber', key: 'running-games-projection' }]
 
     connect-four.games-by-player-projection:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\GamesByPlayerProjection
-        public: false
-        arguments:
-            - '@connect-four.games-by-player-store'
-        tags:
-            - { name: 'connect-four.stored-event-subscriber', key: 'games-by-player-projection' }
+        arguments: ['@connect-four.games-by-player-store']
+        tags: [{ name: 'connect-four.stored-event-subscriber', key: 'games-by-player-projection' }]
 
     connect-four.publish-stored-events-subscriber:
         class: Gaming\ConnectFour\Port\Adapter\Messaging\PublishDomainEventsToMessageBrokerSubscriber
-        public: false
-        arguments:
-            - '@gaming.message-broker.gaming-exchange-publisher'
-            - '@connect-four.normalizer'
-        tags:
-            - { name: 'connect-four.stored-event-subscriber', key: 'publish-to-message-broker' }
+        arguments: ['@gaming.message-broker.gaming-exchange-publisher', '@connect-four.normalizer']
+        tags: [{ name: 'connect-four.stored-event-subscriber', key: 'publish-to-message-broker' }]

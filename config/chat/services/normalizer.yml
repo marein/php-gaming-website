@@ -1,5 +1,4 @@
 services:
-
     chat.jms:
         class: JMS\Serializer\Serializer
         factory: ['Gaming\Common\JmsSerializer\JmsSerializerFactory', 'create']
@@ -11,5 +10,4 @@ services:
 
     chat.normalizer:
         class: Gaming\Common\Normalizer\Integration\JmsSerializerNormalizer
-        arguments:
-            - '@chat.jms'
+        arguments: ['@chat.jms']

@@ -2,13 +2,13 @@ version: '3.4'
 
 x-php-container-volumes:
     &php-container-volumes
-        volumes:
-            - ./:/project:delegated
-            - php-vendor:/project/vendor
-            - asset-vendor:/project/assets/vendor
-            - proxysql.sock:/var/run/proxysql
-            - type: tmpfs
-              target: /project/var
+    volumes:
+        - ./:/project:delegated
+        - php-vendor:/project/vendor
+        - asset-vendor:/project/assets/vendor
+        - proxysql.sock:/var/run/proxysql
+        -   type: tmpfs
+            target: /project/var
 
 x-php-container:
     &php-container

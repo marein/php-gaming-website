@@ -1,19 +1,12 @@
 services:
-
     identity.user-controller:
         class: Gaming\Identity\Port\Adapter\Http\UserController
-        public: false
-        arguments:
-            - '@identity.command-bus'
+        arguments: ['@identity.command-bus']
 
     identity.user-repository:
         class: Gaming\Identity\Port\Adapter\Persistence\Repository\DoctrineUserRepository
-        public: false
-        arguments:
-            - '@identity.doctrine-orm'
+        arguments: ['@identity.doctrine-orm']
 
     identity.user-service:
         class: Gaming\Identity\Application\User\UserService
-        public: false
-        arguments:
-            - '@identity.user-repository'
+        arguments: ['@identity.user-repository']

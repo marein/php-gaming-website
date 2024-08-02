@@ -1,14 +1,7 @@
 services:
-
-    web-interface.publish-running-games-count-to-nchan-command:
-        class: Gaming\WebInterface\Presentation\Console\PublishRunningGamesCountToNchanCommand
-        public: false
-        arguments:
-            - '@web-interface.connect-four-service'
-            - '@web-interface.browser-notifier'
+    Gaming\WebInterface\Presentation\Console\PublishRunningGamesCountToNchanCommand:
+        arguments: ['@web-interface.connect-four-service', '@web-interface.browser-notifier']
         tags:
-            - {
-                name: console.command,
-                command: web-interface:publish-running-games-count-to-nchan,
+            -   name: console.command
+                command: web-interface:publish-running-games-count-to-nchan
                 description: 'Publish number of running games to the browser.'
-            }

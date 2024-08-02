@@ -1,9 +1,5 @@
 services:
-
     chat.publish-stored-events-subscriber:
         class: Gaming\Chat\Infrastructure\Messaging\PublishDomainEventsToMessageBrokerSubscriber
-        public: false
-        arguments:
-            - '@gaming.message-broker.gaming-exchange-publisher'
-        tags:
-            - { name: 'chat.stored-event-subscriber', key: 'publish-to-message-broker' }
+        arguments: ['@gaming.message-broker.gaming-exchange-publisher']
+        tags: [{ name: 'chat.stored-event-subscriber', key: 'publish-to-message-broker' }]

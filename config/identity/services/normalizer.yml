@@ -1,5 +1,4 @@
 services:
-
     identity.jms:
         class: JMS\Serializer\Serializer
         factory: ['Gaming\Common\JmsSerializer\JmsSerializerFactory', 'create']
@@ -11,5 +10,4 @@ services:
 
     identity.normalizer:
         class: Gaming\Common\Normalizer\Integration\JmsSerializerNormalizer
-        arguments:
-            - '@identity.jms'
+        arguments: ['@identity.jms']

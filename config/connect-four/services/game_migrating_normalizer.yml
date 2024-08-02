@@ -1,14 +1,9 @@
 services:
-
     connect-four.migrating-normalizer.game-migrations:
         class: Gaming\Common\Normalizer\Migrations
-        arguments:
-            - 'schemaVersion'
-            - !tagged_iterator connect-four.migrating-normalizer.game-migration
-        tags:
-            - { name: 'connect-four.migrating-normalizer.migrations', key: 'Gaming\ConnectFour\Domain\Game\Game' }
+        arguments: ['schemaVersion', !tagged_iterator connect-four.migrating-normalizer.game-migration]
+        tags: [{ name: 'connect-four.migrating-normalizer.migrations', key: 'Gaming\ConnectFour\Domain\Game\Game' }]
 
     connect-four.migrating-normalizer.game-migration.stone-as-scalar:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\MigratingNormalizer\StoneAsScalarMigration
-        tags:
-            - { name: 'connect-four.migrating-normalizer.game-migration' }
+        tags: [{ name: 'connect-four.migrating-normalizer.game-migration' }]

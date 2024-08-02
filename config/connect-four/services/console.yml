@@ -1,15 +1,14 @@
 services:
-
     connect-four.follow-event-store-command:
         class: Gaming\Common\EventStore\Integration\Symfony\FollowEventStoreCommand
-        public: false
         arguments:
             - '@connect-four.event-store'
             - !service
                 class: Gaming\Common\EventStore\Integration\Predis\PredisEventStorePointerFactory
-                arguments:
-                    - '@connect-four.predis'
+                arguments: ['@connect-four.predis']
             - !tagged_locator { tag: 'connect-four.stored-event-subscriber', index_by: 'key' }
             - '@event_dispatcher'
         tags:
-            - { name: console.command, command: connect-four:follow-event-store, description: 'Publish events to subscribers.' }
+            -   name: console.command
+                command: connect-four:follow-event-store
+                description: 'Publish events to subscribers.'

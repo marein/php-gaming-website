@@ -1,15 +1,8 @@
 services:
-
     web-interface.predis:
         class: Predis\Client
-        public: false
-        arguments:
-            - '%env(APP_WEB_INTERFACE_PREDIS_CLIENT_URL)%'
-            - { prefix: 'web-interface:' }
+        arguments: ['%env(APP_WEB_INTERFACE_PREDIS_CLIENT_URL)%', { prefix: 'web-interface:' }]
 
     web-interface.session-handler:
         class: Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler
-        public: false
-        arguments:
-            - '@web-interface.predis'
-            - { prefix: 'session:', ttl: 86400 }
+        arguments: ['@web-interface.predis', { prefix: 'session:', ttl: 86400 }]

@@ -1,11 +1,10 @@
-imports:
-    - { resource: config.yml }
+imports: [{ resource: config.yml }]
 
 framework:
     profiler:
         only_exceptions: false
     router:
-        resource: "%kernel.project_dir%/config/routing_dev.yml"
+        resource: '%kernel.project_dir%/config/routing_dev.yml'
 
 web_profiler:
     toolbar: true
@@ -19,13 +18,10 @@ monolog:
 services:
     Gaming\Common\EventStore\Integration\Doctrine\SkipDebugMatchingSqlPatternLogger:
         decorates: 'monolog.logger.doctrine'
-        arguments:
-            - '@.inner'
-            - ['/^SELECT.*FROM event_store .*WHERE.*id >/']
+        arguments: ['@.inner', ['/^SELECT.*FROM event_store .*WHERE.*id >/']]
 
     Gaming\Common\MessageBroker\EventListener\DebugEvents:
-        arguments:
-            - '@logger'
+        arguments: ['@logger']
         tags:
             - { name: kernel.event_listener, method: 'messageReceived' }
             - { name: kernel.event_listener, method: 'messageHandled' }
@@ -35,8 +31,7 @@ services:
             - { name: kernel.event_listener, method: 'requestSent' }
 
     Gaming\Common\EventStore\EventListener\DebugEvents:
-        arguments:
-            - '@logger'
+        arguments: ['@logger']
         tags:
             - { name: kernel.event_listener, method: 'eventsFetched' }
             - { name: kernel.event_listener, method: 'eventsCommitted' }

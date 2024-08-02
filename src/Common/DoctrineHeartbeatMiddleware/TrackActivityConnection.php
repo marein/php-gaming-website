@@ -8,7 +8,6 @@ use Closure;
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\Result;
 use Doctrine\DBAL\Driver\Statement;
-use Doctrine\DBAL\ParameterType;
 
 final class TrackActivityConnection implements Connection
 {

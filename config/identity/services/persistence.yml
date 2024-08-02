@@ -1,5 +1,4 @@
 services:
-
     identity.doctrine-dbal:
         alias: 'doctrine.dbal.identity_connection'
 
@@ -8,20 +7,16 @@ services:
 
     identity.event-store:
         class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
-        public: false
         arguments:
             - '@identity.doctrine-dbal'
             - 'event_store'
             - !service
                 class: Gaming\Common\EventStore\Integration\JmsSerializer\JmsContentSerializer
-                arguments:
-                    - '@identity.jms'
-                    - 'Gaming\Common\Domain\DomainEvent'
+                arguments: ['@identity.jms', 'Gaming\Common\Domain\DomainEvent']
 
     identity.orm.publish-domain-events-listener:
         class: Gaming\Common\EventStore\Integration\Doctrine\EventListener\AppendDomainEvents
-        arguments:
-            - '@identity.event-store'
+        arguments: ['@identity.event-store']
         tags:
             - { name: doctrine.event_listener, event: postPersist, entity_manager: identity }
             - { name: doctrine.event_listener, event: postUpdate, entity_manager: identity }
