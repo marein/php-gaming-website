@@ -1,22 +1,15 @@
 services:
-
     web-interface.chat-service:
         class: Gaming\WebInterface\Infrastructure\Integration\DirectControllerInvocationChatService
-        public: false
-        arguments:
-            - '@chat.chat-controller'
+        arguments: ['@chat.chat-controller']
 
     web-interface.connect-four-service:
         class: Gaming\WebInterface\Infrastructure\Integration\DirectControllerInvocationConnectFourService
-        public: false
-        arguments:
-            - '@connect-four.game-controller'
+        arguments: ['@connect-four.game-controller']
 
     web-interface.identity-service:
         class: Gaming\WebInterface\Infrastructure\Integration\DirectControllerInvocationIdentityService
-        public: false
-        arguments:
-            - '@identity.user-controller'
+        arguments: ['@identity.user-controller']
 
     web-interface.nchan:
         class: Marein\Nchan\Nchan
@@ -24,13 +17,8 @@ services:
             - '%env(APP_WEB_INTERFACE_NCHAN_BASE_URL)%'
             - !service
                 class: Marein\Nchan\HttpAdapter\Psr18ClientAdapter
-                arguments:
-                    - '@psr18.http_client'
-                    - '@psr18.http_client'
-                    - '@psr18.http_client'
+                arguments: ['@psr18.http_client', '@psr18.http_client', '@psr18.http_client']
 
     web-interface.browser-notifier:
         class: Gaming\WebInterface\Infrastructure\NchanBrowserNotifier
-        public: false
-        arguments:
-            - '@web-interface.nchan'
+        arguments: ['@web-interface.nchan']

@@ -1,16 +1,10 @@
 services:
-
-    # This is pretty ugly. We can use tags, or create this via a factory in php.
     chat.query-bus:
-        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
-        public: false
-        arguments:
-            - '@chat.routing-query-bus'
-            - '@validator'
-
-    chat.routing-query-bus:
         class: Gaming\Common\Bus\RoutingBus
-        public: false
         arguments:
-            -
-                'Gaming\Chat\Application\Query\MessagesQuery': ['@chat.chat-service', 'messages']
+            -   'Gaming\Chat\Application\Query\MessagesQuery': ['@chat.chat-service', 'messages']
+
+    chat.validating-query-bus:
+        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
+        decorates: 'chat.query-bus'
+        arguments: ['@.inner', '@validator']

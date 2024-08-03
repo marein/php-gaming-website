@@ -1,66 +1,38 @@
 services:
-
-    # The following definitions decorate the routing command bus. This could be done with a factory object.
     connect-four.command-bus:
-        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
-        public: false
-        arguments:
-            - '@connect-four.retry-command-bus'
-            - '@validator'
+        class: Gaming\Common\Bus\Psr11RoutingBus
+        arguments: [!tagged_locator { tag: 'connect-four.command-bus.handler', index_by: 'key' }]
 
     connect-four.retry-command-bus:
         class: Gaming\Common\Bus\RetryBus
-        public: false
-        arguments:
-            - '@connect-four.routing-command-bus'
-            - 3
-            - 'Gaming\Common\Domain\Exception\ConcurrencyException'
+        decorates: 'connect-four.command-bus'
+        arguments: ['@.inner', 3,'Gaming\Common\Domain\Exception\ConcurrencyException']
 
-    # This is pretty ugly. We can use tags, or create this via a factory in php.
-    connect-four.routing-command-bus:
-        class: Gaming\Common\Bus\RoutingBus
-        public: false
-        arguments:
-            -
-                'Gaming\ConnectFour\Application\Game\Command\AbortCommand': '@connect-four.command.abort-handler'
-                'Gaming\ConnectFour\Application\Game\Command\ResignCommand': '@connect-four.command.resign-handler'
-                'Gaming\ConnectFour\Application\Game\Command\AssignChatCommand': '@connect-four.command.assign-chat-handler'
-                'Gaming\ConnectFour\Application\Game\Command\JoinCommand': '@connect-four.command.join-handler'
-                'Gaming\ConnectFour\Application\Game\Command\MoveCommand': '@connect-four.command.move-handler'
-                'Gaming\ConnectFour\Application\Game\Command\OpenCommand': '@connect-four.command.open-handler'
+    connect-four.validating-command-bus:
+        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
+        decorates: 'connect-four.command-bus'
+        arguments: ['@.inner', '@validator']
 
-    connect-four.command.abort-handler:
-        class: Gaming\ConnectFour\Application\Game\Command\AbortHandler
-        public: false
-        arguments:
-            - '@connect-four.game-repository'
+    Gaming\ConnectFour\Application\Game\Command\AbortHandler:
+        arguments: ['@connect-four.game-repository']
+        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\AbortCommand }]
 
-    connect-four.command.resign-handler:
-        class: Gaming\ConnectFour\Application\Game\Command\ResignHandler
-        public: false
-        arguments:
-            - '@connect-four.game-repository'
+    Gaming\ConnectFour\Application\Game\Command\ResignHandler:
+        arguments: ['@connect-four.game-repository']
+        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\ResignCommand }]
 
-    connect-four.command.assign-chat-handler:
-        class: Gaming\ConnectFour\Application\Game\Command\AssignChatHandler
-        public: false
-        arguments:
-            - '@connect-four.game-repository'
+    Gaming\ConnectFour\Application\Game\Command\AssignChatHandler:
+        arguments: ['@connect-four.game-repository']
+        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\AssignChatCommand }]
 
-    connect-four.command.join-handler:
-        class: Gaming\ConnectFour\Application\Game\Command\JoinHandler
-        public: false
-        arguments:
-            - '@connect-four.game-repository'
+    Gaming\ConnectFour\Application\Game\Command\JoinHandler:
+        arguments: ['@connect-four.game-repository']
+        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\JoinCommand }]
 
-    connect-four.command.move-handler:
-        class: Gaming\ConnectFour\Application\Game\Command\MoveHandler
-        public: false
-        arguments:
-            - '@connect-four.game-repository'
+    Gaming\ConnectFour\Application\Game\Command\MoveHandler:
+        arguments: ['@connect-four.game-repository']
+        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\MoveCommand }]
 
-    connect-four.command.open-handler:
-        class: Gaming\ConnectFour\Application\Game\Command\OpenHandler
-        public: false
-        arguments:
-            - '@connect-four.game-repository'
+    Gaming\ConnectFour\Application\Game\Command\OpenHandler:
+        arguments: ['@connect-four.game-repository']
+        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\OpenCommand }]

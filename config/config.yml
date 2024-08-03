@@ -1,26 +1,19 @@
 parameters:
-    # Workaround for doctrine/doctrine-migrations-bundle:^3.0
-    # To be able to use multiple connections, the bundle requires a default connection.
-    # See https://github.com/marein/php-gaming-website/issues/62.
+    # doctrine/doctrine-migrations-bundle requires a default connection.
     doctrine.migrations.preferred_connection: identity
 
-imports:
-    - { resource: chat/config.yml }
-    - { resource: connect-four/config.yml }
-    - { resource: identity/config.yml }
-    - { resource: web-interface/config.yml }
+imports: [{ resource: '*/config.yml' }]
 
 framework:
     secret: '%env(APP_KERNEL_SECRET)%'
     validation:
         enabled: true
     router:
-        resource: "%kernel.project_dir%/config/routing.yml"
+        resource: '%kernel.project_dir%/config/routing.yml'
     asset_mapper:
-        importmap_path: "%kernel.project_dir%/config/importmap.php"
+        importmap_path: '%kernel.project_dir%/config/importmap.php'
         importmap_polyfill: false # It's manually added to the base template (with feature detection).
-        paths:
-            - assets/
+        paths: [assets/]
 
 monolog:
     handlers:
@@ -35,47 +28,32 @@ twig:
     strict_variables: '%kernel.debug%'
 
 services:
-
-    gaming.schedule-doctrine-connection-heartbeat-middleware:
-        class: Gaming\Common\DoctrineHeartbeatMiddleware\SchedulePeriodicHeartbeatMiddleware
-        arguments:
-            - '@gaming.scheduler'
-            - 60
-            - '@clock'
-        tags:
-            - { name: doctrine.middleware }
+    Gaming\Common\DoctrineHeartbeatMiddleware\SchedulePeriodicHeartbeatMiddleware:
+        arguments: ['@gaming.scheduler', 60, '@clock']
+        tags: [{ name: doctrine.middleware }]
 
     gaming.message-broker.connection-factory:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\AmqpStreamConnectionFactory
-        arguments:
-            - '%env(APP_RABBIT_MQ_DSN)%'
+        arguments: ['%env(APP_RABBIT_MQ_DSN)%']
 
     gaming.message-broker.declare-topology-connection-factory:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\DeclareTopologyConnectionFactory
         decorates: gaming.message-broker.connection-factory
-        arguments:
-            - '@.inner'
-            - '@gaming.message-broker.topology'
+        arguments: ['@.inner', '@gaming.message-broker.topology']
 
     gaming.message-broker.schedule-periodic-heartbeat-connection-factory:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\ConnectionFactory\SchedulePeriodicHeartbeatConnectionFactory
         decorates: gaming.message-broker.connection-factory
-        arguments:
-            - '@.inner'
-            - '@gaming.scheduler'
+        arguments: ['@.inner', '@gaming.scheduler']
 
     gaming.message-broker.gaming-exchange-topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\ExchangeTopology
-        arguments:
-            - 'gaming'
-            - !php/const PhpAmqpLib\Exchange\AMQPExchangeType::TOPIC
-        tags:
-            - { name: 'gaming.message-broker.topology', priority: 100 }
+        arguments: ['gaming', !php/const PhpAmqpLib\Exchange\AMQPExchangeType::TOPIC]
+        tags: [{ name: 'gaming.message-broker.topology', priority: 100 }]
 
     gaming.message-broker.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\CompositeTopology
-        arguments:
-            - !tagged { tag: 'gaming.message-broker.topology' }
+        arguments: [!tagged { tag: 'gaming.message-broker.topology' }]
 
     gaming.message-broker.message-translator:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\ConfigurableMessageTranslator
@@ -85,8 +63,7 @@ services:
 
     gaming.message-broker.message-router:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageRouter\RouteMessagesToExchange
-        arguments:
-            - 'gaming'
+        arguments: ['gaming']
 
     gaming.message-broker.gaming-exchange-publisher:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpPublisher
@@ -105,40 +82,28 @@ services:
             - '@gaming.message-broker.message-router'
             - '@event_dispatcher'
 
-    gaming.consume-messages-command:
-        class: Gaming\Common\MessageBroker\Integration\Symfony\ConsumeMessagesCommand
-        arguments:
-            - !tagged_locator { tag: 'gaming.consumer', index_by: 'key' }
-        tags:
-            - { name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }
+    Gaming\Common\MessageBroker\Integration\Symfony\ConsumeMessagesCommand:
+        arguments: [!tagged_locator { tag: 'gaming.consumer', index_by: 'key' }]
+        tags: [{ name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }]
 
     Gaming\Common\MessageBroker\Integration\Symfony\ResetServicesListener:
-        arguments:
-            - '@services_resetter'
-            - 50
-        tags:
-            - { name: kernel.event_listener, method: 'messageHandled', priority: -50 }
+        arguments: ['@services_resetter', 50]
+        tags: [{ name: kernel.event_listener, method: 'messageHandled', priority: -50 }]
 
     Gaming\Common\MessageBroker\EventListener\ThrowWhenMessageReturned:
-        arguments:
-            - '@logger'
-        tags:
-            - { name: kernel.event_listener, method: 'messageReturned', priority: 50 }
+        arguments: ['@logger']
+        tags: [{ name: kernel.event_listener, method: 'messageReturned', priority: 50 }]
 
     Gaming\Common\MessageBroker\EventListener\ThrowWhenMessageFailed:
-        arguments:
-            - '@logger'
-        tags:
-            - { name: kernel.event_listener, method: 'messageFailed' }
+        arguments: ['@logger']
+        tags: [{ name: kernel.event_listener, method: 'messageFailed' }]
 
     Gaming\Common\EventStore\Integration\Symfony\ResetServicesListener:
-        arguments:
-            - '@services_resetter'
-            - 10
-        tags:
-            - { name: kernel.event_listener, method: 'eventsCommitted', priority: -50 }
+        arguments: ['@services_resetter', 10]
+        tags: [{ name: kernel.event_listener, method: 'eventsCommitted', priority: -50 }]
 
-    Gaming\Common\Bus\Integration\FormViolationMapper: ~
+    gaming.form-violation-mapper:
+        class: Gaming\Common\Bus\Integration\FormViolationMapper
 
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
@@ -146,15 +111,10 @@ services:
     # Custom exception listener for the gaming domain.
     # Lower priority so that the profiler is respected.
     # todo: This can be removed as soon as https://github.com/marein/php-gaming-website/issues/34 is done.
-    gaming.exception-to-json-listener:
-        class: Gaming\Common\ExceptionHandling\GamingExceptionListener
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception, priority: -100 }
+    Gaming\Common\ExceptionHandling\GamingExceptionListener:
+        tags: [{ name: kernel.event_listener, event: kernel.exception, priority: -100 }]
 
     # Lower priority so that the profiler is respected.
-    gaming.application-exception-to-json-listener:
-        class: Gaming\Common\Bus\Integration\ApplicationExceptionToJsonListener
-        arguments:
-            - []
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception, priority: -99 }
+    Gaming\Common\Bus\Integration\ApplicationExceptionToJsonListener:
+        arguments: [[]]
+        tags: [{ name: kernel.event_listener, event: kernel.exception, priority: -99 }]

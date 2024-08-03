@@ -1,8 +1,5 @@
-imports:
-    - { resource: services/ }
+imports: [{ resource: services/ }]
 
-# The framework configuration belongs here, because when we transition to the microservice approach,
-# the other contexts don't have the concept of a session.
 framework:
     session:
         handler_id: web-interface.session-handler
@@ -11,9 +8,8 @@ framework:
         csrf_protection: false # CSRF protection is handled by marein/symfony-standard-headers-csrf-bundle.
 
 twig:
-    form_themes: [ 'bootstrap_5_layout.html.twig' ]
-    paths:
-        "%kernel.project_dir%/src/WebInterface/Presentation/Http/View": web-interface
+    form_themes: ['bootstrap_5_layout.html.twig']
+    paths: { '%kernel.project_dir%/src/WebInterface/Presentation/Http/View': web-interface }
 
 security:
     providers:
@@ -27,7 +23,7 @@ security:
             pattern: ^/
             login_link:
                 check_route: login_check
-                signature_properties: [ 'userIdentifier' ]
+                signature_properties: ['userIdentifier']
             custom_authenticators:
                 - 'web-interface.security.arrival_authenticator'
             logout:

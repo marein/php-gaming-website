@@ -1,5 +1,4 @@
-imports:
-    - { resource: services/ }
+imports: [{ resource: services/ }]
 
 doctrine:
     dbal:
@@ -9,5 +8,5 @@ doctrine:
                 server_version: '8.2'
                 charset: utf8mb4
                 default_table_options:
-                     charset: utf8mb4
-                     collate: utf8mb4_unicode_ci
+                    charset: utf8mb4
+                    collate: utf8mb4_unicode_ci

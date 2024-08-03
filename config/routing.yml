@@ -1,2 +1,1 @@
-WebInterface:
-    resource: web-interface/routing.yml
+Contexts: { resource: '*/routing.yml' }

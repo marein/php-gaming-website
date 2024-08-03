@@ -1,16 +1,14 @@
 services:
-
     chat.follow-event-store-command:
         class: Gaming\Common\EventStore\Integration\Symfony\FollowEventStoreCommand
-        public: false
         arguments:
             - '@chat.event-store'
             - !service
                 class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineMysqlEventStorePointerFactory
-                arguments:
-                    - '@chat.doctrine-dbal'
-                    - 'event_store_pointer'
+                arguments: ['@chat.doctrine-dbal', 'event_store_pointer']
             - !tagged_locator { tag: 'chat.stored-event-subscriber', index_by: 'key' }
             - '@event_dispatcher'
         tags:
-            - { name: console.command, command: chat:follow-event-store, description: 'Publish events to subscribers.' }
+            -   name: console.command
+                command: chat:follow-event-store
+                description: 'Publish events to subscribers.'

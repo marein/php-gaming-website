@@ -1,31 +1,16 @@
 services:
-
     chat.chat-controller:
         class: Gaming\Chat\Presentation\Http\ChatController
-        public: false
-        arguments:
-            - '@chat.command-bus'
-            - '@chat.query-bus'
+        arguments: ['@chat.command-bus', '@chat.query-bus']
 
     chat.chat-gateway:
         class: Gaming\Chat\Infrastructure\DoctrineChatGateway
-        public: false
-        arguments:
-            - '@chat.doctrine-dbal'
-            - 'chat'
-            - 'message'
+        arguments: ['@chat.doctrine-dbal', 'chat', 'message']
 
     chat.idempotent-chat-id-storage:
         class: Gaming\Common\IdempotentStorage\PredisIdempotentStorage
-        arguments:
-            - '@chat.predis'
-            - 86400
+        arguments: ['@chat.predis', 86400]
 
     chat.chat-service:
         class: Gaming\Chat\Application\ChatService
-        public: false
-        arguments:
-            - '@chat.chat-gateway'
-            - '@chat.event-store'
-            - '@clock'
-            - '@chat.idempotent-chat-id-storage'
+        arguments: ['@chat.chat-gateway', '@chat.event-store', '@clock', '@chat.idempotent-chat-id-storage']

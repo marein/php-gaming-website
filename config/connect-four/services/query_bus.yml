@@ -1,43 +1,25 @@
 services:
-
-    # This is pretty ugly. We can use tags, or create this via a factory in php.
     connect-four.query-bus:
+        class: Gaming\Common\Bus\Psr11RoutingBus
+        arguments: [!tagged_locator { tag: 'connect-four.query-bus.handler', index_by: 'key' }]
+
+    connect-four.validating-query-bus:
         class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
-        public: false
-        arguments:
-            - '@connect-four.routing-query-bus'
-            - '@validator'
+        decorates: 'connect-four.query-bus'
+        arguments: ['@.inner', '@validator']
 
-    connect-four.routing-query-bus:
-        class: Gaming\Common\Bus\RoutingBus
-        public: false
-        arguments:
-            -
-                'Gaming\ConnectFour\Application\Game\Query\GameQuery': '@connect-four.query.game-handler'
-                'Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery': '@connect-four.query.games-by-player-handler'
-                'Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery': '@connect-four.query.open-games-handler'
-                'Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery': '@connect-four.query.running-games-handler'
+    Gaming\ConnectFour\Application\Game\Query\GameHandler:
+        arguments: ['@connect-four.game-store']
+        tags: [{ name: connect-four.query-bus.handler, key: Gaming\ConnectFour\Application\Game\Query\GameQuery }]
 
-    connect-four.query.game-handler:
-        class: Gaming\ConnectFour\Application\Game\Query\GameHandler
-        public: false
-        arguments:
-            - '@connect-four.game-store'
+    Gaming\ConnectFour\Application\Game\Query\GamesByPlayerHandler:
+        arguments: ['@connect-four.games-by-player-store']
+        tags: [{ name: connect-four.query-bus.handler, key: Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery }]
 
-    connect-four.query.games-by-player-handler:
-        class: Gaming\ConnectFour\Application\Game\Query\GamesByPlayerHandler
-        public: false
-        arguments:
-            - '@connect-four.games-by-player-store'
+    Gaming\ConnectFour\Application\Game\Query\OpenGamesHandler:
+        arguments: ['@connect-four.open-game-store']
+        tags: [{ name: connect-four.query-bus.handler, key: Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery }]
 
-    connect-four.query.open-games-handler:
-        class: Gaming\ConnectFour\Application\Game\Query\OpenGamesHandler
-        public: false
-        arguments:
-            - '@connect-four.open-game-store'
-
-    connect-four.query.running-games-handler:
-        class: Gaming\ConnectFour\Application\Game\Query\RunningGamesHandler
-        public: false
-        arguments:
-            - '@connect-four.running-games-store'
+    Gaming\ConnectFour\Application\Game\Query\RunningGamesHandler:
+        arguments: ['@connect-four.running-games-store']
+        tags: [{ name: connect-four.query-bus.handler, key: Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery }]

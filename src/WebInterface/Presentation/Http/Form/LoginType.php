@@ -12,9 +12,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class LoginType extends AbstractType
 {
-    /**
-     * @param array{confirm: bool} $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

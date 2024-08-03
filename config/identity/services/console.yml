@@ -1,16 +1,14 @@
 services:
-
     identity.follow-event-store-command:
         class: Gaming\Common\EventStore\Integration\Symfony\FollowEventStoreCommand
-        public: false
         arguments:
             - '@identity.event-store'
             - !service
                 class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineMysqlEventStorePointerFactory
-                arguments:
-                    - '@identity.doctrine-dbal'
-                    - 'event_store_pointer'
+                arguments: ['@identity.doctrine-dbal', 'event_store_pointer']
             - !tagged_locator { tag: 'identity.stored-event-subscriber', index_by: 'key' }
             - '@event_dispatcher'
         tags:
-            - { name: console.command, command: identity:follow-event-store, description: 'Publish events to subscribers.' }
+            -   name: console.command
+                command: identity:follow-event-store
+                description: 'Publish events to subscribers.'

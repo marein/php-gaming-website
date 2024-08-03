@@ -1,2 +1,1 @@
-imports:
-    - { resource: config.yml }
+imports: [{ resource: config.yml }]
