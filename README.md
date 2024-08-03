@@ -307,21 +307,23 @@ Sharding is done at the application level, more specifically in the
 [repository](/src/ConnectFour/Port/Adapter/Persistence/Repository/DoctrineJsonGameRepository.php).
 The application uses schema-based sharding and is aware of all existing logical shards,
 while it's only aware of one physical connection. To actually forward queries to separate physical shards,
-a proxy such as ProxySQL can be used. An example will be added with
-[#118](https://github.com/marein/php-gaming-website/issues/118).  
+the application aims to use ProxySQL as a sidecar. An example can be found in the
+[load test environment](/deploy/load-test).  
 __Example for chat__: Currently there shouldn't be queries that span multiple chats.
 To invoke a chat operation (either writing or reading) we exclusively need a chat id.
 As in connect four context, we can use
 [sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture))
 for the chat context, where the chat id is the sharding key.
 
-You may have seen that all contexts uses only one MySQL and one Redis instance.
-This could be different for the production environment depending on the scale.
-For this reason, different databases can be configured for the different contexts. Have a look at the
-[configuration file](/.env).
-We can split this even further.
-For example, we can create a Redis instance per query model in the "Connect Four" context.
-Of course, the code must be adapted. Whether it's worth it depends also on the scale.
+In development, all contexts use only one MySQL and one Redis instance.
+That is adjustable via environment variables, see
+[here](/.env).
+The
+[load test environment](/deploy/load-test)
+separates those storages. Even though in this example the MySQL servers point to the same host,
+each context still uses a separate MySQL server. This works because the application itself talks to a
+[ProxySQL sidecar](/deploy/load-test/stack/proxysql-sidecar.yml),
+which forwards the queries to the MySQL server of the respective context.
 
 ## Chosen technologies
 

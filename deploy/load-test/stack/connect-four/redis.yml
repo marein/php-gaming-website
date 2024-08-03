@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+    connect-four-redis:
+        image: ghcr.io/gaming-platform/docker-redis:7.2
+        volumes:
+            - connect-four-redis:/data
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.connect-four-redis==1"
+    connect-four-redis-exporter:
+        image: oliver006/redis_exporter:v1.51.0
+        command:
+            - '-redis.addr=connect-four-redis:6379'
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.connect-four-redis==1"
+            labels:
+                - "prometheus-job=redis"
+                - "prometheus-port=9121"
+
+volumes:
+    connect-four-redis:

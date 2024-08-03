@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+    identity-mysql:
+        image: ghcr.io/gaming-platform/docker-mysql:8.2
+        volumes:
+            - identity-mysql:/var/lib/mysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.identity-mysql==1"
+    identity-mysql-exporter:
+        image: prom/mysqld-exporter:v0.15.0
+        command: --mysqld.username=root --mysqld.address identity-mysql:3306
+        environment:
+            MYSQLD_EXPORTER_PASSWORD: password
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.identity-mysql==1"
+            labels:
+                - "prometheus-job=mysql"
+                - "prometheus-port=9104"
+
+volumes:
+    identity-mysql:
