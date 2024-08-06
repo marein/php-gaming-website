@@ -1,5 +1,10 @@
 imports: [{ resource: services/ }]
 
+gaming_platform_bus:
+    buses:
+        chat_command: { serviceId: chat.command-bus }
+        chat_query: { serviceId: chat.query-bus }
+
 doctrine:
     dbal:
         connections:

@@ -11,6 +11,6 @@ services:
         class: Gaming\Common\IdempotentStorage\PredisIdempotentStorage
         arguments: ['@chat.predis', 86400]
 
-    chat.chat-service:
-        class: Gaming\Chat\Application\ChatService
+    Gaming\Chat\Application\ChatService:
         arguments: ['@chat.chat-gateway', '@chat.event-store', '@clock', '@chat.idempotent-chat-id-storage']
+        tags: ['chat.command-bus', 'chat.query-bus']

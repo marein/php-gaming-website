@@ -5,6 +5,11 @@ framework:
         mapping:
             paths: ['%kernel.project_dir%/src/Identity/Port/Adapter/Validation/']
 
+gaming_platform_bus:
+    buses:
+        identity_command: { serviceId: identity.command-bus }
+        identity_query: { serviceId: identity.query-bus }
+
 doctrine:
     dbal:
         connections:
