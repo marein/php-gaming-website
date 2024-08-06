@@ -3,15 +3,13 @@ parameters:
     - src
   level: 8
   ignoreErrors:
-    -
-      message: '#^While loop condition is always true\.$#'
+    - message: '#^Call to an undefined method Symfony[^:]+::children\(\)\.$#'
+    - message: '#^While loop condition is always true\.$#'
       path: **/*.php
       count: 1
-    -
-      message: "#^Property Gaming\\\\Identity\\\\Domain\\\\Model\\\\User\\\\User\\:\\:\\$version is never read, only written\\.$#"
+    - message: "#^Property Gaming\\\\Identity\\\\Domain\\\\Model\\\\User\\\\User\\:\\:\\$version is never read, only written\\.$#"
       count: 1
       path: src/Identity/Domain/Model/User/User.php
-    -
-      message: "#^Property Gaming\\\\Memory\\\\Domain\\\\Model\\\\Game\\\\Game\\:\\:\\$cards is never read, only written\\.$#"
+    - message: "#^Property Gaming\\\\Memory\\\\Domain\\\\Model\\\\Game\\\\Game\\:\\:\\$cards is never read, only written\\.$#"
       count: 1
       path: src/Memory/Domain/Model/Game/Game.php

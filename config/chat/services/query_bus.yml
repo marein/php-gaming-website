@@ -1,8 +1,6 @@
 services:
     chat.query-bus:
-        class: Gaming\Common\Bus\RoutingBus
-        arguments:
-            -   'Gaming\Chat\Application\Query\MessagesQuery': ['@chat.chat-service', 'messages']
+        alias: gaming_platform_bus.chat_query
 
     chat.validating-query-bus:
         class: Gaming\Common\Bus\Integration\SymfonyValidatorBus

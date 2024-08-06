@@ -1,5 +1,10 @@
 imports: [{ resource: services/ }]
 
+gaming_platform_bus:
+    buses:
+        chat_command: ~
+        chat_query: ~
+
 doctrine:
     dbal:
         connections:

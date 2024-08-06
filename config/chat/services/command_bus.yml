@@ -1,9 +1,6 @@
 services:
     chat.command-bus:
-        class: Gaming\Common\Bus\RoutingBus
-        arguments:
-            -   'Gaming\Chat\Application\Command\InitiateChatCommand': ['@chat.chat-service', 'initiateChat']
-                'Gaming\Chat\Application\Command\WriteMessageCommand': ['@chat.chat-service', 'writeMessage']
+        alias: gaming_platform_bus.chat_command
 
     chat.transactional-command-bus:
         class: Gaming\Common\Bus\Integration\DoctrineTransactionalBus
