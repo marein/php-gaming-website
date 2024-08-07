@@ -1,5 +1,10 @@
 imports: [{ resource: services/ }]
 
+gaming_platform_bus:
+    buses:
+        connect_four_command: { serviceId: connect-four.command-bus }
+        connect_four_query: { serviceId: connect-four.query-bus }
+
 doctrine:
     dbal:
         connections:

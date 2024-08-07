@@ -1,8 +1,4 @@
 services:
-    connect-four.command-bus:
-        class: Gaming\Common\Bus\Psr11RoutingBus
-        arguments: [!tagged_locator { tag: 'connect-four.command-bus.handler', index_by: 'key' }]
-
     connect-four.retry-command-bus:
         class: Gaming\Common\Bus\RetryBus
         decorates: 'connect-four.command-bus'
@@ -15,24 +11,24 @@ services:
 
     Gaming\ConnectFour\Application\Game\Command\AbortHandler:
         arguments: ['@connect-four.game-repository']
-        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\AbortCommand }]
+        tags: ['connect-four.command-bus']
 
     Gaming\ConnectFour\Application\Game\Command\ResignHandler:
         arguments: ['@connect-four.game-repository']
-        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\ResignCommand }]
+        tags: ['connect-four.command-bus']
 
     Gaming\ConnectFour\Application\Game\Command\AssignChatHandler:
         arguments: ['@connect-four.game-repository']
-        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\AssignChatCommand }]
+        tags: ['connect-four.command-bus']
 
     Gaming\ConnectFour\Application\Game\Command\JoinHandler:
         arguments: ['@connect-four.game-repository']
-        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\JoinCommand }]
+        tags: ['connect-four.command-bus']
 
     Gaming\ConnectFour\Application\Game\Command\MoveHandler:
         arguments: ['@connect-four.game-repository']
-        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\MoveCommand }]
+        tags: ['connect-four.command-bus']
 
     Gaming\ConnectFour\Application\Game\Command\OpenHandler:
         arguments: ['@connect-four.game-repository']
-        tags: [{ name: connect-four.command-bus.handler, key: Gaming\ConnectFour\Application\Game\Command\OpenCommand }]
+        tags: ['connect-four.command-bus']

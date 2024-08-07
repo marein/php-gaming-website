@@ -1,8 +1,4 @@
 services:
-    connect-four.query-bus:
-        class: Gaming\Common\Bus\Psr11RoutingBus
-        arguments: [!tagged_locator { tag: 'connect-four.query-bus.handler', index_by: 'key' }]
-
     connect-four.validating-query-bus:
         class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
         decorates: 'connect-four.query-bus'
@@ -10,16 +6,16 @@ services:
 
     Gaming\ConnectFour\Application\Game\Query\GameHandler:
         arguments: ['@connect-four.game-store']
-        tags: [{ name: connect-four.query-bus.handler, key: Gaming\ConnectFour\Application\Game\Query\GameQuery }]
+        tags: ['connect-four.query-bus']
 
     Gaming\ConnectFour\Application\Game\Query\GamesByPlayerHandler:
         arguments: ['@connect-four.games-by-player-store']
-        tags: [{ name: connect-four.query-bus.handler, key: Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery }]
+        tags: ['connect-four.query-bus']
 
     Gaming\ConnectFour\Application\Game\Query\OpenGamesHandler:
         arguments: ['@connect-four.open-game-store']
-        tags: [{ name: connect-four.query-bus.handler, key: Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery }]
+        tags: ['connect-four.query-bus']
 
     Gaming\ConnectFour\Application\Game\Query\RunningGamesHandler:
         arguments: ['@connect-four.running-games-store']
-        tags: [{ name: connect-four.query-bus.handler, key: Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery }]
+        tags: ['connect-four.query-bus']

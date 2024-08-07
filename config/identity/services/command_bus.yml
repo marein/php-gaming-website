@@ -1,10 +1,4 @@
 services:
-    identity.command-bus:
-        class: Gaming\Common\Bus\RoutingBus
-        arguments:
-            -   'Gaming\Identity\Application\User\Command\ArriveCommand': ['@identity.user-service', 'arrive']
-                'Gaming\Identity\Application\User\Command\SignUpCommand': ['@identity.user-service', 'signUp']
-
     identity.transactional-command-bus:
         class: Gaming\Common\Bus\Integration\DoctrineTransactionalBus
         decorates: 'identity.command-bus'
