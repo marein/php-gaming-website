@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Console;
 
+use Gaming\Common\Bus\Bus;
+use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Gaming\WebInterface\Application\BrowserNotifier;
-use Gaming\WebInterface\Application\ConnectFourService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class PublishRunningGamesCountToNchanCommand extends Command
 {
     public function __construct(
-        private readonly ConnectFourService $connectFourService,
+        private readonly Bus $connectFourQueryBus,
         private readonly BrowserNotifier $browserNotifier
     ) {
         parent::__construct();
@@ -24,7 +25,7 @@ final class PublishRunningGamesCountToNchanCommand extends Command
         $lastRunningGamesCount = -1;
 
         while (true) {
-            $currentRunningGamesCount = $this->connectFourService->runningGames()['count'];
+            $currentRunningGamesCount = $this->connectFourQueryBus->handle(new RunningGamesQuery())->count();
 
             // Publish only if count has changed.
             if ($lastRunningGamesCount !== $currentRunningGamesCount) {

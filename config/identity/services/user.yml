@@ -1,8 +1,4 @@
 services:
-    identity.user-controller:
-        class: Gaming\Identity\Port\Adapter\Http\UserController
-        arguments: ['@identity.command-bus']
-
     identity.user-repository:
         class: Gaming\Identity\Port\Adapter\Persistence\Repository\DoctrineUserRepository
         arguments: ['@identity.doctrine-orm']
