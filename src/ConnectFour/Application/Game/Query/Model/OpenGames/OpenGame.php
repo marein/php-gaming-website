@@ -6,23 +6,9 @@ namespace Gaming\ConnectFour\Application\Game\Query\Model\OpenGames;
 
 final class OpenGame
 {
-    private string $gameId;
-
-    private string $playerId;
-
-    public function __construct(string $gameId, string $playerId)
-    {
-        $this->gameId = $gameId;
-        $this->playerId = $playerId;
-    }
-
-    public function gameId(): string
-    {
-        return $this->gameId;
-    }
-
-    public function playerId(): string
-    {
-        return $this->playerId;
+    public function __construct(
+        public readonly string $gameId,
+        public readonly string $playerId
+    ) {
     }
 }

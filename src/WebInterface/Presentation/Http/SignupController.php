@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Http;
 
+use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Integration\FormViolationMapper;
-use Gaming\WebInterface\Application\IdentityService;
+use Gaming\Identity\Application\User\Command\SignUpCommand;
 use Gaming\WebInterface\Infrastructure\Security\Security;
 use Gaming\WebInterface\Presentation\Http\Form\SignupType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +21,7 @@ final class SignupController extends AbstractController
     public function __construct(
         private readonly UriSigner $uriSigner,
         private readonly Security $security,
-        private readonly IdentityService $identityService,
+        private readonly Bus $identityCommandBus,
         private readonly FormViolationMapper $formViolationMapper
     ) {
     }
@@ -36,11 +37,13 @@ final class SignupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->identityService->signUp(
-                    $this->security->getUser()->getUserIdentifier(),
-                    (string)$form->get('email')->getData(),
-                    (string)$form->get('username')->getData(),
-                    true
+                $this->identityCommandBus->handle(
+                    new SignUpCommand(
+                        $this->security->getUser()->getUserIdentifier(),
+                        (string)$form->get('email')->getData(),
+                        (string)$form->get('username')->getData(),
+                        true
+                    )
                 );
 
                 return $this->redirectToRoute('signup_verify_email', [
@@ -87,10 +90,13 @@ final class SignupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->identityService->signUp(
-                    $this->security->getUser()->getUserIdentifier(),
-                    (string)$form->get('email')->getData(),
-                    (string)$form->get('username')->getData()
+                $this->identityCommandBus->handle(
+                    new SignUpCommand(
+                        $this->security->getUser()->getUserIdentifier(),
+                        (string)$form->get('email')->getData(),
+                        (string)$form->get('username')->getData(),
+                        false
+                    )
                 );
 
                 $this->security->getUser()->forceRefreshAtNextRequest();

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Security;
 
-use Gaming\WebInterface\Application\IdentityService;
+use Gaming\Common\Bus\Bus;
+use Gaming\Identity\Application\User\Command\ArriveCommand;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 final class ArrivalAuthenticator extends AbstractAuthenticator
 {
     public function __construct(
-        private readonly IdentityService $identityService,
+        private readonly Bus $identityCommandBus,
         private readonly TokenStorageInterface $tokenStorage
     ) {
     }
@@ -36,7 +37,7 @@ final class ArrivalAuthenticator extends AbstractAuthenticator
     {
         return new SelfValidatingPassport(
             new UserBadge(
-                $this->identityService->arrive()['userId']
+                $this->identityCommandBus->handle(new ArriveCommand())
             )
         );
     }

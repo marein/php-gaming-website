@@ -1,8 +1,4 @@
 services:
-    chat.chat-controller:
-        class: Gaming\Chat\Presentation\Http\ChatController
-        arguments: ['@chat.command-bus', '@chat.query-bus']
-
     chat.chat-gateway:
         class: Gaming\Chat\Infrastructure\DoctrineChatGateway
         arguments: ['@chat.doctrine-dbal', 'chat', 'message']

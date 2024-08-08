@@ -1,8 +1,4 @@
 services:
-    connect-four.game-controller:
-        class: Gaming\ConnectFour\Port\Adapter\Http\GameController
-        arguments: ['@connect-four.command-bus', '@connect-four.query-bus']
-
     connect-four.game-repository:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\DoctrineJsonGameRepository
         arguments:
