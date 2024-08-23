@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "${APP_CHAT_RUN_MIGRATIONS}" = "1" ]
+if [ "${APP_CHAT_RUN_MIGRATIONS}" = "1" ] || [ "${APP_RUN_MIGRATIONS}" = "1" ]
 then
     bin/console doctrine:database:create \
         --connection=chat \
