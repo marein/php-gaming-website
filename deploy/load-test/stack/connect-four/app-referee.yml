@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+    connect-four-referee:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console gaming:consume-messages connect-four.referee -r 3
+        env_file: ../app.env
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            replicas: 5
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+
+volumes:
+    proxysql.sock:

@@ -17,13 +17,6 @@ final class ConnectFourController
     ) {
     }
 
-    public function showAction(string $gameId): JsonResponse
-    {
-        return new JsonResponse(
-            $this->connectFourService->game($gameId)
-        );
-    }
-
     public function openAction(Request $request): JsonResponse
     {
         return new JsonResponse(
