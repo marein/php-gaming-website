@@ -4,6 +4,7 @@ __Table of contents__
 
 * [Overview](#overview)
 * [Deploy the app](#deploy-the-app)
+* [Context is king](#context-is-king)
 
 ## Overview
 
@@ -79,3 +80,39 @@ Choose a deployment environment below and follow the guide to get the app up and
 
   This is not merged yet, but feel free to have a look at [#170](https://github.com/marein/php-gaming-website/pull/170).
 </details>
+
+## Context is king
+
+The platform features a modular, reactive, domain-driven backend architecture. Each
+[context](https://martinfowler.com/bliki/BoundedContext.html) ships as a [module](/src) or
+[service](https://github.com/gaming-platform?q=service-) that scales independently by defining its own
+resources, such as databases, and communicates via messaging to reduce temporal coupling.
+
+Check out the purpose and architectural decisions of each context in the sections below.
+
+<details>
+  <summary>Chat</summary>
+
+  ### Chat
+</details>
+
+<details>
+  <summary>Connect Four</summary>
+
+  ### Connect Four
+</details>
+
+<details>
+  <summary>Identity</summary>
+
+  ### Identity
+</details>
+
+<details>
+  <summary>Web Interface</summary>
+
+  ### Web Interface
+</details>
+
+> [src/Common](/src/Common) contains supporting libraries that may be moved to separate repositories in the future,
+> see [#35](https://github.com/marein/php-gaming-website/issues/35).
