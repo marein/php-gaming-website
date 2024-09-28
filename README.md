@@ -10,7 +10,8 @@ __Table of contents__
 
 This is a web-based board game platform designed for players to connect and play.
 Alongside the gaming experience, it showcases a range of software engineering concepts, including a modular,
-reactive, domain-driven backend architecture that ensures scalability, real-time browser interactions,
+[reactive](https://www.reactivemanifesto.org), [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design)
+backend architecture that ensures scalability, real-time browser interactions,
 and observability - while using technologies often underestimated for their capabilities.
 
 **Curious about how it all works?** Take a deeper dive into the system design in [Context is king](#context-is-king).
@@ -83,7 +84,8 @@ Choose a deployment environment below and follow the guide to get the app up and
 
 ## Context is king
 
-The platform features a modular, reactive, domain-driven backend architecture. Each
+The platform features a modular, [reactive](https://www.reactivemanifesto.org),
+[domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design) backend architecture. Each
 [context](https://martinfowler.com/bliki/BoundedContext.html) ships as a [module](/src) or
 [service](https://github.com/gaming-platform?q=service-) that scales independently by defining its own
 resources, such as databases, and communicates via messaging to reduce temporal coupling.
@@ -94,6 +96,33 @@ Check out the purpose and architectural decisions of each context in the section
   <summary>Chat</summary>
 
   ### Chat
+
+  **Purpose**: [Chat](/src/Chat) allows other contexts, like Connect Four, to initiate chats. Authors can list and write messages
+  in these chats based on their access rights.
+
+  **Communication**: Its use cases are exposed via
+  [messaging](https://www.enterpriseintegrationpatterns.com/patterns/messaging/Messaging.html), utilizing
+  [request-reply](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html),
+  with some directly invoked by the Web Interface to reduce network hops and abstractions.
+  To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
+  are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
+  later published using
+  [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
+  A list of available messages [can be found here](https://github.com/gaming-platform/api).
+
+  **Architecture**: Internally, it uses
+  [ports and adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [application layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  and handling cross-cutting concerns like validation and transaction management. Business logic is organized using a
+  [transaction script](https://martinfowler.com/eaaCatalog/transactionScript.html).
+
+  **Infrastructure**: MySQL is used to store chats, messages and events (outbox), while Redis enables
+  [idempotent messaging](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html)
+  to ensure that each message is processed exactly once, and RabbitMQ facilitates communication with other contexts.
+
+  **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
+  Current usage patterns of MySQL don’t require sharding, but chat IDs would be well-suited for partitioning if needed.
 </details>
 
 <details>
