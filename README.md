@@ -11,7 +11,7 @@ __Table of contents__
 This is a web-based board game platform designed for players to connect and play.
 Alongside the gaming experience, it showcases a range of software engineering concepts, including a modular,
 [reactive](https://www.reactivemanifesto.org), [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design)
-backend architecture that ensures scalability, real-time browser interactions,
+backend architecture that ensures scalability, real-time browser notifications,
 and observability - while using technologies often underestimated for their capabilities.
 
 **Curious about how it all works?** Take a deeper dive into the system design in [Context is king](#context-is-king).
@@ -106,7 +106,7 @@ Check out the purpose and architectural decisions of each context in the section
   with some directly invoked by the Web Interface to reduce network hops and abstractions.
   To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
   are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
-  later published using
+  later published in [Protobuf](https://en.wikipedia.org/wiki/Protocol_Buffers) format using
   [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
   A list of available messages [can be found here](https://github.com/gaming-platform/api).
 
@@ -141,6 +141,33 @@ Check out the purpose and architectural decisions of each context in the section
   <summary>Web Interface</summary>
 
   ### Web Interface
+
+  **Purpose**: [Web Interface](/src/WebInterface) ties all modules together and serves as the main point of
+  interaction for users.
+
+  **Communication**: It directly invokes use cases from other modules to reduce network hops and abstractions,
+  and calls other services via [request-response](https://en.wikipedia.org/wiki/Request–response). To notify users
+  in real-time about what has happened, it subscribes to events from other contexts, using
+  [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html),
+  and forwards them to subscribed users.
+
+  **Architecture**: Internally, it uses a form of
+  [layered architecture](https://en.wikipedia.org/wiki/Multitier_architecture).
+
+  **Infrastructure**: Session storage is managed through Redis, RabbitMQ facilitates communication with other contexts,
+  and Nchan notifies users in real-time.
+
+  **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
+  Some queues can be sharded using RabbitMQ's
+  [consistent hash exchange](https://github.com/rabbitmq/rabbitmq-server/blob/main/deps/rabbitmq_consistent_hash_exchange/README.md)
+  to distribute the load across multiple CPUs. Nchan performs well under current usage patterns, maintaining
+  low latency and responsiveness even under high load.
+
+  **Alternatives**: Instead of organizing the Web Interface horizontally, it could be embedded within the verticals
+  to achieve higher [cohesion](https://en.wikipedia.org/wiki/Cohesion_(computer_science)).
+  [UI composition](https://www.jimmybogard.com/composite-uis-for-microservices-a-primer/) would be done using
+  [ESI](https://en.wikipedia.org/wiki/Edge_Side_Includes)/[SSI](https://en.wikipedia.org/wiki/Server_Side_Includes)
+  to aggregate fragments from each context.
 </details>
 
 > [src/Common](/src/Common) contains supporting libraries that may be moved to separate repositories in the future,
