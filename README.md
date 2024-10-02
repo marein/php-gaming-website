@@ -135,6 +135,30 @@ Check out the purpose and architectural decisions of each context in the section
   <summary>Identity</summary>
 
   ### Identity
+
+  **Purpose**: [Identity](/src/Identity) supports the user’s journey, starting from arrival as an anonymous user,
+  through signup, to managing their profile.
+
+  **Communication**: Its use cases are directly invoked by the Web Interface to reduce network hops and abstractions.
+  To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
+  are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
+  later published in [Protobuf](https://en.wikipedia.org/wiki/Protocol_Buffers) format using
+  [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
+  A list of available messages [can be found here](https://github.com/gaming-platform/api).
+
+  **Architecture**: Internally, it uses
+  [ports and adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [application layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  and handling cross-cutting concerns like validation and transaction management. Business logic is organized using
+  [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), which are managed by an
+  [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping).
+
+  **Infrastructure**: MySQL is used to store user identities and Domain Events (outbox), while RabbitMQ facilitates
+  communication with other contexts.
+
+  **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
+  Current usage patterns of MySQL don’t require sharding, but a strategy similar to Connect Four would be necessary.
 </details>
 
 <details>
@@ -154,8 +178,8 @@ Check out the purpose and architectural decisions of each context in the section
   **Architecture**: Internally, it uses a form of
   [layered architecture](https://en.wikipedia.org/wiki/Multitier_architecture).
 
-  **Infrastructure**: Session storage is managed through Redis, RabbitMQ facilitates communication with other contexts,
-  and Nchan notifies users in real-time.
+  **Infrastructure**: Redis is used to store sessions, while Nchan notifies users in real-time, and RabbitMQ
+  facilitates communication with other contexts.
 
   **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
   Some queues can be sharded using RabbitMQ's
