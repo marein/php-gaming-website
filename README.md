@@ -11,8 +11,7 @@ __Table of contents__
 This is a web-based board game platform designed for players to connect and play.
 Alongside the gaming experience, it showcases a range of software engineering concepts, including a modular,
 [reactive](https://www.reactivemanifesto.org), [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design)
-backend architecture that ensures scalability, real-time browser notifications,
-and observability - while using technologies often underestimated for their capabilities.
+backend architecture that ensures scalability, real-time browser notifications, and observability.
 
 **Curious about how it all works?** Take a deeper dive into the system design in [Context is king](#context-is-king).
 
@@ -20,10 +19,10 @@ and observability - while using technologies often underestimated for their capa
 
 ## Deploy the app
 
-The most convenient way to deploy the application is to use [Docker](https://www.docker.com/),
-either with the [Docker Compose](https://docs.docker.com/compose/) plugin
+To deploy the application, it is recommended to use [Docker](https://www.docker.com/)
+with either the [Docker Compose](https://docs.docker.com/compose/) plugin
 or [Docker Swarm](https://docs.docker.com/engine/swarm/).
-Choose a deployment environment below and follow the guide to get the app up and running.
+Choose a deployment environment below and follow the guide to get the application up and running.
 
 <details>
   <summary>Deploy for local development</summary>
@@ -43,9 +42,9 @@ Choose a deployment environment below and follow the guide to get the app up and
   | [http://localhost:8082/](http://localhost:8082/) | Redis management interface.    |
   | [http://localhost:8083/](http://localhost:8083/) | Grafana management interface.  |
 
-  Use `./project tests` to ensure code quality and consistency. This command performs code style checks,
-  runs static analysis and executes the test suite to verify the application's functionality.
-  It is also integrated into the pipeline to automate these checks upon pushing code.
+  Run `./project tests` to verify code quality and functionality. This command performs code style checks,
+  runs static analysis, and executes the test suite. Automated checks are integrated into the pipeline and
+  executed upon code submission.
 
   Use `./project composer` to manage dependencies and `./project installAssets` to install web assets
   during development. Both commands copy dependencies from the container to the host system upon completion,
@@ -56,8 +55,8 @@ Choose a deployment environment below and follow the guide to get the app up and
   > Updating the codebase will automatically restart long-running processes,
   > such as queue consumers, ensuring that changes are applied immediately.
 
-  > After pulling updates from the repository, remember to run ./project build again.
-  > Since the app isn't deployed to a production server, schema changes are consolidated to keep the codebase clean.
+  > After pulling updates from the repository, re-run `./project build` to incorporate the latest changes.
+  > Schema changes are consolidated to maintain a clean codebase.
 
   > Infrastructure components are shared across contexts to reduce resource usage and configuration complexity.
   > For a more sophisticated setup, take a look at the deployment used for load testing.
@@ -103,8 +102,8 @@ Check out the purpose and architectural decisions of each context in the section
 
   ### Chat
 
-  **Purpose**: [Chat](/src/Chat) allows other contexts, like Connect Four, to initiate chats. Authors can list and write messages
-  in these chats based on their access rights.
+  **Purpose**: [Chat](/src/Chat) enables other contexts, like Connect Four, to initiate chats.
+  Authors can list and write messages in these chats based on their access rights.
 
   **Communication**: Its use cases are exposed via
   [messaging](https://www.enterpriseintegrationpatterns.com/patterns/messaging/Messaging.html), utilizing
