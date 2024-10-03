@@ -217,7 +217,12 @@ Check out the purpose and architectural decisions of each context in the section
   and forwards them to subscribed users.
 
   **Architecture**: Internally, it uses a form of
-  [layered architecture](https://en.wikipedia.org/wiki/Multitier_architecture).
+  [layered architecture](https://en.wikipedia.org/wiki/Multitier_architecture) server-side. To reduce client-side
+  complexity, the [REST architectural style](https://en.wikipedia.org/wiki/REST) is used for browser interactions
+  wherever possible. For client-side heavy features, like real-time notifications or handling
+  [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency), it leverages web standards,
+  such as [Web Components](https://en.wikipedia.org/wiki/Web_Components), reducing maintenance effort significantly
+  due to the long-term stability of the web.
 
   **Infrastructure**: Redis is used to store sessions, while Nchan notifies users in real-time, and RabbitMQ
   facilitates communication with other contexts.
