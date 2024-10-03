@@ -249,3 +249,6 @@ Check out the purpose and architectural decisions of each context in the section
 
 > [src/Common](/src/Common) contains supporting libraries that may be moved to separate repositories in the future,
 > see [#35](https://github.com/marein/php-gaming-website/issues/35).
+
+> The [Gaming Platform organization](https://github.com/gaming-platform) contains supporting
+> [infrastructure components](https://github.com/gaming-platform?q=docker-).
