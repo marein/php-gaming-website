@@ -129,6 +129,47 @@ Check out the purpose and architectural decisions of each context in the section
   <summary>Connect Four</summary>
 
   ### Connect Four
+
+  **Purpose**: [Connect Four](/src/ConnectFour) handles games from players opening a game,
+  through others joining and making moves, till they are finished (win, lose, or draw).
+
+  **Communication**: Its use cases are directly invoked by the Web Interface to reduce network hops and abstractions.
+  To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
+  are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
+  later published in JSON format using
+  [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
+
+  **Architecture**: Internally, it uses
+  [ports and adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [application layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  and handling cross-cutting concerns like validation and retries. Business logic is organized using
+  [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), stored as JSON documents because of their
+  complexity. To keep the model focused on business logic and benefit from its scalability aspects
+  [CQRS](https://en.wikipedia.org/wiki/Command_Query_Responsibility_Segregation) is applied to separate reads and
+  writes. Read models are maintained through projections that
+  [asynchronously process a stream of domain events](https://en.wikipedia.org/wiki/Eventual_consistency).
+  Applying CQRS at this level adds complexity, but the reasoning is explained in the Scalability section
+  ([busting CQRS myths](https://lostechies.com/jimmybogard/2012/08/22/busting-some-cqrs-myths/)).
+
+  **Infrastructure**: MySQL is used to store games (as JSON documents) and events (outbox and
+  [stream processing](https://en.wikipedia.org/wiki/Stream_processing)), while Redis stores read models because
+  they don’t require relational queries, and RabbitMQ facilitates communication with other contexts.
+
+  **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
+  MySQL is sharded at application level using the game ID as the sharding key because it
+  [became a bottleneck during load testing](https://github.com/marein/php-gaming-website/issues/119).
+  ProxySQL enables [schema-based sharding](https://proxysql.com/documentation/how-to-setup-proxysql-sharding/),
+  allows the context to maintain only a single connection, and scales horizontally by being deployed as a
+  [sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar).
+  Current usage patterns of Redis don’t require any action.
+
+  **Alternatives**: Instead of using MySQL for stream processing, technologies like
+  [RabbitMQ’s Super Streams](https://www.rabbitmq.com/docs/streams#super-streams) or [Kafka](https://kafka.apache.org)
+  could be used as they are specifically designed for this purpose. However, MySQL is chosen because it performs
+  very well (>20k events/s), and with the write model already sharded, it scales naturally without the need for
+  additional infrastructure. This choice would be reconsidered if an increase in streaming processes impacts
+  database performance.
 </details>
 
 <details>
@@ -154,7 +195,7 @@ Check out the purpose and architectural decisions of each context in the section
   [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), which are managed by an
   [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping).
 
-  **Infrastructure**: MySQL is used to store user identities and Domain Events (outbox), while RabbitMQ facilitates
+  **Infrastructure**: MySQL is used to store users and events (outbox), while RabbitMQ facilitates
   communication with other contexts.
 
   **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
