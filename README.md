@@ -58,6 +58,9 @@ Choose a deployment environment below and follow the guide to get the app up and
 
   > After pulling updates from the repository, remember to run ./project build again.
   > Since the app isn't deployed to a production server, schema changes are consolidated to keep the codebase clean.
+
+  > Infrastructure components are shared across contexts to reduce resource usage and configuration complexity.
+  > For a more sophisticated setup, take a look at the deployment used for load testing.
 </details>
 
 <details>
@@ -72,6 +75,9 @@ Choose a deployment environment below and follow the guide to get the app up and
 
   Alternatively, [click here](http://play-with-docker.com?stack=https://raw.githubusercontent.com/marein/php-gaming-website/master/deploy/single-server/docker-compose.yml)
   to deploy the application on [Play with Docker](http://play-with-docker.com).
+
+  > Infrastructure components are shared across contexts to reduce resource usage and configuration complexity.
+  > For a more sophisticated setup, take a look at the deployment used for load testing.
 </details>
 
 <details>
