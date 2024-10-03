@@ -151,7 +151,7 @@ Check out the purpose and architectural decisions of each context in the section
   [application layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
   and handling cross-cutting concerns like validation and retries. Business logic is organized using
   [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), stored as JSON documents because of their
-  complexity. To keep the model focused on business logic and benefit from its scalability aspects
+  complexity. To keep the model focused on business logic and benefit from its scalability aspects,
   [CQRS](https://en.wikipedia.org/wiki/Command_Query_Responsibility_Segregation) is applied to separate reads and
   writes. Read models are maintained through projections that
   [asynchronously process a stream of domain events](https://en.wikipedia.org/wiki/Eventual_consistency).
@@ -216,9 +216,10 @@ Check out the purpose and architectural decisions of each context in the section
   **Purpose**: [Web Interface](/src/WebInterface) ties all modules together and serves as the main point of
   interaction for users.
 
-  **Communication**: It directly invokes use cases from other modules to reduce network hops and abstractions,
-  and calls other services via [request-response](https://en.wikipedia.org/wiki/Request–response). To notify users
-  in real-time about what has happened, it subscribes to events from other contexts, using
+  **Communication**: It directly invokes use cases from other [modules](/src) to reduce network hops and abstractions,
+  and calls other [services](https://github.com/gaming-platform?q=service-) via
+  [request-response](https://en.wikipedia.org/wiki/Request–response).
+  To notify users in real-time about what has happened, it subscribes to events from other contexts, using
   [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html),
   and forwards them to subscribed users.
 
