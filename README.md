@@ -2,9 +2,9 @@
 
 __Table of contents__
 
-* [Overview](#overview)
-* [Deploy the app](#deploy-the-app)
-* [Context is king](#context-is-king)
+* [Overview](#overview): A brief introduction to the platform.
+* [Deployment Guide](#deployment-guide): Instructions for deploying the application in different environments.
+* [System Design](#system-design): Details about the functionality and architectural decisions.
 
 ## Overview
 
@@ -13,24 +13,24 @@ Alongside the gaming experience, it showcases a range of software engineering co
 [reactive](https://www.reactivemanifesto.org), [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design)
 backend architecture that ensures scalability, real-time browser notifications, and observability.
 
-**Curious about how it all works?** Take a deeper dive into the system design in [Context is king](#context-is-king).
+Refer to the [System Design](#system-design) for functionality and architectural details, and to the
+[Deployment Guide](#deployment-guide) for setup instructions.
 
-**Ready to set it up?** Keep on reading to find out how to [deploy the app](#deploy-the-app) in different environments.
-
-## Deploy the app
+## Deployment Guide
 
 To deploy the application, it is recommended to use [Docker](https://www.docker.com/)
 with either the [Docker Compose](https://docs.docker.com/compose/) plugin
 or [Docker Swarm](https://docs.docker.com/engine/swarm/).
+
 Choose a deployment environment below and follow the guide to get the application up and running.
 
 <details>
-  <summary>Deploy for local development</summary>
+  <summary>For Local Development</summary>
 
-  ### Deploy for local development
+  ### For Local Development
 
-  Clone the repository and execute `./project build` to run the application. This command uses
-  [Docker Compose](https://docs.docker.com/compose/) and copies downloaded dependencies from
+  To deploy the application for local development, clone the repository and run `./project build`. This
+  command uses [Docker Compose](https://docs.docker.com/compose/) and copies downloaded dependencies from
   the container to the host system, enabling autocompletion.
 
   Once the project is up and running, the following URLs will be accessible:
@@ -63,14 +63,14 @@ Choose a deployment environment below and follow the guide to get the applicatio
 </details>
 
 <details>
-  <summary>Deploy prod on a single server</summary>
+  <summary>Production on Single Server</summary>
 
-  ### Deploy prod on a single server
+  ### Production on Single Server
 
-  Clone the repository or download [this file](/deploy/single-server/docker-compose.yml),
-  and execute `docker compose -f deploy/single-server/docker-compose.yml up -d` or
-  `docker stack deploy -c deploy/single-server/docker-compose.yml app`
-  to deploy the application in a production environment.
+  To deploy the application in a production environment, either clone the repository or
+  [download the deployment file](/deploy/single-server/docker-compose.yml). Then, run
+  `docker compose -f deploy/single-server/docker-compose.yml up -d` or
+  `docker stack deploy -c deploy/single-server/docker-compose.yml app`.
 
   Alternatively, [click here](http://play-with-docker.com?stack=https://raw.githubusercontent.com/marein/php-gaming-website/master/deploy/single-server/docker-compose.yml)
   to deploy the application on [Play with Docker](http://play-with-docker.com).
@@ -80,14 +80,14 @@ Choose a deployment environment below and follow the guide to get the applicatio
 </details>
 
 <details>
-  <summary>Deploy prod for load testing</summary>
+  <summary>Production for Load Testing</summary>
 
-  ### Deploy prod for load testing
+  ### Production for Load Testing
 
   This is not merged yet, but feel free to have a look at [#170](https://github.com/marein/php-gaming-website/pull/170).
 </details>
 
-## Context is king
+## System Design
 
 The platform features a modular, [reactive](https://www.reactivemanifesto.org),
 [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design) backend architecture. Each
@@ -154,8 +154,9 @@ Check out the purpose and architectural decisions of each context in the section
   [CQRS](https://en.wikipedia.org/wiki/Command_Query_Responsibility_Segregation) is applied to separate reads and
   writes. Read models are maintained through projections that
   [asynchronously process a stream of domain events](https://en.wikipedia.org/wiki/Eventual_consistency).
-  Applying CQRS at this level adds complexity, but the reasoning is explained in the Scalability section
-  ([busting CQRS myths](https://lostechies.com/jimmybogard/2012/08/22/busting-some-cqrs-myths/)).
+  Applying CQRS at this level adds complexity
+  ([busting CQRS myths](https://lostechies.com/jimmybogard/2012/08/22/busting-some-cqrs-myths/)),
+  but the reasoning is explained in the Scalability section.
 
   **Infrastructure**: MySQL is used to store games (as JSON documents) and events (outbox and
   [stream processing](https://en.wikipedia.org/wiki/Stream_processing)), while Redis stores read models because
@@ -250,5 +251,5 @@ Check out the purpose and architectural decisions of each context in the section
 > [src/Common](/src/Common) contains supporting libraries that may be moved to separate repositories in the future,
 > see [#35](https://github.com/marein/php-gaming-website/issues/35).
 
-> The [Gaming Platform organization](https://github.com/gaming-platform) contains supporting
-> [infrastructure components](https://github.com/gaming-platform?q=docker-).
+> Additional resources, such as [infrastructure components](https://github.com/gaming-platform?q=docker-), can
+> be found in the [Gaming Platform organization](https://github.com/gaming-platform).
