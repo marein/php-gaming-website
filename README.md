@@ -171,10 +171,11 @@ Check out the purpose and architectural decisions of each context in the section
 
   **Alternatives**: Instead of using MySQL for stream processing, technologies like
   [RabbitMQ’s Super Streams](https://www.rabbitmq.com/docs/streams#super-streams) or [Kafka](https://kafka.apache.org)
-  could be used as they are specifically designed for this purpose. However, MySQL is chosen because it performs
-  very well (>20k events/s), and with the write model already sharded, it scales naturally without the need for
-  additional infrastructure. This choice would be reconsidered if an increase in streaming processes impacts
-  database performance.
+  could be used as they are specifically designed for this purpose. However, MySQL is chosen because it performs very
+  well (>20k events/s) and, since the write model is already sharded, it scales naturally without the need for
+  additional infrastructure. Additionally, for reliable messaging, events need to be streamed out of MySQL first,
+  making it an ideal starting point for processing. This choice would be reconsidered if an increase in streaming
+  processes impacts database performance.
 </details>
 
 <details>
