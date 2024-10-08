@@ -5,6 +5,7 @@ __Table of contents__
 * [Overview](#overview): A brief introduction to the platform.
 * [Deployment Guide](#deployment-guide): Instructions for deploying the application in different environments.
 * [System Design](#system-design): Details about the functionality and architectural decisions.
+* [Technology Stack](#technology-stack): Summary of the technologies used across the platform.
 
 ## Overview
 
@@ -253,3 +254,78 @@ Check out the purpose and architectural decisions of each context in the section
 
 > Additional resources, such as [infrastructure components](https://github.com/gaming-platform?q=docker-), can
 > be found in the [Gaming Platform organization](https://github.com/gaming-platform).
+
+## Technology Stack
+
+The platform uses a minimal set of infrastructure components to keep complexity and maintenance overhead low,
+while expanding its stack only when necessary to meet specific performance or scalability requirements.
+
+Learn more about the technology stack and the reasons behind each choice below.
+
+<details>
+  <summary>Languages and Frameworks</summary>
+
+  ### Languages and Frameworks
+
+  * **PHP & Symfony**: The main language and framework used in the platform. Both are mature, offer a large ecosystem,
+    and provide solid performance with good scalability. Refer to "Production for Load Testing" within the
+    [Deployment Guide](#deployment-guide) to see how the platform performs under load.
+  * **HTML/CSS/JavaScript**: Sticking to web standards as much as possible ensures stability and minimizes maintenance
+    overhead. Modern features like Web Components and Import Maps enhance modularity and reduce the need for additional
+    frameworks and tooling.
+  * **Tabler**: A design system used to provide a consistent UI across the platform, reducing development
+    time by offering pre-built components.
+
+  > Some features may be implemented in other languages, such as Go or C#, where efficient use of all CPU cores
+  > would be beneficial - for example, in a [computer player](https://github.com/marein/php-gaming-website/issues/122)
+  > or [matchmaker](https://github.com/marein/php-gaming-website/issues/121).
+</details>
+
+<details>
+  <summary>Storage</summary>
+
+  ### Storage
+
+  * **MySQL**: A reliable database used to handle both relational and non-relational transactional data, essential
+    for supporting a [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern).
+  * **ProxySQL**: Deployed as a [Sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar) to
+    route database traffic, manage connection pooling, and optimize query performance. It supports
+    [Schema-Based Sharding](https://proxysql.com/documentation/how-to-setup-proxysql-sharding/) and ensures efficient
+    load balancing across MySQL instances.
+  * **Redis**: Employed to manage user sessions, store read models, and implement
+    [Idempotent Receiver](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html),
+    leveraging its in-memory data structure for high-performance operations.
+</details>
+
+<details>
+  <summary>Messaging</summary>
+
+  ### Messaging
+
+  * **RabbitMQ**: Utilized for reliable inter-service communication, supporting both
+    [Request-Reply](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html) and
+    [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html)
+    messaging patterns to facilitate temporal decoupling.
+  * **Nchan**: Provides a scalable, persistent
+    [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html)
+    messaging system for real-time browser notifications, ensuring low-latency between clients and servers.
+  * **MySQL**: Used for [stream processing](https://en.wikipedia.org/wiki/Stream_processing) to build read models
+    within a given context.
+
+  > MySQL is used for stream processing because events are stored in the
+  > [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and need to be streamed to other
+  > messaging systems regardless. It performs well (>20k events/s per shard), but this choice may change if increased
+  > streaming processes impact database performance or if inter-service streaming is required.
+  > [RabbitMQ’s Super Streams](https://www.rabbitmq.com/docs/streams#super-streams) or [Kafka](https://kafka.apache.org)
+  > could be suitable alternatives.
+</details>
+
+<details>
+  <summary>Observability</summary>
+
+  ### Observability
+
+  * **Grafana & Prometheus**: A combined solution for real-time monitoring and visualization, where Prometheus
+    collects and stores metrics, and Grafana provides dashboards and alerts. The dashboard definitions
+    [can be found here](https://github.com/gaming-platform/docker-grafana).
+</details>
