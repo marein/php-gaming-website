@@ -108,23 +108,23 @@ Check out the purpose and architectural decisions of each context in the section
 
   **Communication**: Its use cases are exposed via
   [messaging](https://www.enterpriseintegrationpatterns.com/patterns/messaging/Messaging.html), utilizing
-  [request-reply](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html),
+  [Request-Reply](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html),
   with some directly invoked by the Web Interface to reduce network hops and abstractions.
   To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
-  are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
+  are stored in a [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
   later published in [Protobuf](https://en.wikipedia.org/wiki/Protocol_Buffers) format using
-  [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
+  [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
   A list of available messages [can be found here](https://github.com/gaming-platform/api).
 
   **Architecture**: Internally, it uses
-  [ports and adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
-  from external systems. A [mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
-  [application layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  [Ports and Adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [Mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
   and handling cross-cutting concerns like validation and transaction management. Business logic is organized using a
-  [transaction script](https://martinfowler.com/eaaCatalog/transactionScript.html).
+  [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html).
 
   **Infrastructure**: MySQL is used to store chats, messages and events (outbox), while Redis enables
-  [idempotent messaging](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html)
+  [Idempotent Receivers](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html)
   to ensure that each message is processed exactly once, and RabbitMQ facilitates communication with other contexts.
 
   **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
@@ -141,14 +141,14 @@ Check out the purpose and architectural decisions of each context in the section
 
   **Communication**: Its use cases are directly invoked by the Web Interface to reduce network hops and abstractions.
   To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
-  are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
+  are stored in a [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
   later published in JSON format using
-  [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
+  [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
 
   **Architecture**: Internally, it uses
-  [ports and adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
-  from external systems. A [mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
-  [application layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  [Ports and Adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [Mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
   and handling cross-cutting concerns like validation and retries. Business logic is organized using
   [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), stored as JSON documents because of their
   complexity. To keep the model focused on business logic and benefit from its scalability aspects,
@@ -160,21 +160,21 @@ Check out the purpose and architectural decisions of each context in the section
   but the reasoning is explained in the Scalability section.
 
   **Infrastructure**: MySQL is used to store games (as JSON documents) and events (outbox and
-  [stream processing](https://en.wikipedia.org/wiki/Stream_processing)), while Redis stores read models because
+  [Stream Processing](https://en.wikipedia.org/wiki/Stream_processing)), while Redis stores read models because
   they don’t require relational queries, and RabbitMQ facilitates communication with other contexts.
 
   **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
   MySQL is sharded at application level using the game ID as the sharding key because it
   [became a bottleneck during load testing](https://github.com/marein/php-gaming-website/issues/119).
-  ProxySQL enables [schema-based sharding](https://proxysql.com/documentation/how-to-setup-proxysql-sharding/),
+  ProxySQL enables [Schema-Based Sharding](https://proxysql.com/documentation/how-to-setup-proxysql-sharding/),
   allows the context to maintain only a single connection, and scales horizontally by being deployed as a
-  [sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar).
+  [Sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar).
   Current usage patterns of Redis don’t require any action.
 
   **Alternatives**: Instead of using MySQL for stream processing, technologies like
   [RabbitMQ’s Super Streams](https://www.rabbitmq.com/docs/streams#super-streams) or [Kafka](https://kafka.apache.org)
   could be used as they are specifically designed for this purpose. However, MySQL is chosen because it performs very
-  well (>20k events/s) and, since the write model is already sharded, it scales naturally without the need for
+  well (>20k messages/s) and, since the write model is already sharded, it scales naturally without the need for
   additional infrastructure. Additionally, for reliable messaging, events need to be streamed out of MySQL first,
   making it an ideal starting point for processing. This choice would be reconsidered if an increase in streaming
   processes impacts database performance.
@@ -192,13 +192,13 @@ Check out the purpose and architectural decisions of each context in the section
   To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
   are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
   later published in [Protobuf](https://en.wikipedia.org/wiki/Protocol_Buffers) format using
-  [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
+  [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
   A list of available messages [can be found here](https://github.com/gaming-platform/api).
 
   **Architecture**: Internally, it uses
-  [ports and adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
-  from external systems. A [mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
-  [application layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  [Ports and Adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [Mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
   and handling cross-cutting concerns like validation and transaction management. Business logic is organized using
   [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), which are managed by an
   [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping).
@@ -220,16 +220,16 @@ Check out the purpose and architectural decisions of each context in the section
 
   **Communication**: It directly invokes use cases from other [modules](/src) to reduce network hops and abstractions,
   and calls other [services](https://github.com/gaming-platform?q=service-) via
-  [request-response](https://en.wikipedia.org/wiki/Request–response).
+  [Request-Response](https://en.wikipedia.org/wiki/Request–response).
   To notify users in real-time about what has happened, it subscribes to events from other contexts, using
-  [publish-subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html),
+  [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html),
   and forwards them to subscribed users.
 
   **Architecture**: Internally, it uses a form of
-  [layered architecture](https://en.wikipedia.org/wiki/Multitier_architecture) server-side. To reduce client-side
+  [Layered Architecture](https://en.wikipedia.org/wiki/Multitier_architecture) server-side. To reduce client-side
   complexity, the [REST architectural style](https://en.wikipedia.org/wiki/REST) is used for browser interactions
   wherever possible. For client-side heavy features, like real-time notifications or handling
-  [eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency), it leverages web standards,
+  [Eventual Consistency](https://en.wikipedia.org/wiki/Eventual_consistency), it leverages web standards,
   such as [Web Components](https://en.wikipedia.org/wiki/Web_Components), reducing maintenance effort significantly
   due to the long-term stability of the web.
 
@@ -238,7 +238,7 @@ Check out the purpose and architectural decisions of each context in the section
 
   **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
   Some queues can be sharded using RabbitMQ's
-  [consistent hash exchange](https://github.com/rabbitmq/rabbitmq-server/blob/main/deps/rabbitmq_consistent_hash_exchange/README.md)
+  [Consistent Hash Exchange](https://github.com/rabbitmq/rabbitmq-server/blob/main/deps/rabbitmq_consistent_hash_exchange/README.md)
   to distribute the load across multiple CPUs. Nchan performs well under current usage patterns, maintaining
   low latency and responsiveness even under high load.
 
@@ -253,7 +253,7 @@ Check out the purpose and architectural decisions of each context in the section
 > see [#35](https://github.com/marein/php-gaming-website/issues/35).
 
 > Additional resources, such as [infrastructure components](https://github.com/gaming-platform?q=docker-), can
-> be found in the [Gaming Platform organization](https://github.com/gaming-platform).
+> be found in the [Gaming Platform](https://github.com/gaming-platform) organization.
 
 ## Technology Stack
 
@@ -309,7 +309,7 @@ Learn more about the technology stack and the reasons behind each choice below.
   * **Nchan**: Provides a scalable, persistent
     [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html)
     messaging system for real-time browser notifications, ensuring low-latency between clients and servers.
-  * **MySQL**: Used for [stream processing](https://en.wikipedia.org/wiki/Stream_processing) to build read models
+  * **MySQL**: Used for [Stream Processing](https://en.wikipedia.org/wiki/Stream_processing) to build read models
     within a given context.
 
   > MySQL is used for stream processing because events are stored in the
