@@ -309,6 +309,9 @@ Learn more about the technology stack and the reasons behind each choice below.
     [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) reliably to other messaging systems,
     and to perform [Stream Processing](https://en.wikipedia.org/wiki/Stream_processing) for building read models within
     a given context using those same events.
+  * **Protobuf & JSON**: The chosen message formats for inter-service communication. While JSON messages are not
+    defined using [JSON Schema](https://json-schema.org) to avoid added complexity, Protobuf schema definitions
+    [can be found here](https://github.com/gaming-platform/api).
 
   > MySQL is used for Stream Processing because Domain Events are already stored in the Transactional Outbox and need
   > to be published to messaging systems as it already does with RabbitMQ. This avoids additional complexity as long as
