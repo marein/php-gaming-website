@@ -2,357 +2,331 @@
 
 __Table of contents__
 
-* [Overview](#overview)
-* [Installation and requirements](#installation-and-requirements)
-* [Context is king](#context-is-king)
-  * [Chat](#chat)
-  * [Common](#common)
-  * [Connect Four](#connect-four)
-  * [Identity](#identity)
-  * [Web Interface](#web-interface)
-* [Transition to Microservices](#transition-to-microservices)
-* [Scale-Out the application](#scale-out-the-application)
-* [Chosen technologies](#chosen-technologies)
-* [A note on testing](#a-note-on-testing)
+* [Overview](#overview): A brief introduction to the platform.
+* [Deployment Guide](#deployment-guide): Instructions for deploying the application in different environments.
+* [System Design](#system-design): Details about the functionality and architectural decisions.
+* [Technology Stack](#technology-stack): Summary of the technologies used across the platform.
 
 ## Overview
 
-This is my playground project to explore new ideas and concepts. It's a gaming website where people can play against
-each other. Currently, the only game is [Connect Four](#connect-four) but I plan other games to show more concepts.
+This is a web-based board game platform designed for players to connect and play.
+Alongside the gaming experience, it showcases a range of software engineering concepts, including a modular,
+[reactive](https://www.reactivemanifesto.org), [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design)
+backend architecture that ensures scalability, real-time browser notifications, and observability.
 
-Before you start looking at the code, I recommend reading this documentation to understand what concepts I use
-and why I apply these concepts for this particular application.
+Refer to the [System Design](#system-design) for functionality and architectural details, the
+[Deployment Guide](#deployment-guide) for setup instructions, and the [Technology Stack](#technology-stack)
+for information on the technologies used.
 
-The application is built with a
-[Microservice Architecture](https://martinfowler.com/articles/microservices.html),
-concepts of
-[Domain Driven Design](http://domainlanguage.com/ddd/reference/)
-and Scale-Out techniques in mind.
-The sections
-[Context is king](#context-is-king),
-[Transition to Microservices](#transition-to-microservices)
-and
-[Scale-Out the application](#scale-out-the-application)
-describe what's done to apply these concepts.
+## Deployment Guide
 
-## Installation and requirements
+To deploy the application, it is recommended to use [Docker](https://www.docker.com/)
+with either the [Docker Compose](https://docs.docker.com/compose/) plugin
+or [Docker Swarm](https://docs.docker.com/engine/swarm/).
 
-[Docker](https://www.docker.com)
-with
-[Docker Compose](https://docs.docker.com/compose/)
-plugin for deploying the application.
+Choose a deployment environment below and follow the guide to get the application up and running.
 
-A modern browser, as this project uses modern features and doesn't polyfill all of them, e.g.
-[Server-sent events](https://caniuse.com/eventsource)
-and
-[Custom Elements](https://caniuse.com/custom-elementsv1).
+<details>
+  <summary>For Local Development</summary>
 
-### Development
+  ### For Local Development
 
-```
-git clone https://github.com/marein/php-gaming-website
-cd php-gaming-website
-./project build
-```
+  To deploy the application for local development, clone the repository and run `./project build`. This
+  command uses [Docker Compose](https://docs.docker.com/compose/) and copies downloaded dependencies from
+  the container to the host system, enabling autocompletion.
 
-There're several other handy commands in the project script, like running tests or a static analyzer. You see them with
+  Once the project is up and running, the following URLs will be accessible:
 
-```
-./project help
-```
+  | URL                                              | Information                    |
+  |--------------------------------------------------|--------------------------------|
+  | [http://localhost/](http://localhost/)           | The application.               |
+  | [http://localhost:8081/](http://localhost:8081/) | MySQL management interface.    |
+  | [http://localhost:8082/](http://localhost:8082/) | Redis management interface.    |
+  | [http://localhost:8083/](http://localhost:8083/) | Grafana management interface.  |
 
-__Note__  
-If you update your local repository, you have to "./project build" again.
-This project is in development and I don't pollute the code with schema changes at this stage.
+  Run `./project tests` to verify code quality and functionality. This command performs code style checks,
+  runs static analysis, and executes the test suite. Automated checks are integrated into the pipeline and
+  executed upon code submission.
 
-Following urls are accessible after the project is successfully started.
+  Use `./project composer` to manage dependencies and `./project installAssets` to install web assets
+  during development. Both commands copy dependencies from the container to the host system upon completion,
+  enabling autocompletion.
 
-| URL                                              | Information                    |
-|--------------------------------------------------|--------------------------------|
-| [http://localhost/](http://localhost/)           | The application.               |
-| [http://localhost:8081/](http://localhost:8081/) | MySQL management interface.    |
-| [http://localhost:8082/](http://localhost:8082/) | Redis management interface.    |
-| [http://localhost:8083/](http://localhost:8083/) | Grafana management interface.  |
+  > Additional commands helpful during development can be found by running `./project help`.
 
-### Production
+  > Updating the codebase will automatically restart long-running processes,
+  > such as queue consumers, ensuring that changes are applied immediately.
 
-The
-[production images](https://hub.docker.com/r/marein/php-gaming-website/)
-are built when pushed to git master. They always reflect the latest stable version.
+  > After pulling updates from the repository, re-run `./project build` to incorporate the latest changes.
+  > Schema changes are consolidated to maintain a clean codebase.
 
-You can run them as follows.
+  > Infrastructure components are shared across contexts to reduce resource usage and configuration complexity.
+  > For a more sophisticated setup, take a look at the deployment used for load testing.
+</details>
 
-```
-git clone https://github.com/marein/php-gaming-website
-cd php-gaming-website
-docker compose -f deploy/single-server/docker-compose.yml pull
-docker compose -f deploy/single-server/docker-compose.yml up
-```
+<details>
+  <summary>Production on Single Server</summary>
 
-Or you can try out
-[Play with Docker](http://play-with-docker.com?stack=https://raw.githubusercontent.com/marein/php-gaming-website/master/deploy/single-server/docker-compose.yml).
+  ### Production on Single Server
 
-## Context is king
+  To deploy the application in a production environment, either clone the repository or
+  [download the deployment file](/deploy/single-server/docker-compose.yml). Then, run
+  `docker compose -f deploy/single-server/docker-compose.yml up -d` or
+  `docker stack deploy -c deploy/single-server/docker-compose.yml app`.
 
-The application is split into several
-[Bounded Contexts](https://martinfowler.com/bliki/BoundedContext.html).
-I've chosen modeling techniques like
-[Domain Driven Design](http://domainlanguage.com/ddd/reference/)
-and
-[Event Storming](https://en.wikipedia.org/wiki/Event_storming)
-to define them. Well, you only see the result and not the breakthroughs I went through.
-The following sections describe what techniques I use in the respective context.
-Note that I've intentionally chosen a different approach in each context.
+  Alternatively, [click here](http://play-with-docker.com?stack=https://raw.githubusercontent.com/marein/php-gaming-website/master/deploy/single-server/docker-compose.yml)
+  to deploy the application on [Play with Docker](http://play-with-docker.com).
 
-I presuppose you've read
-[Implementing Domain Driven Design](https://vaughnvernon.co/?page_id=168#iddd)
-by Vaughn Vernon and
-[Tackling Complexity in the Heart of Software](http://dddcommunity.org/book/evans_2003/)
-by Eric Evans.
+  > Infrastructure components are shared across contexts to reduce resource usage and configuration complexity.
+  > For a more sophisticated setup, take a look at the deployment used for load testing.
+</details>
 
-### Chat
+<details>
+  <summary>Production for Load Testing</summary>
 
-To organize the business logic, the
-[Chat](/src/Chat)
-context uses the 
-[Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html)
-pattern. The tasks are to initiate chats, list messages from a chat, and allow authors to write messages in a chat.
-If authors are assigned to a chat, only those authors can write and read messages.
+  ### Production for Load Testing
 
-The public interface is formed by a
-[controller](/src/Chat/Presentation/Http/ChatController.php),
-which can be called up via http, and a
-[message handler](/src/Chat/Infrastructure/Messaging/CommandMessageHandler.php),
-which serves as an interface to a message broker.
+  This is not merged yet, but feel free to have a look at [#170](https://github.com/marein/php-gaming-website/pull/170).
+</details>
 
-This context publishes
-[Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
-through the message broker to inform other contexts what's happened here.
-First the domain events are stored to the event store.
-This happens in the same transaction in which the commands are executed.
-After that, an
-[event subscriber](/src/Chat/Infrastructure/Messaging/PublishStoredEventsToMessageBrokerSubscriber.php)
-publishes these stored events to the message broker.
+## System Design
 
-I've chosen MySQL as the storage.
+The platform features a modular, [reactive](https://www.reactivemanifesto.org),
+[domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design) backend architecture. Each
+[context](https://martinfowler.com/bliki/BoundedContext.html) ships as a [module](/src) or
+[service](https://github.com/gaming-platform?q=service-) that scales independently by defining its own
+resources, such as databases, and communicates via messaging to reduce temporal coupling.
 
-### Common
+Check out the purpose and architectural decisions of each context in the sections below.
 
-[Common](/src/Common)
-provides a set of reusable libraries that can be swapped out at some point, but there are also already similar
-libraries available through
-[Packagist](https://packagist.org).
+<details>
+  <summary>Chat</summary>
 
-### Connect Four
+  ### Chat
 
-[Connect Four](/src/ConnectFour)
-is the context where I put the most effort in. The business logic is definitely worth building a proper
-[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html).
-Players can open, join, abort and resign a game. Of course they can also perform moves.
-The game can be aborted until the second move. After the second move, players can only resign or finish the game.
-The referee, which sits near the game desks, ensure that the people can talk to each other.
-This process is described below.
+  **Purpose**: [Chat](/src/Chat) enables other contexts, like Connect Four, to initiate chats.
+  Authors can list and write messages in these chats based on their access rights.
 
-As the
-[folder structure](/src/ConnectFour)
-shows, this context uses the "Ports and Adapters" architecture. The
-[Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
-is split into several callable classes. Cross-cutting concerns are handled via a decorated
-[mediator](/src/Common/Bus/Bus.php)
-instead of handling them directly inside the classes.
+  **Communication**: Its use cases are exposed via
+  [messaging](https://www.enterpriseintegrationpatterns.com/patterns/messaging/Messaging.html), utilizing
+  [Request-Reply](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html),
+  with some directly invoked by the Web Interface to reduce network hops and abstractions.
+  To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
+  are stored in a [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
+  later published in [Protobuf](https://en.wikipedia.org/wiki/Protocol_Buffers) format using
+  [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
+  A list of available messages [can be found here](https://github.com/gaming-platform/api).
 
-The public interface is formed by a
-[controller](/src/ConnectFour/Port/Adapter/Http/GameController.php),
-which can be called up via http.
+  **Architecture**: Internally, it uses
+  [Ports and Adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [Mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  and handling cross-cutting concerns like validation and transaction management. Business logic is organized using a
+  [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html).
 
-This context publishes
-[Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
-through the message broker to inform other contexts what's happened here.
-First the domain events are stored to the event store.
-This happens in the same transaction in which the commands are executed.
-After that, an
-[event subscriber](/src/ConnectFour/Port/Adapter/Messaging/PublishStoredEventsToMessageBrokerSubscriber.php)
-publishes these stored events to the message broker.
+  **Infrastructure**: MySQL is used to store chats, messages and events (Transactional Outbox), while Redis enables
+  [Idempotent Receivers](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html)
+  to ensure that each message is processed exactly once, and RabbitMQ facilitates communication with other contexts.
 
-The Connect Four context applies the
-[CQRS](https://martinfowler.com/bliki/CQRS.html)
-pattern. Not only the domain model is divided into command and query side, but also the storage layer.
-The query model is stored in an
-[eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency)
-manner. Multiple
-[projections](/src/ConnectFour/Port/Adapter/Persistence/Projection)
-retrieve the stored events from the event store and create the query models.
-This is done for scalability reasons. Why exactly this was done is described in the section
-"[Scale-Out the application](#scale-out-the-application)".
-Before you use it in your application, you should check if you really need it.
-This model adds risky complexity to the codebase. Also note that nothing I've done here is required to
-apply the basics of the CQRS pattern. Look at
-"[Busting some CQRS myths](https://lostechies.com/jimmybogard/2012/08/22/busting-some-cqrs-myths/)"
-by Jimmy Bogard for further reading.
+  **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
+  Current usage patterns of MySQL don’t require sharding, but chat IDs would be well-suited for partitioning if needed.
+</details>
 
-There's also a
-[Process Manager](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ProcessManager.html)
-involved.
-Its name is referee and it's a
-[message handler](/src/ConnectFour/Port/Adapter/Messaging/RefereeMessageHandler.php).
-The referee picks up a player joined event and ensures, that a chat is initiated.
-When the chat is initiated, it assigns the chat to the game.
-This is done, so the storage of games and chats can be on different MySQL instances.
-This allows to scale the games and the chats independently, but ensures consistency with
-[eventual consistency](https://en.wikipedia.org/wiki/Eventual_consistency).
+<details>
+  <summary>Connect Four</summary>
 
-I've chosen MySQL as the command side storage. Since the games are stored as json, MySQL is used as a document store.
-On the query side, I've chosen Redis as the storage, since there are no relational queries to perform.
-Note that on the command side you'll need a database that allows you to store the domain model as well as
-the events in a single transaction. Another possibility is to use
-[Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
-as the storage model. With this model, only the events are saved.
-The game aggregate is actually a good fit for the event sourcing approach.
-Maybe I'll implement this storage model in the next game.
+  ### Connect Four
 
-### Identity
+  **Purpose**: [Connect Four](/src/ConnectFour) handles games from players opening a game,
+  through others joining and making moves, till they are finished (win, lose, or draw).
 
-The
-[Identity](/src/Identity)
-context is managing the user identities. To organize the business logic I've chosen the
-[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html)
-pattern backed up by an ORM. In this case I've chosen Doctrine because it's a really matured ORM that applies the
-[Data Mapper](https://martinfowler.com/eaaCatalog/dataMapper.html)
-pattern. The main responsibilities are that users can sign up, authenticate, change username and change password.
+  **Communication**: Its use cases are directly invoked by the Web Interface to reduce network hops and abstractions.
+  To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
+  are stored in a [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
+  later published in JSON format using
+  [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
 
-As the
-[folder structure](/src/Identity)
-shows, this context uses the "Ports and Adapters" architecture. The
-[Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html)
-uses a traditional application service. Cross-cutting concerns are handled via a decorated
-[mediator](/src/Common/Bus/Bus.php)
-instead of handling them directly inside the service.
+  **Architecture**: Internally, it uses
+  [Ports and Adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [Mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  and handling cross-cutting concerns like validation and retries. Business logic is organized using
+  [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), stored as JSON documents because of their
+  complexity. To keep the model focused on business logic and benefit from its scalability aspects,
+  [CQRS](https://en.wikipedia.org/wiki/Command_Query_Responsibility_Segregation) is applied to separate reads and
+  writes. Read models are maintained through projections that
+  [asynchronously process a stream of domain events](https://en.wikipedia.org/wiki/Eventual_consistency).
+  Applying CQRS at this level adds complexity
+  ([busting CQRS myths](https://lostechies.com/jimmybogard/2012/08/22/busting-some-cqrs-myths/)),
+  but the reasoning is explained in the Scalability section.
 
-The public interface is formed by a
-[controller](/src/Identity/Port/Adapter/Http/UserController.php),
-which can be called up via http.
+  **Infrastructure**: MySQL is used to store games (as JSON documents) and events (Transactional Outbox and
+  [Stream Processing](https://en.wikipedia.org/wiki/Stream_processing)), while Redis stores read models because
+  they don’t require relational queries, and RabbitMQ facilitates communication with other contexts.
 
-### Web Interface
+  **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
+  MySQL is sharded at application level using the game ID as the sharding key because it
+  [became a bottleneck during load testing](https://github.com/marein/php-gaming-website/issues/119).
+  ProxySQL enables [Schema-Based Sharding](https://proxysql.com/documentation/how-to-setup-proxysql-sharding/),
+  allows the context to maintain only a single connection, and scales horizontally by being deployed as a
+  [Sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar).
+  Current usage patterns of Redis don’t require any action.
 
-The
-[Web Interface](/src/WebInterface)
-acts like an
-[Backend For Frontend](https://samnewman.io/patterns/architectural/bff/).
-All browser interactions go through this context. The main responsibilities are the session management
-and the aggregation of the data from the other contexts. The
-[JavaScript](/assets/js)
-and
-[StyleSheet](/assets/css)
-are also defined here.
+  **Alternatives**: MySQL might not be the first choice for Stream Processing. Refer to "Messaging" in the
+  [Technology Stack](#technology-stack) for the reasoning and alternatives.
+</details>
 
-There're currently three pages.
-1. The first page is the game lobby. Users can come together here to open or join games.
-If John opens a game and Jane clicks on it, both have a game against each other.
-If John clicks on his own game, the game will be aborted.
-2. The second page is the game itself. The users play against each other and can write messages.
-3. The third page is the user profile. Users can see a history of past games here.
+<details>
+  <summary>Identity</summary>
 
-## Transition to Microservices
+  ### Identity
 
-This application matches all requirements to be a so called
-[Microservice Architecture](https://martinfowler.com/articles/microservices.html),
-except for deployment. This section describe the steps which needs to be done to fulfill the microservice requirement.
-The true microservice approach isn't done, because I don't need it. I'm a single developer and it isn't worthwhile
-here. The only requirement I've set myself is the high scalability which is described in the next section. However,
-I've assigned an abstraction layer to the Web Interface context for easier migration to the microservice architecture.
+  **Purpose**: [Identity](/src/Identity) supports the user’s journey, starting from arrival as an anonymous user,
+  through signup, to managing their profile.
 
-To have single deployable units, the following steps needs to be done
-1. Copy the folders (at
-[config](/config),
-[src](/src)
-and
-[tests](/tests))
-in a separate application for each context or the context that's worthwhile to be a single deployable unit.
-Because there are direct method invocations to the controllers (except WebInterface),
-the routing needs to be defined.
-2. The WebInterface is the only context which performs direct method invocations to the others.
-This needs to be rewritten. The interfaces in the folder
-[src/WebInterface/Application](/src/WebInterface/Application)
-need new implementations which are currently located in
-[src/WebInterface/Infrastructure/Integration](/src/WebInterface/Infrastructure/Integration).
-They're need to make
-[rpc](https://en.wikipedia.org/wiki/Remote_procedure_call)
-calls.
+  **Communication**: Its use cases are directly invoked by the Web Interface to reduce network hops and abstractions.
+  To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
+  are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
+  later published in [Protobuf](https://en.wikipedia.org/wiki/Protocol_Buffers) format using
+  [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html).
+  A list of available messages [can be found here](https://github.com/gaming-platform/api).
 
-__It's totally fine to invoke the application layer of the other contexts directly.
-It helps with type safety and adds other benefits that you get from a monolithic approach.
-I've added this layer of abstraction to write this section.__
+  **Architecture**: Internally, it uses
+  [Ports and Adapters](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)) to separate business logic
+  from external systems. A [Mediator](https://en.wikipedia.org/wiki/Mediator_pattern) exposes the
+  [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
+  and handling cross-cutting concerns like validation and transaction management. Business logic is organized using
+  [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), which are managed by an
+  [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping).
 
-## Scale-Out the application
+  **Infrastructure**: MySQL is used to store users and events (Transactional Outbox), while RabbitMQ facilitates
+  communication with other contexts.
 
-Scale-Out is a technique where you can put as much servers in parallel as possible to handle high loads.
-I've set this requirement for this application. This section describe how this requirement is fulfilled.
+  **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
+  Current usage patterns of MySQL don’t require sharding, but a strategy similar to Connect Four would be necessary.
+</details>
 
-The application itself is stateless. This means that the application store lives in a different location.
-We can scale the application when we put a
-[Load Balancer](https://en.wikipedia.org/wiki/Load_balancing_(computing))
-in front of it.
+<details>
+  <summary>Web Interface</summary>
 
-In the next step we've to scale the databases. We've to divide this into two parts
-1. First we want to scale the databases for reading purposes.  
-Since there should not be a concurrency problem in this application, we can add replicas for the MySQL and Redis stores.
-2. Then we want to scale the databases for writing purposes.  
-__Example for connect four__: This context already can be scaled-out by
-[sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture))
-the database, since queries that span multiple games have been offloaded. How this is made possible is described
-[in this section](#connect-four).
-Only the game id is needed for the execution of the command model,
-which is why it's well suited for the sharding key.
-Sharding is done at the application level, more specifically in the
-[repository](/src/ConnectFour/Port/Adapter/Persistence/Repository/DoctrineJsonGameRepository.php).
-The application uses schema-based sharding and is aware of all existing logical shards,
-while it's only aware of one physical connection. To actually forward queries to separate physical shards,
-a proxy such as ProxySQL can be used. An example will be added with
-[#118](https://github.com/marein/php-gaming-website/issues/118).  
-__Example for chat__: Currently there shouldn't be queries that span multiple chats.
-To invoke a chat operation (either writing or reading) we exclusively need a chat id.
-As in connect four context, we can use
-[sharding](https://en.wikipedia.org/wiki/Shard_(database_architecture))
-for the chat context, where the chat id is the sharding key.
+  ### Web Interface
 
-You may have seen that all contexts uses only one MySQL and one Redis instance.
-This could be different for the production environment depending on the scale.
-For this reason, different databases can be configured for the different contexts. Have a look at the
-[configuration file](/.env).
-We can split this even further.
-For example, we can create a Redis instance per query model in the "Connect Four" context.
-Of course, the code must be adapted. Whether it's worth it depends also on the scale.
+  **Purpose**: [Web Interface](/src/WebInterface) ties all modules together and serves as the main point of
+  interaction for users.
 
-## Chosen technologies
+  **Communication**: It directly invokes use cases from other [modules](/src) to reduce network hops and abstractions,
+  and calls other [services](https://github.com/gaming-platform?q=service-) via
+  [Request-Response](https://en.wikipedia.org/wiki/Request–response).
+  To notify users in real-time about what has happened, it subscribes to events from other contexts, using
+  [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html),
+  and forwards them to subscribed users.
 
-It's mainly written with PHP, but also JavaScript
-for the frontend. I've chosen
-[Symfony](https://symfony.com)
-as the underlying framework, because I know it and I'm free to choose my application architecture,
-or in this context, the directory structure.
+  **Architecture**: Internally, it uses a form of
+  [Layered Architecture](https://en.wikipedia.org/wiki/Multitier_architecture) server-side. To reduce client-side
+  complexity, the [REST architectural style](https://en.wikipedia.org/wiki/REST) is used for browser interactions
+  wherever possible. For client-side heavy features, like real-time notifications or handling
+  [Eventual Consistency](https://en.wikipedia.org/wiki/Eventual_consistency), it leverages web standards,
+  such as [Web Components](https://en.wikipedia.org/wiki/Web_Components), reducing maintenance effort significantly
+  due to the long-term stability of the web.
 
-Some other technologies:
-* [MySQL](https://www.mysql.com) as the main storage of the contexts.
-* [ProxySQL](https://proxysql.com) as a connection pool and for query routing / database sharding.
-* [Redis](https://redis.io) for the query models or as a caching layer. Also the user sessions are stored here.
-* [Rabbit Mq](https://www.rabbitmq.com) as the message broker.
-* [Nchan](https://nchan.io) for real-time browser notifications.
-* [Grafana](https://grafana.com) and [Prometheus](https://prometheus.io) for observability.
-* Various [libraries](/composer.json) for php.
+  **Infrastructure**: Redis is used to store sessions, while Nchan notifies users in real-time, and RabbitMQ
+  facilitates communication with other contexts.
 
-## A note on testing
+  **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
+  Some queues can be sharded using RabbitMQ's
+  [Consistent Hash Exchange](https://github.com/rabbitmq/rabbitmq-server/blob/main/deps/rabbitmq_consistent_hash_exchange/README.md)
+  to distribute the load across multiple CPUs. Nchan performs well under current usage patterns, maintaining
+  low latency and responsiveness even under high load.
 
-The unit tests written in this application focuses on the business logic.
-You can run them as follows.
+  **Alternatives**: Instead of organizing the Web Interface horizontally, it could be embedded within the verticals
+  to achieve higher [cohesion](https://en.wikipedia.org/wiki/Cohesion_(computer_science)).
+  [UI composition](https://www.jimmybogard.com/composite-uis-for-microservices-a-primer/) would be done using
+  [ESI](https://en.wikipedia.org/wiki/Edge_Side_Includes)/[SSI](https://en.wikipedia.org/wiki/Server_Side_Includes)
+  to aggregate fragments from each context.
+</details>
 
-```
-./project unit
-```
+> [src/Common](/src/Common) contains supporting libraries that may be moved to separate repositories in the future,
+> see [#35](https://github.com/marein/php-gaming-website/issues/35).
 
-There are also acceptance tests (not many yet) that check if all is working and wired together as expected.
-Acceptance tests work directly on the production images which gets pushed to docker hub.
-You can run them as follows.
+> Additional resources, such as [infrastructure components](https://github.com/gaming-platform?q=docker-), can
+> be found in the [Gaming Platform](https://github.com/gaming-platform) organization.
 
-```
-./project acceptance
-```
+## Technology Stack
+
+The platform uses a minimal set of infrastructure components to keep complexity and maintenance overhead low,
+while expanding its stack only when necessary to meet specific performance or scalability requirements.
+
+Learn more about the technology stack and the reasons behind each choice below.
+
+<details>
+  <summary>Languages and Frameworks</summary>
+
+  ### Languages and Frameworks
+
+  * **PHP & Symfony**: The main language and framework used in the platform. Both are mature, offer a large ecosystem,
+    and provide solid performance with good scalability. Refer to "Production for Load Testing" within the
+    [Deployment Guide](#deployment-guide) to see how the platform performs under load.
+  * **HTML/CSS/JavaScript**: Sticking to web standards as much as possible ensures stability and minimizes maintenance
+    overhead. Modern features like Web Components and Import Maps enhance modularity and reduce the need for additional
+    frameworks and tooling.
+  * **Tabler**: A design system used to provide a consistent UI across the platform, reducing development
+    time by offering pre-built components.
+
+  > Some features may be implemented in other languages, such as Go or C#, where efficient use of all CPU cores
+  > would be beneficial - for example, in a [computer player](https://github.com/marein/php-gaming-website/issues/122)
+  > or [matchmaker](https://github.com/marein/php-gaming-website/issues/121).
+</details>
+
+<details>
+  <summary>Storage</summary>
+
+  ### Storage
+
+  * **MySQL**: A reliable database used to handle both relational and non-relational transactional data, essential
+    for supporting a [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern).
+  * **ProxySQL**: Deployed as a [Sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar) to
+    route database traffic, manage connection pooling, and optimize query performance. It supports
+    [Schema-Based Sharding](https://proxysql.com/documentation/how-to-setup-proxysql-sharding/) and ensures efficient
+    load balancing across MySQL instances.
+  * **Redis**: Employed to manage user sessions, store read models, and implement
+    [Idempotent Receivers](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html),
+    leveraging its in-memory data structure for high-performance operations.
+</details>
+
+<details>
+  <summary>Messaging</summary>
+
+  ### Messaging
+
+  * **RabbitMQ**: Utilized for reliable inter-service communication, supporting both
+    [Request-Reply](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html) and
+    [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html)
+    messaging patterns to facilitate temporal decoupling.
+  * **Nchan**: Provides a scalable, persistent
+    [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html)
+    messaging system for real-time browser notifications, ensuring low-latency between clients and servers.
+  * **MySQL**: Used to publish [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html) stored in the
+    [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) reliably to other messaging systems,
+    and to perform [Stream Processing](https://en.wikipedia.org/wiki/Stream_processing) for building read models within
+    a given context using those same events.
+  * **Protobuf & JSON**: The chosen message formats for inter-service communication. While JSON messages are not
+    defined using [JSON Schema](https://json-schema.org) to avoid added complexity, Protobuf schema definitions
+    [can be found here](https://github.com/gaming-platform/api).
+
+  > MySQL is used for Stream Processing because Domain Events are already stored in the Transactional Outbox and need
+  > to be published to messaging systems as it already does with RabbitMQ. This avoids additional complexity as long as
+  > MySQL scales effectively (>20k events/s per shard). If increased streaming processes impact database performance
+  > or if inter-service streaming is required, alternatives like
+  > [RabbitMQ’s Super Streams](https://www.rabbitmq.com/docs/streams#super-streams) or
+  > [Kafka](https://kafka.apache.org) will be considered.
+</details>
+
+<details>
+  <summary>Observability</summary>
+
+  ### Observability
+
+  * **Grafana & Prometheus**: A combined solution for real-time monitoring and visualization, where Prometheus
+    collects and stores metrics, and Grafana provides dashboards and alerts. The dashboard definitions
+    [can be found here](https://github.com/gaming-platform/docker-grafana).
+</details>
