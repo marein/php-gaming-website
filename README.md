@@ -289,7 +289,7 @@ Learn more about the technology stack and the reasons behind each choice below.
     [Schema-Based Sharding](https://proxysql.com/documentation/how-to-setup-proxysql-sharding/) and ensures efficient
     load balancing across MySQL instances.
   * **Redis**: Employed to manage user sessions, store read models, and implement
-    [Idempotent Receiver](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html),
+    [Idempotent Receivers](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html),
     leveraging its in-memory data structure for high-performance operations.
 </details>
 
