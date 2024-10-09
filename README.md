@@ -14,8 +14,9 @@ Alongside the gaming experience, it showcases a range of software engineering co
 [reactive](https://www.reactivemanifesto.org), [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design)
 backend architecture that ensures scalability, real-time browser notifications, and observability.
 
-Refer to the [System Design](#system-design) for functionality and architectural details, and to the
-[Deployment Guide](#deployment-guide) for setup instructions.
+Refer to the [System Design](#system-design) for functionality and architectural details, the
+[Deployment Guide](#deployment-guide) for setup instructions, and the [Technology Stack](#technology-stack)
+for information on the technologies used.
 
 ## Deployment Guide
 
@@ -123,7 +124,7 @@ Check out the purpose and architectural decisions of each context in the section
   and handling cross-cutting concerns like validation and transaction management. Business logic is organized using a
   [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html).
 
-  **Infrastructure**: MySQL is used to store chats, messages and events (outbox), while Redis enables
+  **Infrastructure**: MySQL is used to store chats, messages and events (Transactional Outbox), while Redis enables
   [Idempotent Receivers](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html)
   to ensure that each message is processed exactly once, and RabbitMQ facilitates communication with other contexts.
 
@@ -159,7 +160,7 @@ Check out the purpose and architectural decisions of each context in the section
   ([busting CQRS myths](https://lostechies.com/jimmybogard/2012/08/22/busting-some-cqrs-myths/)),
   but the reasoning is explained in the Scalability section.
 
-  **Infrastructure**: MySQL is used to store games (as JSON documents) and events (outbox and
+  **Infrastructure**: MySQL is used to store games (as JSON documents) and events (Transactional Outbox and
   [Stream Processing](https://en.wikipedia.org/wiki/Stream_processing)), while Redis stores read models because
   they don’t require relational queries, and RabbitMQ facilitates communication with other contexts.
 
@@ -171,13 +172,8 @@ Check out the purpose and architectural decisions of each context in the section
   [Sidecar](https://learn.microsoft.com/en-us/azure/architecture/patterns/sidecar).
   Current usage patterns of Redis don’t require any action.
 
-  **Alternatives**: Instead of using MySQL for stream processing, technologies like
-  [RabbitMQ’s Super Streams](https://www.rabbitmq.com/docs/streams#super-streams) or [Kafka](https://kafka.apache.org)
-  could be used as they are specifically designed for this purpose. However, MySQL is chosen because it performs very
-  well (>20k messages/s) and, since the write model is already sharded, it scales naturally without the need for
-  additional infrastructure. Additionally, for reliable messaging, events need to be streamed out of MySQL first,
-  making it an ideal starting point for processing. This choice would be reconsidered if an increase in streaming
-  processes impacts database performance.
+  **Alternatives**: MySQL might not be the first choice for Stream Processing. Refer to "Messaging" in the
+  [Technology Stack](#technology-stack) for the reasoning and alternatives.
 </details>
 
 <details>
@@ -203,7 +199,7 @@ Check out the purpose and architectural decisions of each context in the section
   [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), which are managed by an
   [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping).
 
-  **Infrastructure**: MySQL is used to store users and events (outbox), while RabbitMQ facilitates
+  **Infrastructure**: MySQL is used to store users and events (Transactional Outbox), while RabbitMQ facilitates
   communication with other contexts.
 
   **Scalability**: The module is stateless, enabling it to scale horizontally by adding more instances.
@@ -309,15 +305,17 @@ Learn more about the technology stack and the reasons behind each choice below.
   * **Nchan**: Provides a scalable, persistent
     [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html)
     messaging system for real-time browser notifications, ensuring low-latency between clients and servers.
-  * **MySQL**: Used for [Stream Processing](https://en.wikipedia.org/wiki/Stream_processing) to build read models
-    within a given context.
+  * **MySQL**: Used to publish [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html) stored in the
+    [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) reliably to other messaging systems,
+    and to perform [Stream Processing](https://en.wikipedia.org/wiki/Stream_processing) for building read models within
+    a given context using those same events.
 
-  > MySQL is used for stream processing because events are stored in the
-  > [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and need to be streamed to other
-  > messaging systems regardless. It performs well (>20k events/s per shard), but this choice may change if increased
-  > streaming processes impact database performance or if inter-service streaming is required.
-  > [RabbitMQ’s Super Streams](https://www.rabbitmq.com/docs/streams#super-streams) or [Kafka](https://kafka.apache.org)
-  > could be suitable alternatives.
+  > MySQL is used for Stream Processing because Domain Events are already stored in the Transactional Outbox and need
+  > to be published to messaging systems as it already does with RabbitMQ. This avoids additional complexity as long as
+  > MySQL scales effectively (>20k events/s per shard). If increased streaming processes impact database performance
+  > or if inter-service streaming is required, alternatives like
+  > [RabbitMQ’s Super Streams](https://www.rabbitmq.com/docs/streams#super-streams) or
+  > [Kafka](https://kafka.apache.org) will be considered.
 </details>
 
 <details>
