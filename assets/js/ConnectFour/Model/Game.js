@@ -2,10 +2,12 @@ export class Game {
     /**
      * @param {String} gameId
      * @param {{x:Number, y:Number, color:Number}[]} moves
+     * @param {{x:Number, y:Number}[]} moves
      */
-    constructor(gameId, moves) {
+    constructor(gameId, moves, winningSequence) {
         this.gameId = gameId;
         this.moves = moves;
+        this.winningSequence = winningSequence;
         this.onMoveAppendedObservers = [];
     }
 
@@ -55,12 +57,13 @@ export class Game {
     /**
      * Create the game from a raw object.
      *
-     * @param {{gameId:String, moves:{x:Number, y:Number, color:Number}[]}} object
+     * @param {{gameId:String, moves:{x:Number, y:Number, color:Number}[], winningSequence:{x:Number, y:Number}[]}} object
      */
     static fromObject(object) {
         return new this(
             object.gameId,
-            object.moves
+            object.moves,
+            object.winningSequence
         );
     }
 }

@@ -25,21 +25,22 @@ final class HorizontalWinningRule implements WinningRule
         $this->numberOfRequiredMatches = $numberOfRequiredMatches;
     }
 
-    public function calculate(Board $board): bool
+    public function calculate(Board $board): ?array
     {
         if ($board->lastUsedField()->isEmpty()) {
-            return false;
+            return null;
         }
 
         $stone = $board->lastUsedField()->stone();
         $point = $board->lastUsedField()->point();
+        $fields = $board->findFieldsByRow($point->y());
 
-        // Create a string representation of fields e.g. "000121"
-        $haystack = implode($board->findFieldsByRow($point->y()));
-        // Create a string like "1111|2222" depending on the stone and the required matches.
-        $needle = str_repeat((string)$stone->value, $this->numberOfRequiredMatches);
+        // Create a string representation of fields e.g. "000121" and find the start position of a winning sequence.
+        $start = strpos(
+            implode($fields),
+            str_repeat((string)$stone->value, $this->numberOfRequiredMatches)
+        );
 
-        // Check whether "1111|2222" is in "000121"
-        return strpos($haystack, $needle) !== false;
+        return $start !== false ? array_slice($fields, $start, $this->numberOfRequiredMatches) : null;
     }
 }

@@ -21,7 +21,7 @@ final class CommonWinningRule implements WinningRule
         );
     }
 
-    public function calculate(Board $board): bool
+    public function calculate(Board $board): ?array
     {
         return $this->winningRule->calculate($board);
     }

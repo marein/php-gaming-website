@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
+use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Configuration;
@@ -528,6 +529,15 @@ class GameTest extends TestCase
         assert($domainEvents[7] instanceof GameWon);
         self::assertEquals($game->id()->toString(), $domainEvents[7]->aggregateId());
         self::assertEquals('playerId1', $domainEvents[7]->winnerPlayerId());
+        self::assertEquals(
+            [
+                new Point(1, 3),
+                new Point(1, 4),
+                new Point(1, 5),
+                new Point(1, 6)
+            ],
+            $domainEvents[7]->winningSequence()
+        );
 
         return $game;
     }

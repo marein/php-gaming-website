@@ -45,6 +45,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
         this._updateNavigationButtons();
+        this._showWinningSequence();
     }
 
     /**
@@ -75,6 +76,18 @@ customElements.define('connect-four-game', class extends HTMLElement {
         if (isCurrentMoveTheLastMove) {
             this._followMovesButton.classList.remove('btn-warning', 'gp-heartbeat');
         }
+    }
+
+    _showWinningSequence() {
+        if (this._game.winningSequence.length === 0) return;
+        if (this._numberOfCurrentMoveInView !== this._game.numberOfMoves()) return;
+
+        this._fields.forEach(field => field.classList.remove('gp-heartbeat'));
+        this._game.winningSequence.forEach(point => this._gameNode
+            .querySelector(`.gp-game__field[data-point="${point.x} ${point.y}"]`)
+            .classList
+            .add('gp-heartbeat')
+        );
     }
 
     /**
@@ -110,6 +123,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._game.appendMove(event.detail);
     }
 
+    _onGameWon(event) {
+        this._game.winningSequence = event.detail.winningSequence;
+        this._showWinningSequence();
+    }
+
     _onPreviousMoveClick(event) {
         event.preventDefault();
 
@@ -138,6 +156,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
             window.addEventListener(n, f);
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('ConnectFour.PlayerMoved', this._onPlayerMoved.bind(this));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.GameWon', this._onGameWon.bind(this));
 
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));

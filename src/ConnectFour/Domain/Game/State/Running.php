@@ -53,10 +53,10 @@ final class Running implements State
             )
         ];
 
-        $isWin = $this->winningRule->calculate($board);
+        $winningSequence = $this->winningRule->calculate($board);
 
-        if ($isWin) {
-            $domainEvents[] = new GameWon($gameId, $this->players->current());
+        if ($winningSequence !== null) {
+            $domainEvents[] = new GameWon($gameId, $this->players->current(), $winningSequence);
 
             return new Transition(
                 new Won(),
