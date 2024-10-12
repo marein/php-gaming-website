@@ -86,7 +86,114 @@ Choose a deployment environment below and follow the guide to get the applicatio
 
   ### Production for Load Testing
 
-  This is not merged yet, but feel free to have a look at [#170](https://github.com/marein/php-gaming-website/pull/170).
+  This is the most sophisticated deployment designed for evaluating the platform’s performance and scalability
+  under extreme load. Leveraging [Docker Swarm](https://docs.docker.com/engine/swarm/), this configuration
+  enables scaling across multiple nodes, making it ideal for stress testing and pinpointing bottlenecks.
+  The stack defines 5 physical MySQL shards for Connect Four, as this context receives the highest load.
+
+  Before deploying the application, ensure that the Swarm nodes are labeled correctly to distribute services as needed.
+
+  <details>
+    <summary>Example Node Setup</summary>
+
+  | Node       | Labels                                                    |
+  |------------|-----------------------------------------------------------|
+  | manager-01 | `traefik=1` `nchan=1` `grafana=1` `prometheus=1`          |
+  | node-01    | `chat-mysql=1` `identity-mysql=1` `web-interface-redis=1` |
+  | node-02    | `rabbit-mq=1`                                             |
+  | node-03    | `connect-four-mysql-1=1` `connect-four-mysql-2=1`         |
+  | node-04    | `connect-four-mysql-3=1` `connect-four-mysql-4=1`         |
+  | node-05    | `connect-four-mysql-5=1` `connect-four-redis=1`           |
+  | node-06    | `long-running=1` `needs-proxysql-sidecar=1`               |
+  | node-07    | `long-running=1` `needs-proxysql-sidecar=1`               |
+  | node-08    | `web-interface-http=1` `needs-proxysql-sidecar=1`         |
+  | node-09    | `web-interface-http=1` `needs-proxysql-sidecar=1`         |
+  | node-10    | `web-interface-http=1` `needs-proxysql-sidecar=1`         |
+  | node-11    | `web-interface-http=1` `needs-proxysql-sidecar=1`         |
+  | node-12    | `web-interface-http=1` `needs-proxysql-sidecar=1`         |
+  | node-13    | `web-interface-http=1` `needs-proxysql-sidecar=1`         |
+  </details>
+
+  To deploy, clone the repository or download the [load-test](/deploy/load-test) directory, and switch to it on the Swarm manager.
+  The stack combines multiple Compose files, deployable with a single command using:
+
+  ```bash
+  find stack \
+    -name '*.yml' \
+    -type f \
+    -printf '-c %p ' \
+    | xargs -I {} sh -c 'docker stack deploy {} --prune app'
+  ```
+
+  After the stack is successfully deployed, tweak `BASE_URL` and `vus` in the following command,
+  then run it to start the load test:
+
+  ```bash
+  docker run --rm -i --network=host -e BASE_URL=http://127.0.0.1 grafana/k6:0.43.1 run \
+    --vus 500 \
+    --duration 1m \
+    - < scenario/play-connect-four.js
+  ```
+
+  > This is not a trivial test. It involves all components, especially those handling gameplay. The scenario
+  > simulates players continuously playing Connect Four, designed to stress the system and identify bottlenecks.
+
+  > Grafana is accessible on port 8083, providing valuable insights into how each component performs.
+
+  The following performance figures were measured using a deployment on nodes from the "Example Node Setup" with
+  32 CPU cores each.
+
+  <details>
+    <summary>23k req/s sustained for 1 minute with 500 vus</summary>
+
+    ```
+    data_received..................: 457 MB  7.6 MB/s
+    data_sent......................: 422 MB  7.0 MB/s
+    http_req_blocked...............: avg=9.24µs   min=657ns    med=1.82µs   max=107.48ms p(90)=2.56µs   p(95)=3.18µs
+    http_req_connecting............: avg=2.14µs   min=0s       med=0s       max=37.16ms  p(90)=0s       p(95)=0s
+    http_req_duration..............: avg=20.99ms  min=5.98ms   med=19.23ms  max=292.24ms p(90)=28.33ms  p(95)=32.59ms
+      { expected_response:true }...: avg=20.99ms  min=5.98ms   med=19.23ms  max=292.24ms p(90)=28.33ms  p(95)=32.59ms
+    http_req_failed................: 0.00%   ✓ 0            ✗ 1420128
+    http_req_receiving.............: avg=507.14µs min=11.17µs  med=39.04µs  max=79.68ms  p(90)=848.99µs p(95)=2.47ms
+    http_req_sending...............: avg=16.58µs  min=4.67µs   med=11.91µs  max=72.84ms  p(90)=17.12µs  p(95)=28.81µs
+    http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s
+    http_req_waiting...............: avg=20.46ms  min=5.95ms   med=18.87ms  max=248.13ms p(90)=27.45ms  p(95)=31.33ms
+    http_reqs......................: 1420128 23511.901409/s
+    iteration_duration.............: avg=508.32ms min=325.84ms med=501.41ms max=832.07ms p(90)=589.62ms p(95)=617.98ms
+    iterations.....................: 59172   979.662559/s
+    vus............................: 500     min=500        max=500
+    vus_max........................: 500     min=500        max=500
+    ```
+  </details>
+
+  <details>
+    <summary>25k req/s sustained for 1 minute with 700 vus</summary>
+
+    ```
+    data_received..................: 496 MB  8.2 MB/s
+    data_sent......................: 458 MB  7.6 MB/s
+    http_req_blocked...............: avg=6.28µs   min=668ns   med=1.85µs   max=65.39ms  p(90)=2.64µs  p(95)=3.27µs
+    http_req_connecting............: avg=3.59µs   min=0s      med=0s       max=65.32ms  p(90)=0s      p(95)=0s
+    http_req_duration..............: avg=27.08ms  min=6.33ms  med=24.47ms  max=248.25ms p(90)=38.33ms p(95)=44.88ms
+      { expected_response:true }...: avg=27.08ms  min=6.33ms  med=24.47ms  max=248.25ms p(90)=38.33ms p(95)=44.88ms
+    http_req_failed................: 0.00%   ✓ 0            ✗ 1541208
+    http_req_receiving.............: avg=660.94µs min=11.64µs med=38.28µs  max=106.28ms p(90)=1.07ms  p(95)=3.6ms
+    http_req_sending...............: avg=18.39µs  min=5.1µs   med=12.16µs  max=50.12ms  p(90)=17.44µs p(95)=29.4µs
+    http_req_tls_handshaking.......: avg=0s       min=0s      med=0s       max=0s       p(90)=0s      p(95)=0s
+    http_req_waiting...............: avg=26.4ms   min=6.24ms  med=23.98ms  max=248.21ms p(90)=37.12ms p(95)=43.17ms
+    http_reqs......................: 1541208 25493.380546/s
+    iteration_duration.............: avg=655.45ms min=342.4ms med=649.67ms max=1.07s    p(90)=748.3ms p(95)=779.48ms
+    iterations.....................: 64217   1062.224189/s
+    vus............................: 700     min=700        max=700
+    vus_max........................: 700     min=700        max=700
+    ```
+  </details>
+
+  The highest load achieved was over `38k req/s` sustained for `10 minutes`, maintaining a snappy UI, no errors, and
+  ensuring transactional integrity without losing any messages. With more resources distributed across additional nodes,
+  the `p95` latency can be kept consistently low, and messages flow through the system to the browser in real-time.
+  Achieving this requires fine-tuning factors like the number of message consumers, the sharding of RabbitMQ queues
+  and MySQL databases, and the distribution of Swarm services.
 </details>
 
 ## System Design
@@ -217,9 +324,9 @@ Check out the purpose and architectural decisions of each context in the section
   **Communication**: It directly invokes use cases from other [modules](/src) to reduce network hops and abstractions,
   and calls other [services](https://github.com/gaming-platform?q=service-) via
   [Request-Response](https://en.wikipedia.org/wiki/Request–response).
-  To notify users in real-time about what has happened, it subscribes to events from other contexts, using
+  To notify users in real-time about what has happened, it subscribes to events from other contexts using
   [Publish-Subscribe](https://www.enterpriseintegrationpatterns.com/patterns/messaging/PublishSubscribeChannel.html),
-  and forwards them to subscribed users.
+  and forwards them to subscribed users via [Server-Sent Events](https://en.wikipedia.org/wiki/Server-sent_events).
 
   **Architecture**: Internally, it uses a form of
   [Layered Architecture](https://en.wikipedia.org/wiki/Multitier_architecture) server-side. To reduce client-side

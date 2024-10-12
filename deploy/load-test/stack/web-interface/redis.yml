@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+    web-interface-redis:
+        image: ghcr.io/gaming-platform/docker-redis:7.2
+        volumes:
+            - web-interface-redis:/data
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.web-interface-redis==1"
+    web-interface-redis-exporter:
+        image: oliver006/redis_exporter:v1.51.0
+        command:
+            - '-redis.addr=web-interface-redis:6379'
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.web-interface-redis==1"
+            labels:
+                - "prometheus-job=redis"
+                - "prometheus-port=9121"
+
+volumes:
+    web-interface-redis:

@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+    chat-mysql:
+        image: ghcr.io/gaming-platform/docker-mysql:8.2
+        volumes:
+            - chat-mysql:/var/lib/mysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.chat-mysql==1"
+    chat-mysql-exporter:
+        image: prom/mysqld-exporter:v0.15.0
+        command: --mysqld.username=root --mysqld.address chat-mysql:3306
+        environment:
+            MYSQLD_EXPORTER_PASSWORD: password
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.chat-mysql==1"
+            labels:
+                - "prometheus-job=mysql"
+                - "prometheus-port=9104"
+
+volumes:
+    chat-mysql:

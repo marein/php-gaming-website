@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+    chat-follow-event-store:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console chat:follow-event-store pointer all
+        env_file: ../app.env
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+    chat-command:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console gaming:consume-messages chat.command -r 3
+        env_file: ../app.env
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            replicas: 5
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+
+volumes:
+    proxysql.sock:
