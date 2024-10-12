@@ -1,9 +1,6 @@
 services:
     identity.query-bus:
-        class: Gaming\Common\Bus\RoutingBus
-        arguments:
-            -   'Gaming\Identity\Application\User\Query\UserQuery': ['@identity.user-service', 'user']
-                'Gaming\Identity\Application\User\Query\UserByEmailQuery': ['@identity.user-service', 'userByEmail']
+        alias: gaming_platform_bus.identity_query
 
     identity.validating-query-bus:
         class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
