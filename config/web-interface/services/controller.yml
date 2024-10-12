@@ -1,7 +1,7 @@
 services:
     web-interface.page-controller:
         class: Gaming\WebInterface\Presentation\Http\PageController
-        arguments: ['@twig', '@web-interface.connect-four-service', '@web-interface.security']
+        arguments: ['@twig', '@connect-four.query-bus', '@web-interface.security']
         tags: ['controller.service_arguments']
 
     web-interface.signup-controller:
@@ -9,7 +9,7 @@ services:
         arguments:
             - '@uri_signer'
             - '@web-interface.security'
-            - '@web-interface.identity-service'
+            - '@identity.command-bus'
             - '@gaming.form-violation-mapper'
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']
@@ -28,10 +28,10 @@ services:
 
     web-interface.chat-controller:
         class: Gaming\WebInterface\Presentation\Http\ChatController
-        arguments: ['@web-interface.chat-service', '@web-interface.security']
+        arguments: ['@chat.command-bus', '@chat.query-bus', '@web-interface.security']
         tags: ['controller.service_arguments']
 
     web-interface.connect-four-controller:
         class: Gaming\WebInterface\Presentation\Http\ConnectFourController
-        arguments: ['@web-interface.connect-four-service', '@web-interface.security']
+        arguments: ['@connect-four.command-bus', '@web-interface.security']
         tags: ['controller.service_arguments']

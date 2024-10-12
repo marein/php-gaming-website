@@ -78,12 +78,12 @@
                             </button>
                         </div>
                         <div class="col-6">
-                            <connect-four-abort-button game-id="{{ game.gameId }}">
+                            <connect-four-abort-button game-id="{{ game.id }}">
                                 Abort
                             </connect-four-abort-button>
                         </div>
                         <div class="col-6">
-                            <connect-four-resign-button game-id="{{ game.gameId }}">
+                            <connect-four-resign-button game-id="{{ game.id }}">
                                 Resign
                             </connect-four-resign-button>
                         </div>
@@ -97,7 +97,7 @@
             </chat-widget>
         </div>
     </div>
-    <event-source subscriptions="connect-four-{{ game.gameId }}{% if game.chatId %},chat-{{ game.chatId }}{% endif %}"
+    <event-source subscriptions="connect-four-{{ game.id }}{% if game.chatId %},chat-{{ game.chatId }}{% endif %}"
                   {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>
 {% endblock %}
