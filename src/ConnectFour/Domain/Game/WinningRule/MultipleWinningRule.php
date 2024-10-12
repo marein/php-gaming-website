@@ -21,14 +21,14 @@ final class MultipleWinningRule implements WinningRule
         $this->winningRules = $winningRules;
     }
 
-    public function calculate(Board $board): bool
+    public function calculate(Board $board): ?array
     {
         foreach ($this->winningRules as $winningRule) {
-            if ($winningRule->calculate($board)) {
-                return true;
+            if (($winningSequence = $winningRule->calculate($board)) !== null) {
+                return $winningSequence;
             }
         }
 
-        return false;
+        return null;
     }
 }
