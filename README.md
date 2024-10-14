@@ -61,7 +61,7 @@ Choose a deployment environment below and follow the guide to get the applicatio
   > Schema changes are consolidated to maintain a clean codebase.
 
   > Infrastructure components are shared across contexts to reduce resource usage and configuration complexity.
-  > For a more sophisticated setup, take a look at the deployment used for load testing.
+  > For a more sophisticated setup, take a look at the deployment "Production for Load Testing".
 </details>
 
 <details>
@@ -78,7 +78,7 @@ Choose a deployment environment below and follow the guide to get the applicatio
   to deploy the application on [Play with Docker](http://play-with-docker.com).
 
   > Infrastructure components are shared across contexts to reduce resource usage and configuration complexity.
-  > For a more sophisticated setup, take a look at the deployment used for load testing.
+  > For a more sophisticated setup, take a look at the deployment "Production for Load Testing".
 </details>
 
 <details>
