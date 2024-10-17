@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "${APP_CONNECT_FOUR_RUN_MIGRATIONS}" = "1" ]
+if [ "${APP_CONNECT_FOUR_RUN_MIGRATIONS}" = "1" ] || [ "${APP_RUN_MIGRATIONS}" = "1" ]
 then
     IFS=, read -ra values <<< "${APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS}"
     for value in "${values[@]}"
