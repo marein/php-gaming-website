@@ -15,3 +15,5 @@ else
     bin/console importmap:install --env=prod
     bin/console asset-map:compile --env=prod
 fi
+
+chown -R www-data:www-data var

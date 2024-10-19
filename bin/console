@@ -1,32 +1,16 @@
 #!/usr/bin/env php
 <?php
+
 declare(strict_types=1);
 
 namespace {
 
     use Gaming\Kernel;
     use Symfony\Bundle\FrameworkBundle\Console\Application;
-    use Symfony\Component\Console\Input\ArgvInput;
-    use Symfony\Component\ErrorHandler\Debug;
 
-    umask(0000);
+    require_once __DIR__ . '/../vendor/autoload_runtime.php';
 
-    set_time_limit(0);
-
-    require_once __DIR__ . '/../vendor/autoload.php';
-
-    $input = new ArgvInput();
-    $environment = $input->getParameterOption(
-            ['--env', '-e'],
-            $_SERVER['APP_ENVIRONMENT'] ?? $_ENV['APP_ENVIRONMENT'] ?? 'dev'
-    );
-    $isDevelopmentEnvironment = $environment !== 'prod';
-
-    if ($isDevelopmentEnvironment) {
-        Debug::enable();
-    }
-
-    $kernel = new Kernel($environment, $isDevelopmentEnvironment);
-    $application = new Application($kernel);
-    $application->run($input);
+    return static function (array $context): Application {
+        return new Application(new Kernel($context['APP_ENV'], (bool)$context['APP_DEBUG']));
+    };
 }

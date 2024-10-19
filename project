@@ -104,7 +104,10 @@ acceptance() {
 }
 
 buildProductionImages() {
-    docker build --build-arg environment=production --file docker/Dockerfile --tag marein/php-gaming-website:php-fpm .
+    docker build --pull \
+        --build-arg environment=production \
+        --file docker/Dockerfile \
+        --tag marein/php-gaming-website:php-fpm .
 }
 
 pushProductionImages() {
