@@ -15,3 +15,6 @@ else
     bin/console importmap:install --env=prod
     bin/console asset-map:compile --env=prod
 fi
+
+setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var
+setfacl -R -m u:www-data:rwX -m u:$(whoami):rwX var

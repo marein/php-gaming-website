@@ -58,6 +58,7 @@
     "symfony/http-kernel": "^7.0",
     "symfony/lock": "^7.0",
     "symfony/monolog-bundle": "^3.8",
+    "symfony/runtime": "^7.1",
     "symfony/security-bundle": "^7.0",
     "symfony/service-contracts": "^3.3",
     "symfony/translation-contracts": "^3.5",
@@ -86,7 +87,8 @@
     "sort-packages": true,
     "allow-plugins": {
       "composer/package-versions-deprecated": true,
-      "phpstan/extension-installer": true
+      "phpstan/extension-installer": true,
+      "symfony/runtime": true
     }
   }
 }

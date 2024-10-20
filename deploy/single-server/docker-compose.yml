@@ -6,7 +6,7 @@ x-php-container:
     &php-container
     image: marein/php-gaming-website:php-fpm
     environment:
-        APP_ENVIRONMENT: "prod"
+        APP_ENV: "prod"
         APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
         APP_WAIT_FOR: "unix:///var/run/proxysql/proxysql.sock,mysql:3306,redis:6379,rabbitmq:5672,nchan:81"
         APP_RUN_MIGRATIONS: "1"

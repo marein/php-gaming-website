@@ -5,7 +5,7 @@ x-php-container:
     image: marein/php-gaming-website:php-fpm
     env_file: ./.env
     environment:
-        APP_ENVIRONMENT: prod
+        APP_ENV: prod
     depends_on:
         - mysql
         - proxysql
