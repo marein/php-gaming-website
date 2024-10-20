@@ -7,7 +7,7 @@
         <div class="card-body">
             {% for game in games %}
                 <p>
-                    <a href="{{ path('game', {id: game}) }}">
+                    <a href="{{ path('game', {id: game.gameId}) }}">
                         Anonymous - Anonymous
                     </a>
                 </p>
