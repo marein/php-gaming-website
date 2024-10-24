@@ -29,19 +29,6 @@ html:has(.layout-fluid) {
     }
 }
 
-.gp-heartbeat {
-    animation: gp-heartbeat 1s infinite;
-}
-
-@keyframes gp-heartbeat {
-    0%, 100% {
-        filter: brightness(0.95);
-    }
-    20% {
-        filter: brightness(1.15);
-    }
-}
-
 .gp-loading {
     filter: brightness(0.85);
     cursor: wait !important;
@@ -86,6 +73,22 @@ notification-list {
     content: "";
     padding-top: 100%;
     position: relative;
+}
+
+.gp-game__field--highlight {
+    animation: gp-game__field--highlight 1.5s infinite;
+}
+
+@keyframes gp-game__field--highlight {
+    from, 40%, to {
+        transform: scale3d(1, 1, 1);
+    }
+    20% {
+        transform: scale3d(.9, .9, .9);
+    }
+    60% {
+        transform: scale3d(.95, .95, .95);
+    }
 }
 
 [data-bs-theme=dark] .gp-game {
