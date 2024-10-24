@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <connect-four-game-list open-games="{{ openGames|json_encode|e('html_attr') }}"
+            <connect-four-game-list open-games="{{ openGames.games|json_encode|e('html_attr') }}"
                                     player-id="{{ user.userIdentifier|e('html_attr') }}"
                                     maximum-number-of-games="{{ maximumNumberOfGamesInList }}">
             </connect-four-game-list>
