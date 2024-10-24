@@ -41,10 +41,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {Number} index
      */
     _showMovesUpTo(index) {
-        this._fields.forEach(field => field.classList.remove('gp-heartbeat', 'bg-red', 'bg-yellow'));
+        this._fields.forEach(field => field.classList.remove('icon-pulse', 'bg-red', 'bg-yellow'));
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
         this._updateNavigationButtons();
+        this._showWinningSequence();
     }
 
     /**
@@ -56,8 +57,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
         let field = this._gameNode.querySelector(`.gp-game__field[data-point="${move.x} ${move.y}"]`);
         field.classList.add(this._colorToClass[move.color]);
 
-        this._fields.forEach(field => field.classList.remove('gp-heartbeat'));
-        field.classList.add('gp-heartbeat');
+        this._fields.forEach(field => field.classList.remove('icon-pulse'));
+        field.classList.add('icon-pulse');
     }
 
     /**
@@ -73,23 +74,34 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         // Remove flashing if the user follow the moves.
         if (isCurrentMoveTheLastMove) {
-            this._followMovesButton.classList.remove('btn-warning', 'gp-heartbeat');
+            this._followMovesButton.classList.remove('btn-warning', 'icon-tada');
         }
     }
 
+    _showWinningSequence() {
+        if (this._game.winningSequence.length === 0) return;
+        if (this._numberOfCurrentMoveInView !== this._game.numberOfMoves()) return;
+
+        this._fields.forEach(field => field.classList.remove('icon-pulse'));
+        this._game.winningSequence.forEach(point => this._gameNode
+            .querySelector(`.gp-game__field[data-point="${point.x} ${point.y}"]`)
+            .classList
+            .add('icon-pulse')
+        );
+    }
+
     /**
-     * Display the move only if the user looks at the last move.
+     * Only show if the user follows the moves. Otherwise, notify user that a new move is available.
      *
      * @param {{x:Number, y:Number, color:Number}} move
      */
     _onMoveAppendedToGame(move) {
-        // Only show if the user follow the moves. Otherwise notify user that a new move is available.
         if (this._followMovesButton.disabled === true) {
             this._showMove(move);
             this._numberOfCurrentMoveInView++;
             this._updateNavigationButtons();
         } else {
-            this._followMovesButton.classList.add('btn-warning', 'gp-heartbeat');
+            this._followMovesButton.classList.add('btn-warning', 'icon-tada');
         }
     }
 
@@ -108,6 +120,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
     _onPlayerMoved(event) {
         this._game.appendMove(event.detail);
+    }
+
+    _onGameWon(event) {
+        this._game.winningSequence = event.detail.winningSequence;
+        this._showWinningSequence();
     }
 
     _onPreviousMoveClick(event) {
@@ -138,6 +155,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
             window.addEventListener(n, f);
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('ConnectFour.PlayerMoved', this._onPlayerMoved.bind(this));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.GameWon', this._onGameWon.bind(this));
 
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));

@@ -29,19 +29,6 @@ html:has(.layout-fluid) {
     }
 }
 
-.gp-heartbeat {
-    animation: gp-heartbeat 1s infinite;
-}
-
-@keyframes gp-heartbeat {
-    0%, 100% {
-        filter: brightness(0.95);
-    }
-    20% {
-        filter: brightness(1.15);
-    }
-}
-
 .gp-loading {
     filter: brightness(0.85);
     cursor: wait !important;
