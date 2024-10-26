@@ -100,6 +100,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             this._showMove(move);
             this._numberOfCurrentMoveInView++;
             this._updateNavigationButtons();
+            this._showWinningSequence();
         } else {
             this._followMovesButton.classList.add('btn-warning', 'icon-tada');
         }
