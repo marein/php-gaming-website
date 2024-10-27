@@ -2,7 +2,7 @@ export class Game {
     /**
      * @param {String} gameId
      * @param {{x:Number, y:Number, color:Number}[]} moves
-     * @param {{x:Number, y:Number}[]} moves
+     * @param {{x:Number, y:Number}[]} winningSequence
      */
     constructor(gameId, moves, winningSequence) {
         this.gameId = gameId;

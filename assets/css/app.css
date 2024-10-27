@@ -66,6 +66,18 @@ notification-list {
     border-radius: 50%;
     cursor: pointer;
     background-color: var(--tblr-body-bg);
+
+    &.bg-red {
+        box-shadow: inset 0 0 0 .5em var(--tblr-red-darken),
+        inset 0 0 0 1.5em var(--tblr-red),
+        inset 0 0 0 1.8em var(--tblr-red-darken);
+    }
+
+    &.bg-yellow {
+        box-shadow: inset 0 0 0 .5em var(--tblr-yellow-darken),
+        inset 0 0 0 1.5em var(--tblr-yellow),
+        inset 0 0 0 1.8em var(--tblr-yellow-darken);
+    }
 }
 
 .gp-game__field::before {
@@ -77,6 +89,7 @@ notification-list {
 
 .gp-game__field--highlight {
     animation: gp-game__field--highlight 3s infinite;
+    border-color: var(--tblr-light) !important;
 }
 
 @keyframes gp-game__field--highlight {
