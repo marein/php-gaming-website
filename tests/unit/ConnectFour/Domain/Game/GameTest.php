@@ -530,12 +530,7 @@ class GameTest extends TestCase
         self::assertEquals($game->id()->toString(), $domainEvents[7]->aggregateId());
         self::assertEquals('playerId1', $domainEvents[7]->winnerPlayerId());
         self::assertEquals(
-            [
-                new Point(1, 3),
-                new Point(1, 4),
-                new Point(1, 5),
-                new Point(1, 6)
-            ],
+            [new Point(1, 3), new Point(1, 4), new Point(1, 5), new Point(1, 6)],
             $domainEvents[7]->winningSequence()
         );
 

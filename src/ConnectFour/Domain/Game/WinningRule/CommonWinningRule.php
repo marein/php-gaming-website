@@ -21,8 +21,8 @@ final class CommonWinningRule implements WinningRule
         );
     }
 
-    public function calculate(Board $board): ?array
+    public function findWinningSequence(Board $board): array
     {
-        return $this->winningRule->calculate($board);
+        return $this->winningRule->findWinningSequence($board);
     }
 }

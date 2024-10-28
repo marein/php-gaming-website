@@ -9,26 +9,21 @@ use Gaming\ConnectFour\Domain\Game\Board\Board;
 final class MultipleWinningRule implements WinningRule
 {
     /**
-     * @var WinningRule[]
-     */
-    private array $winningRules;
-
-    /**
      * @param WinningRule[] $winningRules
      */
-    public function __construct(array $winningRules)
-    {
-        $this->winningRules = $winningRules;
+    public function __construct(
+        private readonly array $winningRules
+    ) {
     }
 
-    public function calculate(Board $board): ?array
+    public function findWinningSequence(Board $board): array
     {
         foreach ($this->winningRules as $winningRule) {
-            if (($winningSequence = $winningRule->calculate($board)) !== null) {
+            if (count($winningSequence = $winningRule->findWinningSequence($board)) !== 0) {
                 return $winningSequence;
             }
         }
 
-        return null;
+        return [];
     }
 }

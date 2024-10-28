@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\WinningRule;
 
 use Gaming\ConnectFour\Domain\Game\Board\Board;
-use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
@@ -34,7 +33,7 @@ class DiagonalWinningRuleTest extends TestCase
         $board = Board::empty($size);
         $diagonalWinningRule = new DiagonalWinningRule(4);
 
-        $this->assertNull($diagonalWinningRule->calculate($board));
+        $this->assertCount(0, $diagonalWinningRule->findWinningSequence($board));
 
         /**
          *    /
@@ -52,18 +51,13 @@ class DiagonalWinningRuleTest extends TestCase
         $board = $board->dropStone(Stone::Red, 4);
         $board = $board->dropStone(Stone::Red, 4);
 
-        $this->assertNull($diagonalWinningRule->calculate($board));
+        $this->assertCount(0, $diagonalWinningRule->findWinningSequence($board));
 
         $board = $board->dropStone(Stone::Red, 4);
 
         $this->assertEquals(
-            [
-                Field::empty(new Point(1, 6))->placeStone(Stone::Red),
-                Field::empty(new Point(2, 5))->placeStone(Stone::Red),
-                Field::empty(new Point(3, 4))->placeStone(Stone::Red),
-                Field::empty(new Point(4, 3))->placeStone(Stone::Red)
-            ],
-            $diagonalWinningRule->calculate($board)
+            [new Point(1, 6), new Point(2, 5), new Point(3, 4), new Point(4, 3)],
+            $diagonalWinningRule->findWinningSequence($board)
         );
 
         $board = Board::empty($size);
@@ -84,18 +78,13 @@ class DiagonalWinningRuleTest extends TestCase
         $board = $board->dropStone(Stone::Red, 4);
         $board = $board->dropStone(Stone::Red, 4);
 
-        $this->assertNull($diagonalWinningRule->calculate($board));
+        $this->assertCount(0, $diagonalWinningRule->findWinningSequence($board));
 
         $board = $board->dropStone(Stone::Red, 4);
 
         $this->assertEquals(
-            [
-                Field::empty(new Point(4, 3))->placeStone(Stone::Red),
-                Field::empty(new Point(5, 4))->placeStone(Stone::Red),
-                Field::empty(new Point(6, 5))->placeStone(Stone::Red),
-                Field::empty(new Point(7, 6))->placeStone(Stone::Red)
-            ],
-            $diagonalWinningRule->calculate($board)
+            [new Point(4, 3), new Point(5, 4), new Point(6, 5), new Point(7, 6)],
+            $diagonalWinningRule->findWinningSequence($board)
         );
     }
 }

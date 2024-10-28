@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\WinningRule;
 
 use Gaming\ConnectFour\Domain\Game\Board\Board;
-use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\WinningRule\MultipleWinningRule;
@@ -23,23 +22,23 @@ class MultipleWinningRuleTest extends TestCase
         $board = Board::empty($size);
 
         $first = $this->createMock(WinningRule::class);
-        $first->method('calculate')->willReturn(null);
+        $first->method('findWinningSequence')->willReturn([]);
 
         $second = $this->createMock(WinningRule::class);
-        $second->method('calculate')->willReturn(null);
+        $second->method('findWinningSequence')->willReturn([]);
 
         $rule = new MultipleWinningRule([$first, $second]);
 
-        $this->assertNull($rule->calculate($board));
+        $this->assertCount(0, $rule->findWinningSequence($board));
 
         $first = $this->createMock(WinningRule::class);
-        $first->method('calculate')->willReturn([Field::empty(new Point(1, 6))]);
+        $first->method('findWinningSequence')->willReturn([new Point(1, 6)]);
 
         $second = $this->createMock(WinningRule::class);
-        $second->method('calculate')->willReturn(null);
+        $second->method('findWinningSequence')->willReturn([]);
 
         $rule = new MultipleWinningRule([$first, $second]);
 
-        $this->assertEquals([Field::empty(new Point(1, 6))], $rule->calculate($board));
+        $this->assertEquals([new Point(1, 6)], $rule->findWinningSequence($board));
     }
 }
