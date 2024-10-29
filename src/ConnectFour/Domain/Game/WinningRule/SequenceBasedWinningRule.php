@@ -7,24 +7,24 @@ namespace Gaming\ConnectFour\Domain\Game\WinningRule;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
-use Gaming\ConnectFour\Domain\Game\Exception\InvalidNumberOfRequiredMatchesException;
+use Gaming\ConnectFour\Domain\Game\Exception\WinningSequenceLengthTooShortException;
 
 abstract class SequenceBasedWinningRule implements WinningRule
 {
     private const int MINIMUM = 4;
 
-    private int $numberOfRequiredMatches;
+    private int $winningSequenceLength;
 
     /**
-     * @throws InvalidNumberOfRequiredMatchesException
+     * @throws WinningSequenceLengthTooShortException
      */
-    public function __construct(int $numberOfRequiredMatches)
+    public function __construct(int $winningSequenceLength)
     {
-        if ($numberOfRequiredMatches < self::MINIMUM) {
-            throw new InvalidNumberOfRequiredMatchesException('The value must be at least ' . self::MINIMUM . '.');
+        if ($winningSequenceLength < self::MINIMUM) {
+            throw new WinningSequenceLengthTooShortException('The value must be at least ' . self::MINIMUM . '.');
         }
 
-        $this->numberOfRequiredMatches = $numberOfRequiredMatches;
+        $this->winningSequenceLength = $winningSequenceLength;
     }
 
     public function findWinningSequence(Board $board): array
@@ -35,7 +35,7 @@ abstract class SequenceBasedWinningRule implements WinningRule
 
         $stone = $board->lastUsedField()->stone();
         $point = $board->lastUsedField()->point();
-        $winningSequence = str_repeat((string)$stone->value, $this->numberOfRequiredMatches);
+        $winningSequence = str_repeat((string)$stone->value, $this->winningSequenceLength);
         $fields = $this->findFields($board, $point);
 
         $winningSequencePosition = strpos(implode($fields), $winningSequence);
@@ -45,7 +45,7 @@ abstract class SequenceBasedWinningRule implements WinningRule
 
         return array_map(
             static fn(Field $field) => $field->point(),
-            array_slice($fields, $winningSequencePosition, $this->numberOfRequiredMatches)
+            array_slice($fields, $winningSequencePosition, $this->winningSequenceLength)
         );
     }
 

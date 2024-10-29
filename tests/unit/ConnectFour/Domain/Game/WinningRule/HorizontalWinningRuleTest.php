@@ -8,7 +8,7 @@ use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
-use Gaming\ConnectFour\Domain\Game\Exception\InvalidNumberOfRequiredMatchesException;
+use Gaming\ConnectFour\Domain\Game\Exception\WinningSequenceLengthTooShortException;
 use Gaming\ConnectFour\Domain\Game\WinningRule\HorizontalWinningRule;
 use PHPUnit\Framework\TestCase;
 
@@ -17,9 +17,9 @@ class HorizontalWinningRuleTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowAnExceptionIfNumberOfRequiredMatchesIsLowerThanFour(): void
+    public function itShouldThrowIfWinningSequenceLengthIsTooShort(): void
     {
-        $this->expectException(InvalidNumberOfRequiredMatchesException::class);
+        $this->expectException(WinningSequenceLengthTooShortException::class);
 
         new HorizontalWinningRule(3);
     }
