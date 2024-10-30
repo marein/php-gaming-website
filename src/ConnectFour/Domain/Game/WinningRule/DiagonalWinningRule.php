@@ -18,4 +18,9 @@ final class DiagonalWinningRule extends SequenceBasedWinningRule
             ...$board->findFieldsInCounterDiagonalByPoint($point)
         ];
     }
+
+    protected function name(): string
+    {
+        return 'diagonal';
+    }
 }

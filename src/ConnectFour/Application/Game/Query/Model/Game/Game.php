@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-use Gaming\ConnectFour\Domain\Game\Board\Point as DomainPoint;
 use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
@@ -13,6 +12,7 @@ use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
 use JsonSerializable;
 use RuntimeException;
 
@@ -42,9 +42,9 @@ final class Game implements JsonSerializable
     private bool $finished = false;
 
     /**
-     * @var Point[]
+     * @var WinningSequence[]
      */
-    private array $winningSequence = [];
+    private array $winningSequences = [];
 
     /**
      * @var Move[]
@@ -71,7 +71,7 @@ final class Game implements JsonSerializable
             'height' => $this->height,
             'width' => $this->width,
             'moves' => $this->moves,
-            'winningSequence' => $this->winningSequence
+            'winningSequences' => $this->winningSequences
         ];
     }
 
@@ -122,10 +122,8 @@ final class Game implements JsonSerializable
 
     private function handleGameWon(GameWon $gameWon): void
     {
-        $this->winningSequence = array_map(
-            static fn(DomainPoint $point) => new Point($point->x(), $point->y()),
-            $gameWon->winningSequence()
-        );
+        $this->winningSequences = $gameWon->winningSequences();
+
         $this->markAsFinished();
     }
 

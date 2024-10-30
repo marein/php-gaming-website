@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Domain\Game\Event;
 
 use Gaming\Common\Domain\DomainEvent;
-use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Player;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
 
 final class GameWon implements DomainEvent
 {
@@ -16,18 +16,18 @@ final class GameWon implements DomainEvent
     private string $winnerPlayerId;
 
     /**
-     * @var Point[]
+     * @var WinningSequence[]
      */
-    private array $winningSequence;
+    private array $winningSequences;
 
     /**
-     * @param Point[] $winningSequence
+     * @param WinningSequence[] $winningSequences
      */
-    public function __construct(GameId $gameId, Player $winnerPlayer, array $winningSequence)
+    public function __construct(GameId $gameId, Player $winnerPlayer, array $winningSequences)
     {
         $this->gameId = $gameId->toString();
         $this->winnerPlayerId = $winnerPlayer->id();
-        $this->winningSequence = $winningSequence;
+        $this->winningSequences = $winningSequences;
     }
 
     public function aggregateId(): string
@@ -41,10 +41,10 @@ final class GameWon implements DomainEvent
     }
 
     /**
-     * @return Point[]
+     * @return WinningSequence[]
      */
-    public function winningSequence(): array
+    public function winningSequences(): array
     {
-        return $this->winningSequence;
+        return $this->winningSequences;
     }
 }

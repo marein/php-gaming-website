@@ -23,7 +23,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._previousMoveButton = document.querySelector(this.getAttribute('previous-move-selector'));
         this._nextMoveButton = document.querySelector(this.getAttribute('next-move-selector'));
         this._followMovesButton = document.querySelector(this.getAttribute('follow-moves-selector'));
-        this._game = GameModel.fromObject(game);
+        this._game = new GameModel(game);
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
         this._fields = this._gameNode.querySelectorAll('.gp-game__field');
         this._colorToClass = {1: 'bg-red', 2: 'bg-yellow'};
@@ -45,13 +45,13 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
         this._updateNavigationButtons();
-        this._showWinningSequence();
+        this._showWinningSequences();
     }
 
     /**
      * Display the move in the view.
      *
-     * @param {{x:Number, y:Number, color:Number}} move
+     * @param {import('./Model/Game.js').Move} move
      */
     _showMove(move) {
         let field = this._gameNode.querySelector(`.gp-game__field[data-point="${move.x} ${move.y}"]`);
@@ -78,29 +78,31 @@ customElements.define('connect-four-game', class extends HTMLElement {
         }
     }
 
-    _showWinningSequence() {
-        if (this._game.winningSequence.length === 0) return;
+    _showWinningSequences() {
+        if (this._game.winningSequences.length === 0) return;
         if (this._numberOfCurrentMoveInView !== this._game.numberOfMoves()) return;
 
         this._fields.forEach(field => field.classList.remove('gp-game__field--highlight'));
-        this._game.winningSequence.forEach(point => this._gameNode
-            .querySelector(`.gp-game__field[data-point="${point.x} ${point.y}"]`)
-            .classList
-            .add('gp-game__field--highlight')
-        );
+        this._game.winningSequences.forEach(winningSequence => {
+            winningSequence.points.forEach(point => this._gameNode
+                .querySelector(`.gp-game__field[data-point="${point.x} ${point.y}"]`)
+                .classList
+                .add('gp-game__field--highlight')
+            );
+        });
     }
 
     /**
      * Only show if the user follows the moves. Otherwise, notify user that a new move is available.
      *
-     * @param {{x:Number, y:Number, color:Number}} move
+     * @param {import('./Model/Game.js').Move} move
      */
     _onMoveAppendedToGame(move) {
         if (this._followMovesButton.disabled === true) {
             this._showMove(move);
             this._numberOfCurrentMoveInView++;
             this._updateNavigationButtons();
-            this._showWinningSequence();
+            this._showWinningSequences();
         } else {
             this._followMovesButton.classList.add('btn-warning', 'icon-tada');
         }
@@ -124,8 +126,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onGameWon(event) {
-        this._game.winningSequence = event.detail.winningSequence;
-        this._showWinningSequence();
+        this._game.winningSequences = event.detail.winningSequences;
+        this._showWinningSequences();
     }
 
     _onPreviousMoveClick(event) {

@@ -36,7 +36,7 @@ final class Open implements State
 
         return new Transition(
             new Running(
-                $this->configuration->winningRule(),
+                $this->configuration->winningRules(),
                 $width * $height,
                 Board::empty($size),
                 new Players($this->player, $joinedPlayer)

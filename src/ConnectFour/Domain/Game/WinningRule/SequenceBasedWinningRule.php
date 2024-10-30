@@ -13,24 +13,21 @@ abstract class SequenceBasedWinningRule implements WinningRule
 {
     private const int MINIMUM = 4;
 
-    private int $winningSequenceLength;
-
     /**
      * @throws WinningSequenceLengthTooShortException
      */
-    public function __construct(int $winningSequenceLength)
-    {
+    public function __construct(
+        private readonly int $winningSequenceLength
+    ) {
         if ($winningSequenceLength < self::MINIMUM) {
             throw new WinningSequenceLengthTooShortException('The value must be at least ' . self::MINIMUM . '.');
         }
-
-        $this->winningSequenceLength = $winningSequenceLength;
     }
 
-    public function findWinningSequence(Board $board): array
+    public function findWinningSequence(Board $board): ?WinningSequence
     {
         if ($board->lastUsedField()->isEmpty()) {
-            return [];
+            return null;
         }
 
         $stone = $board->lastUsedField()->stone();
@@ -40,12 +37,15 @@ abstract class SequenceBasedWinningRule implements WinningRule
 
         $winningSequencePosition = strpos(implode($fields), $winningSequence);
         if ($winningSequencePosition === false) {
-            return [];
+            return null;
         }
 
-        return array_map(
-            static fn(Field $field) => $field->point(),
-            array_slice($fields, $winningSequencePosition, $this->winningSequenceLength)
+        return new WinningSequence(
+            $this->name(),
+            array_map(
+                static fn(Field $field) => $field->point(),
+                array_slice($fields, $winningSequencePosition, $this->winningSequenceLength)
+            )
         );
     }
 
@@ -53,4 +53,6 @@ abstract class SequenceBasedWinningRule implements WinningRule
      * @return Field[]
      */
     abstract protected function findFields(Board $board, Point $point): array;
+
+    abstract protected function name(): string;
 }

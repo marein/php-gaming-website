@@ -13,4 +13,9 @@ final class VerticalWinningRule extends SequenceBasedWinningRule
     {
         return $board->findFieldsByColumn($point->x());
     }
+
+    protected function name(): string
+    {
+        return 'vertical';
+    }
 }

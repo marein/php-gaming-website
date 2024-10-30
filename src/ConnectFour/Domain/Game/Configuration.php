@@ -5,32 +5,31 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Domain\Game;
 
 use Gaming\ConnectFour\Domain\Game\Board\Size;
-use Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
-use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 
 final class Configuration
 {
     private Size $size;
 
-    private WinningRule $winningRule;
+    private WinningRules $winningRules;
 
-    private function __construct(Size $size, WinningRule $winningRule)
+    private function __construct(Size $size, WinningRules $winningRules)
     {
         $this->size = $size;
-        $this->winningRule = $winningRule;
+        $this->winningRules = $winningRules;
     }
 
     public static function common(): Configuration
     {
         return new self(
             new Size(7, 6),
-            new CommonWinningRule()
+            WinningRules::standard()
         );
     }
 
-    public static function custom(Size $size, WinningRule $winningRule): Configuration
+    public static function custom(Size $size, WinningRules $winningRules): Configuration
     {
-        return new self($size, $winningRule);
+        return new self($size, $winningRules);
     }
 
     public function size(): Size
@@ -38,8 +37,8 @@ final class Configuration
         return $this->size;
     }
 
-    public function winningRule(): WinningRule
+    public function winningRules(): WinningRules
     {
-        return $this->winningRule;
+        return $this->winningRules;
     }
 }

@@ -13,4 +13,9 @@ final class HorizontalWinningRule extends SequenceBasedWinningRule
     {
         return $board->findFieldsByRow($point->y());
     }
+
+    protected function name(): string
+    {
+        return 'horizontal';
+    }
 }

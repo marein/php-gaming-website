@@ -10,6 +10,7 @@ use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\WinningSequenceLengthTooShortException;
 use Gaming\ConnectFour\Domain\Game\WinningRule\VerticalWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
 use PHPUnit\Framework\TestCase;
 
 class VerticalWinningRuleTest extends TestCase
@@ -33,18 +34,18 @@ class VerticalWinningRuleTest extends TestCase
         $board = Board::empty($size);
         $verticalWinningRule = new VerticalWinningRule(4);
 
-        $this->assertCount(0, $verticalWinningRule->findWinningSequence($board));
+        $this->assertNull($verticalWinningRule->findWinningSequence($board));
 
         $board = $board->dropStone(Stone::Red, 1);
         $board = $board->dropStone(Stone::Red, 1);
         $board = $board->dropStone(Stone::Red, 1);
 
-        $this->assertCount(0, $verticalWinningRule->findWinningSequence($board));
+        $this->assertNull($verticalWinningRule->findWinningSequence($board));
 
         $board = $board->dropStone(Stone::Red, 1);
 
         $this->assertEquals(
-            [new Point(1, 3), new Point(1, 4), new Point(1, 5), new Point(1, 6)],
+            new WinningSequence('vertical', [new Point(1, 3), new Point(1, 4), new Point(1, 5), new Point(1, 6)]),
             $verticalWinningRule->findWinningSequence($board)
         );
     }

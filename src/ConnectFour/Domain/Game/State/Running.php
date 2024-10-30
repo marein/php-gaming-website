@@ -15,11 +15,11 @@ use Gaming\ConnectFour\Domain\Game\Exception\GameRunningException;
 use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Players;
-use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 
 final class Running implements State
 {
-    private WinningRule $winningRule;
+    private WinningRules $winningRules;
 
     private int $numberOfMovesUntilDraw;
 
@@ -28,12 +28,12 @@ final class Running implements State
     private Players $players;
 
     public function __construct(
-        WinningRule $winningRule,
+        WinningRules $winningRules,
         int $numberOfMovesUntilDraw,
         Board $board,
         Players $players
     ) {
-        $this->winningRule = $winningRule;
+        $this->winningRules = $winningRules;
         $this->numberOfMovesUntilDraw = $numberOfMovesUntilDraw;
         $this->board = $board;
         $this->players = $players;
@@ -53,10 +53,10 @@ final class Running implements State
             )
         ];
 
-        $winningSequence = $this->winningRule->findWinningSequence($board);
+        $winningSequences = $this->winningRules->findWinningSequences($board);
 
-        if (count($winningSequence) !== 0) {
-            $domainEvents[] = new GameWon($gameId, $this->players->current(), $winningSequence);
+        if (count($winningSequences) !== 0) {
+            $domainEvents[] = new GameWon($gameId, $this->players->current(), $winningSequences);
 
             return new Transition(
                 new Won(),
@@ -77,7 +77,7 @@ final class Running implements State
 
         return new Transition(
             new self(
-                $this->winningRule,
+                $this->winningRules,
                 $numberOfMovesUntilDraw,
                 $board,
                 $this->players->switch()
