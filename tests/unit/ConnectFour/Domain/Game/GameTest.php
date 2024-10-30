@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
+use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Configuration;
@@ -23,7 +24,8 @@ use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
-use Gaming\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -528,6 +530,10 @@ class GameTest extends TestCase
         assert($domainEvents[7] instanceof GameWon);
         self::assertEquals($game->id()->toString(), $domainEvents[7]->aggregateId());
         self::assertEquals('playerId1', $domainEvents[7]->winnerPlayerId());
+        self::assertEquals(
+            [new WinningSequence('vertical', [new Point(1, 3), new Point(1, 4), new Point(1, 5), new Point(1, 6)])],
+            $domainEvents[7]->winningSequences()
+        );
 
         return $game;
     }
@@ -538,7 +544,7 @@ class GameTest extends TestCase
             GameId::generate(),
             Configuration::custom(
                 new Size(2, 2),
-                new CommonWinningRule()
+                WinningRules::standard()
             ),
             'playerId1'
         );

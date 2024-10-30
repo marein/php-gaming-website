@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\WinningRule;
 
 use Gaming\ConnectFour\Domain\Game\Board\Board;
+use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
-use Gaming\ConnectFour\Domain\Game\Exception\InvalidNumberOfRequiredMatchesException;
+use Gaming\ConnectFour\Domain\Game\Exception\WinningSequenceLengthTooShortException;
 use Gaming\ConnectFour\Domain\Game\WinningRule\VerticalWinningRule;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
 use PHPUnit\Framework\TestCase;
 
 class VerticalWinningRuleTest extends TestCase
@@ -16,9 +18,9 @@ class VerticalWinningRuleTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowAnExceptionIfNumberOfRequiredMatchesIsLowerThanFour(): void
+    public function itShouldThrowIfWinningSequenceLengthIsTooShort(): void
     {
-        $this->expectException(InvalidNumberOfRequiredMatchesException::class);
+        $this->expectException(WinningSequenceLengthTooShortException::class);
 
         new VerticalWinningRule(3);
     }
@@ -32,16 +34,19 @@ class VerticalWinningRuleTest extends TestCase
         $board = Board::empty($size);
         $verticalWinningRule = new VerticalWinningRule(4);
 
-        $this->assertFalse($verticalWinningRule->calculate($board));
+        $this->assertNull($verticalWinningRule->findWinningSequence($board));
 
         $board = $board->dropStone(Stone::Red, 1);
         $board = $board->dropStone(Stone::Red, 1);
         $board = $board->dropStone(Stone::Red, 1);
 
-        $this->assertFalse($verticalWinningRule->calculate($board));
+        $this->assertNull($verticalWinningRule->findWinningSequence($board));
 
         $board = $board->dropStone(Stone::Red, 1);
 
-        $this->assertTrue($verticalWinningRule->calculate($board));
+        $this->assertEquals(
+            new WinningSequence('vertical', [new Point(1, 3), new Point(1, 4), new Point(1, 5), new Point(1, 6)]),
+            $verticalWinningRule->findWinningSequence($board)
+        );
     }
 }

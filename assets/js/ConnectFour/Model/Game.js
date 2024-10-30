@@ -1,11 +1,17 @@
+/**
+ * @typedef {{x: Number, y: Number}} Point
+ * @typedef {{x: Number, y: Number, color: Number}} Move
+ * @typedef {{rule: String, points: Point[]}} WinningSequence
+ */
+
 export class Game {
     /**
-     * @param {String} gameId
-     * @param {{x:Number, y:Number, color:Number}[]} moves
+     * @param {{gameId: String, moves: Move[], winningSequences: WinningSequence[]}} game
      */
-    constructor(gameId, moves) {
-        this.gameId = gameId;
-        this.moves = moves;
+    constructor(game) {
+        this.gameId = game.gameId;
+        this.moves = game.moves;
+        this.winningSequences = game.winningSequences;
         this.onMoveAppendedObservers = [];
     }
 
@@ -21,7 +27,7 @@ export class Game {
     /**
      * Append a move. If it's already there, it'll silently not appended.
      *
-     * @param {{x:Number, y:Number, color:Number}} move
+     * @param {Move} move
      */
     appendMove(move) {
         if (!this.hasMove(move)) {
@@ -34,7 +40,7 @@ export class Game {
     /**
      * Check if the game has the given move.
      *
-     * @param {{x:Number, y:Number, color:Number}} move
+     * @param {Move} move
      *
      * @returns {boolean}
      */
@@ -50,17 +56,5 @@ export class Game {
      */
     onMoveAppended(callback) {
         this.onMoveAppendedObservers.push(callback);
-    }
-
-    /**
-     * Create the game from a raw object.
-     *
-     * @param {{gameId:String, moves:{x:Number, y:Number, color:Number}[]}} object
-     */
-    static fromObject(object) {
-        return new this(
-            object.gameId,
-            object.moves
-        );
     }
 }

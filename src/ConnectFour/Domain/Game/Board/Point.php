@@ -6,21 +6,23 @@ namespace Gaming\ConnectFour\Domain\Game\Board;
 
 final class Point
 {
-    private int $x;
-
-    private int $y;
-
-    public function __construct(int $x, int $y)
-    {
-        $this->x = $x;
-        $this->y = $y;
+    public function __construct(
+        public readonly int $x,
+        public readonly int $y
+    ) {
     }
 
+    /**
+     * @deprecated Use the property instead.
+     */
     public function x(): int
     {
         return $this->x;
     }
 
+    /**
+     * @deprecated Use the property instead.
+     */
     public function y(): int
     {
         return $this->y;

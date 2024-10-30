@@ -12,6 +12,7 @@ use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
 use JsonSerializable;
 use RuntimeException;
 
@@ -41,6 +42,11 @@ final class Game implements JsonSerializable
     private bool $finished = false;
 
     /**
+     * @var WinningSequence[]
+     */
+    private array $winningSequences = [];
+
+    /**
      * @var Move[]
      */
     private array $moves = [];
@@ -64,7 +70,8 @@ final class Game implements JsonSerializable
             'finished' => $this->finished,
             'height' => $this->height,
             'width' => $this->width,
-            'moves' => $this->moves
+            'moves' => $this->moves,
+            'winningSequences' => $this->winningSequences
         ];
     }
 
@@ -80,8 +87,8 @@ final class Game implements JsonSerializable
             PlayerMoved::class => $this->handlePlayerMoved($domainEvent),
             GameAborted::class,
             GameDrawn::class,
-            GameWon::class,
             GameResigned::class => $this->markAsFinished(),
+            GameWon::class => $this->handleGameWon($domainEvent),
             ChatAssigned::class => $this->handleChatAssigned($domainEvent),
             default => throw new RuntimeException($domainEvent::class . ' must be handled.')
         };
@@ -111,6 +118,13 @@ final class Game implements JsonSerializable
         if (!in_array($move, $this->moves)) {
             $this->moves[] = $move;
         }
+    }
+
+    private function handleGameWon(GameWon $gameWon): void
+    {
+        $this->winningSequences = $gameWon->winningSequences();
+
+        $this->markAsFinished();
     }
 
     private function handleChatAssigned(ChatAssigned $chatAssigned): void

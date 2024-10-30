@@ -8,5 +8,5 @@ use Gaming\ConnectFour\Domain\Game\Board\Board;
 
 interface WinningRule
 {
-    public function calculate(Board $board): bool;
+    public function findWinningSequence(Board $board): ?WinningSequence;
 }

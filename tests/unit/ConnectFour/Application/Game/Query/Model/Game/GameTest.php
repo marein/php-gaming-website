@@ -44,7 +44,8 @@ class GameTest extends TestCase
                         'y' => 5,
                         'color' => 2
                     ]
-                ]
+                ],
+                'winningSequences' => []
             ],
             JSON_THROW_ON_ERROR
         );
@@ -115,7 +116,14 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
-        $this->assertEquals(true, $game->jsonSerialize()['finished']);
+        $this->assertEquals(
+            [[
+                'rule' => 'vertical',
+                'points' => [['x' => 1, 'y' => 3], ['x' => 1, 'y' => 4], ['x' => 1, 'y' => 5], ['x' => 1, 'y' => 6]]
+            ]],
+            json_decode(json_encode($game), true)['winningSequences']
+        );
+        $this->assertEquals(true, json_decode(json_encode($game), true)['finished']);
     }
 
     /**
