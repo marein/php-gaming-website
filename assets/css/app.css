@@ -67,18 +67,6 @@ notification-list {
     cursor: pointer;
     background-color: var(--tblr-body-bg);
     box-shadow: var(--box-shadow-main, none);
-
-    &.bg-red {
-        --box-shadow-main: inset 0 0 0 .5em var(--tblr-red-darken),
-        inset 0 0 0 1.5em var(--tblr-red),
-        inset 0 0 0 1.8em var(--tblr-red-darken);
-    }
-
-    &.bg-yellow {
-        --box-shadow-main: inset 0 0 0 .5em var(--tblr-yellow-darken),
-        inset 0 0 0 1.5em var(--tblr-yellow),
-        inset 0 0 0 1.8em var(--tblr-yellow-darken);
-    }
 }
 
 .gp-game__field::before {
@@ -86,6 +74,18 @@ notification-list {
     content: "";
     padding-top: 100%;
     position: relative;
+}
+
+.gp-game__field.bg-red {
+    --box-shadow-main: inset 0 0 0 .5em var(--tblr-red-darken),
+    inset 0 0 0 1.5em var(--tblr-red),
+    inset 0 0 0 1.8em var(--tblr-red-darken);
+}
+
+.gp-game__field.bg-yellow {
+    --box-shadow-main: inset 0 0 0 .5em var(--tblr-yellow-darken),
+    inset 0 0 0 1.5em var(--tblr-yellow),
+    inset 0 0 0 1.8em var(--tblr-yellow-darken);
 }
 
 .gp-game__field--current {
