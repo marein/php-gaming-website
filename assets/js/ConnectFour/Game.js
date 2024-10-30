@@ -41,7 +41,9 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {Number} index
      */
     _showMovesUpTo(index) {
-        this._fields.forEach(field => field.classList.remove('gp-game__field--highlight', 'bg-red', 'bg-yellow'));
+        this._fields.forEach(field => field.classList.remove(
+            'gp-game__field--highlight', 'gp-game__field--current', 'bg-red', 'bg-yellow')
+        );
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
         this._updateNavigationButtons();
@@ -57,8 +59,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
         let field = this._gameNode.querySelector(`.gp-game__field[data-point="${move.x} ${move.y}"]`);
         field.classList.add(this._colorToClass[move.color]);
 
-        this._fields.forEach(field => field.classList.remove('gp-game__field--highlight'));
-        field.classList.add('gp-game__field--highlight');
+        this._fields.forEach(field => field.classList.remove('gp-game__field--highlight', 'gp-game__field--current'));
+        field.classList.add('gp-game__field--highlight', 'gp-game__field--current');
     }
 
     /**
