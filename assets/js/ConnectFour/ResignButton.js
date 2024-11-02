@@ -6,9 +6,7 @@ customElements.define('connect-four-resign-button', class extends HTMLElement {
     connectedCallback() {
         this.replaceChildren(html`
             <confirmation-button @confirmation-button:yes="${this._onConfirmed.bind(this)}">
-                <button class="btn w-100">
-                    ${this.innerHTML}
-                </button>
+                ${Array.from(this.children)}
             </confirmation-button>
         `);
     }

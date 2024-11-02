@@ -79,12 +79,16 @@
                         </div>
                         <div class="col-6">
                             <connect-four-abort-button game-id="{{ game.gameId }}">
-                                Abort
+                                <button id="abort-game" class="btn btn-outline-danger w-100">
+                                    Abort
+                                </button>
                             </connect-four-abort-button>
                         </div>
                         <div class="col-6">
                             <connect-four-resign-button game-id="{{ game.gameId }}">
-                                Resign
+                                <button class="btn w-100">
+                                    Resign
+                                </button>
                             </connect-four-resign-button>
                         </div>
                     </div>

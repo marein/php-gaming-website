@@ -4,20 +4,20 @@ customElements.define('confirmation-button', class extends HTMLElement {
     connectedCallback() {
         this._initialChildren = Array.from(this.children);
         this._button = this.querySelector('button');
-        this._onDocumentClickHandler = this._onDocumentClick.bind(this);
+        this._onDocumentClick = e => !this.contains(e.target) && this.reset();
 
         this._button?.addEventListener('click', this._onButtonClick.bind(this));
     }
 
     reset() {
-        document.removeEventListener('click', this._onDocumentClickHandler);
+        document.removeEventListener('click', this._onDocumentClick);
         this.replaceChildren(...this._initialChildren);
         this._button?.removeAttribute('disabled');
         this._button?.classList.remove('btn-loading');
     }
 
     _onButtonClick(e) {
-        setTimeout(() => document.addEventListener('click', this._onDocumentClickHandler), 0);
+        setTimeout(() => document.addEventListener('click', this._onDocumentClick), 0);
 
         this.replaceChildren(html`
             <div class="row row-gap-2">
@@ -49,15 +49,11 @@ customElements.define('confirmation-button', class extends HTMLElement {
     }
 
     _onYesClick(e) {
-        document.removeEventListener('click', this._onDocumentClickHandler);
+        document.removeEventListener('click', this._onDocumentClick);
         this.replaceChildren(...this._initialChildren);
         this._button?.setAttribute('disabled', '');
         this._button?.classList.add('btn-loading');
 
         this.dispatchEvent(new CustomEvent('confirmation-button:yes'));
-    }
-
-    _onDocumentClick(e) {
-        !this.contains(e.target) && this.reset();
     }
 });
