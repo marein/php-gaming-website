@@ -9,6 +9,10 @@ customElements.define('confirmation-button', class extends HTMLElement {
         this._button?.addEventListener('click', this._onButtonClick.bind(this));
     }
 
+    disconnectedCallback() {
+        this.reset();
+    }
+
     reset() {
         document.removeEventListener('click', this._onDocumentClick);
         this.replaceChildren(...this._initialChildren);
