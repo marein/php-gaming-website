@@ -16,13 +16,16 @@ window.app = {
         const timeout = setTimeout(() => document.head.after(progress), delay ?? 250);
         return () => clearTimeout(timeout) || progress.classList.add('gp-page-progress--finish');
     },
+    notifyUser(message, type, timeout = 3000) {
+        document.querySelector('notification-list')?.appendMessage(message, type, timeout)
+    },
     peInit() {
         if (!window.pe) return window.addEventListener('pe:init', window.app.peInit);
         window.app.navigate = window.pe.navigate;
     }
 }
 
-client.onError = response => document.querySelector('notification-list').appendMessage(response.message);
+client.onError = response => window.app.notifyUser(response.message, 'warning');
 
 window.app.peInit();
 window.addEventListener('pe:click', e => {

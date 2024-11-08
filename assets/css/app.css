@@ -39,8 +39,16 @@ html:has(.layout-fluid) {
 }
 
 .gp-fadeout {
-    transition: all 0.25s ease-in-out;
-    opacity: 0;
+    animation: gp-fadeout .5s ease-in-out;
+}
+
+@keyframes gp-fadeout {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 notification-list {
