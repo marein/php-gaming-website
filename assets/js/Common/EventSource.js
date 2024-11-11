@@ -2,23 +2,23 @@ customElements.define('event-source', class extends HTMLElement {
     connectedCallback() {
         this._eventSource = null;
         this._lastEventId = null;
-        this._subscriptions = this.getAttribute('subscriptions').split(',');
-        this._verbose = this.hasAttribute('verbose');
         this._reconnectTimeout = null;
+        this._subscriptions = this.getAttribute('subscriptions')?.split(',') ?? [];
+        this._verbose = this.hasAttribute('verbose');
 
         window.addEventListener('sse:addsubscription', this._onAddSubscription);
-        window.addEventListener('app:load', this._onAppLoad);
+        window.addEventListener('app:load', this._connect);
     }
 
     disconnectedCallback() {
         window.removeEventListener('sse:addsubscription', this._onAddSubscription);
-        window.removeEventListener('app:load', this._onAppLoad);
+        window.removeEventListener('app:load', this._connect);
 
         this._eventSource && this._eventSource.close();
         clearTimeout(this._reconnectTimeout);
     }
 
-    _connect = (shouldShowSuccess = false) => {
+    _connect = () => {
         this._eventSource && this._eventSource.close();
         clearTimeout(this._reconnectTimeout);
 
@@ -26,32 +26,24 @@ customElements.define('event-source', class extends HTMLElement {
         if (this._lastEventId !== null) url += '&last_event_id=' + this._lastEventId;
 
         this._eventSource = new EventSource(url);
-        this._eventSource.onmessage = this._onMessage;
-        this._eventSource.onopen = () => shouldShowSuccess && window.app.notifyUser('Connected to server.', 'success');
-        this._eventSource.onerror = this._onError;
-    }
+        this._eventSource.onmessage = (message) => {
+            this._lastEventId = message.lastEventId;
 
-    _onAppLoad = () => {
-        this._connect();
-    }
+            let [, eventName, eventData] = message.data.split(/([^:]+):(.*)/);
+            let payload = JSON.parse(eventData);
 
-    _onMessage = (message) => {
-        this._lastEventId = message.lastEventId;
+            this.dispatchEvent(new CustomEvent(eventName, {bubbles: true, detail: payload}));
 
-        let [, eventName, eventData] = message.data.split(/([^:]+):(.*)/);
-        let payload = JSON.parse(eventData);
+            this._verbose && console.log(eventName, payload);
+        };
+        this._eventSource.onopen = () => this.dispatchEvent(new CustomEvent('sse:open', {bubbles: true}));
+        this._eventSource.onerror = () => {
+            this.dispatchEvent(new CustomEvent('sse:error', {bubbles: true}));
 
-        this.dispatchEvent(new CustomEvent(eventName, {bubbles: true, detail: payload}));
+            if (this._eventSource.readyState !== EventSource.CLOSED) return;
 
-        if (this._verbose) console.log(eventName, payload);
-    }
-
-    _onError = async () => {
-        if (this._eventSource.readyState !== EventSource.CLOSED) return;
-
-        const timeout = 4000 + Math.floor(Math.random() * 2000);
-        window.app.notifyUser('No connection to server.', 'danger', timeout);
-        this._reconnectTimeout = setTimeout(() => this._connect(true), timeout + 1000);
+            this._reconnectTimeout = setTimeout(() => this._connect(), 3000 + Math.floor(Math.random() * 2000));
+        };
     }
 
     _onAddSubscription = (event) => {
