@@ -26,24 +26,32 @@ customElements.define('event-source', class extends HTMLElement {
         if (this._lastEventId !== null) url += '&last_event_id=' + this._lastEventId;
 
         this._eventSource = new EventSource(url);
-        this._eventSource.onmessage = (message) => {
-            this._lastEventId = message.lastEventId;
+        this._eventSource.onmessage = this._onMessage;
+        this._eventSource.onopen = this._onOpen;
+        this._eventSource.onerror = this._onError;
+    }
 
-            let [, eventName, eventData] = message.data.split(/([^:]+):(.*)/);
-            let payload = JSON.parse(eventData);
+    _onMessage = (message) => {
+        this._lastEventId = message.lastEventId;
 
-            this.dispatchEvent(new CustomEvent(eventName, {bubbles: true, detail: payload}));
+        let [, eventName, eventData] = message.data.split(/([^:]+):(.*)/);
+        let payload = JSON.parse(eventData);
 
-            this._verbose && console.log(eventName, payload);
-        };
-        this._eventSource.onopen = () => this.dispatchEvent(new CustomEvent('sse:open', {bubbles: true}));
-        this._eventSource.onerror = () => {
-            this.dispatchEvent(new CustomEvent('sse:error', {bubbles: true}));
+        this.dispatchEvent(new CustomEvent(eventName, {bubbles: true, detail: payload}));
 
-            if (this._eventSource.readyState !== EventSource.CLOSED) return;
+        this._verbose && console.log(eventName, payload);
+    };
 
-            this._reconnectTimeout = setTimeout(() => this._connect(), 3000 + Math.floor(Math.random() * 2000));
-        };
+    _onOpen = () => {
+        this.dispatchEvent(new CustomEvent('sse:open', {bubbles: true}))
+    }
+
+    _onError = () => {
+        this.dispatchEvent(new CustomEvent('sse:error', {bubbles: true}));
+
+        if (this._eventSource.readyState !== EventSource.CLOSED) return;
+
+        this._reconnectTimeout = setTimeout(() => this._connect(), 3000 + Math.floor(Math.random() * 2000));
     }
 
     _onAddSubscription = (event) => {

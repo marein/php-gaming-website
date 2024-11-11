@@ -1,12 +1,15 @@
+import {html} from 'uhtml/node.js'
+
 customElements.define('event-source-status', class extends HTMLElement {
     connectedCallback() {
-        this.innerHTML = `
-            <span class="status-indicator status-secondary status-indicator-animated">
+        this.replaceChildren(this._statusIndicator = html`
+            <span class="status-indicator status-secondary status-indicator-animated"
+                  title="${this.getAttribute('title-closed')}">
                 <span class="status-indicator-circle"></span>
                 <span class="status-indicator-circle"></span>
                 <span class="status-indicator-circle"></span>
             </span>
-        `;
+        `);
 
         document.addEventListener('sse:open', this._open);
         document.addEventListener('sse:error', this._error);
@@ -24,12 +27,14 @@ customElements.define('event-source-status', class extends HTMLElement {
     }
 
     _open = () => {
-        this.querySelector('.status-indicator').classList.remove('status-secondary', 'status-red', 'status-indicator-animated');
-        this.querySelector('.status-indicator').classList.add('status-green');
+        this._statusIndicator.classList.remove('status-secondary', 'status-red', 'status-indicator-animated');
+        this._statusIndicator.classList.add('status-green');
+        this._statusIndicator.title = this.getAttribute('title-open');
     }
 
     _error = () => {
-        this.querySelector('.status-indicator').classList.remove('status-secondary', 'status-green');
-        this.querySelector('.status-indicator').classList.add('status-red', 'status-indicator-animated');
+        this._statusIndicator.classList.remove('status-secondary', 'status-green');
+        this._statusIndicator.classList.add('status-red', 'status-indicator-animated');
+        this._statusIndicator.title = this.getAttribute('title-closed');
     }
 });
