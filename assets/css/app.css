@@ -6,6 +6,28 @@ html:has(.layout-fluid) {
     scroll-padding-top: 66px;
 }
 
+[data-title] {
+    position: relative;
+}
+
+[data-title]:hover:after,
+[data-title-show]:after {
+    content: attr(data-title);
+    pointer-events: none;
+    position: absolute;
+    padding: var(--tblr-spacer-2);
+    opacity: .9;
+    top: 100%;
+    right: 0;
+    white-space: pre;
+    z-index: 1080;
+    font-size: 0.765625rem;
+    color: var(--tblr-light);
+    background-color: var(--tblr-bg-surface-dark);
+    font-weight: var(--tblr-font-weight-light);
+    border-radius: var(--tblr-border-radius);
+}
+
 .gp-page-progress {
     z-index: 10000;
     top: 0;
@@ -39,8 +61,18 @@ html:has(.layout-fluid) {
 }
 
 .gp-fadeout {
-    transition: all 0.25s ease-in-out;
-    opacity: 0;
+    animation: gp-fadeout .5s ease-in-out;
+}
+
+@keyframes gp-fadeout {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
 }
 
 notification-list {

@@ -14,9 +14,13 @@
                     </a>
                 </div>
                 <div class="navbar-nav flex-row order-last">
+                    <div class="nav-item me-1">
+                        <event-source-status title-open="Ready to Play!"
+                                             title-closed="Connecting..."></event-source-status>
+                    </div>
                     {% if app.user ? app.user.isSignedUp %}
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link d-flex lh-1 text-reset p-0"
+                            <a href="javascript:void(0)" class="nav-link d-flex lh-1 text-reset p-0"
                                data-bs-toggle="dropdown">
                                 <span class="avatar avatar-sm">{{ app.user.username|slice(0, 2) }}</span>
                                 <div class="d-none d-sm-block ps-2">
@@ -29,15 +33,27 @@
                             </div>
                         </div>
                     {% else %}
-                        <div class="nav-item">
-                            <a href="{{ path('signup') }}" class="nav-link">
-                                Sign up
+                        <div class="nav-item dropdown">
+                            <a href="javascript:void(0)" class="nav-link d-flex lh-1 text-reset p-0"
+                               data-bs-toggle="dropdown">
+                                <span class="avatar avatar-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon avatar-icon" width="24"
+                                         height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                         fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+                                    </svg>
+                                </span>
+                                <div class="d-none d-sm-block ps-2">
+                                    <div class="small text-secondary">Hi!</div>
+                                    <div class="mt-1">Login</div>
+                                </div>
                             </a>
-                        </div>
-                        <div class="nav-item">
-                            <a href="{{ path('login') }}" class="nav-link">
-                                Sign in
-                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <a href="{{ path('signup') }}" class="dropdown-item">Sign up</a>
+                                <a href="{{ path('login') }}" class="dropdown-item">Sign in</a>
+                            </div>
                         </div>
                     {% endif %}
                 </div>
