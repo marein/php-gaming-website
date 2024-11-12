@@ -31,6 +31,10 @@ html:has(.layout-fluid) {
     border-radius: var(--tblr-border-radius);
 }
 
+.gp-dropdown-toggle:checked + .dropdown-menu {
+    display: block;
+}
+
 .gp-page-progress {
     z-index: 10000;
     top: 0;

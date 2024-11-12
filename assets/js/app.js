@@ -1,7 +1,6 @@
 import {client} from './Common/HttpClient.js'
 import './Common/NotificationList.js'
 import '@tabler/core/dist/css/tabler.min.css'
-import '@tabler/core/dist/js/tabler.min.js'
 import '../css/app.css'
 
 window.fetch = (fetch => async (resource, options = {}) => {
@@ -59,5 +58,19 @@ window.matchMedia("(prefers-color-scheme:dark)").addEventListener(
 );
 
 await window.app.loadElements(document.body).finally(window.app.showProgress());
+
+document.addEventListener('change', e => {
+    if (!e.target.matches('.gp-dropdown-toggle[type="checkbox"]')) return;
+
+    const onClick = eClick => {
+        if (eClick.target.closest(`label[for="${e.target.id}"]`)) return;
+
+        e.target.checked = e.target.parentElement.contains(eClick.target);
+
+        if (e.target.checked) document.addEventListener('click', onClick, {once: true});
+    }
+
+    if (e.target.checked) setTimeout(() => document.addEventListener('click', onClick, {once: true}), 0);
+})
 
 window.dispatchEvent(new CustomEvent('app:load'));

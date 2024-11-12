@@ -22,7 +22,7 @@ customElements.define('notification-list', class extends HTMLElement {
                     </div>
                     <div>${message}</div>
                 </div>
-                <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                <button class="btn-close" @click="${e => e.target.parentElement.remove()}"></button>
             </div>
         `;
 
