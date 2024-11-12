@@ -66,9 +66,11 @@ html:has(.layout-fluid) {
 @keyframes gp-fadeout {
     0% {
         opacity: 1;
+        transform: translateY(0);
     }
     100% {
         opacity: 0;
+        transform: translateX(100%);
     }
 }
 
