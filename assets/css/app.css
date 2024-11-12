@@ -10,7 +10,8 @@ html:has(.layout-fluid) {
     position: relative;
 }
 
-[data-title]:hover:after {
+[data-title]:hover:after,
+[data-title-show]:after {
     content: attr(data-title);
     pointer-events: none;
     position: absolute;

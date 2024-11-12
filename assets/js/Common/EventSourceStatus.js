@@ -10,6 +10,8 @@ customElements.define('event-source-status', class extends HTMLElement {
                 <span class="status-indicator-circle"></span>
             </span>
         `);
+        this._isInErrorState = false;
+        this._tooltipTimeout = null;
 
         document.addEventListener('sse:open', this._open);
         document.addEventListener('sse:error', this._error);
@@ -30,11 +32,27 @@ customElements.define('event-source-status', class extends HTMLElement {
         this._statusIndicator.classList.remove('status-secondary', 'status-red', 'status-indicator-animated');
         this._statusIndicator.classList.add('status-green');
         this._statusIndicator.dataset.title = this.getAttribute('title-open');
+
+        if (!this._isInErrorState) return;
+
+        this._isInErrorState = false;
+        this._forceTooltip();
     }
 
     _error = () => {
         this._statusIndicator.classList.remove('status-secondary', 'status-green');
         this._statusIndicator.classList.add('status-red', 'status-indicator-animated');
         this._statusIndicator.dataset.title = this.getAttribute('title-closed');
+
+        if (this._isInErrorState) return;
+
+        this._isInErrorState = true;
+        this._forceTooltip();
+    }
+
+    _forceTooltip() {
+        clearTimeout(this._tooltipTimeout);
+        this._statusIndicator.dataset.titleShow = '';
+        this._tooltipTimeout = setTimeout(() => delete this._statusIndicator.dataset.titleShow, 3000);
     }
 });
