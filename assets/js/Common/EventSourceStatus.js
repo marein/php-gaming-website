@@ -4,7 +4,7 @@ customElements.define('event-source-status', class extends HTMLElement {
     connectedCallback() {
         this.replaceChildren(this._statusIndicator = html`
             <span class="status-indicator status-secondary status-indicator-animated"
-                  title="${this.getAttribute('title-closed')}">
+                  data-title="${this.getAttribute('title-closed')}">
                 <span class="status-indicator-circle"></span>
                 <span class="status-indicator-circle"></span>
                 <span class="status-indicator-circle"></span>
@@ -29,12 +29,12 @@ customElements.define('event-source-status', class extends HTMLElement {
     _open = () => {
         this._statusIndicator.classList.remove('status-secondary', 'status-red', 'status-indicator-animated');
         this._statusIndicator.classList.add('status-green');
-        this._statusIndicator.title = this.getAttribute('title-open');
+        this._statusIndicator.dataset.title = this.getAttribute('title-open');
     }
 
     _error = () => {
         this._statusIndicator.classList.remove('status-secondary', 'status-green');
         this._statusIndicator.classList.add('status-red', 'status-indicator-animated');
-        this._statusIndicator.title = this.getAttribute('title-closed');
+        this._statusIndicator.dataset.title = this.getAttribute('title-closed');
     }
 });
