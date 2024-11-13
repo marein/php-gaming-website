@@ -19,7 +19,10 @@ html:has(.layout-fluid) {
     opacity: .9;
     top: 100%;
     right: 0;
-    white-space: pre;
+    width: max-content;
+    max-width: 200px;
+    word-wrap: break-word;
+    text-align: center;
     z-index: 1080;
     font-size: 0.765625rem;
     color: var(--tblr-light);
