@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Common\Bus\Integration;
 
 use Gaming\Common\Bus\HandlerDiscovery;
-use Gaming\Common\Bus\RouteToMethodBus;
+use Gaming\Common\Bus\PsrCompiledRoutingBus;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -46,7 +46,7 @@ final class GamingPlatformBusBundle extends AbstractBundle implements CompilerPa
     {
         foreach ($config['buses'] as $name => $busConfig) {
             $container->services()
-                ->set($this->extensionAlias . '.' . $name, RouteToMethodBus::class)
+                ->set($this->extensionAlias . '.' . $name, PsrCompiledRoutingBus::class)
                 ->args([service_locator([]), []]);
         }
     }

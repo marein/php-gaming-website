@@ -7,7 +7,7 @@ namespace Gaming\Common\Bus;
 use Gaming\Common\Bus\Exception\BusException;
 use Psr\Container\ContainerInterface;
 
-final class RouteToCallableBus implements Bus
+final class PsrCallableRoutingBus implements Bus
 {
     public function __construct(
         private readonly ContainerInterface $container

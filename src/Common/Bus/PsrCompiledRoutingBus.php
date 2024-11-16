@@ -7,7 +7,7 @@ namespace Gaming\Common\Bus;
 use Gaming\Common\Bus\Exception\BusException;
 use Psr\Container\ContainerInterface;
 
-final class RouteToMethodBus implements Bus
+final class PsrCompiledRoutingBus implements Bus
 {
     /**
      * @param array<class-string, array{handlerId: string, method: string}> $routes
@@ -22,6 +22,8 @@ final class RouteToMethodBus implements Bus
     {
         $route = $this->routes[$request::class] ?? throw BusException::missingHandler($request::class);
 
-        return $this->container->get($route['handlerId'])->{$route['method']}($request);
+        return $this->container->has($route['handlerId'])
+            ? $this->container->get($route['handlerId'])->{$route['method']}($request)
+            : throw BusException::missingHandler($request::class);
     }
 }
