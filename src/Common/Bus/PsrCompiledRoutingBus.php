@@ -7,6 +7,10 @@ namespace Gaming\Common\Bus;
 use Gaming\Common\Bus\Exception\BusException;
 use Psr\Container\ContainerInterface;
 
+/**
+ * This routing bus does not have any runtime checks. They should happen somewhere else,
+ * e.g. during container compilation.
+ */
 final class PsrCompiledRoutingBus implements Bus
 {
     /**
@@ -22,8 +26,6 @@ final class PsrCompiledRoutingBus implements Bus
     {
         $route = $this->routes[$request::class] ?? throw BusException::missingHandler($request::class);
 
-        return $this->container->has($route['handlerId'])
-            ? $this->container->get($route['handlerId'])->{$route['method']}($request)
-            : throw BusException::missingHandler($request::class);
+        return $this->container->get($route['handlerId'])->{$route['method']}($request);
     }
 }
