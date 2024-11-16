@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Common\Bus\Integration;
 
-use Closure;
-use Gaming\Common\Bus\Request;
+use Gaming\Common\Bus\HandlerDiscovery;
 use Gaming\Common\Bus\RouteToMethodBus;
-use ReflectionClass;
-use ReflectionMethod;
-use ReflectionNamedType;
-use ReflectionUnionType;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -78,9 +73,9 @@ final class GamingPlatformBusBundle extends AbstractBundle implements CompilerPa
         );
         $busDefinition = $container->getDefinition($this->extensionAlias . '.' . $bus);
 
-        $addRoute = static function (string $type, string $method) use ($handlerId, $tag, $busDefinition): void {
+        foreach ((new HandlerDiscovery())->forClass($handlerClass) as $type => $method) {
             if (!preg_match($tag['match'] ?? '/.*/', $type)) {
-                return;
+                continue;
             }
 
             if (array_key_exists($type, $busDefinition->getArgument(1))) {
@@ -100,53 +95,6 @@ final class GamingPlatformBusBundle extends AbstractBundle implements CompilerPa
                 service_locator($busDefinition->getArgument(0)->getValues() + [$handlerId => service($handlerId)]),
                 $busDefinition->getArgument(1) + [$type => ['handlerId' => $handlerId, 'method' => $method]]
             ]);
-        };
-
-        $this->processClass($handlerClass, $addRoute);
-    }
-
-    /**
-     * @param class-string $className
-     * @param Closure(string, string): void $addRoute
-     */
-    private function processClass(string $className, Closure $addRoute): void
-    {
-        foreach ((new ReflectionClass($className))->getMethods() as $method) {
-            $this->processMethod($method, $addRoute);
-        }
-    }
-
-    /**
-     * @param Closure(string, string): void $addRoute
-     */
-    private function processMethod(ReflectionMethod $method, Closure $addRoute): void
-    {
-        if (
-            !$method->isPublic() ||
-            $method->isStatic() ||
-            preg_match('/^__(?!invoke$)/', $method->getName()) ||
-            $method->getNumberOfParameters() !== 1
-        ) {
-            return;
-        }
-
-        $parameterType = $method->getParameters()[0]->getType();
-        $parameterTypes = match (true) {
-            $parameterType instanceof ReflectionNamedType => [$parameterType->getName()],
-            $parameterType instanceof ReflectionUnionType => array_map(
-                static fn(ReflectionNamedType $reflectionType): string => $reflectionType->getName(),
-                array_filter(
-                    $parameterType->getTypes(),
-                    static fn($reflectionType): bool => $reflectionType instanceof ReflectionNamedType
-                )
-            ),
-            default => []
-        };
-
-        foreach ($parameterTypes as $type) {
-            if (class_exists($type) && in_array(Request::class, class_implements($type))) {
-                $addRoute($type, $method->getName());
-            }
         }
     }
 }
