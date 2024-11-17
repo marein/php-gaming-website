@@ -6,6 +6,7 @@ namespace Gaming;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
+use Gaming\Common\Bus\Integration\GamingPlatformBusBundle;
 use Marein\LockDoctrineMigrationsBundle\MareinLockDoctrineMigrationsBundle;
 use Marein\StandardHeadersCsrfBundle\MareinStandardHeadersCsrfBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
@@ -33,7 +34,8 @@ final class Kernel extends BaseKernel
             new MareinStandardHeadersCsrfBundle(),
             new TwigBundle(),
             new MonologBundle(),
-            new SecurityBundle()
+            new SecurityBundle(),
+            new GamingPlatformBusBundle()
         ];
 
         if ($this->getEnvironment() === 'dev') {

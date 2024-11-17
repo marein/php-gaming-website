@@ -7,7 +7,7 @@ namespace Gaming\Common\Bus;
 use Gaming\Common\Bus\Exception\BusException;
 use Psr\Container\ContainerInterface;
 
-final class Psr11RoutingBus implements Bus
+final class PsrCallableRoutingBus implements Bus
 {
     public function __construct(
         private readonly ContainerInterface $container
@@ -16,8 +16,12 @@ final class Psr11RoutingBus implements Bus
 
     public function handle(Request $request): mixed
     {
-        return $this->container->has($request::class)
-            ? $this->container->get($request::class)($request)
+        $handler = $this->container->has($request::class)
+            ? $this->container->get($request::class)
+            : throw BusException::missingHandler($request::class);
+
+        return is_callable($handler)
+            ? $handler($request)
             : throw BusException::missingHandler($request::class);
     }
 }

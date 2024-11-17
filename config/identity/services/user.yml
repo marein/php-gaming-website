@@ -7,6 +7,8 @@ services:
         class: Gaming\Identity\Port\Adapter\Persistence\Repository\DoctrineUserRepository
         arguments: ['@identity.doctrine-orm']
 
-    identity.user-service:
-        class: Gaming\Identity\Application\User\UserService
+    Gaming\Identity\Application\User\UserService:
         arguments: ['@identity.user-repository']
+        tags:
+            - { name: 'gaming_platform_bus.handler', bus: 'identity_query', match: '/\\Query\\/' }
+            - { name: 'gaming_platform_bus.handler', bus: 'identity_command', match: '/\\Command\\/' }
