@@ -1,9 +1,7 @@
 {% extends '@web-interface/layout/base.html.twig' %}
 
-{% set body_class = 'd-flex flex-column' %}
-
 {% block body %}
-    <div class="page page-center">
+    <div class="page page-center" data-page-content>
         <div class="container container-tight">
             <p class="text-center fw-medium my-5">
                 <a href="{{ path('lobby') }}" class="link-secondary navbar-brand-autodark text-decoration-none">
