@@ -29,7 +29,7 @@ window.app = {
     peInit() {
         if (!window.pe) return window.addEventListener('pe:init', window.app.peInit);
         window.app.navigate = window.pe.navigate;
-        window.pe.selectContent = d => d.querySelector('[data-page-content]');
+        window.pe.selectSource = window.pe.selectTarget = d => d.querySelector('[data-page-content]');
     }
 }
 
