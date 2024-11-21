@@ -4,6 +4,13 @@ import '@tabler/core/dist/css/tabler.min.css'
 import '@tabler/core/dist/js/tabler.min.js'
 import '../css/app.css'
 
+window.fetch = (fetch => async (resource, options = {}) => {
+    return fetch(
+        resource,
+        {...options, headers: {...(options.headers || {}), 'X-Requested-With': 'XMLHttpRequest'}}
+    );
+})(window.fetch);
+
 window.app = {
     navigate: url => top.location.href = url,
     loadElements: node => Promise.allSettled([...node.querySelectorAll(':not(:defined)')]
