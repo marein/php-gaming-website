@@ -1,7 +1,8 @@
 function render(oldDocument, newDocument) {
     oldDocument.title = newDocument.title || oldDocument.title;
-    window.pe.selectTarget(oldDocument).replaceWith(window.pe.selectSource(newDocument));
-    [...window.pe.selectTarget(oldDocument).getElementsByTagName('script')].forEach(n => {
+    const sourceNode = window.pe.selectSource(newDocument);
+    window.pe.selectTarget(oldDocument).replaceWith(sourceNode);
+    [...sourceNode.getElementsByTagName('script')].forEach(n => {
         const s = oldDocument.createElement('script');
         s.innerHTML = n.innerHTML;
         [...n.attributes].forEach(a => s.setAttribute(a.nodeName, a.nodeValue));
