@@ -28,8 +28,16 @@ customElements.define('notification-list', class extends HTMLElement {
 
         this.insertBefore(messageNode, this.childNodes[0]);
 
-        await new Promise(resolve => setTimeout(resolve, timeout));
-        messageNode.addEventListener('animationend', () => this.removeChild(messageNode));
-        messageNode.classList.add('gp-fadeout');
+        let handle = this._scheduleRemoval(messageNode, timeout);
+
+        messageNode.addEventListener('mouseenter', () => clearTimeout(handle));
+        messageNode.addEventListener('mouseleave', () => handle = this._scheduleRemoval(messageNode, timeout));
+    }
+
+    _scheduleRemoval = (messageNode, timeout) => {
+        return setTimeout(() => {
+            messageNode.addEventListener('animationend', () => this.removeChild(messageNode));
+            messageNode.classList.add('gp-fadeout')
+        }, timeout);
     }
 });

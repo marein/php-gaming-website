@@ -1,7 +1,6 @@
 class HttpClient {
     constructor() {
-        this.onError = (response) => {
-        };
+        this.onError = () => true;
     }
 
     /**
@@ -9,9 +8,7 @@ class HttpClient {
      * @returns {Promise}
      */
     async get(url) {
-        const response = await fetch(url, {
-            headers: {'X-Requested-With': 'XMLHttpRequest'}
-        });
+        const response = await fetch(url);
         const json = await response.json();
 
         if (response.status >= 200 && response.status < 300) return json;
@@ -28,7 +25,6 @@ class HttpClient {
     async post(url, data) {
         const response = await fetch(url, {
             method: 'POST',
-            headers: {'X-Requested-With': 'XMLHttpRequest'},
             body: new URLSearchParams(data)
         });
         const json = await response.json();

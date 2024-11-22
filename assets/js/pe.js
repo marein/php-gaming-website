@@ -1,7 +1,8 @@
 function render(oldDocument, newDocument) {
     oldDocument.title = newDocument.title || oldDocument.title;
-    oldDocument.body.replaceWith(newDocument.body);
-    [...oldDocument.body.getElementsByTagName('script')].forEach(n => {
+    const sourceNode = window.pe.selectSource(newDocument);
+    window.pe.selectTarget(oldDocument).replaceWith(sourceNode);
+    [...sourceNode.getElementsByTagName('script')].forEach(n => {
         const s = oldDocument.createElement('script');
         s.innerHTML = n.innerHTML;
         [...n.attributes].forEach(a => s.setAttribute(a.nodeName, a.nodeValue));
@@ -96,7 +97,13 @@ async function submit(form) {
     }
 }
 
-window.pe = {navigate: url => navigate(url, true), submit, abortController: new AbortController()};
+window.pe = {
+    navigate: url => navigate(url, true),
+    submit,
+    abortController: new AbortController(),
+    selectSource: d => d.body,
+    selectTarget: d => d.body
+};
 
 window.addEventListener('popstate', () => navigate(top.location.href, false));
 document.addEventListener('click', e => {

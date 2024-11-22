@@ -4,6 +4,13 @@ import '@tabler/core/dist/css/tabler.min.css'
 import '@tabler/core/dist/js/tabler.min.js'
 import '../css/app.css'
 
+window.fetch = (fetch => async (resource, options = {}) => {
+    return fetch(
+        resource,
+        {...options, headers: {...(options.headers || {}), 'X-Requested-With': 'XMLHttpRequest'}}
+    );
+})(window.fetch);
+
 window.app = {
     navigate: url => top.location.href = url,
     loadElements: node => Promise.allSettled([...node.querySelectorAll(':not(:defined)')]
@@ -22,6 +29,7 @@ window.app = {
     peInit() {
         if (!window.pe) return window.addEventListener('pe:init', window.app.peInit);
         window.app.navigate = window.pe.navigate;
+        window.pe.selectSource = window.pe.selectTarget = d => d.querySelector('[data-page-content]');
     }
 }
 

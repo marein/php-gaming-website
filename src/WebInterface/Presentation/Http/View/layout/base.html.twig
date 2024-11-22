@@ -15,7 +15,7 @@
     <script type="module" src="{{ asset('js/pe.js') }}"></script>
     <script>window.matchMedia("(prefers-color-scheme:dark)").matches && document.documentElement.setAttribute('data-bs-theme', 'dark');</script>
 </head>
-<body class="{{ body_class is defined ? body_class : 'layout-fluid' }}">
+<body>
 <notification-list></notification-list>
 {% block body %}{% endblock %}
 </body>

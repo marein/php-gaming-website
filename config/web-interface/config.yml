@@ -28,3 +28,8 @@ security:
                 - 'web-interface.security.arrival_authenticator'
             logout:
                 path: /logout
+
+when@dev:
+    services:
+        Gaming\WebInterface\Infrastructure\Symfony\ReplaceSymfonyToolbar:
+            tags: [{ name: kernel.event_listener, event: kernel.response }]
