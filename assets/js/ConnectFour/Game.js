@@ -9,12 +9,10 @@ customElements.define('connect-four-game', class extends HTMLElement {
         let game = JSON.parse(this.getAttribute('game'));
 
         this.append(this._gameNode = html`
-            <div class="gp-game">${[...Array(game.height).keys()].map(y => y + 1).map(y => html`
-                <div class="gp-game__row">${[...Array(game.width).keys()].map(x => x + 1).map(x => html`
-                    <div class="gp-game__cell"
-                         data-column="${x}"
-                         data-row="${y}">
-                    </div>`)}
+            <div class="gp-game">${[...Array(game.height * game.width).keys()].map(n => html`
+                <div class="gp-game__field"
+                     data-column="${(n % game.width) + 1}"
+                     data-row="${Math.floor(n / game.width) + 1}">
                 </div>`)}
             </div>
         `);
@@ -24,7 +22,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._followMovesButton = document.querySelector(this.getAttribute('follow-moves-selector'));
         this._game = new GameModel(game);
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
-        this._fields = this._gameNode.querySelectorAll('.gp-game__cell');
+        this._fields = this._gameNode.querySelectorAll('.gp-game__field');
         this._colorToClass = {1: 'bg-red', 2: 'bg-yellow'};
 
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
@@ -41,7 +39,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
      */
     _showMovesUpTo(index) {
         this._fields.forEach(field => field.classList.remove(
-            'gp-game__cell--highlight', 'gp-game__cell--current', 'bg-red', 'bg-yellow')
+            'gp-game__field--highlight', 'gp-game__field--current', 'bg-red', 'bg-yellow')
         );
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
@@ -55,11 +53,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {import('./Model/Game.js').Move} move
      */
     _showMove(move) {
-        let field = this._gameNode.querySelector(`[data-column="${move.x}"][data-row="${move.y}"]`);
+        let field = this._gameNode.querySelector(`.gp-game__field[data-column="${move.x}"][data-row="${move.y}"]`);
         field.classList.add(this._colorToClass[move.color]);
 
-        this._fields.forEach(field => field.classList.remove('gp-game__cell--highlight', 'gp-game__cell--current'));
-        field.classList.add('gp-game__cell--highlight', 'gp-game__cell--current');
+        this._fields.forEach(field => field.classList.remove('gp-game__field--highlight', 'gp-game__field--current'));
+        field.classList.add('gp-game__field--highlight', 'gp-game__field--current');
     }
 
     /**
@@ -83,12 +81,12 @@ customElements.define('connect-four-game', class extends HTMLElement {
         if (this._game.winningSequences.length === 0) return;
         if (this._numberOfCurrentMoveInView !== this._game.numberOfMoves()) return;
 
-        this._fields.forEach(field => field.classList.remove('gp-game__cell--highlight'));
+        this._fields.forEach(field => field.classList.remove('gp-game__field--highlight'));
         this._game.winningSequences.forEach(winningSequence => {
             winningSequence.points.forEach(point => this._gameNode
-                .querySelector(`[data-column="${point.x}"][data-row="${point.y}"]`)
+                .querySelector(`.gp-game__field[data-column="${point.x}"][data-row="${point.y}"]`)
                 .classList
-                .add('gp-game__cell--highlight')
+                .add('gp-game__field--highlight')
             );
         });
     }
