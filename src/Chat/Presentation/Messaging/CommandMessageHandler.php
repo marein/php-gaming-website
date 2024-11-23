@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Chat\Infrastructure\Messaging;
+namespace Gaming\Chat\Presentation\Messaging;
 
 use Gaming\Chat\Application\Command\InitiateChatCommand;
 use Gaming\Common\Bus\Bus;
@@ -26,7 +26,7 @@ final class CommandMessageHandler implements MessageHandler
         $chatId = $this->commandBus->handle(
             new InitiateChatCommand(
                 $request->getIdempotencyKey(),
-                iterator_to_array($request->getAuthors())
+                [...$request->getAuthors()]
             )
         );
 
