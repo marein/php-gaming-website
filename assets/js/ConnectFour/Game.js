@@ -9,15 +9,13 @@ customElements.define('connect-four-game', class extends HTMLElement {
         let game = JSON.parse(this.getAttribute('game'));
 
         this.append(this._gameNode = html`
-            <table class="gp-game user-select-none">
-                <tbody>${[...Array(game.height).keys()].map(y => y + 1).map(y => html`
-                    <tr>${[...Array(game.width).keys()].map(x => x + 1).map(x => html`
-                        <td class="gp-game__field"
-                            data-column="${x}"
-                            data-point="${x + ' ' + y}"></td>`)}
-                    </tr>`)}
-                </tbody>
-            </table>
+            <div style="${`--grid-cols: ${game.width}`}"
+                 class="gp-game">${[...Array(game.height * game.width).keys()].map(n => html`
+                <div class="gp-game__field"
+                     data-column="${(n % game.width) + 1}"
+                     data-row="${Math.floor(n / game.width) + 1}">
+                </div>`)}
+            </div>
         `);
 
         this._previousMoveButton = document.querySelector(this.getAttribute('previous-move-selector'));
@@ -56,7 +54,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {import('./Model/Game.js').Move} move
      */
     _showMove(move) {
-        let field = this._gameNode.querySelector(`.gp-game__field[data-point="${move.x} ${move.y}"]`);
+        let field = this._gameNode.querySelector(`.gp-game__field[data-column="${move.x}"][data-row="${move.y}"]`);
         field.classList.add(this._colorToClass[move.color]);
 
         this._fields.forEach(field => field.classList.remove('gp-game__field--highlight', 'gp-game__field--current'));
@@ -87,7 +85,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._fields.forEach(field => field.classList.remove('gp-game__field--highlight'));
         this._game.winningSequences.forEach(winningSequence => {
             winningSequence.points.forEach(point => this._gameNode
-                .querySelector(`.gp-game__field[data-point="${point.x} ${point.y}"]`)
+                .querySelector(`.gp-game__field[data-column="${point.x}"][data-row="${point.y}"]`)
                 .classList
                 .add('gp-game__field--highlight')
             );
