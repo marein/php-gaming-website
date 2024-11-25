@@ -9,7 +9,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
         let game = JSON.parse(this.getAttribute('game'));
 
         this.append(this._gameNode = html`
-            <div class="gp-game">${[...Array(game.height * game.width).keys()].map(n => html`
+            <div style="${`--grid-cols: ${game.width}`}"
+                 class="gp-game">${[...Array(game.height * game.width).keys()].map(n => html`
                 <div class="gp-game__field"
                      data-column="${(n % game.width) + 1}"
                      data-row="${Math.floor(n / game.width) + 1}">

@@ -87,13 +87,14 @@ notification-list {
 }
 
 .gp-game {
+    --grid-cols: 7;
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-gap: .5rem;
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+    grid-gap: var(--tblr-spacer-2);
     background-color: var(--tblr-blue);
     border: var(--tblr-border-width) solid var(--tblr-border-color-translucent);
     border-radius: var(--tblr-border-radius);
-    padding: .75rem;
+    padding: var(--tblr-spacer-2);
 }
 
 .gp-game__field {
