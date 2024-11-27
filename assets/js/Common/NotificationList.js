@@ -22,7 +22,7 @@ customElements.define('notification-list', class extends HTMLElement {
                     </div>
                     <div>${message}</div>
                 </div>
-                <button class="btn-close" @click="${e => e.target.parentElement.remove()}"></button>
+                <button class="btn-close" @click="${e => this._scheduleRemoval(e.target.parentElement, 0)}"></button>
             </div>
         `;
 
