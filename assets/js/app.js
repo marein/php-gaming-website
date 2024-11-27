@@ -63,6 +63,7 @@ document.addEventListener('change', e => {
     if (!e.target.matches('.gp-dropdown-toggle[type="checkbox"]')) return;
 
     const onClick = eClick => {
+        if (eClick.target === e.target) return;
         if (eClick.target.closest(`label[for="${e.target.id}"]`)) return;
 
         e.target.checked = e.target.parentElement.contains(eClick.target);
