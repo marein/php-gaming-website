@@ -122,7 +122,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMoved(event) {
-        this._game.appendMove(event.detail);
+        this._game.appendMove({
+            x: event.detail.x,
+            y: event.detail.y,
+            color: event.detail.color,
+        });
     }
 
     _onGameWon(event) {
