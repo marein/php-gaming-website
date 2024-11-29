@@ -1,16 +1,4 @@
 services:
-    web-interface.chat-service:
-        class: Gaming\WebInterface\Infrastructure\Integration\DirectControllerInvocationChatService
-        arguments: ['@chat.chat-controller']
-
-    web-interface.connect-four-service:
-        class: Gaming\WebInterface\Infrastructure\Integration\DirectControllerInvocationConnectFourService
-        arguments: ['@connect-four.game-controller']
-
-    web-interface.identity-service:
-        class: Gaming\WebInterface\Infrastructure\Integration\DirectControllerInvocationIdentityService
-        arguments: ['@identity.user-controller']
-
     web-interface.nchan:
         class: Marein\Nchan\Nchan
         arguments:

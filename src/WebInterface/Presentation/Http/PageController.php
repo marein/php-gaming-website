@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Gaming\WebInterface\Presentation\Http;
 
-use Gaming\WebInterface\Application\ConnectFourService;
+use Gaming\Common\Bus\Bus;
+use Gaming\ConnectFour\Application\Game\Query\GameQuery;
+use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
+use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
+use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Gaming\WebInterface\Infrastructure\Security\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +18,7 @@ final class PageController
 {
     public function __construct(
         private readonly Environment $twig,
-        private readonly ConnectFourService $connectFourService,
+        private readonly Bus $connectFourQueryBus,
         private readonly Security $security
     ) {
     }
@@ -24,8 +28,8 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/lobby.html.twig', [
                 'maximumNumberOfGamesInList' => 10,
-                'openGames' => $this->connectFourService->openGames()['games'],
-                'runningGames' => $this->connectFourService->runningGames(),
+                'openGames' => $this->connectFourQueryBus->handle(new OpenGamesQuery()),
+                'runningGames' => $this->connectFourQueryBus->handle(new RunningGamesQuery()),
                 'user' => $this->security->getUser()
             ])
         );
@@ -35,7 +39,7 @@ final class PageController
     {
         return new Response(
             $this->twig->render('@web-interface/game.html.twig', [
-                'game' => $this->connectFourService->game($id),
+                'game' => $this->connectFourQueryBus->handle(new GameQuery($id)),
                 'user' => $this->security->getUser()
             ])
         );
@@ -45,9 +49,9 @@ final class PageController
     {
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
-                'games' => $this->connectFourService->gamesByPlayer(
-                    $this->security->getUser()->getUserIdentifier()
-                )['games']
+                'games' => $this->connectFourQueryBus->handle(
+                    new GamesByPlayerQuery($this->security->getUser()->getUserIdentifier())
+                )->games()
             ])
         );
     }

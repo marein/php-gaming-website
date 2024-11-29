@@ -56,6 +56,11 @@ final class Game implements JsonSerializable
         return $this->gameId;
     }
 
+    public function chatId(): string
+    {
+        return $this->chatId;
+    }
+
     public function finished(): bool
     {
         return $this->finished;

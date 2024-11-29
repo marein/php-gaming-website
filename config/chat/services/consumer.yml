@@ -9,7 +9,7 @@ services:
         factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
         arguments:
             - !service
-                class: Gaming\Chat\Infrastructure\Messaging\CommandMessageHandler
+                class: Gaming\Chat\Presentation\Messaging\CommandMessageHandler
                 arguments: ['@chat.command-bus']
             - !service
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues

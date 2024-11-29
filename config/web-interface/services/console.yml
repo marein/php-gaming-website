@@ -1,6 +1,6 @@
 services:
     Gaming\WebInterface\Presentation\Console\PublishRunningGamesCountToNchanCommand:
-        arguments: ['@web-interface.connect-four-service', '@web-interface.browser-notifier']
+        arguments: ['@connect-four.query-bus', '@web-interface.browser-notifier']
         tags:
             -   name: console.command
                 command: web-interface:publish-running-games-count-to-nchan

@@ -23,11 +23,11 @@ final class PredisOpenGameStore implements OpenGameStore
     public function save(OpenGame $openGame): void
     {
         $this->predis->pipeline(function (ClientContextInterface $pipeline) use ($openGame): void {
-            $pipeline->set($this->storageKeyForGameInfo($openGame->gameId()), $openGame->playerId());
+            $pipeline->set($this->storageKeyForGameInfo($openGame->gameId), $openGame->playerId);
 
             $pipeline->zadd(
                 $this->storageKey,
-                [$openGame->gameId() => microtime(true)]
+                [$openGame->gameId => microtime(true)]
             );
         });
     }
