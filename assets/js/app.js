@@ -35,12 +35,7 @@ window.app = {
 client.onError = response => window.app.notifyUser(response.message, 'warning');
 
 window.app.peInit();
-window.addEventListener('pe:click', e => {
-    (
-        e.detail.a.hasAttribute('data-bs-toggle') ||
-        e.detail.a.closest('[data-no-turbolink]')
-    ) && e.preventDefault()
-});
+window.addEventListener('pe:click', e => e.detail.a.closest('[data-no-turbolink]') && e.preventDefault());
 window.addEventListener('pe:navigate', e => {
     e.detail.parsed.push(dom => window.app.loadElements(dom.body));
     e.detail.succeed.push(() => window.dispatchEvent(new CustomEvent('app:load')));
