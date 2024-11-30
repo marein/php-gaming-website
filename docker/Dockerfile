@@ -3,7 +3,7 @@ ARG environment=development
 ##############################
 #     Build dependencies     #
 ##############################
-FROM ghcr.io/gaming-platform/docker-php-fpm:8.3-development as builder
+FROM ghcr.io/gaming-platform/docker-php-fpm:8.4-development as builder
 
 ARG environment=development
 
@@ -19,7 +19,7 @@ RUN /composer-install-after-code-copy.sh
 ##############################
 #       Build php-fpm        #
 ##############################
-FROM ghcr.io/gaming-platform/docker-php-fpm:8.3-$environment
+FROM ghcr.io/gaming-platform/docker-php-fpm:8.4-$environment
 
 ARG environment=development
 
@@ -31,7 +31,7 @@ COPY --from=builder /project /project
 
 RUN /warmup.sh
 
-COPY /docker/${environment}.ini /etc/php/8.3/fpm/conf.d/
+COPY /docker/${environment}.ini /etc/php/8.4/fpm/conf.d/
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-http"]

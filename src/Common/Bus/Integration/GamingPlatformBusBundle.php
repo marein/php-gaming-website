@@ -65,9 +65,7 @@ final class GamingPlatformBusBundle extends AbstractBundle implements CompilerPa
      */
     private function processHandlerTag(ContainerBuilder $container, string $handlerId, array $tag): void
     {
-        $handlerClass = $container->getDefinition($handlerId)->getClass() ?? throw new InvalidArgumentException(
-            'No class defined for service "' . $handlerId . '".'
-        );
+        $handlerClass = $this->resolveClassForServiceId($container, $handlerId);
         $bus = $tag['bus'] ?? throw new InvalidArgumentException(
             'Option "bus" should be set in tag "' . $this->extensionAlias . '.' . 'handler' . '".'
         );
@@ -96,5 +94,28 @@ final class GamingPlatformBusBundle extends AbstractBundle implements CompilerPa
                 $busDefinition->getArgument(1) + [$type => ['handlerId' => $handlerId, 'method' => $method]]
             ]);
         }
+    }
+
+    /**
+     * @return class-string
+     */
+    private function resolveClassForServiceId(ContainerBuilder $container, string $serviceId): string
+    {
+        $definition = $container->getDefinition($serviceId);
+        $class = $container->getParameterBag()->resolveValue($definition->getClass());
+
+        if ($class === null) {
+            throw new InvalidArgumentException(
+                sprintf('Service "%s" does not have a class.', $serviceId)
+            );
+        }
+
+        if (!class_exists($class)) {
+            throw new InvalidArgumentException(
+                sprintf('Class "%s" for service "%s" does not exist.', $class, $serviceId)
+            );
+        }
+
+        return $class;
     }
 }

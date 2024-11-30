@@ -16,7 +16,7 @@ final class GameAborted implements DomainEvent
 
     private string $opponentPlayerId;
 
-    public function __construct(GameId $gameId, Player $abortedPlayer, Player $opponentPlayer = null)
+    public function __construct(GameId $gameId, Player $abortedPlayer, ?Player $opponentPlayer = null)
     {
         $this->gameId = $gameId->toString();
         $this->abortedPlayerId = $abortedPlayer->id();
