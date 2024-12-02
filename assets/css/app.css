@@ -31,6 +31,28 @@ html:has(.layout-fluid) {
     border-radius: var(--tblr-border-radius);
 }
 
+.gp-dropdown-toggle {
+    clip: rect(0 0 0 0);
+    position: absolute;
+}
+
+.gp-dropdown-toggle:focus-visible + label.nav-link {
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(var(--tblr-primary-rgb), .25);
+}
+
+.gp-dropdown-toggle:focus-visible + label.btn {
+    color: var(--tblr-btn-hover-color);
+    background-color: var(--tblr-btn-hover-bg);
+    border-color: var(--tblr-btn-hover-border-color);
+    outline: 0;
+    box-shadow: var(--tblr-btn-box-shadow),var(--tblr-btn-focus-box-shadow);
+}
+
+.gp-dropdown-toggle:checked + label + .dropdown-menu {
+    display: block;
+}
+
 .gp-page-progress {
     z-index: 10000;
     top: 0;

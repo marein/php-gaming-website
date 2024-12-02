@@ -18,24 +18,21 @@
                         <event-source-status title-open="Ready to Play!"
                                              title-closed="Connecting..."></event-source-status>
                     </div>
-                    {% if app.user ? app.user.isSignedUp %}
-                        <div class="nav-item dropdown">
-                            <a href="javascript:void(0)" class="nav-link d-flex lh-1 text-reset p-0"
-                               data-bs-toggle="dropdown">
+                    <div class="nav-item dropdown">
+                        <input type="checkbox" class="gp-dropdown-toggle" id="menu">
+                        {% if app.user ? app.user.isSignedUp %}
+                            <label for="menu" class="nav-link d-flex lh-1 text-reset p-0 cursor-pointer">
                                 <span class="avatar avatar-sm">{{ app.user.username|slice(0, 2) }}</span>
                                 <div class="d-none d-sm-block ps-2">
                                     <div class="small text-secondary">Hi!</div>
                                     <div class="mt-1">{{ app.user.username }}</div>
                                 </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            </label>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-popper>
                                 <a href="{{ path('_logout_main') }}" class="dropdown-item">Logout</a>
                             </div>
-                        </div>
-                    {% else %}
-                        <div class="nav-item dropdown">
-                            <a href="javascript:void(0)" class="nav-link d-flex lh-1 text-reset p-0"
-                               data-bs-toggle="dropdown">
+                        {% else %}
+                            <label for="menu" class="nav-link d-flex lh-1 text-reset p-0 cursor-pointer">
                                 <span class="avatar avatar-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon avatar-icon" width="24"
                                          height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -49,13 +46,13 @@
                                     <div class="small text-secondary">Hi!</div>
                                     <div class="mt-1">Login</div>
                                 </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            </label>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-popper>
                                 <a href="{{ path('signup') }}" class="dropdown-item">Sign up</a>
                                 <a href="{{ path('login') }}" class="dropdown-item">Sign in</a>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
                     <ul class="navbar-nav">
