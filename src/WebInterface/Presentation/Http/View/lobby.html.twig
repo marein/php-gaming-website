@@ -17,9 +17,21 @@
         <div class="col-lg-3 order-first order-lg-last">
             <div class="card">
                 <div class="card-body">
-                    <connect-four-open-button>
-                        Open a new game
-                    </connect-four-open-button>
+                    <div class="dropdown">
+                        <input type="checkbox" class="gp-dropdown-toggle" id="open-game-dropdown">
+                        <label class="btn btn-primary w-100 dropdown-toggle"
+                               for="open-game-dropdown">
+                            Open a new game
+                        </label>
+                        <div class="dropdown-menu dropdown-menu-card dropdown-menu-arrow dropdown-menu-end"
+                             data-bs-popper>
+                            <div class="card">
+                                <div class="card-body">
+                                    {{ form(openForm, {action: path('open')}) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
