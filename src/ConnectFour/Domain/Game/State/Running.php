@@ -102,8 +102,8 @@ final class Running implements State
             [
                 new GameAborted(
                     $gameId,
-                    $this->players->get($playerId),
-                    $this->players->opponentOf($playerId)
+                    $playerId,
+                    $this->players->opponentOf($playerId)->id()
                 )
             ]
         );

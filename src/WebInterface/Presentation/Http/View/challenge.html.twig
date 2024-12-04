@@ -1,0 +1,38 @@
+{% extends 'layout/condensed.html.twig' %}
+
+{% set page_title = 'Finding your next match...' %}
+
+{% block content %}
+    <h1 class="text-center">
+        Finding your next match<span class="animated-dots"></span>
+    </h1>
+    <div class="container-tight text-center">
+        <p>
+            While we find the best match for you, feel free to explore other games or browse around.
+            Once your match is ready, you'll be automatically redirected.
+        </p>
+        <p>
+            Size: <strong>{{ game.width }} x {{ game.height }}</strong>,
+            Variant: <strong>Standard</strong>,
+            Color: <strong>{{ game.preferredStone|replace({1: 'Red', 2: 'Yellow'})|default('Random') }}</strong>
+        </p>
+        <form action="{{ path('challenge_abort', {gameId: game.gameId}) }}" method="post" data-abort-form>
+            <button type="submit" class="btn btn-outline-danger">Cancel search</button>
+        </form>
+    </div>
+    <div class="hr-text">Running games</div>
+    <div class="container-tight text-center">
+        <p class="fw-bolder">
+            Feature not implemented yet.
+        </p>
+    </div>
+    <event-source id="event-source"
+                  subscriptions="connect-four-{{ game.gameId }}"
+                  {% if app.environment == 'dev' %}verbose{% endif %}>
+    </event-source>
+    <script type="module">
+        document.getElementById('event-source').addEventListener('ConnectFour.PlayerJoined', () => {
+            window.app.navigate({{ path('game', {id: game.gameId})|json_encode|raw }});
+        });
+    </script>
+{% endblock %}

@@ -1,8 +1,9 @@
 services:
     web-interface.page-controller:
         class: Gaming\WebInterface\Presentation\Http\PageController
-        arguments: ['@twig', '@connect-four.query-bus']
-        tags: ['controller.service_arguments']
+        arguments: ['@connect-four.query-bus']
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']
 
     web-interface.signup-controller:
         class: Gaming\WebInterface\Presentation\Http\SignupController
@@ -33,4 +34,5 @@ services:
     web-interface.connect-four-controller:
         class: Gaming\WebInterface\Presentation\Http\ConnectFourController
         arguments: ['@connect-four.command-bus', '@web-interface.security']
-        tags: ['controller.service_arguments']
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']

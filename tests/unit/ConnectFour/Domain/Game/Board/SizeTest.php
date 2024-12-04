@@ -46,8 +46,6 @@ class SizeTest extends TestCase
     public function wrongSizeProvider(): array
     {
         return [
-            [3, 3],
-            [5, 5],
             [-1, 3],
             [2, -3],
             [-1, -3],

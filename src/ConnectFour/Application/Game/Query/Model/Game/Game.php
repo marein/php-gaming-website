@@ -13,7 +13,6 @@ use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
-use JsonSerializable;
 use RuntimeException;
 
 /**
@@ -24,60 +23,24 @@ use RuntimeException;
  * we send the user the latest projection from the event store. This way, the domain model
  * itself stays clean and gets not inflated by a bunch of getters.
  */
-final class Game implements JsonSerializable
+final class Game
 {
-    private string $gameId = '';
-
-    private string $chatId = '';
-
     /**
-     * @var string[]
+     * @param string[] $players
+     * @param WinningSequence[] $winningSequences
+     * @param Move[] $moves
      */
-    private array $players = [];
-
-    private int $width = 0;
-
-    private int $height = 0;
-
-    private bool $finished = false;
-
-    /**
-     * @var WinningSequence[]
-     */
-    private array $winningSequences = [];
-
-    /**
-     * @var Move[]
-     */
-    private array $moves = [];
-
-    public function id(): string
-    {
-        return $this->gameId;
-    }
-
-    public function chatId(): string
-    {
-        return $this->chatId;
-    }
-
-    public function finished(): bool
-    {
-        return $this->finished;
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'gameId' => $this->gameId,
-            'chatId' => $this->chatId,
-            'players' => $this->players,
-            'finished' => $this->finished,
-            'height' => $this->height,
-            'width' => $this->width,
-            'moves' => $this->moves,
-            'winningSequences' => $this->winningSequences
-        ];
+    public function __construct(
+        public private(set) string $gameId = '',
+        public private(set) string $chatId = '',
+        public private(set) array $players = [],
+        public private(set) bool $finished = false,
+        public private(set) int $height = 0,
+        public private(set) int $width = 0,
+        public private(set) ?int $preferredStone = null,
+        public private(set) array $moves = [],
+        public private(set) array $winningSequences = []
+    ) {
     }
 
     /**
@@ -102,9 +65,10 @@ final class Game implements JsonSerializable
     private function handleGameOpened(GameOpened $gameOpened): void
     {
         $this->gameId = $gameOpened->aggregateId();
-        $this->width = $gameOpened->width();
-        $this->height = $gameOpened->height();
-        $this->addPlayer($gameOpened->playerId());
+        $this->width = $gameOpened->width;
+        $this->height = $gameOpened->height;
+        $this->preferredStone = $gameOpened->preferredStone;
+        $this->addPlayer($gameOpened->playerId);
     }
 
     private function handlePlayerJoined(PlayerJoined $playerJoined): void

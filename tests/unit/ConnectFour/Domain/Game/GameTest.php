@@ -443,9 +443,10 @@ class GameTest extends TestCase
 
         assert($domainEvents[0] instanceof GameOpened);
         self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
-        self::assertEquals('playerId1', $domainEvents[0]->playerId());
-        self::assertEquals(7, $domainEvents[0]->width());
-        self::assertEquals(6, $domainEvents[0]->height());
+        self::assertEquals('playerId1', $domainEvents[0]->playerId);
+        self::assertEquals(7, $domainEvents[0]->width);
+        self::assertEquals(6, $domainEvents[0]->height);
+        self::assertEquals(1, $domainEvents[0]->preferredStone);
 
         return $game;
     }
@@ -542,9 +543,10 @@ class GameTest extends TestCase
     {
         $game = Game::open(
             GameId::generate(),
-            Configuration::custom(
+            new Configuration(
                 new Size(2, 2),
-                WinningRules::standard()
+                WinningRules::standard(),
+                Stone::Red
             ),
             'playerId1'
         );
@@ -560,9 +562,10 @@ class GameTest extends TestCase
 
         assert($domainEvents[0] instanceof GameOpened);
         self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
-        self::assertEquals('playerId1', $domainEvents[0]->playerId());
-        self::assertEquals(2, $domainEvents[0]->width());
-        self::assertEquals(2, $domainEvents[0]->height());
+        self::assertEquals('playerId1', $domainEvents[0]->playerId);
+        self::assertEquals(2, $domainEvents[0]->width);
+        self::assertEquals(2, $domainEvents[0]->height);
+        self::assertEquals(1, $domainEvents[0]->preferredStone);
 
         assert($domainEvents[1] instanceof PlayerJoined);
         self::assertEquals($game->id()->toString(), $domainEvents[1]->aggregateId());
