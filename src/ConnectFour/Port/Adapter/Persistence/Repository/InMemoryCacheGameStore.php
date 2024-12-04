@@ -28,15 +28,15 @@ final class InMemoryCacheGameStore implements GameStore
 
     public function persist(Game $game): void
     {
-        if ($game->finished()) {
-            unset($this->cachedGames[$game->id()]);
+        if ($game->finished) {
+            unset($this->cachedGames[$game->gameId]);
         }
 
         $this->removeFirstElementIfLimitHasBeenExceeded();
 
         $this->gameStore->persist($game);
 
-        $this->cachedGames[$game->id()] = $game;
+        $this->cachedGames[$game->gameId] = $game;
     }
 
     public function flush(): void
