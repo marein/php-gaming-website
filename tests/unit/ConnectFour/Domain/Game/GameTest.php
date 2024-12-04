@@ -542,9 +542,10 @@ class GameTest extends TestCase
     {
         $game = Game::open(
             GameId::generate(),
-            Configuration::custom(
+            new Configuration(
                 new Size(2, 2),
-                WinningRules::standard()
+                WinningRules::standard(),
+                Stone::Red
             ),
             'playerId1'
         );

@@ -1,0 +1,10 @@
+{% use "bootstrap_5_layout.html.twig" %}
+
+{# Don't apply label_attr to labels for radio buttons. #}
+{%- block choice_label -%}
+    {% if expanded is defined and expanded %}
+        <legend class="form-label{{ required ? ' required' }}">{{ label }}</legend>
+    {% else %}
+        {{- parent() -}}
+    {% endif %}
+{%- endblock choice_label %}
