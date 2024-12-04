@@ -8,7 +8,7 @@ framework:
         csrf_protection: false # CSRF protection is handled by marein/symfony-standard-headers-csrf-bundle.
 
 twig:
-    form_themes: ['bootstrap_5_layout.html.twig']
+    form_themes: ['@web-interface/layout/forms.html.twig']
     paths: { '%kernel.project_dir%/src/WebInterface/Presentation/Http/View': web-interface }
 
 security:

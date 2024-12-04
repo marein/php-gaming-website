@@ -35,9 +35,11 @@ final class Game implements JsonSerializable
      */
     private array $players = [];
 
-    private int $width = 0;
+    public private(set) int $width = 0;
 
-    private int $height = 0;
+    public private(set) int $height = 0;
+
+    public private(set) ?int $preferredStone = null;
 
     private bool $finished = false;
 
@@ -75,6 +77,7 @@ final class Game implements JsonSerializable
             'finished' => $this->finished,
             'height' => $this->height,
             'width' => $this->width,
+            'preferredStone' => $this->preferredStone,
             'moves' => $this->moves,
             'winningSequences' => $this->winningSequences
         ];
@@ -102,9 +105,10 @@ final class Game implements JsonSerializable
     private function handleGameOpened(GameOpened $gameOpened): void
     {
         $this->gameId = $gameOpened->aggregateId();
-        $this->width = $gameOpened->width();
-        $this->height = $gameOpened->height();
-        $this->addPlayer($gameOpened->playerId());
+        $this->width = $gameOpened->width;
+        $this->height = $gameOpened->height;
+        $this->preferredStone = $gameOpened->preferredStone;
+        $this->addPlayer($gameOpened->playerId);
     }
 
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
