@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
 
+use Gaming\ConnectFour\Domain\Game\Board\Size;
+use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\Games;
+use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 
 final class OpenHandler
 {
@@ -21,8 +24,12 @@ final class OpenHandler
     {
         $game = Game::open(
             $this->games->nextIdentity(),
-            Configuration::common(),
-            $command->playerId()
+            new Configuration(
+                new Size($command->width, $command->height),
+                WinningRules::standard(),
+                Stone::tryFrom($command->stone)
+            ),
+            $command->playerId
         );
 
         $this->games->add($game);
