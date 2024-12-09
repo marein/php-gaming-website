@@ -9,10 +9,10 @@ class GameCest
 {
     public function iCanOpenAGameAndAbortIt(AcceptanceTester $I): void
     {
-        $gameId = $this->prepareOpenGameScenario($I);
+        $this->prepareOpenGameScenario($I);
 
-        $I->click('.table-success');
-        $I->waitForElementNotVisible('[data-game-id="' . $gameId . '"]');
+        $I->submitForm('[data-abort-form]', []);
+        $I->retrySeeInCurrentUrl('/');
     }
 
     public function iCanAbortAGameWithAJoinedFriend(AcceptanceTester $I): void
@@ -48,10 +48,14 @@ class GameCest
     private function prepareOpenGameScenario(AcceptanceTester $I): string
     {
         $I->amOnPage('/');
+        $I->click('label[for="open-game-dropdown"]');
+        $I->waitForElementVisible('[data-open-game-button]');
         $I->click('[data-open-game-button]');
-        $I->waitForElement('.table-success');
 
-        return $I->grabAttributeFrom('.table-success', 'data-game-id');
+        $I->retrySeeCurrentUrlMatches('#^/challenge/(.*)$#');
+        preg_match('#^/challenge/(.*)$#', $I->grabFromCurrentUrl(), $matches);
+
+        return $matches[1];
     }
 
     private function prepareRunningGameScenario(AcceptanceTester $I, Friend $friend): string

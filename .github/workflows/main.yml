@@ -17,7 +17,9 @@ jobs:
         run: ./project buildProductionImages
 
       - name: Testsuite
-        run: ./project tests
+        run: |
+          ./project tests
+          find tests/_output/*.fail.html | xargs cat
 
       - name: Deploy
         if: github.ref == 'refs/heads/master'
