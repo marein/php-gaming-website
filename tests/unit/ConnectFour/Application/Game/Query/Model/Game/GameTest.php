@@ -33,6 +33,7 @@ class GameTest extends TestCase
                 'finished' => $expectedFinished,
                 'height' => 6,
                 'width' => 7,
+                'preferredStone' => 1,
                 'moves' => [
                     [
                         'x' => 1,
