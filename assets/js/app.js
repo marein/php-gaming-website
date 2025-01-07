@@ -42,9 +42,16 @@ window.addEventListener('pe:navigate', e => {
     e.detail.finally.push(window.app.showProgress(0));
 });
 window.addEventListener('pe:form', e => {
+    e.detail.form.querySelectorAll('button').forEach(b => b.disabled = true);
+    e.detail.form.querySelectorAll('button').forEach(b => b.classList.add('btn-loading'));
+
     e.detail.parsed.push(dom => window.app.loadElements(dom.body));
     e.detail.succeed.push(() => window.dispatchEvent(new CustomEvent('app:load')));
     e.detail.finally.push(window.app.showProgress(0));
+    e.detail.finally.push(() => {
+        e.detail.form.querySelectorAll('button').forEach(b => b.disabled = false);
+        e.detail.form.querySelectorAll('button').forEach(b => b.classList.remove('btn-loading'));
+    })
 });
 
 window.matchMedia("(prefers-color-scheme:dark)").addEventListener(
