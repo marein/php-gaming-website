@@ -58,22 +58,29 @@ html:has(.layout-fluid) {
     top: 0;
     left: 0;
     position: fixed;
-    height: 0.2em;
+    height: .2rem;
     width: 0;
     background-color: var(--tblr-primary);
-    animation: gp-page-progress 10s infinite;
+    animation: gp-page-progress 10s ease-in-out infinite;
+}
+
+@keyframes gp-page-progress {
+    2% {
+        width: 10%;
+    }
+    20% {
+        width: 25%;
+    }
+    to {
+        width: 100%;
+    }
 }
 
 .gp-page-progress--finish {
     width: 100%;
+    animation: none;
     transition: opacity .25s ease .2s;
     opacity: 0;
-}
-
-@keyframes gp-page-progress {
-    to {
-        width: 100%;
-    }
 }
 
 .gp-loading {
