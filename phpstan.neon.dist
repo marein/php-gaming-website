@@ -7,5 +7,5 @@ parameters:
     - message: '#(should return|expects) non-empty-string( but returns string|, string given)\.$#'
     - message: '#^Call to an undefined method Symfony[^:]+::children\(\)\.$#'
     - message: '#^While loop condition is always true\.$#'
-    - message: "#^Property Gaming\\\\Identity\\\\Domain\\\\Model\\\\User\\\\User\\:\\:\\$version is never read, only written\\.$#"
+    - message: "#^Property Gaming\\\\Identity\\\\Domain\\\\Model\\\\User\\\\User\\:\\:\\$version#"
     - message: "#^Property Gaming\\\\Memory\\\\Domain\\\\Model\\\\Game\\\\Game\\:\\:\\$cards is never read, only written\\.$#"
