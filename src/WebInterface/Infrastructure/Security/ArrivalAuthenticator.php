@@ -24,7 +24,7 @@ final class ArrivalAuthenticator extends AbstractAuthenticator
     ) {
     }
 
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool
     {
         /**
          * A better idea would be to authenticate an anonymous user only when needed.

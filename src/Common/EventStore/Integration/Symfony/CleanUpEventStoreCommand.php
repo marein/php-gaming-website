@@ -47,6 +47,7 @@ final class CleanUpEventStoreCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        /** @var non-empty-array<string, int> $pointers */
         $pointers = [];
         foreach ($input->getArgument('pointers') as $pointer) {
             $pointers[$pointer] = $this->eventStorePointerFactory

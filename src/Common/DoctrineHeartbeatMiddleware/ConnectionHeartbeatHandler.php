@@ -36,7 +36,6 @@ final class ConnectionHeartbeatHandler implements Handler
         if ($connection === null) {
             return;
         }
-        assert($connection instanceof TrackActivityConnection);
 
         if (
             !$connection->isQuerying()
