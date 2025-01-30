@@ -23,6 +23,7 @@ security:
             security: false
         main:
             pattern: ^/
+            lazy: true
             login_link:
                 check_route: login_check
                 signature_properties: ['userIdentifier']
