@@ -1,6 +1,8 @@
 imports: [{ resource: services/ }]
 
 framework:
+    ssi: { enabled: true }
+    fragments: { path: /_fragment }
     session:
         handler_id: web-interface.session-handler
         cookie_samesite: lax

@@ -30,7 +30,8 @@ final class ArrivalAuthenticator extends AbstractAuthenticator
          * A better idea would be to authenticate an anonymous user only when needed.
          * See https://github.com/marein/php-gaming-website/issues/155.
          */
-        return $this->tokenStorage->getToken() === null;
+        return !str_starts_with($request->getPathInfo(), '/_fragment')
+            && $this->tokenStorage->getToken() === null;
     }
 
     public function authenticate(Request $request): Passport
