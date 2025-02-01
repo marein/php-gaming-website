@@ -118,3 +118,7 @@ services:
     Gaming\Common\Bus\Integration\ApplicationExceptionToJsonListener:
         arguments: [[]]
         tags: [{ name: kernel.event_listener, event: kernel.exception, priority: -99 }]
+
+    Gaming\WebInterface\Infrastructure\Symfony\HandleFragmentExceptions:
+        arguments: ['#^/_fragment#']
+        tags: [{ name: kernel.event_listener, event: kernel.exception, priority: -98 }]

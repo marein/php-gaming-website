@@ -97,6 +97,36 @@ async function submit(form) {
     }
 }
 
+customElements.define('pe-include', class extends HTMLElement {
+    async connectedCallback() {
+        const url = this.getAttribute('src');
+        const delay = this.getAttribute('delay') || 0;
+
+        const event = new CustomEvent('pe:include', {
+            detail: {url, fetchOptions: {}, parsed: [], succeed: [], catch: [], finally: []}
+        });
+        window.dispatchEvent(event);
+
+        await new Promise(r => setTimeout(r, delay));
+
+        try {
+            const response = await fetch(url, event.detail.fetchOptions);
+
+            const dom = new DOMParser().parseFromString(await response.text(), 'text/html');
+            await Promise.all(event.detail.parsed.map(f => f(dom)));
+
+            this.replaceWith(...dom.body.childNodes);
+
+            await Promise.all(event.detail.succeed.map(f => f()));
+        } catch (e) {
+            await Promise.all(event.detail.catch.map(f => f(e)));
+            throw e;
+        } finally {
+            await Promise.all(event.detail.finally.map(f => f()));
+        }
+    }
+});
+
 window.pe = {
     navigate: url => navigate(url, true),
     submit,
