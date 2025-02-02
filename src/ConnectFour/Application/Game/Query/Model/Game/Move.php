@@ -4,29 +4,12 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\Game;
 
-use JsonSerializable;
-
-final class Move implements JsonSerializable
+final class Move
 {
-    private int $x;
-
-    private int $y;
-
-    private int $color;
-
-    public function __construct(int $x, int $y, int $color)
-    {
-        $this->x = $x;
-        $this->y = $y;
-        $this->color = $color;
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'x' => $this->x,
-            'y' => $this->y,
-            'color' => $this->color
-        ];
+    public function __construct(
+        public readonly int $x,
+        public readonly int $y,
+        public readonly int $color
+    ) {
     }
 }
