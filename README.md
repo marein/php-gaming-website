@@ -318,6 +318,14 @@ Check out the purpose and architectural decisions of each context in the section
 
   ### Web Interface
 
+  > This module is currently being redesigned to aggregate fragments from each context for
+  > higher [cohesion](https://en.wikipedia.org/wiki/Cohesion_(computer_science)), leveraging
+  > [SSI](https://en.wikipedia.org/wiki/Server_Side_Includes) for
+  > [UI composition](https://www.jimmybogard.com/composite-uis-for-microservices-a-primer/).
+  > With this, there are two options for UI composition: on the client via
+  > [Web Components](https://en.wikipedia.org/wiki/Web_Components) or on the server via SSI
+  > (in addition to typical data aggregation).
+
   **Purpose**: [Web Interface](/src/WebInterface) ties all modules together and serves as the main point of
   interaction for users.
 
