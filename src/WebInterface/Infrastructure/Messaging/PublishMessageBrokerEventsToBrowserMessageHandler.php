@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\WebInterface\Infrastructure\Messaging;
 
+use Gaming\Common\BrowserNotifier\BrowserNotifier;
 use Gaming\Common\MessageBroker\Context;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\MessageHandler;
-use Gaming\WebInterface\Application\BrowserNotifier;
 use GamingPlatform\Api\Chat\V1\ChatV1Factory;
 
 final class PublishMessageBrokerEventsToBrowserMessageHandler implements MessageHandler

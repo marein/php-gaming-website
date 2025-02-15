@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\WebInterface\Application;
+namespace Gaming\Common\BrowserNotifier;
 
 interface BrowserNotifier
 {

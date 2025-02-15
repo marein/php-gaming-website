@@ -1,7 +1,0 @@
-services:
-    Gaming\WebInterface\Presentation\Console\PublishRunningGamesCountToNchanCommand:
-        arguments: ['@connect-four.query-bus', '@web-interface.browser-notifier']
-        tags:
-            -   name: console.command
-                command: web-interface:publish-running-games-count-to-nchan
-                description: 'Publish number of running games to the browser.'

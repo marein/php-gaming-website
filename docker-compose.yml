@@ -161,7 +161,7 @@ services:
         command: bin/restartOnChange bin/console gaming:consume-messages all
     php-web-interface-publish-running-games-count-to-nchan:
         <<: *php-container
-        command: bin/restartOnChange bin/console web-interface:publish-running-games-count-to-nchan
+        command: bin/restartOnChange bin/console connect-four:publish-running-games-count-to-nchan
 
     ##############################
     #     Development helper     #

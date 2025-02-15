@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Gaming\WebInterface\Presentation\Console;
+namespace Gaming\ConnectFour\Port\Adapter\Console;
 
+use Gaming\Common\BrowserNotifier\BrowserNotifier;
 use Gaming\Common\Bus\Bus;
 use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
-use Gaming\WebInterface\Application\BrowserNotifier;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -19,7 +19,7 @@ x-php-container:
         APP_CONNECT_FOUR_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
         APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@localhost/identity?persistent=1&unix_socket=/var/run/proxysql/proxysql.sock"
         APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
-        APP_WEB_INTERFACE_NCHAN_BASE_URL: "http://nchan:81"
+        APP_NCHAN_BASE_URL: "http://nchan:81"
         APP_WEB_INTERFACE_PUBLISH_TO_BROWSER_SHARDS: "1"
     depends_on:
         - mysql
@@ -161,7 +161,7 @@ services:
         command: bin/console gaming:consume-messages all
     web-interface-publish-running-games-count-to-nchan:
         <<: *php-container
-        command: bin/console web-interface:publish-running-games-count-to-nchan
+        command: bin/console connect-four:publish-running-games-count-to-nchan
 
 volumes:
     mysql:

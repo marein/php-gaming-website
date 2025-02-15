@@ -20,7 +20,7 @@ final class FragmentController extends AbstractController
     #[Cache(public: true, maxage: 10)]
     public function statisticsAction(): Response
     {
-        return $this->render('@connect-four/running-games.html.twig', [
+        return $this->render('@connect-four/statistics.html.twig', [
             'runningGames' => $this->queryBus->handle(new RunningGamesQuery())
         ]);
     }
