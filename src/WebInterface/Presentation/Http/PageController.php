@@ -30,7 +30,7 @@ final class PageController
                 'maximumNumberOfGamesInList' => 10,
                 'openGames' => $this->connectFourQueryBus->handle(new OpenGamesQuery()),
                 'runningGames' => $this->connectFourQueryBus->handle(new RunningGamesQuery()),
-                'user' => $this->security->getUser()
+                'user' => $this->security->tryUser()
             ])
         );
     }
@@ -40,7 +40,7 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/game.html.twig', [
                 'game' => $this->connectFourQueryBus->handle(new GameQuery($id)),
-                'user' => $this->security->getUser()
+                'user' => $this->security->tryUser()
             ])
         );
     }
@@ -50,7 +50,7 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
                 'games' => $this->connectFourQueryBus->handle(
-                    new GamesByPlayerQuery($this->security->getUser()->getUserIdentifier())
+                    new GamesByPlayerQuery($this->security->tryUser()->getUserIdentifier())
                 )->games()
             ])
         );

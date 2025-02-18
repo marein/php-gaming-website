@@ -33,7 +33,7 @@ final class LoginController extends AbstractController
 
     public function indexAction(Request $request): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($this->security->tryUser()->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 
@@ -66,7 +66,7 @@ final class LoginController extends AbstractController
 
     public function checkInboxAction(): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($this->security->tryUser()->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 

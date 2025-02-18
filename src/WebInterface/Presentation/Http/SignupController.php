@@ -28,7 +28,7 @@ final class SignupController extends AbstractController
 
     public function indexAction(Request $request): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($this->security->tryUser()->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 
@@ -62,7 +62,7 @@ final class SignupController extends AbstractController
 
     public function verifyEmailAction(Request $request): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($this->security->tryUser()->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 
@@ -71,7 +71,7 @@ final class SignupController extends AbstractController
 
     public function confirmAction(Request $request): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($this->security->tryUser()->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 

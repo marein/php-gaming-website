@@ -86,8 +86,10 @@ async function submit(form) {
 
         event.detail.render(document, dom);
 
-        if (response.redirected || form.method === 'get') history.pushState(null, '', response.url);
-        scroll(form.action.split('#')[1] ?? form.getAttribute('id'));
+        if (response.redirected || url.split('#')[0] !== response.url || form.method === 'get') {
+            history.pushState(null, '', response.url);
+        }
+        scroll(url.split('#')[1] ?? form.getAttribute('id'));
         await Promise.all(event.detail.succeed.map(f => f()));
     } catch (e) {
         await Promise.all(event.detail.catch.map(f => f(e)));

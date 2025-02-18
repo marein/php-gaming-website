@@ -27,8 +27,6 @@ security:
             login_link:
                 check_route: login_check
                 signature_properties: ['userIdentifier']
-            custom_authenticators:
-                - 'web-interface.security.arrival_authenticator'
             logout:
                 path: /logout
 

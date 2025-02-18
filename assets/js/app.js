@@ -4,10 +4,18 @@ import '@tabler/core/dist/css/tabler.min.css'
 import '../css/app.css'
 
 window.fetch = (fetch => async (resource, options = {}) => {
-    return fetch(
+    const response = await fetch(
         resource,
         {...options, headers: {...(options.headers || {}), 'X-Requested-With': 'XMLHttpRequest'}}
     );
+
+    JSON.parse(response.headers.get('App-Events') ?? '[]').forEach(e => {
+        window.dispatchEvent(new CustomEvent(e.name, {detail: e.detail}));
+    });
+
+    if (response.headers.has('App-Location')) return window.fetch(response.headers.get('App-Location'));
+
+    return response;
 })(window.fetch);
 
 window.app = {
@@ -77,6 +85,6 @@ document.addEventListener('change', e => {
     }
 
     if (e.target.checked) setTimeout(() => document.addEventListener('click', onClick, {once: true}), 0);
-})
+});
 
 window.dispatchEvent(new CustomEvent('app:load'));

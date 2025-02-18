@@ -40,7 +40,7 @@ final class ChatController
                 'messages' => $this->chatQueryBus->handle(
                     new MessagesQuery(
                         $chatId,
-                        $this->security->getUser()->getUserIdentifier(),
+                        $this->security->tryUser()->getUserIdentifier(),
                         0,
                         10000
                     )

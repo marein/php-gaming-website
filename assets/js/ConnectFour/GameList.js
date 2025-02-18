@@ -41,7 +41,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     _addGame(gameId, playerId) {
         if (this._currentGamesInList.indexOf(gameId) === -1) {
             this._games.appendChild(
-                this._createGameNode(gameId, this._playerId === playerId)
+                this._createGameNode(gameId, playerId)
             );
         }
     }
@@ -135,13 +135,13 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
 
     /**
      * @param {String} gameId
-     * @param {Boolean} isCurrentUserThePlayer
+     * @param {String} playerId
      * @returns {Node}
      */
-    _createGameNode(gameId, isCurrentUserThePlayer) {
+    _createGameNode(gameId, playerId) {
         let row = html`
-            <tr data="${{gameId}}"
-                class="${isCurrentUserThePlayer ? 'table-success' : 'table-light'}">
+            <tr data="${{gameId, playerId}}"
+                class="${this._playerId === playerId ? 'table-success' : 'table-light'}">
                 <td>Anonymous</td><td></td>
             </tr>
         `;
@@ -154,7 +154,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
             row.classList.add('table-secondary', 'cursor-default');
             row.classList.remove('table-success', 'table-light');
 
-            if (isCurrentUserThePlayer) {
+            if (this._playerId === playerId) {
                 service.abort(gameId)
                     .then(() => true)
                     .catch(() => {
@@ -212,6 +212,13 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         this._scheduleRemovingOfGame(event.detail.gameId);
     }
 
+    _onUserArrived(event) {
+        this._playerId = event.detail.userId;
+
+        this.querySelectorAll(`[data-player-id="${this._playerId}"]`)
+            .forEach(game => game.classList.replace('table-light', 'table-success'));
+    }
+
     _registerEventHandler() {
         ((n, f) => {
             window.addEventListener(n, f);
@@ -227,5 +234,10 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
             window.addEventListener(n, f);
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('ConnectFour.GameAborted', this._onPlayerJoinedOrGameAborted.bind(this));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('WebInterface.UserArrived', this._onUserArrived.bind(this));
     }
 });
