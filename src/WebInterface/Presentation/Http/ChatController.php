@@ -27,7 +27,7 @@ final class ChatController
         $this->chatCommandBus->handle(
             new WriteMessageCommand(
                 $chatId,
-                $this->security->getUser()->getUserIdentifier(),
+                $this->security->forceUser()->getUserIdentifier(),
                 (string)$request->request->get('message')
             )
         );

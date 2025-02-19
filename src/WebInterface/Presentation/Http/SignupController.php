@@ -41,7 +41,7 @@ final class SignupController extends AbstractController
             try {
                 $this->identityCommandBus->handle(
                     new SignUpCommand(
-                        $this->security->getUser()->getUserIdentifier(),
+                        $this->security->forceUser()->getUserIdentifier(),
                         (string)$form->get('email')->getData(),
                         (string)$form->get('username')->getData(),
                         true
@@ -94,14 +94,14 @@ final class SignupController extends AbstractController
             try {
                 $this->identityCommandBus->handle(
                     new SignUpCommand(
-                        $this->security->getUser()->getUserIdentifier(),
+                        $this->security->forceUser()->getUserIdentifier(),
                         (string)$form->get('email')->getData(),
                         (string)$form->get('username')->getData(),
                         false
                     )
                 );
 
-                $this->security->getUser()->forceRefreshAtNextRequest();
+                $this->security->forceUser()->forceRefreshAtNextRequest();
 
                 return $this->redirectToRoute('lobby');
             } catch (ApplicationException $e) {

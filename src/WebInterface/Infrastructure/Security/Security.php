@@ -16,7 +16,7 @@ final class Security
     ) {
     }
 
-    public function getUser(): User
+    public function forceUser(): User
     {
         if ($this->security->getUser() instanceof User) {
             return $this->security->getUser();
