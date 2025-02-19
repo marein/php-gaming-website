@@ -96,7 +96,7 @@
             </div>
             <chat-widget id="chat"
                          chat-id="{{ game.chatId|e('html_attr') }}"
-                         author-id="{{ user.userIdentifier|e('html_attr') }}"
+                         author-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
                          seconds-before-retry="3">
             </chat-widget>
         </div>
