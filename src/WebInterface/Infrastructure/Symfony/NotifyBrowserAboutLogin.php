@@ -19,22 +19,22 @@ final class NotifyBrowserAboutLogin
 
     public function onKernelResponse(ResponseEvent $event): void
     {
-        if ($this->authenticatedUserId === null || !$event->getRequest()->isXmlHttpRequest()) {
+        if ($this->authenticatedUserId === null || !$event->getRequest()->headers->has('Pe-Request')) {
             return;
         }
 
         $event->getResponse()->headers->set(
-            'App-Events',
+            'Pe-Dispatch',
             (string)json_encode(
                 [['name' => 'WebInterface.UserArrived', 'detail' => ['userId' => $this->authenticatedUserId]]]
             )
         );
 
         // Prevent automatic redirection from being followed by window.fetch(),
-        // allowing App-Events to be processed before the redirection is manually followed.
+        // allowing Pe-Dispatch to be processed before the redirection is manually followed.
         if ($event->getResponse()->isRedirection()) {
             $event->getResponse()->setStatusCode(Response::HTTP_OK);
-            $event->getResponse()->headers->set('App-Location', $event->getResponse()->headers->get('Location'));
+            $event->getResponse()->headers->set('Pe-Location', $event->getResponse()->headers->get('Location'));
             $event->getResponse()->headers->remove('Location');
         }
     }

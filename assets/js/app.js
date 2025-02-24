@@ -3,20 +3,10 @@ import './Common/NotificationList.js'
 import '@tabler/core/dist/css/tabler.min.css'
 import '../css/app.css'
 
-window.fetch = (fetch => async (resource, options = {}) => {
-    const response = await fetch(
-        resource,
-        {...options, headers: {...(options.headers || {}), 'X-Requested-With': 'XMLHttpRequest'}}
-    );
-
-    JSON.parse(response.headers.get('App-Events') ?? '[]').forEach(e => {
-        window.dispatchEvent(new CustomEvent(e.name, {detail: e.detail}));
-    });
-
-    if (response.headers.has('App-Location')) return window.fetch(response.headers.get('App-Location'));
-
-    return response;
-})(window.fetch);
+window.fetch = (fetch => (resource, options = {}) => fetch(
+    resource,
+    {...options, headers: {...(options.headers || {}), 'X-Requested-With': 'XMLHttpRequest'}}
+))(window.fetch);
 
 window.app = {
     navigate: url => top.location.href = url,
@@ -25,7 +15,7 @@ window.app = {
         .map(n => import(n.localName))),
     showProgress(delay) {
         document.querySelector('.gp-page-progress')?.remove();
-        let progress = document.createElement('div');
+        const progress = document.createElement('div');
         progress.classList.add('gp-page-progress');
         const timeout = setTimeout(() => document.head.after(progress), delay ?? 250);
         return () => clearTimeout(timeout) || progress.classList.add('gp-page-progress--finish');
