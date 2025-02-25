@@ -8,8 +8,10 @@ use Gaming\Chat\Application\Command\WriteMessageCommand;
 use Gaming\Chat\Application\Query\MessagesQuery;
 use Gaming\Common\Bus\Bus;
 use Gaming\WebInterface\Infrastructure\Security\Security;
+use Gaming\WebInterface\Infrastructure\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 final class ChatController
 {
@@ -25,7 +27,7 @@ final class ChatController
         $this->chatCommandBus->handle(
             new WriteMessageCommand(
                 $chatId,
-                $this->security->getUser()->getUserIdentifier(),
+                $this->security->forceUser()->getUserIdentifier(),
                 (string)$request->request->get('message')
             )
         );
@@ -33,14 +35,14 @@ final class ChatController
         return new JsonResponse();
     }
 
-    public function messagesAction(Request $request, string $chatId): JsonResponse
+    public function messagesAction(#[CurrentUser] ?User $user, string $chatId): JsonResponse
     {
         return new JsonResponse(
             [
                 'messages' => $this->chatQueryBus->handle(
                     new MessagesQuery(
                         $chatId,
-                        $this->security->getUser()->getUserIdentifier(),
+                        $user?->getUserIdentifier() ?? '',
                         0,
                         10000
                     )

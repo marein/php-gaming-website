@@ -9,12 +9,14 @@ use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Integration\FormViolationMapper;
 use Gaming\Identity\Application\User\Command\SignUpCommand;
 use Gaming\WebInterface\Infrastructure\Security\Security;
+use Gaming\WebInterface\Infrastructure\Security\User;
 use Gaming\WebInterface\Presentation\Http\Form\SignupType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 final class SignupController extends AbstractController
 {
@@ -26,9 +28,9 @@ final class SignupController extends AbstractController
     ) {
     }
 
-    public function indexAction(Request $request): Response
+    public function indexAction(#[CurrentUser] ?User $user, Request $request): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($user?->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 
@@ -39,7 +41,7 @@ final class SignupController extends AbstractController
             try {
                 $this->identityCommandBus->handle(
                     new SignUpCommand(
-                        $this->security->getUser()->getUserIdentifier(),
+                        $this->security->forceUser()->getUserIdentifier(),
                         (string)$form->get('email')->getData(),
                         (string)$form->get('username')->getData(),
                         true
@@ -60,18 +62,18 @@ final class SignupController extends AbstractController
         return $this->render('@web-interface/signup/index.html.twig', ['form' => $form]);
     }
 
-    public function verifyEmailAction(Request $request): Response
+    public function verifyEmailAction(#[CurrentUser] ?User $user, Request $request): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($user?->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 
         return $this->render('@web-interface/signup/verify-email.html.twig');
     }
 
-    public function confirmAction(Request $request): Response
+    public function confirmAction(#[CurrentUser] ?User $user, Request $request): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($user?->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 
@@ -92,14 +94,14 @@ final class SignupController extends AbstractController
             try {
                 $this->identityCommandBus->handle(
                     new SignUpCommand(
-                        $this->security->getUser()->getUserIdentifier(),
+                        $this->security->forceUser()->getUserIdentifier(),
                         (string)$form->get('email')->getData(),
                         (string)$form->get('username')->getData(),
                         false
                     )
                 );
 
-                $this->security->getUser()->forceRefreshAtNextRequest();
+                $this->security->forceUser()->forceRefreshAtNextRequest();
 
                 return $this->redirectToRoute('lobby');
             } catch (ApplicationException $e) {

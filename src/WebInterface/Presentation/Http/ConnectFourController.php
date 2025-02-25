@@ -27,7 +27,7 @@ final class ConnectFourController
         return new JsonResponse(
             [
                 'gameId' => $this->connectFourCommandBus->handle(
-                    new OpenCommand($this->security->getUser()->getUserIdentifier())
+                    new OpenCommand($this->security->forceUser()->getUserIdentifier())
                 )
             ]
         );
@@ -38,7 +38,7 @@ final class ConnectFourController
         $this->connectFourCommandBus->handle(
             new JoinCommand(
                 $gameId,
-                $this->security->getUser()->getUserIdentifier()
+                $this->security->forceUser()->getUserIdentifier()
             )
         );
 
@@ -50,7 +50,7 @@ final class ConnectFourController
         $this->connectFourCommandBus->handle(
             new AbortCommand(
                 $gameId,
-                $this->security->getUser()->getUserIdentifier()
+                $this->security->forceUser()->getUserIdentifier()
             )
         );
 
@@ -62,7 +62,7 @@ final class ConnectFourController
         $this->connectFourCommandBus->handle(
             new ResignCommand(
                 $gameId,
-                $this->security->getUser()->getUserIdentifier()
+                $this->security->forceUser()->getUserIdentifier()
             )
         );
 
@@ -74,7 +74,7 @@ final class ConnectFourController
         $this->connectFourCommandBus->handle(
             new MoveCommand(
                 $gameId,
-                $this->security->getUser()->getUserIdentifier(),
+                $this->security->forceUser()->getUserIdentifier(),
                 (int)$request->request->get('column', -1)
             )
         );

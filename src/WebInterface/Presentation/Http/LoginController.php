@@ -8,7 +8,6 @@ use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Integration\FormViolationMapper;
 use Gaming\Identity\Application\User\Query\UserByEmailQuery;
-use Gaming\WebInterface\Infrastructure\Security\Security;
 use Gaming\WebInterface\Infrastructure\Security\User;
 use Gaming\WebInterface\Presentation\Http\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,13 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 final class LoginController extends AbstractController
 {
     public function __construct(
-        private readonly Security $security,
         private readonly AuthenticationUtils $authenticationUtils,
         private readonly LoginLinkHandlerInterface $loginLinkHandler,
         private readonly UriSigner $uriSigner,
@@ -31,9 +30,9 @@ final class LoginController extends AbstractController
     ) {
     }
 
-    public function indexAction(Request $request): Response
+    public function indexAction(#[CurrentUser] ?User $user, Request $request): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($user?->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 
@@ -64,9 +63,9 @@ final class LoginController extends AbstractController
         ]);
     }
 
-    public function checkInboxAction(): Response
+    public function checkInboxAction(#[CurrentUser] ?User $user): Response
     {
-        if ($this->security->getUser()->isSignedUp) {
+        if ($user?->isSignedUp) {
             return $this->redirectToRoute('lobby');
         }
 

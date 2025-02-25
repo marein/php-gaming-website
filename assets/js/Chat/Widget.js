@@ -117,7 +117,7 @@ customElements.define('chat-widget', class extends HTMLElement {
         const isSameAuthor = this._authorId === message.authorId;
 
         return html`
-            <div class="chat-item" data-id="${message.messageId}">
+            <div class="chat-item" data-id="${message.messageId}" data-author-id="${message.authorId}">
                 <div class="${`row${isSameAuthor ? ' align-items-end justify-content-end' : ''}`}">
                     <div class="col-11">
                         <div class="${`chat-bubble${isSameAuthor ? ' chat-bubble-me' : ''}`}">
@@ -170,6 +170,15 @@ customElements.define('chat-widget', class extends HTMLElement {
         this._initialize(event.detail.chatId);
     }
 
+    _onUserArrived(event) {
+        this._authorId = event.detail.userId;
+
+        this.querySelectorAll(`[data-author-id="${this._authorId}"]`).forEach(message => {
+            message.querySelector('.chat-bubble').classList.add('chat-bubble-me');
+            message.querySelector('.row').classList.add('align-items-end', 'justify-content-end');
+        });
+    }
+
     _registerEventHandler() {
         this._input.addEventListener('keypress', this._onKeyPress.bind(this));
 
@@ -182,5 +191,10 @@ customElements.define('chat-widget', class extends HTMLElement {
             window.addEventListener(n, f);
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('ConnectFour.ChatAssigned', this._onChatAssigned.bind(this));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('WebInterface.UserArrived', this._onUserArrived.bind(this));
     }
 });

@@ -1,7 +1,7 @@
 services:
     web-interface.page-controller:
         class: Gaming\WebInterface\Presentation\Http\PageController
-        arguments: ['@twig', '@connect-four.query-bus', '@web-interface.security']
+        arguments: ['@twig', '@connect-four.query-bus']
         tags: ['controller.service_arguments']
 
     web-interface.signup-controller:
@@ -17,7 +17,6 @@ services:
     web-interface.login-controller:
         class: Gaming\WebInterface\Presentation\Http\LoginController
         arguments:
-            - '@web-interface.security'
             - '@security.authentication_utils'
             - '@security.authenticator.firewall_aware_login_link_handler'
             - '@uri_signer'

@@ -69,7 +69,7 @@ async function submit(form) {
     window.dispatchEvent(event);
 
     const formData = new FormData(form);
-    let url = form.method === 'get' ? mergeSearchParams(form.action, formData) : form.action;
+    const url = form.method === 'get' ? mergeSearchParams(form.action, formData) : form.action;
 
     try {
         const response = await fetch(url, {
@@ -96,6 +96,27 @@ async function submit(form) {
         await Promise.all(event.detail.finally.map(f => f()));
     }
 }
+
+window.fetch = (fetch => async (resource, options = {}) => {
+    const headers = {'Pe-Request': '1', ...(options.headers || {})};
+    const response = await fetch(resource, {...options, headers});
+
+    JSON.parse(response.headers.get('Pe-Dispatch') ?? '[]').forEach(e => {
+        window.dispatchEvent(new CustomEvent(e.name, {detail: e.detail}));
+    });
+
+    return !response.headers.has('Pe-Location')
+        ? response
+        : new Proxy(await window.fetch(response.headers.get('Pe-Location'), {headers}), {
+            get: (target, prop) => {
+                if (prop === 'redirected') return true;
+
+                const value = Reflect.get(target, prop, target);
+
+                return typeof value === 'function' ? value.bind(target) : value;
+            }
+        });
+})(window.fetch);
 
 customElements.define('pe-include', class extends HTMLElement {
     async connectedCallback() {
@@ -138,7 +159,7 @@ window.pe = {
 window.addEventListener('popstate', () => navigate(top.location.href, false));
 document.addEventListener('click', e => {
     if (e.metaKey || e.altKey || e.shiftKey) return;
-    let a = e.target.closest('a');
+    const a = e.target.closest('a');
     if (!a) return;
     if (a.protocol !== window.location.protocol || a.host !== window.location.host) return;
     if (a.hasAttribute('target') || a.hasAttribute('download')) return;
