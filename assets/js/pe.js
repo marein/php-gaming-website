@@ -97,6 +97,27 @@ async function submit(form) {
     }
 }
 
+window.fetch = (fetch => async (resource, options = {}) => {
+    const headers = {'Pe-Request': '1', ...(options.headers || {})};
+    const response = await fetch(resource, {...options, headers});
+
+    JSON.parse(response.headers.get('Pe-Dispatch') ?? '[]').forEach(e => {
+        window.dispatchEvent(new CustomEvent(e.name, {detail: e.detail}));
+    });
+
+    return !response.headers.has('Pe-Location')
+        ? response
+        : new Proxy(await window.fetch(response.headers.get('Pe-Location'), {headers}), {
+            get: (target, prop) => {
+                if (prop === 'redirected') return true;
+
+                const value = Reflect.get(target, prop, target);
+
+                return typeof value === 'function' ? value.bind(target) : value;
+            }
+        });
+})(window.fetch);
+
 customElements.define('pe-include', class extends HTMLElement {
     async connectedCallback() {
         const url = this.getAttribute('src');
@@ -126,27 +147,6 @@ customElements.define('pe-include', class extends HTMLElement {
         }
     }
 });
-
-window.fetch = (fetch => async (resource, options = {}) => {
-    const headers = {'Pe-Request': '1', ...(options.headers || {})};
-    const response = await fetch(resource, {...options, headers});
-
-    JSON.parse(response.headers.get('Pe-Dispatch') ?? '[]').forEach(e => {
-        window.dispatchEvent(new CustomEvent(e.name, {detail: e.detail}));
-    });
-
-    return !response.headers.has('Pe-Location')
-        ? response
-        : new Proxy(await window.fetch(response.headers.get('Pe-Location'), {headers}), {
-            get: (target, prop) => {
-                if (prop === 'redirected') return true;
-
-                const value = Reflect.get(target, prop, target);
-
-                return typeof value === 'function' ? value.bind(target) : value;
-            }
-        });
-})(window.fetch);
 
 window.pe = {
     navigate: url => navigate(url, true),
