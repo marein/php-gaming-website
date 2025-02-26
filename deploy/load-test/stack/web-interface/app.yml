@@ -27,16 +27,6 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
-    web-interface-publish-running-games-count-to-nchan:
-        image: marein/php-gaming-website:php-fpm
-        command: bin/console connect-four:publish-running-games-count-to-nchan
-        env_file: ../app.env
-        volumes:
-            - proxysql.sock:/var/run/proxysql
-        deploy:
-            placement:
-                constraints:
-                    - "node.labels.long-running==1"
 
 volumes:
     proxysql.sock:

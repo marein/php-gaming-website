@@ -150,6 +150,9 @@ services:
     connect-four-follow-event-store:
         <<: *php-container
         command: bin/console connect-four:follow-event-store pointer all
+    connect-four-publish-running-games-count-to-nchan:
+        <<: *php-container
+        command: bin/console connect-four:publish-running-games-count-to-nchan
     chat-follow-event-store:
         <<: *php-container
         command: bin/console chat:follow-event-store pointer all
@@ -159,9 +162,6 @@ services:
     consume-messages:
         <<: *php-container
         command: bin/console gaming:consume-messages all
-    web-interface-publish-running-games-count-to-nchan:
-        <<: *php-container
-        command: bin/console connect-four:publish-running-games-count-to-nchan
 
 volumes:
     mysql:
