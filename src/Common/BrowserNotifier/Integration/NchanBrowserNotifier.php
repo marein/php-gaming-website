@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gaming\WebInterface\Infrastructure;
+namespace Gaming\Common\BrowserNotifier\Integration;
 
-use Gaming\WebInterface\Application\BrowserNotifier;
+use Gaming\Common\BrowserNotifier\BrowserNotifier;
 use Marein\Nchan\Api\Model\PlainTextMessage;
 use Marein\Nchan\Nchan;
 

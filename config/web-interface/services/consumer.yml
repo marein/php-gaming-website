@@ -15,7 +15,7 @@ services:
         arguments:
             - !service
                 class: Gaming\WebInterface\Infrastructure\Messaging\PublishMessageBrokerEventsToBrowserMessageHandler
-                arguments: ['@web-interface.browser-notifier']
+                arguments: ['@gaming.browser-notifier']
             - !service
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueueWithLeastConsumers
                 arguments:

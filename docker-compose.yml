@@ -150,6 +150,9 @@ services:
     php-connect-four-follow-event-store:
         <<: *php-container
         command: bin/restartOnChange bin/console connect-four:follow-event-store pointer all
+    php-connect-four-publish-running-games-count-to-nchan:
+        <<: *php-container
+        command: bin/restartOnChange bin/console connect-four:publish-running-games-count-to-nchan
     php-chat-follow-event-store:
         <<: *php-container
         command: bin/restartOnChange bin/console chat:follow-event-store pointer all
@@ -159,9 +162,6 @@ services:
     php-consume-messages:
         <<: *php-container
         command: bin/restartOnChange bin/console gaming:consume-messages all
-    php-web-interface-publish-running-games-count-to-nchan:
-        <<: *php-container
-        command: bin/restartOnChange bin/console web-interface:publish-running-games-count-to-nchan
 
     ##############################
     #     Development helper     #
