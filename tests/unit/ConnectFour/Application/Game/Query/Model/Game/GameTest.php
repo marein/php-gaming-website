@@ -59,8 +59,8 @@ class GameTest extends TestCase
         $game = new Game();
         $this->applyFromDomainGame($game, $domainGame);
 
-        $this->assertEquals($expectedGameId, $game->gameId);
-        $this->assertEquals($expectedFinished, $game->finished);
+        $this->assertEquals($expectedGameId, $game->id());
+        $this->assertEquals($expectedFinished, $game->finished());
         // Implicitly test if it's serializable.
         $this->assertEquals($expectedSerializedGame, json_encode($game, JSON_THROW_ON_ERROR));
     }
@@ -76,7 +76,7 @@ class GameTest extends TestCase
         $game = new Game();
         $this->applyFromDomainGame($game, $domainGame);
 
-        $this->assertEquals(true, $game->finished);
+        $this->assertEquals(true, $game->finished());
     }
 
     /**
@@ -93,7 +93,7 @@ class GameTest extends TestCase
         $game = new Game();
         $this->applyFromDomainGame($game, $domainGame);
 
-        $this->assertEquals(true, $game->finished);
+        $this->assertEquals(true, $game->finished());
     }
 
     /**
@@ -114,7 +114,7 @@ class GameTest extends TestCase
         $game = new Game();
         $this->applyFromDomainGame($game, $domainGame);
 
-        $this->assertEquals(true, $game->finished);
+        $this->assertEquals(true, $game->finished());
         $this->assertEquals(
             [[
                 'rule' => 'vertical',
@@ -135,7 +135,7 @@ class GameTest extends TestCase
             new GameDrawn(GameId::generate())
         );
 
-        $this->assertEquals(true, $game->finished);
+        $this->assertEquals(true, $game->finished());
     }
 
     private function applyFromDomainGame(Game $game, DomainGame $domainGame): void
