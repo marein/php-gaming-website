@@ -13,9 +13,9 @@ final class GameOpened implements DomainEvent
 {
     private string $gameId;
 
-    public readonly int $width;
+    private int $width;
 
-    public readonly int $height;
+    private int $height;
 
     public readonly ?int $preferredStone;
 
@@ -26,8 +26,8 @@ final class GameOpened implements DomainEvent
         public readonly string $playerId
     ) {
         $this->gameId = $gameId->toString();
-        $this->width = $size->width;
-        $this->height = $size->height;
+        $this->width = $size->width();
+        $this->height = $size->height();
         $this->preferredStone = $preferredStone?->value;
     }
 
@@ -36,25 +36,16 @@ final class GameOpened implements DomainEvent
         return $this->gameId;
     }
 
-    /**
-     * @deprecated Use property instead.
-     */
     public function width(): int
     {
         return $this->width;
     }
 
-    /**
-     * @deprecated Use property instead.
-     */
     public function height(): int
     {
         return $this->height;
     }
 
-    /**
-     * @deprecated Use property instead.
-     */
     public function playerId(): string
     {
         return $this->playerId;

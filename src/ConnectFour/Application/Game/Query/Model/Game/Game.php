@@ -44,6 +44,22 @@ final class Game
     }
 
     /**
+     * @deprecated Use property instead.
+     */
+    public function id(): string
+    {
+        return $this->gameId;
+    }
+
+    /**
+     * @deprecated Use property instead.
+     */
+    public function finished(): bool
+    {
+        return $this->finished;
+    }
+
+    /**
      * Apply a domain event. The game can project this to its state.
      * The order of events must be the same as the sequence added to the event store.
      */
@@ -65,10 +81,10 @@ final class Game
     private function handleGameOpened(GameOpened $gameOpened): void
     {
         $this->gameId = $gameOpened->aggregateId();
-        $this->width = $gameOpened->width;
-        $this->height = $gameOpened->height;
+        $this->width = $gameOpened->width();
+        $this->height = $gameOpened->height();
         $this->preferredStone = $gameOpened->preferredStone;
-        $this->addPlayer($gameOpened->playerId);
+        $this->addPlayer($gameOpened->playerId());
     }
 
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
