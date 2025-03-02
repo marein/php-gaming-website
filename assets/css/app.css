@@ -179,3 +179,11 @@ notification-list {
 [data-bs-theme=dark] .gp-game__field {
     border-color: var(--tblr-blue);
 }
+
+/** Fix specificity for checked buttons on hover */
+.btn-check:checked + .btn:hover {
+    color: var(--tblr-btn-active-color);
+    background-color: var(--tblr-btn-active-bg);
+    border-color: var(--tblr-btn-active-border-color);
+    box-shadow: var(--tblr-btn-active-shadow)
+}

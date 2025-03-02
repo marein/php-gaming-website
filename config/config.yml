@@ -25,6 +25,7 @@ monolog:
             formatter: 'monolog.formatter.json'
 
 twig:
+    form_themes: ['tabler_form_layout.html.twig']
     strict_variables: '%kernel.debug%'
 
 services:
