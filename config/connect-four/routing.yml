@@ -7,7 +7,6 @@ connect_four_abort_challenge:
     path: /api/connect-four/challenges/{gameId}/abort
     methods: [POST]
     controller: connect-four.page-controller::abortChallengeAction
-    defaults: { _format: json }
 
 connect_four_challenge:
     path: /challenge/{id}
