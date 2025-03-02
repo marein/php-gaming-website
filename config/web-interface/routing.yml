@@ -21,11 +21,6 @@ game:
     methods: [GET]
     controller: web-interface.page-controller::gameAction
 
-challenge:
-    path: /challenge/{id}
-    methods: [GET]
-    controller: web-interface.page-controller::challengeAction
-
 signup:
     path: /signup
     methods: [GET, POST]
@@ -74,11 +69,6 @@ messages:
 #             Connect Four Service            #
 ###############################################
 
-open:
-    path: /api/connect-four/games/open
-    methods: [POST]
-    controller: web-interface.connect-four-controller::openAction
-
 abort:
     path: /api/connect-four/games/{gameId}/abort
     methods: [POST]
@@ -101,10 +91,4 @@ move:
     path: /api/connect-four/games/{gameId}/move
     methods: [POST]
     controller: web-interface.connect-four-controller::moveAction
-    defaults: { _format: json }
-
-challenge_abort:
-    path: /api/connect-four/challenges/{gameId}/abort
-    methods: [POST]
-    controller: web-interface.connect-four-controller::abortChallengeAction
     defaults: { _format: json }

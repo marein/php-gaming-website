@@ -16,7 +16,7 @@
             Variant: <strong>Standard</strong>,
             Color: <strong>{{ game.preferredStone|replace({1: 'Red', 2: 'Yellow'})|default('Random') }}</strong>
         </p>
-        <form action="{{ path('challenge_abort', {gameId: game.gameId}) }}" method="post" data-abort-form>
+        <form action="{{ path('connect_four_abort_challenge', {gameId: game.gameId}) }}" method="post" data-abort-form>
             <button type="submit" class="btn btn-outline-danger">Cancel search</button>
         </form>
     </div>
