@@ -37,7 +37,7 @@ final class PredisGameStore implements GameStore
 
     public function persist(Game $game): void
     {
-        $this->pendingGames[$game->gameId] = $game;
+        $this->pendingGames[$game->id()] = $game;
 
         if (count($this->pendingGames) === $this->maxNumberOfPendingGamesBeforeFlush) {
             $this->flush();
@@ -49,7 +49,7 @@ final class PredisGameStore implements GameStore
         $this->predis->pipeline(function (ClientContextInterface $pipeline): void {
             foreach (array_splice($this->pendingGames, 0) as $game) {
                 $pipeline->set(
-                    $this->storageKeyPrefix . $game->gameId,
+                    $this->storageKeyPrefix . $game->id(),
                     $this->serializeGame($game)
                 );
             }

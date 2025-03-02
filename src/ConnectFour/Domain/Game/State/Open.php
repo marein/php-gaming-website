@@ -23,11 +23,13 @@ final class Open implements State
     public function join(GameId $gameId, string $playerId): Transition
     {
         $size = $this->configuration->size();
+        $width = $size->width();
+        $height = $size->height();
 
         return new Transition(
             new Running(
                 $this->configuration->winningRules(),
-                $size->width * $size->height,
+                $width * $height,
                 Board::empty($size),
                 $this->configuration->createPlayers($this->playerId, $playerId)
             ),
