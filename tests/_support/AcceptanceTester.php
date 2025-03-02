@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Codeception\Actor;
 use Codeception\Lib\Actor\Shared\Friend;
 use Codeception\Lib\Actor\Shared\Retry;
+use Codeception\Scenario;
 
 /**
  * Inherited Methods
@@ -26,4 +27,11 @@ class AcceptanceTester extends Actor
     use _generated\AcceptanceTesterActions;
     use Friend;
     use Retry;
+
+    public function __construct(Scenario $scenario)
+    {
+        parent::__construct($scenario);
+
+        $this->retry(3);
+    }
 }

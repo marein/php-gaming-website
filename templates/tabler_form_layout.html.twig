@@ -1,0 +1,24 @@
+{% use "bootstrap_5_layout.html.twig" %}
+
+{# Override to ignore label_attr for expanded choices, allowing them to be rendered as buttons. #}
+{%- block choice_label -%}
+    {% if expanded is defined and expanded %}
+        <legend class="form-label{{ required ? ' required' }}">{{ label }}</legend>
+    {% else %}
+        {{- parent() -}}
+    {% endif %}
+{%- endblock choice_label %}
+
+{# Override to ensure choices don't inherit the required attribute, removing the asterisk from each choice. #}
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            {{- form_widget(child, {
+                required: false,
+                parent_label_class: label_attr.class|default(''),
+                translation_domain: choice_translation_domain,
+                valid: valid,
+            }) -}}
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded %}
