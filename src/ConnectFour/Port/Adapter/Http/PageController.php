@@ -1,0 +1,69 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Gaming\ConnectFour\Port\Adapter\Http;
+
+use Gaming\Common\Bus\Bus;
+use Gaming\ConnectFour\Application\Game\Command\AbortCommand;
+use Gaming\ConnectFour\Application\Game\Command\OpenCommand;
+use Gaming\ConnectFour\Application\Game\Query\GameQuery;
+use Gaming\ConnectFour\Port\Adapter\Http\Form\OpenType;
+use Gaming\WebInterface\Infrastructure\Security\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+final class PageController extends AbstractController
+{
+    public function __construct(
+        private readonly Bus $commandBus,
+        private readonly Bus $queryBus,
+        private readonly Security $security
+    ) {
+    }
+
+    public function openAction(Request $request): Response
+    {
+        $form = $this->createForm(OpenType::class)
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            [$width, $height] = explode('x', $form->get('size')->getData());
+
+            return $this->redirectToRoute('connect_four_challenge', [
+                'id' => $this->commandBus->handle(
+                    new OpenCommand(
+                        $this->security->forceUser()->getUserIdentifier(),
+                        (int)$width,
+                        (int)$height,
+                        (int)$form->get('color')->getData()
+                    )
+                )
+            ]);
+        }
+
+        return $this->redirectToRoute('lobby');
+    }
+
+    public function abortChallengeAction(string $gameId): Response
+    {
+        try {
+            $this->commandBus->handle(
+                new AbortCommand(
+                    $gameId,
+                    $this->security->forceUser()->getUserIdentifier()
+                )
+            );
+        } finally {
+            return $this->redirectToRoute('lobby');
+        }
+    }
+
+    public function challengeAction(string $id): Response
+    {
+        return $this->render('@connect-four/challenge.html.twig', [
+            'game' => $this->queryBus->handle(new GameQuery($id))
+        ]);
+    }
+}
