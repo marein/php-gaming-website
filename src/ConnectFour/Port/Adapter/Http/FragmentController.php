@@ -9,7 +9,6 @@ use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
 use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Gaming\ConnectFour\Port\Adapter\Http\Form\OpenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
 
@@ -36,9 +35,9 @@ final class FragmentController extends AbstractController
     }
 
     #[Cache(public: true, maxage: 10)]
-    public function openAction(Request $request): Response
+    public function openAction(): Response
     {
-        return $this->render('@connect-four/open-game.html.twig', [
+        return $this->render('@connect-four/open.html.twig', [
             'form' => $this->createForm(OpenType::class)
         ]);
     }
