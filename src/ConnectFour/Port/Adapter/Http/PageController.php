@@ -6,6 +6,7 @@ namespace Gaming\ConnectFour\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\ConnectFour\Application\Game\Command\AbortCommand;
+use Gaming\ConnectFour\Application\Game\Command\JoinCommand;
 use Gaming\ConnectFour\Application\Game\Command\OpenCommand;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Port\Adapter\Http\Form\OpenType;
@@ -46,18 +47,28 @@ final class PageController extends AbstractController
         return $this->redirectToRoute('lobby');
     }
 
-    public function abortChallengeAction(string $gameId): Response
+    public function abortChallengeAction(string $id): Response
     {
-        try {
-            $this->commandBus->handle(
-                new AbortCommand(
-                    $gameId,
-                    $this->security->forceUser()->getUserIdentifier()
-                )
-            );
-        } finally {
-            return $this->redirectToRoute('lobby');
-        }
+        $this->commandBus->handle(
+            new AbortCommand(
+                $id,
+                $this->security->forceUser()->getUserIdentifier()
+            )
+        );
+
+        return $this->redirectToRoute('lobby');
+    }
+
+    public function acceptChallengeAction(string $id): Response
+    {
+        $this->commandBus->handle(
+            new JoinCommand(
+                $id,
+                $this->security->forceUser()->getUserIdentifier()
+            )
+        );
+
+        return $this->redirectToRoute('game', ['id' => $id]);
     }
 
     public function challengeAction(string $id): Response
