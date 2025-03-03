@@ -7,7 +7,6 @@ namespace Gaming\ConnectFour\Domain\Game\Event;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\GameId;
-use Gaming\ConnectFour\Domain\Game\Player;
 
 final class GameOpened implements DomainEvent
 {
@@ -17,14 +16,15 @@ final class GameOpened implements DomainEvent
 
     private int $height;
 
-    private string $playerId;
-
-    public function __construct(GameId $gameId, Size $size, Player $player)
-    {
+    public function __construct(
+        GameId $gameId,
+        Size $size,
+        public readonly ?int $preferredStone,
+        private readonly string $playerId
+    ) {
         $this->gameId = $gameId->toString();
         $this->width = $size->width();
         $this->height = $size->height();
-        $this->playerId = $player->id();
     }
 
     public function aggregateId(): string

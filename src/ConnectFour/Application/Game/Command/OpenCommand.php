@@ -12,12 +12,10 @@ use Gaming\Common\Bus\Request;
 final class OpenCommand implements Request
 {
     public function __construct(
-        private readonly string $playerId
+        public readonly string $playerId,
+        public readonly int $width,
+        public readonly int $height,
+        public readonly int $stone
     ) {
-    }
-
-    public function playerId(): string
-    {
-        return $this->playerId;
     }
 }

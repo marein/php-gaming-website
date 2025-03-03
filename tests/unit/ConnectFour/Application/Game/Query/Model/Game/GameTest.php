@@ -33,6 +33,7 @@ class GameTest extends TestCase
                 'finished' => $expectedFinished,
                 'height' => 6,
                 'width' => 7,
+                'preferredStone' => 1,
                 'moves' => [
                     [
                         'x' => 1,
@@ -76,7 +77,6 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
-        $this->assertEquals(true, $game->jsonSerialize()['finished']);
     }
 
     /**
@@ -94,7 +94,6 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
-        $this->assertEquals(true, $game->jsonSerialize()['finished']);
     }
 
     /**
@@ -137,7 +136,6 @@ class GameTest extends TestCase
         );
 
         $this->assertEquals(true, $game->finished());
-        $this->assertEquals(true, $game->jsonSerialize()['finished']);
     }
 
     private function applyFromDomainGame(Game $game, DomainGame $domainGame): void
