@@ -7,7 +7,6 @@ namespace Gaming\WebInterface\Presentation\Http;
 use Gaming\Common\Bus\Bus;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
-use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
 use Gaming\WebInterface\Infrastructure\Security\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,10 +24,7 @@ final class PageController
     public function lobbyAction(): Response
     {
         return new Response(
-            $this->twig->render('@web-interface/lobby.html.twig', [
-                'maximumNumberOfGamesInList' => 10,
-                'openGames' => $this->connectFourQueryBus->handle(new OpenGamesQuery())
-            ])
+            $this->twig->render('@web-interface/lobby.html.twig')
         );
     }
 

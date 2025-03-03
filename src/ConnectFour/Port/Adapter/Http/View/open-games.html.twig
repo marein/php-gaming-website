@@ -1,0 +1,4 @@
+<connect-four-game-list open-games="{{ openGames.games|json_encode|e('html_attr') }}"
+                        player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
+                        maximum-number-of-games="10">
+</connect-four-game-list>

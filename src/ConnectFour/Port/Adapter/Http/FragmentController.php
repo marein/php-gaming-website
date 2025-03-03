@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
+use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
 use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,13 @@ final class FragmentController extends AbstractController
     {
         return $this->render('@connect-four/statistics.html.twig', [
             'runningGames' => $this->queryBus->handle(new RunningGamesQuery())
+        ]);
+    }
+
+    public function openGamesAction(): Response
+    {
+        return $this->render('@connect-four/open-games.html.twig', [
+            'openGames' => $this->queryBus->handle(new OpenGamesQuery())
         ]);
     }
 }
