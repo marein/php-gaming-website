@@ -1,14 +1,26 @@
 {% extends 'layout/condensed.html.twig' %}
 
-{% set page_title = 'Finding your next match...' %}
+{% if app.user ? app.user.userIdentifier in game.players %}
+    {% set page_title = 'Finding your next game...' %}
+{% else %}
+    {% set page_title = 'Join the game' %}
+{% endif %}
 
 {% block content %}
     <h1 class="text-center">
-        Finding your next match<span class="animated-dots"></span>
+        {% if app.user ? app.user.userIdentifier in game.players %}
+            Finding your next game<span class="animated-dots"></span>
+        {% else %}
+            Join the game
+        {% endif %}
     </h1>
     <div class="container-tight text-center">
         <p>
-            Once you've been matched, you'll be automatically redirected.
+            {% if app.user ? app.user.userIdentifier in game.players %}
+                Once another player joins, you'll be automatically redirected.
+            {% else %}
+                Player <strong>Anonymous</strong> is waiting for an opponent.
+            {% endif %}
         </p>
         <p>
             Size: <strong>{{ game.width }} x {{ game.height }}</strong>,
