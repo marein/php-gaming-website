@@ -1,7 +1,7 @@
 {% extends 'layout/condensed.html.twig' %}
 
 {% if app.user ? app.user.userIdentifier in game.players %}
-    {% set page_title = 'Finding your next game...' %}
+    {% set page_title = 'Waiting for opponent...' %}
 {% else %}
     {% set page_title = 'Join the game' %}
 {% endif %}
@@ -9,7 +9,7 @@
 {% block content %}
     <h1 class="text-center">
         {% if app.user ? app.user.userIdentifier in game.players %}
-            Finding your next game<span class="animated-dots"></span>
+            Waiting for opponent<span class="animated-dots"></span>
         {% else %}
             Join the game
         {% endif %}
@@ -31,11 +31,11 @@
             <form action="{{ path('connect_four_abort_challenge', {id: game.gameId}) }}"
                   method="post"
                   data-abort-form>
-                <button type="submit" class="btn btn-outline-danger">Cancel search</button>
+                <button type="submit" class="btn btn-outline-danger">Abort game</button>
             </form>
         {% else %}
             <form action="{{ path('connect_four_accept_challenge', {id: game.gameId}) }}" method="post">
-                <button type="submit" class="btn btn-outline-success">Accept challenge</button>
+                <button type="submit" class="btn btn-outline-success">Join now</button>
             </form>
         {% endif %}
     </div>
