@@ -8,17 +8,24 @@
     </h1>
     <div class="container-tight text-center">
         <p>
-            While we find the best match for you, feel free to explore other games or browse around.
-            Once your match is ready, you'll be automatically redirected.
+            Once you've been matched, you'll be automatically redirected.
         </p>
         <p>
             Size: <strong>{{ game.width }} x {{ game.height }}</strong>,
             Variant: <strong>Standard</strong>,
             Color: <strong>{{ game.preferredStone|replace({1: 'Red', 2: 'Yellow'})|default('Random') }}</strong>
         </p>
-        <form action="{{ path('connect_four_abort_challenge', {gameId: game.gameId}) }}" method="post" data-abort-form>
-            <button type="submit" class="btn btn-outline-danger">Cancel search</button>
-        </form>
+        {% if app.user ? app.user.userIdentifier in game.players %}
+            <form action="{{ path('connect_four_abort_challenge', {id: game.gameId}) }}"
+                  method="post"
+                  data-abort-form>
+                <button type="submit" class="btn btn-outline-danger">Cancel search</button>
+            </form>
+        {% else %}
+            <form action="{{ path('connect_four_accept_challenge', {id: game.gameId}) }}" method="post">
+                <button type="submit" class="btn btn-outline-success">Accept challenge</button>
+            </form>
+        {% endif %}
     </div>
     <div class="hr-text">Running games</div>
     <div class="container-tight text-center">
@@ -30,6 +37,8 @@
                   subscriptions="connect-four-{{ game.gameId }}"
                   {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>
+    {# Replace this inline script with code that notifies the user on every page when a player joins. #}
+    {# See https://github.com/marein/php-gaming-website/issues/123. #}
     <script type="module">
         document.getElementById('event-source').addEventListener('ConnectFour.PlayerJoined', () => {
             window.app.navigate({{ path('game', {id: game.gameId})|json_encode|raw }});
