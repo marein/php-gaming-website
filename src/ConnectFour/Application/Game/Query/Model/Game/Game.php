@@ -27,8 +27,8 @@ final class Game
 {
     /**
      * @param string[] $players
-     * @param WinningSequence[] $winningSequences
      * @param Move[] $moves
+     * @param WinningSequence[] $winningSequences
      */
     public function __construct(
         public private(set) string $gameId = '',

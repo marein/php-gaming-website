@@ -57,7 +57,7 @@ final class Game implements AggregateRoot
                 new GameOpened(
                     $gameId,
                     $configuration->size(),
-                    $configuration->preferredStone,
+                    $configuration->preferredStone?->value,
                     $playerId
                 )
             ]
