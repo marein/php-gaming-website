@@ -37,7 +37,7 @@
                   subscriptions="connect-four-{{ game.gameId }}"
                   {% if app.environment == 'dev' %}verbose{% endif %}>
     </event-source>
-    {# Replace this inline script with code that notifies the user on every page when a player joins. #}
+    {# Replace this inline script with a component that notifies the user on every page when a player joins. #}
     {# See https://github.com/marein/php-gaming-website/issues/123. #}
     <script type="module">
         document.getElementById('event-source').addEventListener('ConnectFour.PlayerJoined', () => {
