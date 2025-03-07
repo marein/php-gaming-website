@@ -54,6 +54,14 @@ window.addEventListener('pe:form', e => {
         e.detail.form.querySelectorAll('button').forEach(b => b.classList.remove('btn-loading'));
     })
 });
+window.addEventListener('app:load', () => {
+    document.querySelectorAll('[data-nav-item]').forEach(i => {
+        i.classList.toggle(
+            'active',
+            new RegExp(i.getAttribute('data-nav-item')).test(top.location.pathname)
+        );
+    })
+});
 
 window.matchMedia("(prefers-color-scheme:dark)").addEventListener(
     'change',
