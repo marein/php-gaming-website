@@ -15,3 +15,20 @@ services:
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
                 arguments: ['@chat.command-message-handler.topology']
         tags: [{ name: 'gaming.consumer', key: 'chat.command' }]
+
+    chat.publish-to-browser-message-handler.topology:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
+        arguments: ['Chat.BrowserNotification', 'gaming', ['Chat.MessageWritten']]
+        tags: [{ name: 'gaming.message-broker.topology' }]
+
+    chat.publish-to-browser-message-handler.consumer:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
+        factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
+        arguments:
+            - !service
+                class: Gaming\Chat\Infrastructure\Messaging\PublishMessageBrokerEventsToBrowserMessageHandler
+                arguments: ['@gaming.browser-notifier']
+            - !service
+                class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
+                arguments: ['@chat.publish-to-browser-message-handler.topology']
+        tags: [{ name: 'gaming.consumer', key: 'chat.publish-to-browser' }]
