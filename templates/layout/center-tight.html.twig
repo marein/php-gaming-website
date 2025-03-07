@@ -1,4 +1,4 @@
-{% extends '@web-interface/layout/base.html.twig' %}
+{% extends 'layout/base.html.twig' %}
 
 {% block body %}
     <div class="page page-center" data-page-content>
@@ -28,7 +28,7 @@
             {% endif %}
             {% block content %}{% endblock %}
             <ul class="text-center list-inline list-inline-dots my-5">
-                {% include '@web-interface/layout/partial/footer-links.html.twig' %}
+                {% include 'layout/partial/footer-links.html.twig' %}
             </ul>
         </div>
     </div>
