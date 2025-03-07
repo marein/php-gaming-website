@@ -15,3 +15,28 @@ services:
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
                 arguments: ['@connect-four.referee-message-handler.topology']
         tags: [{ name: 'gaming.consumer', key: 'connect-four.referee' }]
+
+    connect-four.publish-to-browser-message-handler.topology:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\HashExchangeTopology
+        arguments:
+            - 'ConnectFour.BrowserNotification.%s'
+            - 'gaming'
+            - ['ConnectFour.#']
+            - '%env(APP_CONNECT_FOUR_PUBLISH_TO_BROWSER_SHARDS)%'
+            - 'hash-on'
+        tags: [{ name: 'gaming.message-broker.topology' }]
+
+    connect-four.publish-to-browser-message-handler.consumer:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
+        factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
+        arguments:
+            - !service
+                class: Gaming\ConnectFour\Port\Adapter\Messaging\PublishMessageBrokerEventsToBrowserMessageHandler
+                arguments: ['@gaming.browser-notifier']
+            - !service
+                class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueueWithLeastConsumers
+                arguments:
+                    - '@connect-four.publish-to-browser-message-handler.topology'
+                    - '@connect-four.lock-factory'
+                    - 'connect-four.publish-to-browser-message-handler.consumer'
+        tags: [{ name: 'gaming.consumer', key: 'connect-four.publish-to-browser' }]
