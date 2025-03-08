@@ -66,7 +66,7 @@ final class OpenType extends AbstractType
      */
     private static function sizes(): array
     {
-        return ['7 x 6' => '7x6', '8 x 7' => '8x7', '9 x 8' => '9x8', '10 x 8' => '10x8'];
+        return ['7 x 6' => '7x6', '9 x 6' => '9x6', '11 x 8' => '11x8', '13 x 10' => '13x10'];
     }
 
     /**

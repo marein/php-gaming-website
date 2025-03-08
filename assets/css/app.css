@@ -119,7 +119,7 @@ notification-list {
     --grid-cols: 7;
     display: grid;
     grid-template-columns: repeat(var(--grid-cols), 1fr);
-    grid-gap: var(--tblr-spacer-2);
+    grid-gap: var(--tblr-spacer-1);
     background-color: var(--tblr-blue);
     border: var(--tblr-border-width) solid var(--tblr-border-color-translucent);
     border-radius: var(--tblr-border-radius);
