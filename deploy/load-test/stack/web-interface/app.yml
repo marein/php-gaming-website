@@ -16,17 +16,6 @@ services:
                 - "traefik.http.routers.web-interface-http.priority=10"
                 - "traefik.http.routers.web-interface-http.rule=PathPrefix(`/`)"
                 - "traefik.http.services.web-interface-http.loadbalancer.server.port=80"
-    web-interface-publish-to-browser:
-        image: marein/php-gaming-website:php-fpm
-        command: bin/console gaming:consume-messages web-interface.publish-to-browser -r 5
-        env_file: ../app.env
-        volumes:
-            - proxysql.sock:/var/run/proxysql
-        deploy:
-            replicas: 20
-            placement:
-                constraints:
-                    - "node.labels.long-running==1"
 
 volumes:
     proxysql.sock:

@@ -22,6 +22,16 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
+    chat-publish-to-browser:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console gaming:consume-messages chat.publish-to-browser -r 3
+        env_file: ../app.env
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
 
 volumes:
     proxysql.sock:
