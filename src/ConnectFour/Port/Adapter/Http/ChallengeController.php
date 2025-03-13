@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class PageController extends AbstractController
+final class ChallengeController extends AbstractController
 {
     public function __construct(
         private readonly Bus $commandBus,
@@ -71,7 +71,7 @@ final class PageController extends AbstractController
         return $this->redirectToRoute('game', ['id' => $id]);
     }
 
-    public function challengeAction(string $id): Response
+    public function showAction(string $id): Response
     {
         return $this->render('@connect-four/challenge.html.twig', [
             'game' => $this->queryBus->handle(new GameQuery($id))
