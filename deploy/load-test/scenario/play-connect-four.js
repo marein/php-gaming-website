@@ -34,7 +34,12 @@ export default function () {
 
 function open(jar) {
     let url = `${baseUrl}/api/connect-four/games/open`;
-    return http.post(url, {}, {jar, headers}).json().gameId;
+    let response = http.post(
+        url,
+        {'open[size]': '7x6', 'open[variant]': 'standard', 'open[color]': '1'},
+        {jar, headers, redirects: 0}
+    );
+    return response.headers['Location'].match(/\/challenge\/(.*)$/)[1];
 }
 
 function join(jar, gameId) {

@@ -4,3 +4,9 @@ services:
         arguments: ['@connect-four.query-bus']
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']
+
+    connect-four.challenge-controller:
+        class: Gaming\ConnectFour\Port\Adapter\Http\ChallengeController
+        arguments: ['@connect-four.command-bus', '@connect-four.query-bus', '@web-interface.security']
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']

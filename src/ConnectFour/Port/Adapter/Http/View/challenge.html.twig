@@ -1,0 +1,59 @@
+{% extends 'layout/condensed.html.twig' %}
+
+{% if app.user ? app.user.userIdentifier in game.players %}
+    {% set page_title = 'Waiting for opponent...' %}
+{% else %}
+    {% set page_title = 'Join the game' %}
+{% endif %}
+
+{% block content %}
+    <h1 class="text-center">
+        {% if app.user ? app.user.userIdentifier in game.players %}
+            Waiting for opponent<span class="animated-dots"></span>
+        {% else %}
+            Join the game
+        {% endif %}
+    </h1>
+    <div class="container-tight text-center">
+        <p>
+            {% if app.user ? app.user.userIdentifier in game.players %}
+                Once another player joins, you'll be automatically redirected.
+            {% else %}
+                Player <strong>Anonymous</strong> is waiting for an opponent.
+            {% endif %}
+        </p>
+        <p>
+            Size: <strong>{{ game.width }} x {{ game.height }}</strong>,
+            Variant: <strong>Standard</strong>,
+            Color: <strong>{{ game.preferredStone|replace({1: 'Red', 2: 'Yellow'})|default('Random') }}</strong>
+        </p>
+        {% if app.user ? app.user.userIdentifier in game.players %}
+            <form action="{{ path('connect_four_abort_challenge', {id: game.gameId}) }}"
+                  method="post"
+                  data-abort-form>
+                <button type="submit" class="btn btn-outline-danger">Abort game</button>
+            </form>
+        {% else %}
+            <form action="{{ path('connect_four_accept_challenge', {id: game.gameId}) }}" method="post">
+                <button type="submit" class="btn btn-outline-success">Join now</button>
+            </form>
+        {% endif %}
+    </div>
+    <div class="hr-text">Running games</div>
+    <div class="container-tight text-center">
+        <p class="fw-bolder">
+            Feature not implemented yet.
+        </p>
+    </div>
+    <event-source id="event-source"
+                  subscriptions="connect-four-{{ game.gameId }}"
+                  {% if app.environment == 'dev' %}verbose{% endif %}>
+    </event-source>
+    {# Replace this inline script with a component that notifies the user on every page when a player joins. #}
+    {# See https://github.com/marein/php-gaming-website/issues/123. #}
+    <script type="module">
+        document.getElementById('event-source').addEventListener('ConnectFour.PlayerJoined', () => {
+            window.app.navigate({{ path('game', {id: game.gameId})|json_encode|raw }});
+        });
+    </script>
+{% endblock %}
