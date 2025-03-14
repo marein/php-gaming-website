@@ -73,8 +73,14 @@ final class ChallengeController extends AbstractController
 
     public function showAction(string $id): Response
     {
+        $game = $this->queryBus->handle(new GameQuery($id));
+
+        if ($game->state !== $game::STATE_OPEN) {
+            return $this->redirectToRoute('game', ['id' => $id], Response::HTTP_MOVED_PERMANENTLY);
+        }
+
         return $this->render('@connect-four/challenge.html.twig', [
-            'game' => $this->queryBus->handle(new GameQuery($id))
+            'game' => $game
         ]);
     }
 }

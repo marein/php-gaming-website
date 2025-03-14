@@ -25,6 +25,10 @@ use RuntimeException;
  */
 final class Game
 {
+    public const STATE_OPEN = 'open';
+    public const STATE_RUNNING = 'running';
+    public const STATE_FINISHED = 'finished';
+
     /**
      * @param string[] $players
      * @param Move[] $moves
@@ -34,7 +38,7 @@ final class Game
         public private(set) string $gameId = '',
         public private(set) string $chatId = '',
         public private(set) array $players = [],
-        public private(set) bool $finished = false,
+        public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
         public private(set) int $width = 0,
         public private(set) ?int $preferredStone = null,
@@ -56,7 +60,7 @@ final class Game
      */
     public function finished(): bool
     {
-        return $this->finished;
+        return $this->state === self::STATE_FINISHED;
     }
 
     /**
@@ -90,6 +94,8 @@ final class Game
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
     {
         $this->addPlayer($playerJoined->joinedPlayerId());
+
+        $this->state = self::STATE_RUNNING;
     }
 
     private function handlePlayerMoved(PlayerMoved $playerMoved): void
@@ -119,7 +125,7 @@ final class Game
 
     private function markAsFinished(): void
     {
-        $this->finished = true;
+        $this->state = self::STATE_FINISHED;
     }
 
     private function addPlayer(string $playerId): void
