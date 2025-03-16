@@ -30,15 +30,6 @@ class GameService {
     }
 
     /**
-     * @returns {Promise}
-     */
-    open() {
-        return this.httpClient.post(
-            '/api/connect-four/games/open'
-        );
-    }
-
-    /**
      * @param {String} gameId
      * @returns {Promise}
      */

@@ -17,9 +17,7 @@
         <div class="col-lg-3 order-first order-lg-last">
             <div class="card">
                 <div class="card-body">
-                    <connect-four-open-button>
-                        Open a new game
-                    </connect-four-open-button>
+                    {{ render_ssi(controller('connect-four.fragment-controller::openAction')) }}
                 </div>
             </div>
         </div>

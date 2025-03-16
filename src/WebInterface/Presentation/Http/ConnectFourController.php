@@ -8,7 +8,6 @@ use Gaming\Common\Bus\Bus;
 use Gaming\ConnectFour\Application\Game\Command\AbortCommand;
 use Gaming\ConnectFour\Application\Game\Command\JoinCommand;
 use Gaming\ConnectFour\Application\Game\Command\MoveCommand;
-use Gaming\ConnectFour\Application\Game\Command\OpenCommand;
 use Gaming\ConnectFour\Application\Game\Command\ResignCommand;
 use Gaming\WebInterface\Infrastructure\Security\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,17 +19,6 @@ final class ConnectFourController
         private readonly Bus $connectFourCommandBus,
         private readonly Security $security
     ) {
-    }
-
-    public function openAction(Request $request): JsonResponse
-    {
-        return new JsonResponse(
-            [
-                'gameId' => $this->connectFourCommandBus->handle(
-                    new OpenCommand($this->security->forceUser()->getUserIdentifier())
-                )
-            ]
-        );
     }
 
     public function joinAction(Request $request, string $gameId): JsonResponse

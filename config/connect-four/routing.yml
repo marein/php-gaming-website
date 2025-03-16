@@ -1,0 +1,19 @@
+connect_four_open:
+    path: /api/connect-four/games/open
+    methods: [POST]
+    controller: connect-four.challenge-controller::openAction
+
+connect_four_abort_challenge:
+    path: /challenge/{id}/abort
+    methods: [POST]
+    controller: connect-four.challenge-controller::abortChallengeAction
+
+connect_four_accept_challenge:
+    path: /challenge/{id}/accept
+    methods: [POST]
+    controller: connect-four.challenge-controller::acceptChallengeAction
+
+connect_four_challenge:
+    path: /challenge/{id}
+    methods: [GET]
+    controller: connect-four.challenge-controller::showAction

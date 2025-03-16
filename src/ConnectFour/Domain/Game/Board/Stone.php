@@ -9,4 +9,9 @@ enum Stone: int
     case None = 0;
     case Red = 1;
     case Yellow = 2;
+
+    public static function random(): self
+    {
+        return self::from(rand(1, 2));
+    }
 }

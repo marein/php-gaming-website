@@ -69,12 +69,6 @@ messages:
 #             Connect Four Service            #
 ###############################################
 
-open:
-    path: /api/connect-four/games/open
-    methods: [POST]
-    controller: web-interface.connect-four-controller::openAction
-    defaults: { _format: json }
-
 abort:
     path: /api/connect-four/games/{gameId}/abort
     methods: [POST]

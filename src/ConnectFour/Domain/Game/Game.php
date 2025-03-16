@@ -7,7 +7,6 @@ namespace Gaming\ConnectFour\Domain\Game;
 use Gaming\Common\Domain\AggregateRoot;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\Domain\IsAggregateRoot;
-use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Event\ChatAssigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
 use Gaming\ConnectFour\Domain\Game\Exception\GameException;
@@ -48,20 +47,18 @@ final class Game implements AggregateRoot
 
     public static function open(GameId $gameId, Configuration $configuration, string $playerId): Game
     {
-        $size = $configuration->size();
-        $player = new Player($playerId, Stone::Red);
-
         return new self(
             $gameId,
             new Open(
                 $configuration,
-                $player
+                $playerId
             ),
             [
                 new GameOpened(
                     $gameId,
-                    $size,
-                    $player
+                    $configuration->size(),
+                    $configuration->preferredStone?->value,
+                    $playerId
                 )
             ]
         );
