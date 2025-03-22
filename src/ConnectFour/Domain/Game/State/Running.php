@@ -49,7 +49,8 @@ final class Running implements State
             new PlayerMoved(
                 $gameId,
                 $board->lastUsedField()->point(),
-                $board->lastUsedField()->stone()
+                $board->lastUsedField()->stone(),
+                $this->players->switch()->current()->id()
             )
         ];
 

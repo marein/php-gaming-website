@@ -14,7 +14,8 @@ final class PlayerJoined implements DomainEvent
     public function __construct(
         GameId $gameId,
         private readonly string $joinedPlayerId,
-        private readonly string $opponentPlayerId
+        private readonly string $opponentPlayerId,
+        public readonly string $startingPlayerId
     ) {
         $this->gameId = $gameId->toString();
     }

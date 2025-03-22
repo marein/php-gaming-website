@@ -19,8 +19,7 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
     public function handle(Message $message, Context $context): void
     {
         match ($message->name()) {
-            'ConnectFour.GameOpened',
-            'ConnectFour.GameAborted' => $this->browserNotifier->publish(
+            'ConnectFour.GameOpened' => $this->browserNotifier->publish(
                 ['lobby'],
                 $message->name(),
                 $message->body()
@@ -34,6 +33,7 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
                 $message->name(),
                 $message->body()
             ),
+            'ConnectFour.GameAborted',
             'ConnectFour.PlayerJoined' => $this->browserNotifier->publish(
                 ['lobby', 'connect-four-' . $message->streamId()],
                 $message->name(),

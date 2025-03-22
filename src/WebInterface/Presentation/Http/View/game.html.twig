@@ -19,6 +19,15 @@
                                         <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
                                     </svg>
                                     Anonymous
+                                    {{ app.user ? app.user.userIdentifier == game.redPlayerId ? '(you)' }}
+                                    <connect-four-player-status player-id="{{ game.redPlayerId }}"
+                                                                current-player-id="{{ game.currentPlayerId }}"
+                                                                winning-player-id="{{ game.winningPlayerId }}"
+                                                                color="red"
+                                                                text-turn="Turn"
+                                                                text-won="Won"
+                                                                text-lost="Lost">
+                                    </connect-four-player-status>
                                 </div>
                                 <div class="col-6 col-xl-12">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -29,6 +38,15 @@
                                         <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
                                     </svg>
                                     Anonymous
+                                    {{ app.user ? app.user.userIdentifier == game.yellowPlayerId ? '(you)' }}
+                                    <connect-four-player-status player-id="{{ game.yellowPlayerId }}"
+                                                                current-player-id="{{ game.currentPlayerId }}"
+                                                                winning-player-id="{{ game.winningPlayerId }}"
+                                                                color="yellow"
+                                                                text-turn="Turn"
+                                                                text-won="Won"
+                                                                text-lost="Lost">
+                                    </connect-four-player-status>
                                 </div>
                             </div>
                         </div>
