@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# THIS FILE WILL BE DELETED.
+# It's needed to enable SSI.
+
+# This is a wrapper script to run rr and nginx in the same container.
+# It provides a graceful shutdown by first sending QUIT to nginx
+# and TERM to rr once nginx has finished its execution.
+
+pidRoadRunner=0
+pidNginx=0
+
+onSignal () {
+  kill -QUIT "$pidNginx"
+  wait -n
+
+  kill -TERM "$pidRoadRunner"
+  wait -n
+
+  exit
+}
+
+waitForOneAndExit () {
+  wait -n
+  exitCode=$?
+
+  kill $(jobs -p)
+  wait
+
+  exit $exitCode
+}
+
+trap onSignal SIGTERM SIGINT
+
+envsubst "$(printf '${%s}' ${!PHP_HTTP_*})" \
+    < "/etc/nginx/sites-template/default" \
+    > "/etc/nginx/sites-available/default"
+
+rr serve "$@" &
+pidRoadRunner=$!
+
+# https://github.com/roadrunner-server/roadrunner/issues/1789
+sleep 2 && chown www-data:www-data /var/run/php-fpm.sock
+
+nginx -g 'daemon off;' &
+pidNginx=$!
+
+waitForOneAndExit

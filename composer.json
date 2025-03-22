@@ -32,6 +32,7 @@
     "ext-session": "*",
     "ext-sodium": "*",
     "amphp/http-server": "^3.4",
+    "baldinof/roadrunner-bundle": "^3.3",
     "doctrine/dbal": "^4.0",
     "doctrine/doctrine-bundle": "^2.11",
     "doctrine/doctrine-migrations-bundle": "^3.3",

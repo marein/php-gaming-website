@@ -146,6 +146,8 @@ services:
             - "prometheus-port=81"
     php-fpm:
         <<: *php-container
+#        command: frankenphp run -c docker/frankenphp/dev.Caddyfile
+#        command: php-rr -c docker/roadrunner/.rr.dev.yaml
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.php-fpm.entrypoints=https"

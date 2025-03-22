@@ -1,0 +1,14 @@
+{
+	frankenphp {
+        worker {
+            file ./public/index.php
+            num {$PHP_FPM_PM_MAX_CHILDREN:4}
+        }
+	}
+}
+
+:80 {
+	root * /project/public
+	encode zstd gzip
+	php_server
+}

@@ -30,7 +30,16 @@ twig:
     form_themes: ['tabler_form_layout.html.twig']
     strict_variables: '%kernel.debug%'
 
+baldinof_road_runner:
+    kernel_reboot:
+        strategy: ['on_exception']
+        allowed_exceptions: ['Throwable']
+    middlewares: ['Gaming\Common\RoadRunner\ResetServicesMiddleware']
+
 services:
+    Gaming\Common\RoadRunner\ResetServicesMiddleware:
+        arguments: ['@services_resetter']
+
     Gaming\Common\DoctrineHeartbeatMiddleware\SchedulePeriodicHeartbeatMiddleware:
         arguments: ['@gaming.scheduler', 60, '@clock']
         tags: [{ name: doctrine.middleware }]

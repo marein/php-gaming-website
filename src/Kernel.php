@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming;
 
+use Baldinof\RoadRunnerBundle\BaldinofRoadRunnerBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Gaming\Common\Bus\Integration\GamingPlatformBusBundle;
@@ -35,7 +36,8 @@ final class Kernel extends BaseKernel
             new TwigBundle(),
             new MonologBundle(),
             new SecurityBundle(),
-            new GamingPlatformBusBundle()
+            new GamingPlatformBusBundle(),
+            new BaldinofRoadRunnerBundle()
         ];
 
         if ($this->getEnvironment() === 'dev') {
