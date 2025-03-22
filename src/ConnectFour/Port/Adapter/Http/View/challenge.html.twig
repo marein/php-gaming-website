@@ -1,6 +1,6 @@
 {% extends 'layout/condensed.html.twig' %}
 
-{% if app.user ? app.user.userIdentifier in game.players %}
+{% if app.user ? app.user.userIdentifier == game.challengerId %}
     {% set page_title = 'Waiting for opponent...' %}
 {% else %}
     {% set page_title = 'Join the game' %}
@@ -8,7 +8,7 @@
 
 {% block content %}
     <h1 class="text-center">
-        {% if app.user ? app.user.userIdentifier in game.players %}
+        {% if app.user ? app.user.userIdentifier == game.challengerId %}
             Waiting for opponent<span class="animated-dots"></span>
         {% else %}
             Join the game
@@ -16,7 +16,7 @@
     </h1>
     <div class="container-tight text-center">
         <p>
-            {% if app.user ? app.user.userIdentifier in game.players %}
+            {% if app.user ? app.user.userIdentifier == game.challengerId %}
                 Once another player joins, you'll be automatically redirected.
             {% else %}
                 Player <strong>Anonymous</strong> is waiting for an opponent.
@@ -27,7 +27,7 @@
             Variant: <strong>Standard</strong>,
             Color: <strong>{{ game.preferredStone|replace({1: 'Red', 2: 'Yellow'})|default('Random') }}</strong>
         </p>
-        {% if app.user ? app.user.userIdentifier in game.players %}
+        {% if app.user ? app.user.userIdentifier == game.challengerId %}
             <form action="{{ path('connect_four_abort_challenge', {id: game.gameId}) }}"
                   method="post"
                   data-abort-form>

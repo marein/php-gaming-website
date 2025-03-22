@@ -25,10 +25,11 @@ class GameTest extends TestCase
             [
                 'gameId' => $expectedGameId,
                 'chatId' => 'chatId',
-                'players' => [
-                    'player1',
-                    'player2'
-                ],
+                'challengerId' => 'player1',
+                'redPlayerId' => 'player1',
+                'yellowPlayerId' => 'player2',
+                'currentPlayerId' => 'player1',
+                'winningPlayerId' => '',
                 'state' => 'running',
                 'height' => 6,
                 'width' => 7,
@@ -79,6 +80,7 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
+        $this->assertEquals('', $game->currentPlayerId);
     }
 
     /**
@@ -96,6 +98,8 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
+        $this->assertEquals('player2', $game->winningPlayerId);
+        $this->assertEquals('', $game->currentPlayerId);
     }
 
     /**
@@ -125,6 +129,8 @@ class GameTest extends TestCase
             json_decode(json_encode($game), true)['winningSequences']
         );
         $this->assertEquals($game::STATE_FINISHED, $game->state);
+        $this->assertEquals('player1', $game->winningPlayerId);
+        $this->assertEquals('', $game->currentPlayerId);
     }
 
     /**
@@ -138,6 +144,7 @@ class GameTest extends TestCase
         );
 
         $this->assertEquals($game::STATE_FINISHED, $game->state);
+        $this->assertEquals('', $game->currentPlayerId);
     }
 
     private function applyFromDomainGame(Game $game, DomainGame $domainGame): void

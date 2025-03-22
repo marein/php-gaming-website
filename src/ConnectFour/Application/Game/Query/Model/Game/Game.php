@@ -30,14 +30,17 @@ final class Game
     public const STATE_FINISHED = 'finished';
 
     /**
-     * @param string[] $players
      * @param Move[] $moves
      * @param WinningSequence[] $winningSequences
      */
     public function __construct(
         public private(set) string $gameId = '',
         public private(set) string $chatId = '',
-        public private(set) array $players = [],
+        public private(set) string $challengerId = '',
+        public private(set) string $redPlayerId = '',
+        public private(set) string $yellowPlayerId = '',
+        public private(set) string $currentPlayerId = '',
+        public private(set) string $winningPlayerId = '',
         public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
         public private(set) int $width = 0,
@@ -74,8 +77,8 @@ final class Game
             PlayerJoined::class => $this->handlePlayerJoined($domainEvent),
             PlayerMoved::class => $this->handlePlayerMoved($domainEvent),
             GameAborted::class,
-            GameDrawn::class,
-            GameResigned::class => $this->markAsFinished(),
+            GameDrawn::class => $this->markAsFinished(),
+            GameResigned::class => $this->handleGameResigned($domainEvent),
             GameWon::class => $this->handleGameWon($domainEvent),
             ChatAssigned::class => $this->handleChatAssigned($domainEvent),
             default => throw new RuntimeException($domainEvent::class . ' must be handled.')
@@ -88,18 +91,21 @@ final class Game
         $this->width = $gameOpened->width();
         $this->height = $gameOpened->height();
         $this->preferredStone = $gameOpened->preferredStone;
-        $this->addPlayer($gameOpened->playerId());
+        $this->challengerId = $gameOpened->playerId();
     }
 
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
     {
-        $this->addPlayer($playerJoined->joinedPlayerId());
+        $this->currentPlayerId = $this->redPlayerId = $playerJoined->redPlayerId;
+        $this->yellowPlayerId = $playerJoined->yellowPlayerId;
 
         $this->state = self::STATE_RUNNING;
     }
 
     private function handlePlayerMoved(PlayerMoved $playerMoved): void
     {
+        $this->currentPlayerId = $playerMoved->nextPlayerId;
+
         $move = new Move(
             $playerMoved->x(),
             $playerMoved->y(),
@@ -111,9 +117,17 @@ final class Game
         }
     }
 
+    private function handleGameResigned(GameResigned $gameResigned): void
+    {
+        $this->winningPlayerId = $gameResigned->opponentPlayerId();
+
+        $this->markAsFinished();
+    }
+
     private function handleGameWon(GameWon $gameWon): void
     {
         $this->winningSequences = $gameWon->winningSequences();
+        $this->winningPlayerId = $gameWon->winnerPlayerId();
 
         $this->markAsFinished();
     }
@@ -126,12 +140,6 @@ final class Game
     private function markAsFinished(): void
     {
         $this->state = self::STATE_FINISHED;
-    }
-
-    private function addPlayer(string $playerId): void
-    {
-        if (!in_array($playerId, $this->players)) {
-            $this->players[] = $playerId;
-        }
+        $this->currentPlayerId = '';
     }
 }
