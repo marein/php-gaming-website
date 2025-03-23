@@ -40,7 +40,7 @@ customElements.define('connect-four-players', class extends HTMLElement {
 
     /**
      * @param {HTMLElement|null} playerElement
-     * @param {string} playerId
+     * @param {String} playerId
      */
     _renderForPlayer(playerElement, playerId) {
         if (!playerId) return;
