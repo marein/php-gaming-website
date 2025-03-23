@@ -32,6 +32,7 @@ class GameTest extends TestCase
                 'winningPlayerId' => '',
                 'losingPlayerId' => '',
                 'resigningPlayerId' => '',
+                'abortingPlayerId' => '',
                 'state' => 'running',
                 'height' => 6,
                 'width' => 7,
@@ -82,6 +83,7 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
+        $this->assertEquals('player1', $game->abortingPlayerId);
         $this->assertEquals('', $game->currentPlayerId);
     }
 

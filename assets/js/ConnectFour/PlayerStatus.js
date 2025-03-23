@@ -7,14 +7,15 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
             <span class="badge bg-success-lt d-none" data-won>${this.getAttribute('text-won')}</span>
             <span class="badge bg-danger-lt d-none" data-lost>${this.getAttribute('text-lost')}</span>
             <span class="badge bg-danger-lt d-none" data-resigned>${this.getAttribute('text-resigned')}</span>
+            <span class="badge bg-danger-lt d-none" data-aborted>${this.getAttribute('text-aborted')}</span>
         `);
 
         this._render();
 
         window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.addEventListener('ConnectFour.GameAborted', this._onGameAborted);
         window.addEventListener('ConnectFour.GameWon', this._onGameWon);
-        window.addEventListener('ConnectFour.GameAborted', this._onGameFinished);
         window.addEventListener('ConnectFour.GameResigned', this._onGameResigned);
         window.addEventListener('ConnectFour.GameDrawn', this._onGameFinished);
     }
@@ -33,6 +34,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         const isWinningPlayer = colorPlayerId === this.getAttribute('winning-player-id');
         const isLosingPLayer = colorPlayerId === this.getAttribute('losing-player-id');
         const isResigningPlayer = colorPlayerId === this.getAttribute('resigning-player-id');
+        const isAbortingPlayer = colorPlayerId === this.getAttribute('aborting-player-id');
 
         this.querySelector('.status-dot')?.classList.toggle('status-dot-animated', isCurrentPlayer);
         this.querySelector('[data-username]')?.classList.toggle('fw-bold', isCurrentPlayer);
@@ -40,6 +42,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         this.querySelector('[data-won]').classList.toggle('d-none', !isWinningPlayer);
         this.querySelector('[data-lost]').classList.toggle('d-none', !isLosingPLayer);
         this.querySelector('[data-resigned]').classList.toggle('d-none', !isResigningPlayer);
+        this.querySelector('[data-aborted]').classList.toggle('d-none', !isAbortingPlayer);
     }
 
     _onPlayerJoined = e => {
@@ -61,6 +64,14 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         this.setAttribute('current-player-id', '');
         this.setAttribute('winning-player-id', e.detail.winningPlayerId);
         this.setAttribute('losing-player-id', e.detail.losingPlayerId);
+
+        this._render();
+        this._removeEventListeners();
+    }
+
+    _onGameAborted = e => {
+        this.setAttribute('current-player-id', '');
+        this.setAttribute('aborting-player-id', e.detail.abortedPlayerId);
 
         this._render();
         this._removeEventListeners();

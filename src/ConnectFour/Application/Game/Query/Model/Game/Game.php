@@ -43,6 +43,7 @@ final class Game
         public private(set) string $winningPlayerId = '',
         public private(set) string $losingPlayerId = '',
         public private(set) string $resigningPlayerId = '',
+        public private(set) string $abortingPlayerId = '',
         public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
         public private(set) int $width = 0,
@@ -78,7 +79,7 @@ final class Game
             GameOpened::class => $this->handleGameOpened($domainEvent),
             PlayerJoined::class => $this->handlePlayerJoined($domainEvent),
             PlayerMoved::class => $this->handlePlayerMoved($domainEvent),
-            GameAborted::class,
+            GameAborted::class => $this->handleGameAborted($domainEvent),
             GameDrawn::class => $this->markAsFinished(),
             GameResigned::class => $this->handleGameResigned($domainEvent),
             GameWon::class => $this->handleGameWon($domainEvent),
@@ -117,6 +118,13 @@ final class Game
         if (!in_array($move, $this->moves)) {
             $this->moves[] = $move;
         }
+    }
+
+    private function handleGameAborted(GameAborted $gameAborted): void
+    {
+        $this->abortingPlayerId = $gameAborted->abortedPlayerId();
+
+        $this->markAsFinished();
     }
 
     private function handleGameResigned(GameResigned $gameResigned): void
