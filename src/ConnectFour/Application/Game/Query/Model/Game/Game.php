@@ -41,6 +41,8 @@ final class Game
         public private(set) string $yellowPlayerId = '',
         public private(set) string $currentPlayerId = '',
         public private(set) string $winningPlayerId = '',
+        public private(set) string $losingPlayerId = '',
+        public private(set) string $resigningPlayerId = '',
         public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
         public private(set) int $width = 0,
@@ -120,6 +122,7 @@ final class Game
     private function handleGameResigned(GameResigned $gameResigned): void
     {
         $this->winningPlayerId = $gameResigned->opponentPlayerId();
+        $this->resigningPlayerId = $gameResigned->resignedPlayerId();
 
         $this->markAsFinished();
     }
@@ -127,7 +130,8 @@ final class Game
     private function handleGameWon(GameWon $gameWon): void
     {
         $this->winningSequences = $gameWon->winningSequences();
-        $this->winningPlayerId = $gameWon->winnerPlayerId();
+        $this->winningPlayerId = $gameWon->winningPlayerId;
+        $this->losingPlayerId = $gameWon->losingPlayerId;
 
         $this->markAsFinished();
     }

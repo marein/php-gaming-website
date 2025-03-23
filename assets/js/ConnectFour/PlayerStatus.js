@@ -6,6 +6,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
             <span class="badge bg-info-lt d-none" data-you>${this.getAttribute('text-you')}</span>
             <span class="badge bg-success-lt d-none" data-won>${this.getAttribute('text-won')}</span>
             <span class="badge bg-danger-lt d-none" data-lost>${this.getAttribute('text-lost')}</span>
+            <span class="badge bg-danger-lt d-none" data-resigned>${this.getAttribute('text-resigned')}</span>
         `);
 
         this._render();
@@ -23,18 +24,22 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
     }
 
     _render() {
-        if (!this.getAttribute('color-player-id')) return;
+        const colorPlayerId = this.getAttribute('color-player-id');
 
-        const isYou = this.getAttribute('player-id') === this.getAttribute('color-player-id');
-        const isCurrentPlayer = this.getAttribute('color-player-id') === this.getAttribute('current-player-id');
-        const isWinningPlayer = this.getAttribute('color-player-id') === this.getAttribute('winning-player-id');
-        const isLosingPLayer = this.getAttribute('winning-player-id') !== '' && !isWinningPlayer;
+        if (!colorPlayerId) return;
+
+        const isYou = this.getAttribute('player-id') === colorPlayerId;
+        const isCurrentPlayer = colorPlayerId === this.getAttribute('current-player-id');
+        const isWinningPlayer = colorPlayerId === this.getAttribute('winning-player-id');
+        const isLosingPLayer = colorPlayerId === this.getAttribute('losing-player-id');
+        const isResigningPlayer = colorPlayerId === this.getAttribute('resigning-player-id');
 
         this.querySelector('.status-dot')?.classList.toggle('status-dot-animated', isCurrentPlayer);
         this.querySelector('[data-username]')?.classList.toggle('fw-bold', isCurrentPlayer);
         this.querySelector('[data-you]').classList.toggle('d-none', !isYou);
         this.querySelector('[data-won]').classList.toggle('d-none', !isWinningPlayer);
         this.querySelector('[data-lost]').classList.toggle('d-none', !isLosingPLayer);
+        this.querySelector('[data-resigned]').classList.toggle('d-none', !isResigningPlayer);
     }
 
     _onPlayerJoined = e => {
@@ -54,7 +59,8 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
 
     _onGameWon = e => {
         this.setAttribute('current-player-id', '');
-        this.setAttribute('winning-player-id', e.detail.winnerPlayerId);
+        this.setAttribute('winning-player-id', e.detail.winningPlayerId);
+        this.setAttribute('losing-player-id', e.detail.losingPlayerId);
 
         this._render();
         this._removeEventListeners();
@@ -63,6 +69,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
     _onGameResigned = e => {
         this.setAttribute('current-player-id', '');
         this.setAttribute('winning-player-id', e.detail.opponentPlayerId);
+        this.setAttribute('resigning-player-id', e.detail.resignedPlayerId);
 
         this._render();
         this._removeEventListeners();

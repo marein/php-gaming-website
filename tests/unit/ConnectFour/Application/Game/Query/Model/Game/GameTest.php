@@ -30,6 +30,8 @@ class GameTest extends TestCase
                 'yellowPlayerId' => 'player2',
                 'currentPlayerId' => 'player1',
                 'winningPlayerId' => '',
+                'losingPlayerId' => '',
+                'resigningPlayerId' => '',
                 'state' => 'running',
                 'height' => 6,
                 'width' => 7,
@@ -99,6 +101,8 @@ class GameTest extends TestCase
 
         $this->assertEquals(true, $game->finished());
         $this->assertEquals('player2', $game->winningPlayerId);
+        $this->assertEquals('player1', $game->resigningPlayerId);
+        $this->assertEquals('', $game->losingPlayerId);
         $this->assertEquals('', $game->currentPlayerId);
     }
 
@@ -130,6 +134,7 @@ class GameTest extends TestCase
         );
         $this->assertEquals($game::STATE_FINISHED, $game->state);
         $this->assertEquals('player1', $game->winningPlayerId);
+        $this->assertEquals('player2', $game->losingPlayerId);
         $this->assertEquals('', $game->currentPlayerId);
     }
 
