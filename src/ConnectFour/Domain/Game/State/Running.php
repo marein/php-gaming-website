@@ -73,7 +73,10 @@ final class Running implements State
         $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
 
         if ($numberOfMovesUntilDraw === 0) {
-            $domainEvents[] = new GameDrawn($gameId);
+            $domainEvents[] = new GameDrawn(
+                $gameId,
+                [$this->players->current()->id(), $this->players->switch()->current()->id()]
+            );
 
             return new Transition(
                 new Drawn(),

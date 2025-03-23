@@ -143,14 +143,14 @@ class GameTest extends TestCase
     /**
      * @test
      */
-    public function itShouldBeMarkedAsFinishedWhenGameDrawn(): void
+    public function itShouldBeMarkedAsDrawWhenGameDrawn(): void
     {
         $game = new Game();
         $game->apply(
-            new GameDrawn(GameId::generate())
+            new GameDrawn(GameId::generate(), ['player1', 'player2'])
         );
 
-        $this->assertEquals($game::STATE_FINISHED, $game->state);
+        $this->assertEquals($game::STATE_DRAW, $game->state);
         $this->assertEquals('', $game->currentPlayerId);
     }
 

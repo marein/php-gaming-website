@@ -11,8 +11,13 @@ final class GameDrawn implements DomainEvent
 {
     private string $gameId;
 
-    public function __construct(GameId $gameId)
-    {
+    /**
+     * @param string[] $playerIds
+     */
+    public function __construct(
+        GameId $gameId,
+        public readonly array $playerIds
+    ) {
         $this->gameId = $gameId->toString();
     }
 

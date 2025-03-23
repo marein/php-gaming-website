@@ -579,6 +579,7 @@ class GameTest extends TestCase
 
         assert($domainEvents[6] instanceof GameDrawn);
         self::assertEquals($game->id()->toString(), $domainEvents[6]->aggregateId());
+        self::assertEquals(['playerId2', 'playerId1'], $domainEvents[6]->playerIds);
 
         return $game;
     }

@@ -8,6 +8,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
             <span class="badge bg-danger-lt d-none" data-lost>${this.getAttribute('text-lost')}</span>
             <span class="badge bg-danger-lt d-none" data-resigned>${this.getAttribute('text-resigned')}</span>
             <span class="badge bg-danger-lt d-none" data-aborted>${this.getAttribute('text-aborted')}</span>
+            <span class="badge bg-info-lt d-none" data-draw>${this.getAttribute('text-draw')}</span>
         `);
 
         this._render();
@@ -17,7 +18,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         window.addEventListener('ConnectFour.GameAborted', this._onGameAborted);
         window.addEventListener('ConnectFour.GameWon', this._onGameWon);
         window.addEventListener('ConnectFour.GameResigned', this._onGameResigned);
-        window.addEventListener('ConnectFour.GameDrawn', this._onGameFinished);
+        window.addEventListener('ConnectFour.GameDrawn', this._onGameDrawn);
     }
 
     disconnectedCallback() {
@@ -35,6 +36,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         const isLoser = colorPlayerId === this.getAttribute('loser-id');
         const hasResigned = colorPlayerId === this.getAttribute('resigned-by');
         const hasAborted = colorPlayerId === this.getAttribute('aborted-by');
+        const isDraw = this.getAttribute('game-state') === 'draw';
 
         this.querySelector('.status-dot')?.classList.toggle('status-dot-animated', isCurrentPlayer);
         this.querySelector('[data-username]')?.classList.toggle('fw-bold', isCurrentPlayer);
@@ -43,6 +45,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         this.querySelector('[data-lost]').classList.toggle('d-none', !isLoser);
         this.querySelector('[data-resigned]').classList.toggle('d-none', !hasResigned);
         this.querySelector('[data-aborted]').classList.toggle('d-none', !hasAborted);
+        this.querySelector('[data-draw]').classList.toggle('d-none', !isDraw);
     }
 
     _onPlayerJoined = e => {
@@ -86,8 +89,9 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         this._removeEventListeners();
     }
 
-    _onGameFinished = e => {
+    _onGameDrawn = e => {
         this.setAttribute('current-player-id', '');
+        this.setAttribute('game-state', 'draw');
 
         this._render();
         this._removeEventListeners();
@@ -97,8 +101,8 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
         window.removeEventListener('ConnectFour.GameWon', this._onGameWon);
-        window.removeEventListener('ConnectFour.GameAborted', this._onGameFinished);
+        window.removeEventListener('ConnectFour.GameAborted', this._onGameAborted);
         window.removeEventListener('ConnectFour.GameResigned', this._onGameResigned);
-        window.removeEventListener('ConnectFour.GameDrawn', this._onGameFinished);
+        window.removeEventListener('ConnectFour.GameDrawn', this._onGameDrawn);
     }
 });

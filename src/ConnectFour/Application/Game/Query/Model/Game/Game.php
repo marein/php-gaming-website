@@ -27,6 +27,7 @@ final class Game
 {
     public const STATE_OPEN = 'open';
     public const STATE_RUNNING = 'running';
+    public const STATE_DRAW = 'draw';
     public const STATE_FINISHED = 'finished';
 
     /**
@@ -66,7 +67,7 @@ final class Game
      */
     public function finished(): bool
     {
-        return $this->state === self::STATE_FINISHED;
+        return $this->state === self::STATE_FINISHED || $this->state === self::STATE_DRAW;
     }
 
     /**
@@ -80,7 +81,7 @@ final class Game
             PlayerJoined::class => $this->handlePlayerJoined($domainEvent),
             PlayerMoved::class => $this->handlePlayerMoved($domainEvent),
             GameAborted::class => $this->handleGameAborted($domainEvent),
-            GameDrawn::class => $this->markAsFinished(),
+            GameDrawn::class => $this->handleGameDrawn($domainEvent),
             GameResigned::class => $this->handleGameResigned($domainEvent),
             GameWon::class => $this->handleGameWon($domainEvent),
             ChatAssigned::class => $this->handleChatAssigned($domainEvent),
@@ -127,6 +128,11 @@ final class Game
         $this->markAsFinished();
     }
 
+    private function handleGameDrawn(GameDrawn $gameDrawn): void
+    {
+        $this->markAsFinished(self::STATE_DRAW);
+    }
+
     private function handleGameResigned(GameResigned $gameResigned): void
     {
         $this->winnerId = $gameResigned->opponentPlayerId();
@@ -149,9 +155,9 @@ final class Game
         $this->chatId = $chatAssigned->chatId();
     }
 
-    private function markAsFinished(): void
+    private function markAsFinished(string $state = self::STATE_FINISHED): void
     {
-        $this->state = self::STATE_FINISHED;
+        $this->state = $state;
         $this->currentPlayerId = '';
     }
 }
