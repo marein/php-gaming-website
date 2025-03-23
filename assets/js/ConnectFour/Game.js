@@ -121,6 +121,19 @@ customElements.define('connect-four-game', class extends HTMLElement {
             });
     }
 
+    _onFieldMouseover(event) {
+        this._removeFieldHover();
+
+        const fields = this._gameNode.querySelectorAll(
+            `.gp-game__field[data-column="${event.target.dataset.column}"]:not(.bg-red):not(.bg-yellow)`
+        );
+        fields[fields.length - 1]?.classList.add('gp-game__field--hover');
+    }
+
+    _removeFieldHover() {
+        this._gameNode.querySelector(`.gp-game__field--hover`)?.classList.remove('gp-game__field--hover');
+    }
+
     _onPlayerMoved(event) {
         this._game.appendMove({
             x: event.detail.x,
@@ -170,6 +183,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
+            field.addEventListener('mouseover', this._onFieldMouseover.bind(this));
+            field.addEventListener('mouseout', this._removeFieldHover.bind(this));
         });
 
         this._previousMoveButton.addEventListener('click', this._onPreviousMoveClick.bind(this));
