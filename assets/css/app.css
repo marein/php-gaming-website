@@ -156,14 +156,6 @@ notification-list {
     border-color: var(--tblr-light) !important;
 }
 
-connect-four-players .status-dot {
-    --tblr-status-size: .7rem;
-}
-
-connect-four-players .status-dot-animated:before {
-    animation-delay: 0s;
-}
-
 @keyframes gp-game__field--highlight {
     20%, 40%, 60% {
         transform: scale3d(1, 1, 1);
@@ -177,6 +169,14 @@ connect-four-players .status-dot-animated:before {
     50% {
         transform: scale3d(.98, .98, .98);
     }
+}
+
+connect-four-players .status-dot {
+    --tblr-status-size: .7rem;
+}
+
+connect-four-players .status-dot-animated:before {
+    animation-delay: 0s;
 }
 
 [data-bs-theme=dark] .gp-game {

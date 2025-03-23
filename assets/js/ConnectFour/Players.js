@@ -45,7 +45,7 @@ customElements.define('connect-four-players', class extends HTMLElement {
     _renderForPlayer(playerElement, playerId) {
         if (!playerId) return;
 
-        const isYou = this.getAttribute('player-id') === playerId;
+        const isYou = playerId === this.getAttribute('player-id');
         const isCurrentPlayer = playerId === this.getAttribute('current-player-id');
         const isWinner = playerId === this.getAttribute('winner-id');
         const isLoser = playerId === this.getAttribute('loser-id');
