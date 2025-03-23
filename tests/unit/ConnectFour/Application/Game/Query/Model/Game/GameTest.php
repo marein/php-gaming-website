@@ -25,14 +25,14 @@ class GameTest extends TestCase
             [
                 'gameId' => $expectedGameId,
                 'chatId' => 'chatId',
-                'challengerId' => 'player1',
+                'openedBy' => 'player1',
                 'redPlayerId' => 'player1',
                 'yellowPlayerId' => 'player2',
                 'currentPlayerId' => 'player1',
-                'winningPlayerId' => '',
-                'losingPlayerId' => '',
-                'resigningPlayerId' => '',
-                'abortingPlayerId' => '',
+                'winnerId' => '',
+                'loserId' => '',
+                'resignedBy' => '',
+                'abortedBy' => '',
                 'state' => 'running',
                 'height' => 6,
                 'width' => 7,
@@ -83,7 +83,7 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
-        $this->assertEquals('player1', $game->abortingPlayerId);
+        $this->assertEquals('player1', $game->abortedBy);
         $this->assertEquals('', $game->currentPlayerId);
     }
 
@@ -102,9 +102,9 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
-        $this->assertEquals('player2', $game->winningPlayerId);
-        $this->assertEquals('player1', $game->resigningPlayerId);
-        $this->assertEquals('', $game->losingPlayerId);
+        $this->assertEquals('player2', $game->winnerId);
+        $this->assertEquals('player1', $game->resignedBy);
+        $this->assertEquals('', $game->loserId);
         $this->assertEquals('', $game->currentPlayerId);
     }
 
@@ -135,8 +135,8 @@ class GameTest extends TestCase
             json_decode(json_encode($game), true)['winningSequences']
         );
         $this->assertEquals($game::STATE_FINISHED, $game->state);
-        $this->assertEquals('player1', $game->winningPlayerId);
-        $this->assertEquals('player2', $game->losingPlayerId);
+        $this->assertEquals('player1', $game->winnerId);
+        $this->assertEquals('player2', $game->loserId);
         $this->assertEquals('', $game->currentPlayerId);
     }
 

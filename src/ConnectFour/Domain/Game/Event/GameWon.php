@@ -17,8 +17,8 @@ final class GameWon implements DomainEvent
      */
     public function __construct(
         GameId $gameId,
-        public readonly string $winningPlayerId,
-        public readonly string $losingPlayerId,
+        public readonly string $winnerId,
+        public readonly string $loserId,
         public readonly array $winningSequences
     ) {
         $this->gameId = $gameId->toString();
@@ -31,7 +31,7 @@ final class GameWon implements DomainEvent
 
     public function winnerPlayerId(): string
     {
-        return $this->winningPlayerId;
+        return $this->winnerId;
     }
 
     /**

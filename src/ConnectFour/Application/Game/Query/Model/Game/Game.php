@@ -36,14 +36,14 @@ final class Game
     public function __construct(
         public private(set) string $gameId = '',
         public private(set) string $chatId = '',
-        public private(set) string $challengerId = '',
+        public private(set) string $openedBy = '',
         public private(set) string $redPlayerId = '',
         public private(set) string $yellowPlayerId = '',
         public private(set) string $currentPlayerId = '',
-        public private(set) string $winningPlayerId = '',
-        public private(set) string $losingPlayerId = '',
-        public private(set) string $resigningPlayerId = '',
-        public private(set) string $abortingPlayerId = '',
+        public private(set) string $winnerId = '',
+        public private(set) string $loserId = '',
+        public private(set) string $resignedBy = '',
+        public private(set) string $abortedBy = '',
         public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
         public private(set) int $width = 0,
@@ -94,7 +94,7 @@ final class Game
         $this->width = $gameOpened->width();
         $this->height = $gameOpened->height();
         $this->preferredStone = $gameOpened->preferredStone;
-        $this->challengerId = $gameOpened->playerId();
+        $this->openedBy = $gameOpened->playerId();
     }
 
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
@@ -122,15 +122,15 @@ final class Game
 
     private function handleGameAborted(GameAborted $gameAborted): void
     {
-        $this->abortingPlayerId = $gameAborted->abortedPlayerId();
+        $this->abortedBy = $gameAborted->abortedPlayerId();
 
         $this->markAsFinished();
     }
 
     private function handleGameResigned(GameResigned $gameResigned): void
     {
-        $this->winningPlayerId = $gameResigned->opponentPlayerId();
-        $this->resigningPlayerId = $gameResigned->resignedPlayerId();
+        $this->winnerId = $gameResigned->opponentPlayerId();
+        $this->resignedBy = $gameResigned->resignedPlayerId();
 
         $this->markAsFinished();
     }
@@ -138,8 +138,8 @@ final class Game
     private function handleGameWon(GameWon $gameWon): void
     {
         $this->winningSequences = $gameWon->winningSequences();
-        $this->winningPlayerId = $gameWon->winningPlayerId;
-        $this->losingPlayerId = $gameWon->losingPlayerId;
+        $this->winnerId = $gameWon->winnerId;
+        $this->loserId = $gameWon->loserId;
 
         $this->markAsFinished();
     }
