@@ -106,6 +106,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
         } else {
             this._followMovesButton.classList.add('btn-warning', 'icon-tada');
         }
+
+        this._calculateFieldHover(document.querySelector('.gp-game__field--hover'));
     }
 
     _onFieldClick(event) {
@@ -122,10 +124,19 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onFieldMouseover(event) {
+        this._calculateFieldHover(event.target);
+    }
+
+    /**
+     * @param {HTMLElement|null} element
+     */
+    _calculateFieldHover(element) {
+        if (!element) return;
+
         this._removeFieldHover();
 
         const fields = this._gameNode.querySelectorAll(
-            `.gp-game__field[data-column="${event.target.dataset.column}"]:not(.bg-red):not(.bg-yellow)`
+            `.gp-game__field[data-column="${element.dataset.column}"]:not(.bg-red):not(.bg-yellow)`
         );
         fields[fields.length - 1]?.classList.add('gp-game__field--hover');
     }
