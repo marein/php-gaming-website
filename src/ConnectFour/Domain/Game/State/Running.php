@@ -50,6 +50,7 @@ final class Running implements State
                 $gameId,
                 $board->lastUsedField()->point(),
                 $board->lastUsedField()->stone(),
+                $this->players->current()->id(),
                 $this->players->switch()->current()->id()
             )
         ];
