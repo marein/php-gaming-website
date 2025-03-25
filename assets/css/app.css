@@ -120,7 +120,7 @@ notification-list {
     display: grid;
     grid-template-columns: repeat(var(--grid-cols), 1fr);
     grid-gap: var(--tblr-spacer-1);
-    background-color: var(--tblr-blue);
+    background-color: var(--tblr-blue-darken);
     border: var(--tblr-border-width) solid var(--tblr-border-color-translucent);
     border-radius: var(--tblr-border-radius);
     padding: var(--tblr-spacer-2);
@@ -173,11 +173,11 @@ notification-list {
 
 [data-bs-theme=dark] .gp-game {
     background-color: var(--tblr-bg-surface);
-    border-color: var(--tblr-blue);
+    border-color: var(--tblr-blue-darken);
 }
 
 [data-bs-theme=dark] .gp-game__field {
-    border-color: var(--tblr-blue);
+    border-color: var(--tblr-blue-darken);
 }
 
 /** Fix specificity for checked buttons on hover */

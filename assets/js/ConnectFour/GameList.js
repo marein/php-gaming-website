@@ -6,16 +6,18 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         this._onDisconnect = [];
 
         this.append(html`
-            <table class="table table-nowrap user-select-none cursor-default">
-                <thead>
-                <tr>
-                    <th class="w-75">Player</th>
-                    <th>Rating</th>
-                </tr>
-                </thead>
-                <tbody class="cursor-pointer border-0">
-                </tbody>
-            </table>
+            <div class="card">
+                <table class="table table-nowrap user-select-none cursor-default card-table">
+                    <thead>
+                    <tr>
+                        <th class="w-75">Player</th>
+                        <th>Rating</th>
+                    </tr>
+                    </thead>
+                    <tbody class="cursor-pointer border-0">
+                    </tbody>
+                </table>
+            </div>
         `);
 
         this._games = this.querySelector('tbody');

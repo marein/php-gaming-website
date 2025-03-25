@@ -21,8 +21,8 @@ namespace {
         'notification-list' => ['path' => 'js/Common/NotificationList.js'],
         'event-source-status' => ['path' => 'js/Common/EventSourceStatus.js'],
         'confirmation-button' => ['path' => 'js/Common/ConfirmationButton.js'],
-        'uhtml/node.js' => ['version' => '4.5.8'],
-        '@tabler/core/dist/css/tabler.min.css' => ['version' => '1.0.0-beta20', 'type' => 'css']
+        'uhtml/node.js' => ['version' => '4.7.0'],
+        '@tabler/core/dist/css/tabler.min.css' => ['version' => '1.1.1', 'type' => 'css']
     ];
 
     foreach ($finder as $file) {

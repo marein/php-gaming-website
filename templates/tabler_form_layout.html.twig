@@ -22,3 +22,19 @@
         {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded %}
+
+{%- block form_errors -%}
+    {% from "macro/alert.html.twig" import alert %}
+
+    {%- if errors|length > 0 -%}
+        {%- for error in errors -%}
+            {% if form is rootform %}
+                {{ alert(message: error.message, important: true, type: 'danger') }}
+            {% else %}
+                <div class="invalid-feedback d-block">
+                    {{ error.message }}
+                </div>
+            {% endif %}
+        {%- endfor -%}
+    {%- endif %}
+{%- endblock form_errors %}

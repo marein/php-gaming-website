@@ -1,0 +1,17 @@
+{%- macro alert(message, type, important, classes) -%}
+    {%- import 'macro/icons.html.twig' as icons -%}
+
+    {%- set classes = ['alert-' ~ type|default('info')]|merge(classes|default([])) -%}
+    {%- if important -%}{% set classes = classes|merge(['alert-important']) %}{%- endif -%}
+
+    <div class="alert {{ classes|join(' ') }}"
+         {{- important ? (' style="--tblr-alert-bg: var(--tblr-' ~ type|default('info') ~ '-lt);"')|raw -}}>
+        <div class="alert-icon">
+            {%- if type == 'danger' -%}{{ icons.danger() }}
+            {%- elseif type == 'warning' -%}{{ icons.warning() }}
+            {%- elseif type == 'success' -%}{{ icons.success() }}
+            {%- else -%}{{ icons.info() }}{%- endif -%}
+        </div>
+        {{- message -}}
+    </div>
+{%- endmacro -%}
