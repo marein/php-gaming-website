@@ -9,15 +9,15 @@
 {% block content %}
     <div class="container-narrow">
         <div class="card">
-            <div class="card-body">
-                <h1 class="text-center">
-                    {% if app.user ? app.user.userIdentifier == game.openedBy %}
-                        Waiting for opponent<span class="animated-dots"></span>
-                    {% else %}
-                        Join the game
-                    {% endif %}
-                </h1>
-                <div class="container-tight text-center">
+            <div class="card-body text-center">
+                <div class="container-tight">
+                    <h1>
+                        {% if app.user ? app.user.userIdentifier == game.openedBy %}
+                            Waiting for opponent<span class="animated-dots"></span>
+                        {% else %}
+                            Join the game
+                        {% endif %}
+                    </h1>
                     <p>
                         {% if app.user ? app.user.userIdentifier == game.openedBy %}
                             Once another player joins, you'll be automatically redirected.
