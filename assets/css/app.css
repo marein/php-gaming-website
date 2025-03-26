@@ -2,7 +2,7 @@ html {
     scroll-padding-top: 10px;
 }
 
-html:has(.layout-fluid) {
+html:has(.navbar.sticky-top) {
     scroll-padding-top: 66px;
 }
 
