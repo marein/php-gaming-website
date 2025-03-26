@@ -27,17 +27,24 @@ final class Game
 {
     public const STATE_OPEN = 'open';
     public const STATE_RUNNING = 'running';
+    public const STATE_DRAW = 'draw';
     public const STATE_FINISHED = 'finished';
 
     /**
-     * @param string[] $players
      * @param Move[] $moves
      * @param WinningSequence[] $winningSequences
      */
     public function __construct(
         public private(set) string $gameId = '',
         public private(set) string $chatId = '',
-        public private(set) array $players = [],
+        public private(set) string $openedBy = '',
+        public private(set) string $redPlayerId = '',
+        public private(set) string $yellowPlayerId = '',
+        public private(set) string $currentPlayerId = '',
+        public private(set) string $winnerId = '',
+        public private(set) string $loserId = '',
+        public private(set) string $resignedBy = '',
+        public private(set) string $abortedBy = '',
         public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
         public private(set) int $width = 0,
@@ -60,7 +67,7 @@ final class Game
      */
     public function finished(): bool
     {
-        return $this->state === self::STATE_FINISHED;
+        return $this->state === self::STATE_FINISHED || $this->state === self::STATE_DRAW;
     }
 
     /**
@@ -73,9 +80,9 @@ final class Game
             GameOpened::class => $this->handleGameOpened($domainEvent),
             PlayerJoined::class => $this->handlePlayerJoined($domainEvent),
             PlayerMoved::class => $this->handlePlayerMoved($domainEvent),
-            GameAborted::class,
-            GameDrawn::class,
-            GameResigned::class => $this->markAsFinished(),
+            GameAborted::class => $this->handleGameAborted($domainEvent),
+            GameDrawn::class => $this->handleGameDrawn($domainEvent),
+            GameResigned::class => $this->handleGameResigned($domainEvent),
             GameWon::class => $this->handleGameWon($domainEvent),
             ChatAssigned::class => $this->handleChatAssigned($domainEvent),
             default => throw new RuntimeException($domainEvent::class . ' must be handled.')
@@ -88,18 +95,21 @@ final class Game
         $this->width = $gameOpened->width();
         $this->height = $gameOpened->height();
         $this->preferredStone = $gameOpened->preferredStone;
-        $this->addPlayer($gameOpened->playerId());
+        $this->openedBy = $gameOpened->playerId();
     }
 
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
     {
-        $this->addPlayer($playerJoined->joinedPlayerId());
+        $this->currentPlayerId = $this->redPlayerId = $playerJoined->redPlayerId;
+        $this->yellowPlayerId = $playerJoined->yellowPlayerId;
 
         $this->state = self::STATE_RUNNING;
     }
 
     private function handlePlayerMoved(PlayerMoved $playerMoved): void
     {
+        $this->currentPlayerId = $playerMoved->nextPlayerId;
+
         $move = new Move(
             $playerMoved->x(),
             $playerMoved->y(),
@@ -111,9 +121,31 @@ final class Game
         }
     }
 
+    private function handleGameAborted(GameAborted $gameAborted): void
+    {
+        $this->abortedBy = $gameAborted->abortedPlayerId();
+
+        $this->markAsFinished();
+    }
+
+    private function handleGameDrawn(GameDrawn $gameDrawn): void
+    {
+        $this->markAsFinished(self::STATE_DRAW);
+    }
+
+    private function handleGameResigned(GameResigned $gameResigned): void
+    {
+        $this->winnerId = $gameResigned->opponentPlayerId();
+        $this->resignedBy = $gameResigned->resignedPlayerId();
+
+        $this->markAsFinished();
+    }
+
     private function handleGameWon(GameWon $gameWon): void
     {
         $this->winningSequences = $gameWon->winningSequences();
+        $this->winnerId = $gameWon->winnerId;
+        $this->loserId = $gameWon->loserId;
 
         $this->markAsFinished();
     }
@@ -123,15 +155,9 @@ final class Game
         $this->chatId = $chatAssigned->chatId();
     }
 
-    private function markAsFinished(): void
+    private function markAsFinished(string $state = self::STATE_FINISHED): void
     {
-        $this->state = self::STATE_FINISHED;
-    }
-
-    private function addPlayer(string $playerId): void
-    {
-        if (!in_array($playerId, $this->players)) {
-            $this->players[] = $playerId;
-        }
+        $this->state = $state;
+        $this->currentPlayerId = '';
     }
 }

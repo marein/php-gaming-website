@@ -19,8 +19,13 @@ final class PlayerMoved implements DomainEvent
 
     private int $color;
 
-    public function __construct(GameId $gameId, Point $point, Stone $stone)
-    {
+    public function __construct(
+        GameId $gameId,
+        Point $point,
+        Stone $stone,
+        public readonly string $playerId,
+        public readonly string $nextPlayerId
+    ) {
         $this->gameId = $gameId->toString();
         $this->x = $point->x();
         $this->y = $point->y();

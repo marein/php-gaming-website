@@ -25,10 +25,14 @@ class GameTest extends TestCase
             [
                 'gameId' => $expectedGameId,
                 'chatId' => 'chatId',
-                'players' => [
-                    'player1',
-                    'player2'
-                ],
+                'openedBy' => 'player1',
+                'redPlayerId' => 'player1',
+                'yellowPlayerId' => 'player2',
+                'currentPlayerId' => 'player1',
+                'winnerId' => '',
+                'loserId' => '',
+                'resignedBy' => '',
+                'abortedBy' => '',
                 'state' => 'running',
                 'height' => 6,
                 'width' => 7,
@@ -79,6 +83,8 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
+        $this->assertEquals('player1', $game->abortedBy);
+        $this->assertEquals('', $game->currentPlayerId);
     }
 
     /**
@@ -96,6 +102,10 @@ class GameTest extends TestCase
         $this->applyFromDomainGame($game, $domainGame);
 
         $this->assertEquals(true, $game->finished());
+        $this->assertEquals('player2', $game->winnerId);
+        $this->assertEquals('player1', $game->resignedBy);
+        $this->assertEquals('', $game->loserId);
+        $this->assertEquals('', $game->currentPlayerId);
     }
 
     /**
@@ -125,19 +135,23 @@ class GameTest extends TestCase
             json_decode(json_encode($game), true)['winningSequences']
         );
         $this->assertEquals($game::STATE_FINISHED, $game->state);
+        $this->assertEquals('player1', $game->winnerId);
+        $this->assertEquals('player2', $game->loserId);
+        $this->assertEquals('', $game->currentPlayerId);
     }
 
     /**
      * @test
      */
-    public function itShouldBeMarkedAsFinishedWhenGameDrawn(): void
+    public function itShouldBeMarkedAsDrawWhenGameDrawn(): void
     {
         $game = new Game();
         $game->apply(
-            new GameDrawn(GameId::generate())
+            new GameDrawn(GameId::generate(), ['player1', 'player2'])
         );
 
-        $this->assertEquals($game::STATE_FINISHED, $game->state);
+        $this->assertEquals($game::STATE_DRAW, $game->state);
+        $this->assertEquals('', $game->currentPlayerId);
     }
 
     private function applyFromDomainGame(Game $game, DomainGame $domainGame): void

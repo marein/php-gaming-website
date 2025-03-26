@@ -25,16 +25,23 @@ final class Open implements State
         $size = $this->configuration->size();
         $width = $size->width();
         $height = $size->height();
+        $players = $this->configuration->createPlayers($this->playerId, $playerId);
 
         return new Transition(
             new Running(
                 $this->configuration->winningRules(),
                 $width * $height,
                 Board::empty($size),
-                $this->configuration->createPlayers($this->playerId, $playerId)
+                $players
             ),
             [
-                new PlayerJoined($gameId, $playerId, $this->playerId)
+                new PlayerJoined(
+                    $gameId,
+                    $playerId,
+                    $this->playerId,
+                    $players->current()->id(),
+                    $players->switch()->current()->id()
+                )
             ]
         );
     }

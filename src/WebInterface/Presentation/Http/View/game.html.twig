@@ -9,28 +9,30 @@
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row row-gap-2">
-                                <div class="col-6 col-xl-12">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="icon icon-filled text-red">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
-                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-                                    </svg>
-                                    Anonymous
-                                </div>
-                                <div class="col-6 col-xl-12">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="icon icon-filled text-yellow">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
-                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-                                    </svg>
-                                    Anonymous
-                                </div>
-                            </div>
+                            <connect-four-players player-id="{{ app.user ? app.user.userIdentifier }}"
+                                                  red-player-id="{{ game.redPlayerId }}"
+                                                  yellow-player-id="{{ game.yellowPlayerId }}"
+                                                  current-player-id="{{ game.currentPlayerId }}"
+                                                  winner-id="{{ game.winnerId }}"
+                                                  loser-id="{{ game.loserId }}"
+                                                  resigned-by="{{ game.resignedBy }}"
+                                                  aborted-by="{{ game.abortedBy }}"
+                                                  game-state="{{ game.state }}"
+                                                  text-you="You"
+                                                  text-won="Won"
+                                                  text-lost="Lost"
+                                                  text-draw="Draw"
+                                                  text-resigned="Resigned"
+                                                  text-aborted="Aborted">
+                                <p class="mb-1" data-red-player>
+                                    <span class="status-dot status-red"></span>
+                                    <span data-username>Anonymous</span>
+                                </p>
+                                <p class="mb-0" data-yellow-player>
+                                    <span class="status-dot status-yellow"></span>
+                                    <span data-username>Anonymous</span>
+                                </p>
+                            </connect-four-players>
                         </div>
                     </div>
                 </div>
