@@ -79,20 +79,28 @@
                                 </svg>
                             </button>
                         </div>
-                        <div class="col-6">
-                            <connect-four-abort-button game-id="{{ game.id }}">
-                                <button id="abort-game" class="btn btn-outline-danger w-100">
-                                    Abort
-                                </button>
+                        {% if not game.finished %}
+                            <connect-four-abort-button game-id="{{ game.id }}"
+                                                       player-id="{{ app.user ? app.user.userIdentifier }}"
+                                                       players="{{ game.players|json_encode }}"
+                                                       abortable="{{ game.abortable|json_encode }}">
+                                <div class="col-12">
+                                        <button id="abort-game" class="btn btn-outline-danger w-100">
+                                            Abort
+                                        </button>
+                                </div>
                             </connect-four-abort-button>
-                        </div>
-                        <div class="col-6">
-                            <connect-four-resign-button game-id="{{ game.id }}">
-                                <button class="btn w-100">
-                                    Resign
-                                </button>
+                            <connect-four-resign-button game-id="{{ game.id }}"
+                                                        player-id="{{ app.user ? app.user.userIdentifier }}"
+                                                        players="{{ game.players|json_encode }}"
+                                                        resignable="{{ game.resignable|json_encode }}">
+                                <div class="col-12">
+                                        <button class="btn w-100">
+                                            Resign
+                                        </button>
+                                </div>
                             </connect-four-resign-button>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

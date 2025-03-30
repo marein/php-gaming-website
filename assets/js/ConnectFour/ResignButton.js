@@ -9,11 +9,52 @@ customElements.define('connect-four-resign-button', class extends HTMLElement {
                 ${Array.from(this.children)}
             </confirmation-button>
         `);
+
+        this._changeVisibility();
+
+        window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
+        window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.addEventListener('ConnectFour.GameAborted', this._remove);
+        window.addEventListener('ConnectFour.GameWon', this._remove);
+        window.addEventListener('ConnectFour.GameResigned', this._remove);
+        window.addEventListener('ConnectFour.GameDrawn', this._remove);
+    }
+
+    disconnectedCallback() {
+        window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
+        window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.removeEventListener('ConnectFour.GameWon', this._remove);
+        window.removeEventListener('ConnectFour.GameAborted', this._remove);
+        window.removeEventListener('ConnectFour.GameResigned', this._remove);
+        window.removeEventListener('ConnectFour.GameDrawn', this._remove);
     }
 
     _onYes(e) {
         service.resign(this.getAttribute('game-id'))
             .then(() => true)
             .finally(() => e.target.reset());
+    }
+
+    _onPlayerJoined = e => {
+        this.setAttribute('players', JSON.stringify([e.detail.redPlayerId, e.detail.yellowPlayerId]));
+
+        this._changeVisibility();
+    }
+
+    _onPlayerMoved = e => {
+        this.setAttribute('resignable', !e.detail.abortable);
+
+        this._changeVisibility();
+    }
+
+    _changeVisibility = () => {
+        const resignable = JSON.parse(this.getAttribute('resignable'));
+        const isPlayer = JSON.parse(this.getAttribute('players')).indexOf(this.getAttribute('player-id')) !== -1;
+
+        this.classList.toggle('d-none', !resignable || !isPlayer);
+    }
+
+    _remove = () => {
+        this.remove();
     }
 });

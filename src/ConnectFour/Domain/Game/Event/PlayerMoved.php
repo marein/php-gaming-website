@@ -24,7 +24,8 @@ final class PlayerMoved implements DomainEvent
         Point $point,
         Stone $stone,
         public readonly string $playerId,
-        public readonly string $nextPlayerId
+        public readonly string $nextPlayerId,
+        public readonly bool $abortable
     ) {
         $this->gameId = $gameId->toString();
         $this->x = $point->x();
