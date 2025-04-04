@@ -9,7 +9,6 @@ services:
     connect-four.event-store:
         class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
         arguments:
-            - '@connect-four.shards'
             - '@connect-four.doctrine-dbal'
             - 'event_store'
             - !service
@@ -18,12 +17,9 @@ services:
 
     connect-four.shards:
         class: Gaming\Common\Sharding\Integration\Crc32ModShards
-        arguments:
-            - '%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%'
+        arguments: ['%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%']
 
-    connect-four.doctrine-schema-shards:
-        class: Gaming\Common\Sharding\Integration\DoctrineSchemaShards
+    connect-four.doctrine-mysql-schema-shards:
+        class: Gaming\Common\Sharding\Integration\DoctrineMySqlSchemaShards
         decorates: 'connect-four.shards'
-        arguments:
-            - '@.inner'
-            - '@connect-four.doctrine-dbal'
+        arguments: ['@.inner', '@connect-four.doctrine-dbal']

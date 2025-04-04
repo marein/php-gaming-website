@@ -9,7 +9,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
 use Gaming\Common\EventStore\DomainEvents;
-use Gaming\Common\EventStore\EventStore;
+use Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStoreFactory;
 use Gaming\Common\Normalizer\Normalizer;
 use Gaming\Common\Sharding\Shards;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game as GameQueryModel;
@@ -27,7 +27,7 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
     public function __construct(
         private readonly Shards $shards,
         private readonly string $tableName,
-        private readonly EventStore $eventStore,
+        private readonly DoctrineEventStoreFactory $eventStoreFactory,
         private readonly Normalizer $normalizer
     ) {
     }
@@ -52,7 +52,7 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
                 ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
             );
 
-            $this->eventStore->append(...$domainEvents->flush());
+            $this->eventStoreFactory->withConnection($connection)->append(...$domainEvents->flush());
         });
     }
 
@@ -83,13 +83,15 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
                 ['id' => 'uuid', 'aggregate' => Types::JSON, 'version' => Types::INTEGER]
             ) ?: throw new ConcurrencyException();
 
-            $this->eventStore->append(...$domainEvents->flush());
+            $this->eventStoreFactory->withConnection($connection)->append(...$domainEvents->flush());
         });
     }
 
     public function find(GameId $gameId): GameQueryModel
     {
-        $domainEvents = $this->eventStore->byStreamId(
+        $connection = $this->shards->lookup($gameId->toString());
+
+        $domainEvents = $this->eventStoreFactory->withConnection($connection)->byStreamId(
             $gameId->toString()
         ) ?: throw new GameNotFoundException();
 

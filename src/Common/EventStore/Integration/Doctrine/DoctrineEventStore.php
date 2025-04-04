@@ -18,34 +18,33 @@ use Gaming\Common\EventStore\GapDetection;
 use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventFilters;
-use Gaming\Common\Sharding\Integration\DoctrineSingleShards;
-use Gaming\Common\Sharding\Shards;
 use Throwable;
 
-final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore, GapDetection
+/**
+ * Combines multiple interfaces for higher cohesion, while still letting
+ * different parts of the system depend only on the capabilities they need.
+ */
+final class DoctrineEventStore implements
+    EventStore,
+    PollableEventStore,
+    CleanableEventStore,
+    GapDetection,
+    DoctrineEventStoreFactory
 {
     /**
-     * @var Shards<Connection>
-     */
-    private readonly Shards $shards;
-
-    /**
-     * @param Shards<Connection>|Connection $shards
      * @param ContentSerializer $contentSerializer Must serialize into and deserialize from valid JSON.
      */
     public function __construct(
-        Shards|Connection $shards,
-        private readonly Connection $pollingConnection,
+        private readonly Connection $connection,
         private readonly string $table,
         private readonly ContentSerializer $contentSerializer
     ) {
-        $this->shards = $shards instanceof Shards ? $shards : new DoctrineSingleShards($shards);
     }
 
     public function byStreamId(string $streamId, int $fromStreamVersion = 0): array
     {
         try {
-            $rows = $this->shards->lookup($streamId)->createQueryBuilder()
+            $rows = $this->connection->createQueryBuilder()
                 ->select('e.*')
                 ->from($this->table, 'e')
                 ->where('e.streamId = :streamId')
@@ -84,7 +83,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
         }
 
         try {
-            $this->shards->lookup($domainEvents[0]->streamId)->executeStatement(
+            $this->connection->executeStatement(
                 sprintf(
                     'INSERT INTO %s (streamId, streamVersion, content, headers) VALUES %s',
                     $this->table,
@@ -111,7 +110,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
     public function since(int $id, int $limit): array
     {
         try {
-            $rows = $this->pollingConnection->createQueryBuilder()
+            $rows = $this->connection->createQueryBuilder()
                 ->select('e.*')
                 ->from($this->table, 'e')
                 ->where('e.id > :id')
@@ -137,7 +136,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
     public function cleanUpTo(int $id): void
     {
         try {
-            $this->pollingConnection->createQueryBuilder()
+            $this->connection->createQueryBuilder()
                 ->delete($this->table)
                 ->where('id <= :id')
                 ->setParameter('id', $id)
@@ -153,11 +152,11 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
 
     public function shouldWaitForStoredEventWithId(int $id): bool
     {
-        $currentIsolationLevel = $this->pollingConnection->getTransactionIsolation();
+        $currentIsolationLevel = $this->connection->getTransactionIsolation();
 
-        $this->pollingConnection->setTransactionIsolation(TransactionIsolationLevel::READ_UNCOMMITTED);
+        $this->connection->setTransactionIsolation(TransactionIsolationLevel::READ_UNCOMMITTED);
 
-        $hasStoredEvent = $this->pollingConnection->createQueryBuilder()
+        $hasStoredEvent = $this->connection->createQueryBuilder()
                 ->select('COUNT(id)')
                 ->from($this->table, 'e')
                 ->where('e.id = :id')
@@ -165,9 +164,18 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
                 ->executeQuery()
                 ->fetchOne() > 0;
 
-        $this->pollingConnection->setTransactionIsolation($currentIsolationLevel);
+        $this->connection->setTransactionIsolation($currentIsolationLevel);
 
         return $hasStoredEvent;
+    }
+
+    public function withConnection(Connection $connection): EventStore
+    {
+        return new self(
+            $connection,
+            $this->table,
+            $this->contentSerializer
+        );
     }
 
     /**
@@ -193,10 +201,10 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
     private function transformRowToDomainEvent(array $row): DomainEvent
     {
         return new DomainEvent(
-            (string)$this->pollingConnection->convertToPHPValue($row['streamId'], 'uuid'),
+            (string)$this->connection->convertToPHPValue($row['streamId'], 'uuid'),
             $this->contentSerializer->deserialize((string)$row['content']),
-            $this->pollingConnection->convertToPHPValue($row['streamVersion'], Types::INTEGER),
-            $this->pollingConnection->convertToPHPValue($row['headers'], Types::JSON)
+            $this->connection->convertToPHPValue($row['streamVersion'], Types::INTEGER),
+            $this->connection->convertToPHPValue($row['headers'], Types::JSON)
         );
     }
 }
