@@ -14,3 +14,12 @@ services:
             - !service
                 class: Gaming\Common\EventStore\Integration\JmsSerializer\JmsContentSerializer
                 arguments: ['@connect-four.jms', 'Gaming\Common\Domain\DomainEvent']
+
+    connect-four.shards:
+        class: Gaming\Common\Sharding\Integration\Crc32ModShards
+        arguments: ['%env(csv:APP_CONNECT_FOUR_DOCTRINE_DBAL_SHARDS)%']
+
+    connect-four.doctrine-mysql-schema-shards:
+        class: Gaming\Common\Sharding\Integration\DoctrineMySqlSchemaShards
+        decorates: 'connect-four.shards'
+        arguments: ['@.inner', '@connect-four.doctrine-dbal']

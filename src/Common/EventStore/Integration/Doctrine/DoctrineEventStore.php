@@ -161,6 +161,22 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
     }
 
     /**
+     * Creates a new instance using the given Connection. This is useful for
+     * certain sharding scenarios by allowing runtime configuration based on
+     * context like tenantId, aggregateId, or region.
+     * If the streamId is used as the sharding key for event-sourced streams,
+     * a sharding-aware EventStore implementation may be more straightforward.
+     */
+    public function withConnection(Connection $connection): self
+    {
+        return new self(
+            $connection,
+            $this->table,
+            $this->contentSerializer
+        );
+    }
+
+    /**
      * @param array<int, array<string, mixed>> $rows
      *
      * @return StoredEvent[]
