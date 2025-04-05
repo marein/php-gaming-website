@@ -106,6 +106,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
         } else {
             this._followMovesButton.classList.add('btn-warning', 'icon-tada');
         }
+
+        this._calculateFieldHover(document.querySelector('.gp-game__field--hover'));
     }
 
     _onFieldClick(event) {
@@ -119,6 +121,28 @@ customElements.define('connect-four-game', class extends HTMLElement {
                 if (loadingTimeout) clearTimeout(loadingTimeout);
                 this._gameNode.classList.remove('gp-loading');
             });
+    }
+
+    _onFieldMouseover(event) {
+        this._calculateFieldHover(event.target);
+    }
+
+    /**
+     * @param {HTMLElement|null} element
+     */
+    _calculateFieldHover(element) {
+        if (!element) return;
+
+        this._removeFieldHover();
+
+        const fields = this._gameNode.querySelectorAll(
+            `.gp-game__field[data-column="${element.dataset.column}"]:not(.bg-red):not(.bg-yellow)`
+        );
+        fields[fields.length - 1]?.classList.add('gp-game__field--hover');
+    }
+
+    _removeFieldHover() {
+        this._gameNode.querySelector(`.gp-game__field--hover`)?.classList.remove('gp-game__field--hover');
     }
 
     _onPlayerMoved(event) {
@@ -170,6 +194,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
+            field.addEventListener('mouseover', this._onFieldMouseover.bind(this));
+            field.addEventListener('mouseout', this._removeFieldHover.bind(this));
         });
 
         this._previousMoveButton.addEventListener('click', this._onPreviousMoveClick.bind(this));
