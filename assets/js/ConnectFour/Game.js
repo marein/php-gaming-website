@@ -18,6 +18,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             </div>
         `);
 
+        this._playerId = this.getAttribute('player-id');
         this._previousMoveButton = document.querySelector(this.getAttribute('previous-move-selector'));
         this._nextMoveButton = document.querySelector(this.getAttribute('next-move-selector'));
         this._followMovesButton = document.querySelector(this.getAttribute('follow-moves-selector'));
@@ -33,6 +34,12 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
     disconnectedCallback() {
         this._onDisconnect.forEach(f => f());
+    }
+
+    _hoverClass() {
+        if (this._game.redPlayerId === this._playerId) return 'gp-game__field--hover-red';
+        if (this._game.yellowPlayerId === this._playerId) return 'gp-game__field--hover-yellow';
+        return 'gp-game__field--hover-none';
     }
 
     /**
@@ -107,7 +114,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             this._followMovesButton.classList.add('btn-warning', 'icon-tada');
         }
 
-        this._calculateFieldHover(document.querySelector('.gp-game__field--hover'));
+        this._calculateFieldHover(document.querySelector(`.${this._hoverClass()}`));
     }
 
     _onFieldClick(event) {
@@ -138,11 +145,16 @@ customElements.define('connect-four-game', class extends HTMLElement {
         const fields = this._gameNode.querySelectorAll(
             `.gp-game__field[data-column="${element.dataset.column}"]:not(.bg-red):not(.bg-yellow)`
         );
-        fields[fields.length - 1]?.classList.add('gp-game__field--hover');
+        fields[fields.length - 1]?.classList.add(this._hoverClass());
     }
 
     _removeFieldHover() {
-        this._gameNode.querySelector(`.gp-game__field--hover`)?.classList.remove('gp-game__field--hover');
+        this._gameNode.querySelector(`.${this._hoverClass()}`)?.classList.remove(this._hoverClass());
+    }
+
+    _onPlayerJoined(event) {
+        this._game.redPlayerId = event.detail.redPlayerId;
+        this._game.yellowPlayerId = event.detail.yellowPlayerId;
     }
 
     _onPlayerMoved(event) {
@@ -181,6 +193,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
     _registerEventHandler() {
         this._game.onMoveAppended(this._onMoveAppendedToGame.bind(this));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.PlayerJoined', this._onPlayerJoined.bind(this));
 
         ((n, f) => {
             window.addEventListener(n, f);

@@ -135,9 +135,14 @@ notification-list {
     cursor: pointer;
 }
 
-.gp-game__field--hover {
+.gp-game__field--hover-red {
     --box-shadow-main: inset 0 0 0 .5em var(--tblr-body-bg),
-    inset 0 0 0 1.5em var(--tblr-primary);
+    inset 0 0 0 1.5em var(--tblr-red-darken);
+}
+
+.gp-game__field--hover-yellow {
+    --box-shadow-main: inset 0 0 0 .5em var(--tblr-body-bg),
+    inset 0 0 0 1.5em var(--tblr-yellow-darken);
 }
 
 .gp-game__field.bg-red {

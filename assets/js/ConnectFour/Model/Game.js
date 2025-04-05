@@ -6,10 +6,18 @@
 
 export class Game {
     /**
-     * @param {{gameId: String, moves: Move[], winningSequences: WinningSequence[]}} game
+     * @param {{
+     *   gameId: String,
+     *   redPlayerId: String,
+     *   yellowPlayerId: String,
+     *   moves: Move[],
+     *   winningSequences: WinningSequence[]
+     * }} game
      */
     constructor(game) {
         this.gameId = game.gameId;
+        this.redPlayerId = game.redPlayerId;
+        this.yellowPlayerId = game.yellowPlayerId;
         this.moves = game.moves;
         this.winningSequences = game.winningSequences;
         this.onMoveAppendedObservers = [];
