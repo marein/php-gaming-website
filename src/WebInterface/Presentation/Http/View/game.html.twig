@@ -83,7 +83,7 @@
                             <connect-four-abort-button game-id="{{ game.id }}"
                                                        player-id="{{ app.user ? app.user.userIdentifier }}"
                                                        players="{{ game.players|json_encode }}"
-                                                       abortable="{{ game.abortable|json_encode }}">
+                                                       moves="{{ game.moves[:2]|json_encode }}">
                                 <div class="col-12">
                                         <button id="abort-game" class="btn btn-outline-danger w-100">
                                             Abort
@@ -93,7 +93,7 @@
                             <connect-four-resign-button game-id="{{ game.id }}"
                                                         player-id="{{ app.user ? app.user.userIdentifier }}"
                                                         players="{{ game.players|json_encode }}"
-                                                        resignable="{{ game.resignable|json_encode }}">
+                                                        moves="{{ game.moves[:2]|json_encode }}">
                                 <div class="col-12">
                                         <button class="btn w-100">
                                             Resign

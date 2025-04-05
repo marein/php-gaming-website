@@ -42,13 +42,15 @@ customElements.define('connect-four-resign-button', class extends HTMLElement {
     }
 
     _onPlayerMoved = e => {
-        this.setAttribute('resignable', !e.detail.abortable);
+        const moves = JSON.parse(this.getAttribute('moves'));
+        moves.push(e.detail);
+        this.setAttribute('moves', JSON.stringify(moves));
 
         this._changeVisibility();
     }
 
     _changeVisibility = () => {
-        const resignable = JSON.parse(this.getAttribute('resignable'));
+        const resignable = new Map(JSON.parse(this.getAttribute('moves')).map(m => [`${m.x},${m.y}`, m])).size >= 2;
         const isPlayer = JSON.parse(this.getAttribute('players')).indexOf(this.getAttribute('player-id')) !== -1;
 
         this.classList.toggle('d-none', !resignable || !isPlayer);

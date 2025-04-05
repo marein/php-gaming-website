@@ -45,8 +45,6 @@ final class Game
         public private(set) string $loserId = '',
         public private(set) string $resignedBy = '',
         public private(set) string $abortedBy = '',
-        public private(set) bool $resignable = false,
-        public private(set) bool $abortable = true,
         public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
         public private(set) int $width = 0,
@@ -119,8 +117,6 @@ final class Game
     private function handlePlayerMoved(PlayerMoved $playerMoved): void
     {
         $this->currentPlayerId = $playerMoved->nextPlayerId;
-        $this->abortable = $playerMoved->abortable;
-        $this->resignable = !$playerMoved->abortable;
 
         $move = new Move(
             $playerMoved->x(),

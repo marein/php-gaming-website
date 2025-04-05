@@ -44,7 +44,6 @@ final class Running implements State
         $this->guardExpectedPlayer($playerId);
 
         $board = $this->board->dropStone($this->players->current()->stone(), $column);
-        $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
 
         $domainEvents = [
             new PlayerMoved(
@@ -52,8 +51,7 @@ final class Running implements State
                 $board->lastUsedField()->point(),
                 $board->lastUsedField()->stone(),
                 $this->players->current()->id(),
-                $this->players->switch()->current()->id(),
-                $this->isAbortable($numberOfMovesUntilDraw)
+                $this->players->switch()->current()->id()
             )
         ];
 
@@ -72,6 +70,8 @@ final class Running implements State
                 $domainEvents
             );
         }
+
+        $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
 
         if ($numberOfMovesUntilDraw === 0) {
             $domainEvents[] = new GameDrawn(
@@ -140,12 +140,11 @@ final class Running implements State
     /**
      * The game is only abortable until the second move is done.
      */
-    private function isAbortable(?int $numberOfMovesUntilDraw = null): bool
+    private function isAbortable(): bool
     {
-        $numberOfMovesUntilDraw ??= $this->numberOfMovesUntilDraw;
         $totalNumberOfMoves = $this->board->size()->height() * $this->board->size()->width();
 
-        return $totalNumberOfMoves - $numberOfMovesUntilDraw < 2;
+        return $totalNumberOfMoves - $this->numberOfMovesUntilDraw < 2;
     }
 
     /**

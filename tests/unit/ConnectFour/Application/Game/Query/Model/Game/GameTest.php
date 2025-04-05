@@ -33,8 +33,6 @@ class GameTest extends TestCase
                 'loserId' => '',
                 'resignedBy' => '',
                 'abortedBy' => '',
-                'resignable' => true,
-                'abortable' => false,
                 'state' => 'running',
                 'height' => 6,
                 'width' => 7,
