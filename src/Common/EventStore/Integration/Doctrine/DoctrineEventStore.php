@@ -20,16 +20,7 @@ use Gaming\Common\EventStore\StoredEvent;
 use Gaming\Common\EventStore\StoredEventFilters;
 use Throwable;
 
-/**
- * Combines multiple interfaces for higher cohesion, while still letting
- * different parts of the system depend only on the capabilities they need.
- */
-final class DoctrineEventStore implements
-    EventStore,
-    PollableEventStore,
-    CleanableEventStore,
-    GapDetection,
-    DoctrineEventStoreFactory
+final class DoctrineEventStore implements EventStore, PollableEventStore, CleanableEventStore, GapDetection
 {
     /**
      * @param ContentSerializer $contentSerializer Must serialize into and deserialize from valid JSON.
@@ -169,7 +160,13 @@ final class DoctrineEventStore implements
         return $hasStoredEvent;
     }
 
-    public function withConnection(Connection $connection): EventStore
+    /**
+     * Creates a new instance using the given Connection. This is useful
+     * for certain sharding scenarios. When the streamId is used as the
+     * sharding key for event-sourced streams, a sharding-aware EventStore
+     * may be more straightforward.
+     */
+    public function withConnection(Connection $connection): self
     {
         return new self(
             $connection,
