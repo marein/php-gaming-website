@@ -71,6 +71,14 @@ final class Game
     }
 
     /**
+     * @return string[]
+     */
+    public function players(): array
+    {
+        return array_filter([$this->redPlayerId, $this->yellowPlayerId]);
+    }
+
+    /**
      * Apply a domain event. The game can project this to its state.
      * The order of events must be the same as the sequence added to the event store.
      */
