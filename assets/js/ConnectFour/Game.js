@@ -37,10 +37,10 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._onDisconnect.forEach(f => f());
     }
 
-    _hoverClass() {
-        if (this._game.redPlayerId === this._playerId) return 'gp-game__field--hover-red';
-        if (this._game.yellowPlayerId === this._playerId) return 'gp-game__field--hover-yellow';
-        return 'gp-game__field--hover-none';
+    _previewClass() {
+        if (this._game.redPlayerId === this._playerId) return 'gp-game__field--preview-red';
+        if (this._game.yellowPlayerId === this._playerId) return 'gp-game__field--preview-yellow';
+        return 'gp-game__field--preview-none';
     }
 
     /**
@@ -122,7 +122,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             this._followMovesButton.classList.add('btn-warning', 'icon-tada');
         }
 
-        this._removeFieldHover();
+        this._removeFieldPreview();
     }
 
     _onFieldClick(event) {
@@ -143,13 +143,13 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onFieldMouseover(event) {
-        this._removeFieldHover();
+        this._removeFieldPreview();
 
-        this._lastFieldInColumn(event.target.dataset.column)?.classList.add(this._hoverClass());
+        this._lastFieldInColumn(event.target.dataset.column)?.classList.add(this._previewClass());
     }
 
-    _removeFieldHover() {
-        this._gameNode.querySelector(`.${this._hoverClass()}`)?.classList.remove(this._hoverClass());
+    _removeFieldPreview() {
+        this._gameNode.querySelector(`.${this._previewClass()}`)?.classList.remove(this._previewClass());
     }
 
     /**
@@ -240,7 +240,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
             field.addEventListener('mouseover', this._onFieldMouseover.bind(this));
-            field.addEventListener('mouseout', this._removeFieldHover.bind(this));
+            field.addEventListener('mouseout', this._removeFieldPreview.bind(this));
         });
 
         this._previousMoveButton.addEventListener('click', this._onPreviousMoveClick.bind(this));

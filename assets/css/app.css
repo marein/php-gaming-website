@@ -135,12 +135,12 @@ notification-list {
     cursor: pointer;
 }
 
-.gp-game__field--hover-red {
+.gp-game__field--preview-red {
     --box-shadow-main: inset 0 0 0 .5em var(--tblr-body-bg),
     inset 0 0 0 1.5em var(--tblr-red-darken);
 }
 
-.gp-game__field--hover-yellow {
+.gp-game__field--preview-yellow {
     --box-shadow-main: inset 0 0 0 .5em var(--tblr-body-bg),
     inset 0 0 0 1.5em var(--tblr-yellow-darken);
 }
@@ -170,8 +170,8 @@ notification-list {
     pointer-events: none;
 }
 
-.gp-game--disabled .gp-game__field--hover-red,
-.gp-game--disabled .gp-game__field--hover-yellow {
+.gp-game--disabled .gp-game__field--preview-red,
+.gp-game--disabled .gp-game__field--preview-yellow {
     --box-shadow-main: none;
 }
 
