@@ -128,6 +128,10 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _onFieldClick(event) {
         let cell = event.target;
 
+        if (!this._lastFieldInColumn(event.target.dataset.column)) {
+            return;
+        }
+
         let loadingTimeout = setTimeout(() => this._gameNode.classList.add('gp-loading'), 250);
 
         service.move(this._game.gameId, cell.dataset.column)
@@ -141,14 +145,21 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _onFieldMouseover(event) {
         this._removeFieldHover();
 
-        const fields = this._gameNode.querySelectorAll(
-            `.gp-game__field[data-column="${event.target.dataset.column}"]:not(.bg-red):not(.bg-yellow)`
-        );
-        fields[fields.length - 1]?.classList.add(this._hoverClass());
+        this._lastFieldInColumn(event.target.dataset.column)?.classList.add(this._hoverClass());
     }
 
     _removeFieldHover() {
         this._gameNode.querySelector(`.${this._hoverClass()}`)?.classList.remove(this._hoverClass());
+    }
+
+    /**
+     * @param {Number|undefined} column
+     */
+    _lastFieldInColumn(column) {
+        const fields = this._gameNode.querySelectorAll(
+            `.gp-game__field[data-column="${column}"]:not(.bg-red):not(.bg-yellow)`
+        );
+        return fields[fields.length - 1];
     }
 
     _onPlayerJoined(event) {
