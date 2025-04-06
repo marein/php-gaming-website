@@ -26,6 +26,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
         this._fields = this._gameNode.querySelectorAll('.gp-game__field');
         this._colorToClass = {1: 'bg-red', 2: 'bg-yellow'};
+        this._changeCurrentPlayer(game.currentPlayerId);
 
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
 
@@ -40,6 +41,13 @@ customElements.define('connect-four-game', class extends HTMLElement {
         if (this._game.redPlayerId === this._playerId) return 'gp-game__field--hover-red';
         if (this._game.yellowPlayerId === this._playerId) return 'gp-game__field--hover-yellow';
         return 'gp-game__field--hover-none';
+    }
+
+    /**
+     * @param {String} playerId
+     */
+    _changeCurrentPlayer(playerId) {
+        this._gameNode.classList.toggle('gp-game--disabled', playerId !== this._playerId);
     }
 
     /**
@@ -155,6 +163,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _onPlayerJoined(event) {
         this._game.redPlayerId = event.detail.redPlayerId;
         this._game.yellowPlayerId = event.detail.yellowPlayerId;
+        this._changeCurrentPlayer(event.detail.redPlayerId);
     }
 
     _onPlayerMoved(event) {
@@ -163,11 +172,13 @@ customElements.define('connect-four-game', class extends HTMLElement {
             y: event.detail.y,
             color: event.detail.color,
         });
+        this._changeCurrentPlayer(event.detail.nextPlayerId);
     }
 
     _onGameWon(event) {
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
+        this._changeCurrentPlayer('');
     }
 
     _onPreviousMoveClick(event) {
@@ -208,6 +219,21 @@ customElements.define('connect-four-game', class extends HTMLElement {
             window.addEventListener(n, f);
             this._onDisconnect.push(() => window.removeEventListener(n, f));
         })('ConnectFour.GameWon', this._onGameWon.bind(this));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.GameDrawn', () => this._changeCurrentPlayer(''));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.GameAborted', () => this._changeCurrentPlayer(''));
+
+        ((n, f) => {
+            window.addEventListener(n, f);
+            this._onDisconnect.push(() => window.removeEventListener(n, f));
+        })('ConnectFour.GameResigned', () => this._changeCurrentPlayer(''));
 
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));

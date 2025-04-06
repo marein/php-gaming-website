@@ -166,6 +166,15 @@ notification-list {
     border-color: var(--tblr-light) !important;
 }
 
+.gp-game--disabled {
+    pointer-events: none;
+}
+
+.gp-game--disabled .gp-game__field--hover-red,
+.gp-game--disabled .gp-game__field--hover-yellow {
+    --box-shadow-main: none;
+}
+
 @keyframes gp-game__field--highlight {
     20%, 40%, 60% {
         transform: scale3d(1, 1, 1);
