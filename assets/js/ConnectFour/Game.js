@@ -27,6 +27,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._fields = this._gameNode.querySelectorAll('.gp-game__field');
         this._colorToClass = {1: 'bg-red', 2: 'bg-yellow'};
         this._changeCurrentPlayer(game.currentPlayerId);
+        this._forceFollowMovesAnimation = false;
 
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
 
@@ -47,7 +48,15 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * @param {String} playerId
      */
     _changeCurrentPlayer(playerId) {
-        this._gameNode.classList.toggle('gp-game--disabled', playerId !== this._playerId);
+        this._game.currentPlayerId = playerId;
+        this._toggleInteractivity();
+    }
+
+    _toggleInteractivity() {
+        const isCurrentPlayer = this._game.currentPlayerId === this._playerId;
+        const isInHistoryMode = this._numberOfCurrentMoveInView !== this._game.numberOfMoves();
+
+        this._gameNode.classList.toggle('gp-game--disabled', !isCurrentPlayer || isInHistoryMode);
     }
 
     /**
@@ -61,6 +70,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
         this._updateNavigationButtons();
         this._showWinningSequences();
+        this._toggleInteractivity();
     }
 
     /**
@@ -81,16 +91,16 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * the number of the current move in view.
      */
     _updateNavigationButtons() {
-        let isCurrentMoveTheLastMove = this._numberOfCurrentMoveInView === this._game.numberOfMoves();
+        const isCurrentMoveTheLastMove = this._numberOfCurrentMoveInView === this._game.numberOfMoves();
+        this._forceFollowMovesAnimation = isCurrentMoveTheLastMove ? false : this._forceFollowMovesAnimation;
+        const isCurrentPlayer = this._game.currentPlayerId === this._playerId;
+        const showAnimation = this._forceFollowMovesAnimation || (isCurrentPlayer && !isCurrentMoveTheLastMove);
 
         this._previousMoveButton.disabled = this._numberOfCurrentMoveInView === 0;
         this._nextMoveButton.disabled = isCurrentMoveTheLastMove;
         this._followMovesButton.disabled = isCurrentMoveTheLastMove;
-
-        // Remove flashing if the user follow the moves.
-        if (isCurrentMoveTheLastMove) {
-            this._followMovesButton.classList.remove('btn-warning', 'icon-tada');
-        }
+        this._followMovesButton.classList.toggle('btn-warning', showAnimation);
+        this._followMovesButton.classList.toggle('icon-tada', showAnimation);
     }
 
     _showWinningSequences() {
@@ -119,7 +129,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             this._updateNavigationButtons();
             this._showWinningSequences();
         } else {
-            this._followMovesButton.classList.add('btn-warning', 'icon-tada');
+            this._updateNavigationButtons();
         }
 
         this._removeFieldPreview();
@@ -169,18 +179,21 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMoved(event) {
+        this._changeCurrentPlayer(event.detail.nextPlayerId);
         this._game.appendMove({
             x: event.detail.x,
             y: event.detail.y,
             color: event.detail.color,
         });
-        this._changeCurrentPlayer(event.detail.nextPlayerId);
     }
 
     _onGameWon(event) {
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
         this._changeCurrentPlayer('');
+        if (this._numberOfCurrentMoveInView !== this._game.numberOfMoves()) {
+            this._forceFollowMovesAnimation = true;
+        }
     }
 
     _onPreviousMoveClick(event) {

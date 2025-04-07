@@ -10,6 +10,7 @@ export class Game {
      *   gameId: String,
      *   redPlayerId: String,
      *   yellowPlayerId: String,
+     *   currentPlayerId: String,
      *   moves: Move[],
      *   winningSequences: WinningSequence[]
      * }} game
@@ -18,6 +19,7 @@ export class Game {
         this.gameId = game.gameId;
         this.redPlayerId = game.redPlayerId;
         this.yellowPlayerId = game.yellowPlayerId;
+        this.currentPlayerId = game.currentPlayerId;
         this.moves = game.moves;
         this.winningSequences = game.winningSequences;
         this.onMoveAppendedObservers = [];
