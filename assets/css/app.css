@@ -170,11 +170,6 @@ notification-list {
     pointer-events: none;
 }
 
-.gp-game--disabled .gp-game__field--preview-red,
-.gp-game--disabled .gp-game__field--preview-yellow {
-    --box-shadow-main: none;
-}
-
 @keyframes gp-game__field--highlight {
     20%, 40%, 60% {
         transform: scale3d(1, 1, 1);

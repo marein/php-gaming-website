@@ -28,6 +28,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._colorToClass = {1: 'bg-red', 2: 'bg-yellow'};
         this._changeCurrentPlayer(game.currentPlayerId);
         this._forceFollowMovesAnimation = false;
+        this._isMoveInProgress = false;
 
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
 
@@ -138,9 +139,9 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _onFieldClick(event) {
         let cell = event.target;
 
-        if (!this._lastFieldInColumn(event.target.dataset.column)) {
-            return;
-        }
+        if (this._isMoveInProgress || !this._lastFieldInColumn(event.target.dataset.column)) return;
+
+        this._isMoveInProgress = true;
 
         let loadingTimeout = setTimeout(() => this._gameNode.classList.add('gp-loading'), 250);
 
@@ -149,16 +150,20 @@ customElements.define('connect-four-game', class extends HTMLElement {
             .finally(() => {
                 if (loadingTimeout) clearTimeout(loadingTimeout);
                 this._gameNode.classList.remove('gp-loading');
+                this._isMoveInProgress = false;
+                this._removeFieldPreview();
             });
     }
 
     _onFieldMouseover(event) {
+        if (this._isMoveInProgress) return;
         this._removeFieldPreview();
 
         this._lastFieldInColumn(event.target.dataset.column)?.classList.add(this._previewClass());
     }
 
     _removeFieldPreview() {
+        if (this._isMoveInProgress) return;
         this._gameNode.querySelector(`.${this._previewClass()}`)?.classList.remove(this._previewClass());
     }
 
