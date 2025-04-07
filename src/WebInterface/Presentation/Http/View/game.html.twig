@@ -85,9 +85,9 @@
                                                        players="{{ game.players|json_encode }}"
                                                        moves="{{ game.moves[:2]|json_encode }}">
                                 <div class="col-12">
-                                        <button id="abort-game" class="btn btn-outline-danger w-100">
-                                            Abort
-                                        </button>
+                                    <button id="abort-game" class="btn btn-outline-danger w-100">
+                                        Abort
+                                    </button>
                                 </div>
                             </connect-four-abort-button>
                             <connect-four-resign-button game-id="{{ game.id }}"
@@ -95,9 +95,9 @@
                                                         players="{{ game.players|json_encode }}"
                                                         moves="{{ game.moves[:2]|json_encode }}">
                                 <div class="col-12">
-                                        <button class="btn w-100">
-                                            Resign
-                                        </button>
+                                    <button class="btn w-100">
+                                        Resign
+                                    </button>
                                 </div>
                             </connect-four-resign-button>
                         {% endif %}

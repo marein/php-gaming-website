@@ -10,6 +10,10 @@ customElements.define('connect-four-abort-button', class extends HTMLElement {
             </confirmation-button>
         `);
 
+        this._playerId = this.getAttribute('player-id');
+        this._players = JSON.parse(this.getAttribute('players'));
+        this._moves = new Map(JSON.parse(this.getAttribute('moves')).map(m => [`${m.x},${m.y}`, m]));
+
         this._changeVisibility();
 
         window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
@@ -36,22 +40,20 @@ customElements.define('connect-four-abort-button', class extends HTMLElement {
     }
 
     _onPlayerJoined = e => {
-        this.setAttribute('players', JSON.stringify([e.detail.redPlayerId, e.detail.yellowPlayerId]));
+        this._players = [e.detail.redPlayerId, e.detail.yellowPlayerId];
 
         this._changeVisibility();
     }
 
     _onPlayerMoved = e => {
-        const moves = JSON.parse(this.getAttribute('moves'));
-        moves.push(e.detail);
-        this.setAttribute('moves', JSON.stringify(moves));
+        this._moves.set(`${e.detail.x},${e.detail.y}`, e.detail);
 
         this._changeVisibility();
     }
 
     _changeVisibility = () => {
-        const abortable = new Map(JSON.parse(this.getAttribute('moves')).map(m => [`${m.x},${m.y}`, m])).size < 2;
-        const isPlayer = JSON.parse(this.getAttribute('players')).indexOf(this.getAttribute('player-id')) !== -1;
+        const abortable = this._moves.size < 2;
+        const isPlayer = this._players.indexOf(this._playerId) !== -1;
 
         this.classList.toggle('d-none', !abortable || !isPlayer);
     }
