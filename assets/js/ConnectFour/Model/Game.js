@@ -1,6 +1,6 @@
 /**
  * @typedef {{x: Number, y: Number}} Point
- * @typedef {{x: Number, y: Number, color: Number}} Move
+ * @typedef {{x: Number, y: Number, playerId: String, preview?: boolean}} Move
  * @typedef {{rule: String, points: Point[]}} WinningSequence
  */
 
@@ -22,12 +22,9 @@ export class Game {
         this.currentPlayerId = game.currentPlayerId;
         this.moves = game.moves;
         this.winningSequences = game.winningSequences;
-        this.onMoveAppendedObservers = [];
     }
 
     /**
-     * Returns the number of moves.
-     *
      * @returns {Number}
      */
     numberOfMoves() {
@@ -35,36 +32,25 @@ export class Game {
     }
 
     /**
-     * Append a move. If it's already there, it'll silently not appended.
-     *
      * @param {Move} move
      */
     appendMove(move) {
-        if (!this.hasMove(move)) {
-            this.moves.push(move);
+        if (this.hasMove(move)) return;
 
-            this.onMoveAppendedObservers.forEach(callback => callback(move));
-        }
+        this.moves.push(move);
     }
 
     /**
-     * Check if the game has the given move.
-     *
      * @param {Move} move
-     *
-     * @returns {boolean}
+     */
+    removeMove(move) {
+        this.moves = this.moves.filter(m => m.x !== move.x || m.y !== move.y);
+    }
+
+    /**
+     * @param {Move} move
      */
     hasMove(move) {
-        // this.moves.indexOf(move) doesn't work due === check.
-        return JSON.stringify(this.moves).indexOf(JSON.stringify(move)) !== -1;
-    }
-
-    /**
-     * Register observer which gets notified if a new move was appended.
-     *
-     * @param {Function} callback
-     */
-    onMoveAppended(callback) {
-        this.onMoveAppendedObservers.push(callback);
+        return this.moves.find(m => m.x === move.x && m.y === move.y) !== undefined;
     }
 }

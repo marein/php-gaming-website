@@ -145,13 +145,15 @@ notification-list {
     inset 0 0 0 1.5em var(--tblr-yellow-darken);
 }
 
-.gp-game__field.bg-red {
+.gp-game__field--red {
+    background-color: var(--tblr-red);
     --box-shadow-main: inset 0 0 0 .5em var(--tblr-red-darken),
     inset 0 0 0 1.5em var(--tblr-red),
     inset 0 0 0 1.8em var(--tblr-red-darken);
 }
 
-.gp-game__field.bg-yellow {
+.gp-game__field--yellow {
+    background-color: var(--tblr-yellow);
     --box-shadow-main: inset 0 0 0 .5em var(--tblr-yellow-darken),
     inset 0 0 0 1.5em var(--tblr-yellow),
     inset 0 0 0 1.8em var(--tblr-yellow-darken);

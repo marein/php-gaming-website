@@ -25,7 +25,6 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._game = new GameModel(game);
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
         this._fields = this._gameNode.querySelectorAll('.gp-game__field');
-        this._colorToClass = {1: 'bg-red', 2: 'bg-yellow'};
         this._changeCurrentPlayer(game.currentPlayerId);
         this._forceFollowMovesAnimation = false;
         this._isMoveInProgress = false;
@@ -39,10 +38,19 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._onDisconnect.forEach(f => f());
     }
 
+    /**
+     * @param {String} playerId
+     */
+    _colorClass(playerId) {
+        if (playerId === this._game.redPlayerId) return 'gp-game__field--red';
+        if (playerId === this._game.yellowPlayerId) return 'gp-game__field--yellow';
+        return null;
+    }
+
     _previewClass() {
         if (this._game.redPlayerId === this._playerId) return 'gp-game__field--preview-red';
         if (this._game.yellowPlayerId === this._playerId) return 'gp-game__field--preview-yellow';
-        return 'gp-game__field--preview-none';
+        return null;
     }
 
     /**
@@ -65,7 +73,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
      */
     _showMovesUpTo(index) {
         this._fields.forEach(field => field.classList.remove(
-            'gp-game__field--highlight', 'gp-game__field--current', 'bg-red', 'bg-yellow')
+            'gp-game__field--highlight', 'gp-game__field--current', 'gp-game__field--red', 'gp-game__field--yellow')
         );
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
@@ -81,7 +89,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
      */
     _showMove(move) {
         let field = this._gameNode.querySelector(`.gp-game__field[data-column="${move.x}"][data-row="${move.y}"]`);
-        field.classList.add(this._colorToClass[move.color]);
+        field.classList.add(this._colorClass(move.playerId));
 
         this._fields.forEach(field => field.classList.remove('gp-game__field--highlight', 'gp-game__field--current'));
         field.classList.add('gp-game__field--highlight', 'gp-game__field--current');
@@ -110,49 +118,64 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         this._fields.forEach(field => field.classList.remove('gp-game__field--highlight'));
         this._game.winningSequences.forEach(winningSequence => {
-            winningSequence.points.forEach(point => this._gameNode
+            winningSequence.points.forEach(point => setTimeout(() => this._gameNode
                 .querySelector(`.gp-game__field[data-column="${point.x}"][data-row="${point.y}"]`)
                 .classList
-                .add('gp-game__field--highlight')
+                .add('gp-game__field--highlight'), Math.random() * 100)
             );
         });
     }
 
     /**
-     * Only show if the user follows the moves. Otherwise, notify user that a new move is available.
-     *
-     * @param {import('./Model/Game.js').Move} move
+     * @param {Number} column
+     * @returns {HTMLElement|undefined}
      */
-    _onMoveAppendedToGame(move) {
-        if (this._followMovesButton.disabled === true) {
-            this._showMove(move);
-            this._numberOfCurrentMoveInView++;
-            this._updateNavigationButtons();
-            this._showWinningSequences();
-        } else {
-            this._updateNavigationButtons();
-        }
+    _lastFieldInColumn(column) {
+        const fields = this._gameNode.querySelectorAll(
+            `.gp-game__field[data-column="${column}"]:not(.gp-game__field--red):not(.gp-game__field--yellow)`
+        );
+        return fields[fields.length - 1];
+    }
 
-        this._removeFieldPreview();
+    _removeFieldPreview() {
+        this._gameNode.querySelector(`.${this._previewClass()}`)?.classList.remove(this._previewClass());
     }
 
     _onFieldClick(event) {
-        let cell = event.target;
-
-        if (this._isMoveInProgress || !this._lastFieldInColumn(event.target.dataset.column)) return;
+        if (this._isMoveInProgress) return;
 
         this._isMoveInProgress = true;
 
-        let loadingTimeout = setTimeout(() => this._gameNode.classList.add('gp-loading'), 250);
+        const field = this._lastFieldInColumn(event.target.dataset.column);
+        if (!field) {
+            this._isMoveInProgress = false;
+            return;
+        }
 
-        service.move(this._game.gameId, cell.dataset.column)
-            .catch(() => true)
-            .finally(() => {
-                if (loadingTimeout) clearTimeout(loadingTimeout);
-                this._gameNode.classList.remove('gp-loading');
-                this._isMoveInProgress = false;
-                this._removeFieldPreview();
-            });
+        const eventOptions = {
+            bubbles: true,
+            detail: {
+                x: parseInt(field.dataset.column),
+                y: parseInt(field.dataset.row),
+                color: this._playerId === this._game.redPlayerId ? 1 : 2,
+                playerId: this._playerId,
+                nextPlayerId: this._playerId === this._game.redPlayerId
+                    ? this._game.yellowPlayerId
+                    : this._game.redPlayerId,
+                preview: true
+            }
+        };
+        this.dispatchEvent(new CustomEvent('ConnectFour.PlayerMoved', eventOptions));
+        this._removeFieldPreview();
+
+        const numberOfMoves = this._game.numberOfMoves();
+        service.move(this._game.gameId, field.dataset.column)
+            .catch(() => {
+                if (numberOfMoves !== this._game.numberOfMoves()) return;
+
+                this.dispatchEvent(new CustomEvent('ConnectFour.PlayerMovedFailed', eventOptions));
+            })
+            .finally(() => this._isMoveInProgress = false);
     }
 
     _onFieldMouseover(event) {
@@ -162,19 +185,9 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._lastFieldInColumn(event.target.dataset.column)?.classList.add(this._previewClass());
     }
 
-    _removeFieldPreview() {
+    _onFieldMouseout(event) {
         if (this._isMoveInProgress) return;
-        this._gameNode.querySelector(`.${this._previewClass()}`)?.classList.remove(this._previewClass());
-    }
-
-    /**
-     * @param {Number|undefined} column
-     */
-    _lastFieldInColumn(column) {
-        const fields = this._gameNode.querySelectorAll(
-            `.gp-game__field[data-column="${column}"]:not(.bg-red):not(.bg-yellow)`
-        );
-        return fields[fields.length - 1];
+        this._removeFieldPreview();
     }
 
     _onPlayerJoined(event) {
@@ -184,21 +197,29 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMoved(event) {
+        if (this._game.hasMove(event.detail)) return;
+
+        if (!event.detail.preview) this._isMoveInProgress = false;
+        if (this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView++;
+
+        this._game.appendMove(event.detail);
         this._changeCurrentPlayer(event.detail.nextPlayerId);
-        this._game.appendMove({
-            x: event.detail.x,
-            y: event.detail.y,
-            color: event.detail.color,
-        });
+        this._showMovesUpTo(this._numberOfCurrentMoveInView);
+    }
+
+    _onPlayerMovedFailed(event) {
+        if (this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView--;
+        this._game.removeMove(event.detail);
+
+        this._changeCurrentPlayer(event.detail.playerId);
+        this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
 
     _onGameWon(event) {
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
         this._changeCurrentPlayer('');
-        if (this._numberOfCurrentMoveInView !== this._game.numberOfMoves()) {
-            this._forceFollowMovesAnimation = true;
-        }
+        this._forceFollowMovesAnimation = this._numberOfCurrentMoveInView !== this._game.numberOfMoves();
     }
 
     _onPreviousMoveClick(event) {
@@ -223,7 +244,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _registerEventHandler() {
-        this._game.onMoveAppended(this._onMoveAppendedToGame.bind(this));
+        this.addEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed.bind(this));
 
         ((n, f) => {
             window.addEventListener(n, f);
@@ -258,7 +279,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
             field.addEventListener('mouseover', this._onFieldMouseover.bind(this));
-            field.addEventListener('mouseout', this._removeFieldPreview.bind(this));
+            field.addEventListener('mouseout', this._onFieldMouseout.bind(this));
         });
 
         this._previousMoveButton.addEventListener('click', this._onPreviousMoveClick.bind(this));

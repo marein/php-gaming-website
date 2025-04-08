@@ -41,12 +41,12 @@ class GameTest extends TestCase
                     [
                         'x' => 1,
                         'y' => 6,
-                        'color' => 1
+                        'playerId' => 'player1'
                     ],
                     [
                         'x' => 1,
                         'y' => 5,
-                        'color' => 2
+                        'playerId' => 'player2'
                     ]
                 ],
                 'winningSequences' => []

@@ -9,6 +9,7 @@ customElements.define('connect-four-players', class extends HTMLElement {
 
         window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.addEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed);
         window.addEventListener('ConnectFour.GameAborted', this._onGameAborted);
         window.addEventListener('ConnectFour.GameWon', this._onGameWon);
         window.addEventListener('ConnectFour.GameResigned', this._onGameResigned);
@@ -77,6 +78,12 @@ customElements.define('connect-four-players', class extends HTMLElement {
         this._render();
     }
 
+    _onPlayerMovedFailed = e => {
+        this.setAttribute('current-player-id', e.detail.playerId);
+
+        this._render();
+    }
+
     _onGameWon = e => {
         this.setAttribute('current-player-id', '');
         this.setAttribute('winner-id', e.detail.winnerId);
@@ -114,6 +121,7 @@ customElements.define('connect-four-players', class extends HTMLElement {
     _removeEventListeners() {
         window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.removeEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed);
         window.removeEventListener('ConnectFour.GameWon', this._onGameWon);
         window.removeEventListener('ConnectFour.GameAborted', this._onGameAborted);
         window.removeEventListener('ConnectFour.GameResigned', this._onGameResigned);
