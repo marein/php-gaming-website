@@ -42,12 +42,10 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     /**
-     * @param {String} playerId
+     * @param {Number} color
      */
-    _colorClass(playerId) {
-        if (playerId === this._game.redPlayerId) return 'gp-game__field--red';
-        if (playerId === this._game.yellowPlayerId) return 'gp-game__field--yellow';
-        return null;
+    _colorClass(color) {
+        return color === 1 ? 'gp-game__field--red' : 'gp-game__field--yellow';
     }
 
     _previewClass() {
@@ -92,7 +90,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
      */
     _showMove(move) {
         let field = this._gameNode.querySelector(`.gp-game__field[data-column="${move.x}"][data-row="${move.y}"]`);
-        field.classList.add(this._colorClass(move.playerId));
+        field.classList.add(this._colorClass(move.color));
 
         this._fields.forEach(field => field.classList.remove('gp-game__field--highlight', 'gp-game__field--current'));
         field.classList.add('gp-game__field--highlight', 'gp-game__field--current');

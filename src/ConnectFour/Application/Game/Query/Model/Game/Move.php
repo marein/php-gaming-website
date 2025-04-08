@@ -9,7 +9,7 @@ final class Move
     public function __construct(
         public readonly int $x,
         public readonly int $y,
-        public readonly string $playerId
+        public readonly int $color
     ) {
     }
 }

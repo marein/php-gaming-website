@@ -121,7 +121,7 @@ final class Game
         $move = new Move(
             $playerMoved->x(),
             $playerMoved->y(),
-            $playerMoved->playerId
+            $playerMoved->color()
         );
 
         if (!in_array($move, $this->moves)) {

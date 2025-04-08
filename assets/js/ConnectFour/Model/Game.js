@@ -1,6 +1,6 @@
 /**
  * @typedef {{x: Number, y: Number}} Point
- * @typedef {{x: Number, y: Number, playerId: String, preview?: boolean}} Move
+ * @typedef {{x: Number, y: Number, color: Number}} Move
  * @typedef {{rule: String, points: Point[]}} WinningSequence
  */
 
