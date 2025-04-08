@@ -1,6 +1,6 @@
 /**
  * @typedef {{x: Number, y: Number}} Point
- * @typedef {{x: Number, y: Number, color: Number}} Move
+ * @typedef {{x: Number, y: Number, color: Number, preview?: boolean}} Move
  * @typedef {{rule: String, points: Point[]}} WinningSequence
  */
 
@@ -22,6 +22,7 @@ export class Game {
         this.currentPlayerId = game.currentPlayerId;
         this.moves = game.moves;
         this.winningSequences = game.winningSequences;
+        this.previewMove = null;
     }
 
     /**
@@ -36,6 +37,8 @@ export class Game {
      */
     appendMove(move) {
         if (this.hasMove(move)) return;
+
+        if (move.preview) this.previewMove = move;
 
         this.moves.push(move);
     }
@@ -52,5 +55,12 @@ export class Game {
      */
     hasMove(move) {
         return this.moves.find(m => m.x === move.x && m.y === move.y) !== undefined;
+    }
+
+    /**
+     * @param {Move} move
+     */
+    hasPreviewMove(move) {
+        return this.previewMove?.x === move.x && this.previewMove?.y === move.y;
     }
 }

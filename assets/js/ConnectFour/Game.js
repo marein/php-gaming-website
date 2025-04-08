@@ -169,10 +169,9 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this.dispatchEvent(new CustomEvent('ConnectFour.PlayerMoved', eventOptions));
         this._removeFieldPreview();
 
-        const numberOfMoves = this._game.numberOfMoves();
         service.move(this._game.gameId, field.dataset.column)
             .catch(() => {
-                if (numberOfMoves !== this._game.numberOfMoves()) return;
+                if (!this._game.hasPreviewMove(eventOptions.detail)) return;
 
                 this.dispatchEvent(new CustomEvent('ConnectFour.PlayerMovedFailed', eventOptions));
             })
@@ -198,6 +197,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMoved = event => {
+        if (this._game.hasPreviewMove(event.detail)) this._game.previewMove = null;
         if (this._game.hasMove(event.detail)) return;
 
         if (!event.detail.preview) this._isMoveInProgress = false;
