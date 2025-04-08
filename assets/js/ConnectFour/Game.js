@@ -163,7 +163,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
                 nextPlayerId: this._playerId === this._game.redPlayerId
                     ? this._game.yellowPlayerId
                     : this._game.redPlayerId,
-                preview: true
+                pending: true
             }
         };
         this.dispatchEvent(new CustomEvent('ConnectFour.PlayerMoved', eventOptions));
@@ -171,7 +171,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         service.move(this._game.gameId, field.dataset.column)
             .catch(() => {
-                if (!this._game.hasPreviewMove(eventOptions.detail)) return;
+                if (!this._game.hasPendingMove(eventOptions.detail)) return;
 
                 this.dispatchEvent(new CustomEvent('ConnectFour.PlayerMovedFailed', eventOptions));
             })
@@ -197,10 +197,10 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMoved = event => {
-        if (this._game.hasPreviewMove(event.detail)) this._game.previewMove = null;
+        if (this._game.hasPendingMove(event.detail)) this._game.pendingMove = null;
         if (this._game.hasMove(event.detail)) return;
 
-        if (!event.detail.preview) this._isMoveInProgress = false;
+        if (!event.detail.pending) this._isMoveInProgress = false;
         if (this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView++;
 
         this._game.appendMove(event.detail);
