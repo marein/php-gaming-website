@@ -4,8 +4,6 @@ import {html} from 'uhtml/node.js'
 
 customElements.define('connect-four-game', class extends HTMLElement {
     connectedCallback() {
-        this._onDisconnect = [];
-
         let game = JSON.parse(this.getAttribute('game'));
 
         this.append(this._gameNode = html`
@@ -35,7 +33,12 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     disconnectedCallback() {
-        this._onDisconnect.forEach(f => f());
+        window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
+        window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.removeEventListener('ConnectFour.GameWon', this._onGameWon);
+        window.removeEventListener('ConnectFour.GameDrawn', this._onGameFinished);
+        window.removeEventListener('ConnectFour.GameAborted', this._onGameFinished);
+        window.removeEventListener('ConnectFour.GameResigned', this._onGameFinished);
     }
 
     /**
@@ -190,13 +193,13 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._removeFieldPreview();
     }
 
-    _onPlayerJoined(event) {
+    _onPlayerJoined = event => {
         this._game.redPlayerId = event.detail.redPlayerId;
         this._game.yellowPlayerId = event.detail.yellowPlayerId;
         this._changeCurrentPlayer(event.detail.redPlayerId);
     }
 
-    _onPlayerMoved(event) {
+    _onPlayerMoved = event => {
         if (this._game.hasMove(event.detail)) return;
 
         if (!event.detail.preview) this._isMoveInProgress = false;
@@ -215,11 +218,15 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
 
-    _onGameWon(event) {
+    _onGameWon = event => {
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
         this._changeCurrentPlayer('');
         this._forceFollowMovesAnimation = this._numberOfCurrentMoveInView !== this._game.numberOfMoves();
+    }
+
+    _onGameFinished = () => {
+        this._changeCurrentPlayer('');
     }
 
     _onPreviousMoveClick(event) {
@@ -246,35 +253,12 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _registerEventHandler() {
         this.addEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed.bind(this));
 
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.PlayerJoined', this._onPlayerJoined.bind(this));
-
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.PlayerMoved', this._onPlayerMoved.bind(this));
-
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.GameWon', this._onGameWon.bind(this));
-
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.GameDrawn', () => this._changeCurrentPlayer(''));
-
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.GameAborted', () => this._changeCurrentPlayer(''));
-
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.GameResigned', () => this._changeCurrentPlayer(''));
+        window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
+        window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.addEventListener('ConnectFour.GameWon', this._onGameWon);
+        window.addEventListener('ConnectFour.GameDrawn', this._onGameFinished);
+        window.addEventListener('ConnectFour.GameAborted', this._onGameFinished);
+        window.addEventListener('ConnectFour.GameResigned', this._onGameFinished);
 
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
