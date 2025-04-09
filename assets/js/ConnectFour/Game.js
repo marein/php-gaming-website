@@ -86,24 +86,15 @@ customElements.define('connect-four-game', class extends HTMLElement {
             'gp-game__field--pending-red', 'gp-game__field--pending-yellow')
         );
 
-        this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
+        this._game.moves.slice(0, index).forEach((move, i) => {
+            const field = this._fieldByPoint(move);
+            field.classList.add(this._colorClass(move.color, this._game.hasPendingMove(move)));
+            if (i === index - 1) field.classList.add('gp-game__field--highlight', 'gp-game__field--current');
+        });
+
         this._updateNavigationButtons();
         this._showWinningSequences();
         this._toggleInteractivity();
-    }
-
-    /**
-     * Display the move in the view.
-     *
-     * @param {import('./Model/Game.js').Move} move
-     */
-    _showMove(move) {
-        let field = this._gameNode.querySelector(`.gp-game__field[data-column="${move.x}"][data-row="${move.y}"]`);
-
-        field.classList.add(this._colorClass(move.color, this._game.hasPendingMove(move)));
-
-        this._fields.forEach(field => field.classList.remove('gp-game__field--highlight', 'gp-game__field--current'));
-        field.classList.add('gp-game__field--highlight', 'gp-game__field--current');
     }
 
     /**
@@ -111,7 +102,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
      * the number of the current move in view.
      */
     _updateNavigationButtons() {
-        const isCurrentMoveTheLastMove = this._numberOfCurrentMoveInView === this._game.numberOfMoves();
+        let isCurrentMoveTheLastMove = this._numberOfCurrentMoveInView === this._game.numberOfMoves();
         this._forceFollowMovesAnimation = isCurrentMoveTheLastMove ? false : this._forceFollowMovesAnimation;
         const isCurrentPlayer = this._game.currentPlayerId === this._playerId;
         const showAnimation = this._forceFollowMovesAnimation || (isCurrentPlayer && !isCurrentMoveTheLastMove);
@@ -129,12 +120,19 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         this._fields.forEach(field => field.classList.remove('gp-game__field--highlight'));
         this._game.winningSequences.forEach(winningSequence => {
-            winningSequence.points.forEach(point => setTimeout(() => this._gameNode
-                .querySelector(`.gp-game__field[data-column="${point.x}"][data-row="${point.y}"]`)
-                .classList
-                .add('gp-game__field--highlight'), Math.random() * 100)
-            );
+            winningSequence.points.forEach((point, i) => setTimeout(
+                () => this._fieldByPoint(point).classList.add('gp-game__field--highlight'),
+                i * 100
+            ));
         });
+    }
+
+    /**
+     * @param {import('./Model/Game.js').Move|import('./Model/Game.js').Point} point
+     * @returns {HTMLElement|undefined}
+     */
+    _fieldByPoint(point) {
+        return this._gameNode.querySelector(`.gp-game__field[data-column="${point.x}"][data-row="${point.y}"]`);
     }
 
     /**
