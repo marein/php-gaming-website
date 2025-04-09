@@ -43,9 +43,12 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
     /**
      * @param {Number} color
+     * @param {Boolean} isPending
      */
-    _colorClass(color) {
-        return color === 1 ? 'gp-game__field--red' : 'gp-game__field--yellow';
+    _colorClass(color, isPending) {
+        const prefix = isPending ? 'gp-game__field--pending-' : 'gp-game__field--';
+
+        return color === 1 ? `${prefix}red` : `${prefix}yellow`;
     }
 
     _previewClass() {
@@ -62,6 +65,11 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._toggleInteractivity();
     }
 
+    _removePendingMove() {
+        this._game.pendingMove = null;
+        this._showMovesUpTo(this._numberOfCurrentMoveInView);
+    }
+
     _toggleInteractivity() {
         const isCurrentPlayer = this._game.currentPlayerId === this._playerId;
         const isInHistoryMode = this._numberOfCurrentMoveInView !== this._game.numberOfMoves();
@@ -74,7 +82,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
      */
     _showMovesUpTo(index) {
         this._fields.forEach(field => field.classList.remove(
-            'gp-game__field--highlight', 'gp-game__field--current', 'gp-game__field--red', 'gp-game__field--yellow')
+            'gp-game__field--highlight', 'gp-game__field--current', 'gp-game__field--red', 'gp-game__field--yellow',
+            'gp-game__field--pending-red', 'gp-game__field--pending-yellow')
         );
 
         this._game.moves.slice(0, index).forEach(this._showMove.bind(this));
@@ -90,7 +99,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
      */
     _showMove(move) {
         let field = this._gameNode.querySelector(`.gp-game__field[data-column="${move.x}"][data-row="${move.y}"]`);
-        field.classList.add(this._colorClass(move.color));
+
+        field.classList.add(this._colorClass(move.color, this._game.hasPendingMove(move)));
 
         this._fields.forEach(field => field.classList.remove('gp-game__field--highlight', 'gp-game__field--current'));
         field.classList.add('gp-game__field--highlight', 'gp-game__field--current');
@@ -170,6 +180,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._removeFieldPreview();
 
         service.move(this._game.gameId, field.dataset.column)
+            .then(() => this._game.hasPendingMove(eventOptions.detail) && this._removePendingMove())
             .catch(() => {
                 if (!this._game.hasPendingMove(eventOptions.detail)) return;
 
@@ -197,7 +208,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMoved = event => {
-        if (this._game.hasPendingMove(event.detail)) this._game.pendingMove = null;
+        if (this._game.hasPendingMove(event.detail)) this._removePendingMove();
         if (this._game.hasMove(event.detail)) return;
 
         if (!event.detail.pending) this._isMoveInProgress = false;
