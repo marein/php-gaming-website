@@ -132,6 +132,7 @@ notification-list {
 
 .gp-game__field {
     position: relative;
+    width: 100%;
     aspect-ratio: 1;
     background-color: var(--tblr-body-bg);
     border: var(--tblr-border-width) solid #323232;
