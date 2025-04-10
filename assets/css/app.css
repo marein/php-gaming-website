@@ -231,6 +231,14 @@ notification-list {
     }
 }
 
+.gp-game__field-hitbox {
+    position: absolute;
+    top: calc(var(--tblr-border-width) * -1);
+    left: calc(var(--tblr-border-width) * -1);
+    width: calc(100% + var(--tblr-border-width) * 2);
+    height: calc(100% + var(--tblr-border-width) * 2 + var(--tblr-spacer-1));
+}
+
 connect-four-players .status-dot {
     --tblr-status-size: .7rem;
 }

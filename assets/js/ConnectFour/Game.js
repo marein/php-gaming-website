@@ -12,6 +12,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
                 <div class="gp-game__field"
                      data-column="${(n % game.width) + 1}"
                      data-row="${Math.floor(n / game.width) + 1}">
+                    <span class="gp-game__field-hitbox"></span>
                 </div>`)}
             </div>
         `);
@@ -155,7 +156,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         this._isMoveInProgress = true;
 
-        const field = this._lastFieldInColumn(event.target.dataset.column);
+        const column = event.target.closest('[data-column]').dataset.column;
+        const field = this._lastFieldInColumn(column);
         if (!field) {
             this._isMoveInProgress = false;
             return;
@@ -191,7 +193,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
         if (this._isMoveInProgress) return;
         this._removeFieldPreview();
 
-        this._lastFieldInColumn(event.target.dataset.column)?.classList.add(this._previewClass());
+        const column = event.target.closest('[data-column]').dataset.column;
+        this._lastFieldInColumn(column)?.classList.add(this._previewClass());
     }
 
     _onFieldMouseout(event) {
