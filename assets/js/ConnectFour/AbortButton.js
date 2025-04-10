@@ -18,6 +18,7 @@ customElements.define('connect-four-abort-button', class extends HTMLElement {
 
         window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.addEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed);
         window.addEventListener('ConnectFour.GameAborted', this._remove);
         window.addEventListener('ConnectFour.GameWon', this._remove);
         window.addEventListener('ConnectFour.GameResigned', this._remove);
@@ -27,6 +28,7 @@ customElements.define('connect-four-abort-button', class extends HTMLElement {
     disconnectedCallback() {
         window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
+        window.removeEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed);
         window.removeEventListener('ConnectFour.GameWon', this._remove);
         window.removeEventListener('ConnectFour.GameAborted', this._remove);
         window.removeEventListener('ConnectFour.GameResigned', this._remove);
@@ -47,6 +49,12 @@ customElements.define('connect-four-abort-button', class extends HTMLElement {
 
     _onPlayerMoved = e => {
         this._moves.set(`${e.detail.x},${e.detail.y}`, e.detail);
+
+        this._changeVisibility();
+    }
+
+    _onPlayerMovedFailed = e => {
+        this._moves.delete(`${e.detail.x},${e.detail.y}`);
 
         this._changeVisibility();
     }

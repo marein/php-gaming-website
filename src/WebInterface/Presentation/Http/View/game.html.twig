@@ -38,6 +38,7 @@
                 </div>
                 <div class="col-xl-8">
                     <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
+                                       player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
                                        previous-move-selector="#previous-move"
                                        next-move-selector="#next-move"
                                        follow-moves-selector="#follow-moves">

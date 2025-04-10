@@ -1,23 +1,31 @@
 /**
  * @typedef {{x: Number, y: Number}} Point
- * @typedef {{x: Number, y: Number, color: Number}} Move
+ * @typedef {{x: Number, y: Number, color: Number, pending?: boolean}} Move
  * @typedef {{rule: String, points: Point[]}} WinningSequence
  */
 
 export class Game {
     /**
-     * @param {{gameId: String, moves: Move[], winningSequences: WinningSequence[]}} game
+     * @param {{
+     *   gameId: String,
+     *   redPlayerId: String,
+     *   yellowPlayerId: String,
+     *   currentPlayerId: String,
+     *   moves: Move[],
+     *   winningSequences: WinningSequence[]
+     * }} game
      */
     constructor(game) {
         this.gameId = game.gameId;
+        this.redPlayerId = game.redPlayerId;
+        this.yellowPlayerId = game.yellowPlayerId;
+        this.currentPlayerId = game.currentPlayerId;
         this.moves = game.moves;
         this.winningSequences = game.winningSequences;
-        this.onMoveAppendedObservers = [];
+        this.pendingMove = null;
     }
 
     /**
-     * Returns the number of moves.
-     *
      * @returns {Number}
      */
     numberOfMoves() {
@@ -25,36 +33,34 @@ export class Game {
     }
 
     /**
-     * Append a move. If it's already there, it'll silently not appended.
-     *
      * @param {Move} move
      */
     appendMove(move) {
-        if (!this.hasMove(move)) {
-            this.moves.push(move);
+        if (this.hasMove(move)) return;
 
-            this.onMoveAppendedObservers.forEach(callback => callback(move));
-        }
+        if (move.pending) this.pendingMove = move;
+
+        this.moves.push(move);
     }
 
     /**
-     * Check if the game has the given move.
-     *
      * @param {Move} move
-     *
-     * @returns {boolean}
+     */
+    removeMove(move) {
+        this.moves = this.moves.filter(m => m.x !== move.x || m.y !== move.y);
+    }
+
+    /**
+     * @param {Move} move
      */
     hasMove(move) {
-        // this.moves.indexOf(move) doesn't work due === check.
-        return JSON.stringify(this.moves).indexOf(JSON.stringify(move)) !== -1;
+        return this.moves.find(m => m.x === move.x && m.y === move.y) !== undefined;
     }
 
     /**
-     * Register observer which gets notified if a new move was appended.
-     *
-     * @param {Function} callback
+     * @param {Move} move
      */
-    onMoveAppended(callback) {
-        this.onMoveAppendedObservers.push(callback);
+    hasPendingMove(move) {
+        return this.pendingMove?.x === move.x && this.pendingMove?.y === move.y;
     }
 }
