@@ -242,19 +242,19 @@ notification-list {
 }
 
 .gp-cf-token-loading .gp-cf-token {
-    --token-delay: 0s;
+    --token-index: 0;
     scale: .9;
-    animation: gp-cf-token-loading 1s linear var(--token-delay) infinite;
+    animation: gp-cf-token-loading 1.4s linear calc(var(--token-index) * .1s) infinite;
 }
 
 @keyframes gp-cf-token-loading {
     0%, 100% {
         scale: .9;
     }
-    20% {
+    15% {
         scale: 1;
     }
-    66% {
+    30% {
         scale: .9;
     }
 }
