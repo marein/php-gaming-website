@@ -132,6 +132,7 @@ notification-list {
 
 .gp-cf-game__field {
     position: relative;
+    text-align: initial;
     width: 100%;
     aspect-ratio: 1;
     background-color: var(--tblr-body-bg);
@@ -182,6 +183,7 @@ notification-list {
     --border-size: 5px;
     position: relative;
     display: inline-block;
+    text-align: initial;
     width: 100%;
     aspect-ratio: 1;
     background-color: var(--tblr-red);
