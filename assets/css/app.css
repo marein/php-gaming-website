@@ -235,6 +235,30 @@ notification-list {
     }
 }
 
+.gp-cf-token-loading {
+    display: flex;
+    gap: var(--tblr-spacer-1);
+    margin-bottom: var(--tblr-spacer-3);
+}
+
+.gp-cf-token-loading .gp-cf-token {
+    --token-delay: 0s;
+    scale: .9;
+    animation: gp-cf-token-loading 1s linear var(--token-delay) infinite;
+}
+
+@keyframes gp-cf-token-loading {
+    0%, 100% {
+        scale: .9;
+    }
+    20% {
+        scale: 1;
+    }
+    66% {
+        scale: .9;
+    }
+}
+
 connect-four-players .status-dot {
     --tblr-status-size: .7rem;
 }

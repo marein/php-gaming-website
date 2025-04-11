@@ -13,7 +13,7 @@
                 <div class="container-tight">
                     <h1>
                         {% if app.user ? app.user.userIdentifier == game.openedBy %}
-                            Waiting for opponent<span class="animated-dots"></span>
+                            Waiting for opponent
                         {% else %}
                             Join the game
                         {% endif %}
@@ -31,6 +31,13 @@
                         Color:
                         <strong>{{ game.preferredStone|replace({1: 'Red', 2: 'Yellow'})|default('Random') }}</strong>
                     </p>
+                    <div class="gp-cf-token-loading w-75 mx-auto">
+                        {% for i in 0..6 %}
+                            <span class="gp-cf-token{{ i is odd ? ' gp-cf-token--yellow' }}"
+                                  style="--token-delay: {{ i / 12 }}s; --border-size: 3px">
+                            </span>
+                        {% endfor %}
+                    </div>
                     {% if app.user ? app.user.userIdentifier == game.openedBy %}
                         <form action="{{ path('connect_four_abort_challenge', {id: game.gameId}) }}"
                               method="post"
