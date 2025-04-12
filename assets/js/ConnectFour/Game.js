@@ -3,6 +3,24 @@ import {Game as GameModel} from './Model/Game.js'
 import {html} from 'uhtml/node.js'
 import * as sse from '../Common/EventSource.js'
 
+function play(sheet) {
+    import('https://cdn.jsdelivr.net/gh/marein/js-scriptune@main/src/scriptune.js')
+        .then(m => m.play(sheet));
+}
+
+const sounds = {
+    error: () => play(`-:s F2:s C2:e`),
+    move: () => play(`#BPM 300
+    C4:s C5:s`),
+    next: () => sounds.move(),
+    previous: () => play(`#BPM 300
+    C5:s C4:s`),
+    win: () => play(`-:s C4:s E4:s G4:s C5:e G4:s C5:e`),
+    loss: () => play(`#BPM 180
+    -:s C4:s E4:s G4:s C5:e -:s C5:s -:s C5:s -:e C1:h`),
+    join: () => play(`C4:s E4:s G4:s C5:e`)
+};
+
 customElements.define('connect-four-game', class extends HTMLElement {
     connectedCallback() {
         this._sseAbortController = new AbortController();
@@ -155,9 +173,12 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         const field = this._lastFieldInColumn(event.target.closest('[data-column]').dataset.column);
         if (!field) {
+            sounds.error();
             this._isMoveInProgress = false;
             return;
         }
+
+        sounds.move();
 
         const eventOptions = {
             bubbles: true,
@@ -181,6 +202,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             .catch(() => {
                 if (!this._game.hasPendingMove(eventOptions.detail)) return;
 
+                sounds.error();
                 this.dispatchEvent(new CustomEvent('ConnectFour.PlayerMovedFailed', eventOptions));
             })
             .finally(() => this._isMoveInProgress = false);
@@ -201,6 +223,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerJoined = event => {
+        sounds.join();
         this._game.redPlayerId = event.detail.redPlayerId;
         this._game.yellowPlayerId = event.detail.yellowPlayerId;
         this._changeCurrentPlayer(event.detail.redPlayerId);
@@ -210,6 +233,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._changeCurrentPlayer(event.detail.nextPlayerId);
         if (this._game.hasPendingMove(event.detail)) this._removePendingToken();
         if (this._game.hasMove(event.detail)) return;
+        if (event.detail.playerId !== this._playerId) sounds.move();
 
         if (!event.detail.pending) this._isMoveInProgress = false;
         if (!this._followMovesButton || this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView++;
@@ -219,6 +243,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMovedFailed(event) {
+        if (event.detail.gameId !== this._game.gameId) return;
         if (!this._followMovesButton || this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView--;
         this._game.removeMove(event.detail);
 
@@ -227,19 +252,40 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onGameWon = event => {
+        if (event.detail.loserId === this._playerId) sounds.loss();
+        if (event.detail.winnerId === this._playerId) sounds.win();
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
         this._changeCurrentPlayer('');
         this._forceFollowMovesAnimation = this._numberOfCurrentMoveInView !== this._game.numberOfMoves();
     }
 
-    _onGameFinished = event => {
+    _onGameDrawn = event => {
+        sounds.win();
+        this._changeCurrentPlayer('');
+    }
+
+    _onGameResigned = event => {
+        if (event.detail.resignedPlayerId === this._playerId) sounds.loss();
+        if (event.detail.opponentPlayerId === this._playerId) sounds.win();
+        this._changeCurrentPlayer('');
+    }
+
+    _onGameTimedOut = event => {
+        if (event.detail.timedOutPlayerId === this._playerId) sounds.loss();
+        if (event.detail.opponentPlayerId === this._playerId) sounds.win();
+        this._changeCurrentPlayer('');
+    }
+
+    _onGameAborted = event => {
+        sounds.error();
         this._changeCurrentPlayer('');
     }
 
     _onPreviousMoveClick(event) {
         event.preventDefault();
 
+        sounds.previous();
         this._numberOfCurrentMoveInView--;
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
@@ -247,6 +293,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _onNextMoveClick(event) {
         event.preventDefault();
 
+        sounds.next();
         this._numberOfCurrentMoveInView++;
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
@@ -254,6 +301,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _onFollowMovesClick(event) {
         event.preventDefault();
 
+        sounds.next();
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
@@ -278,10 +326,10 @@ customElements.define('connect-four-game', class extends HTMLElement {
             'ConnectFour.PlayerJoined': this._onPlayerJoined,
             'ConnectFour.PlayerMoved': this._onPlayerMoved,
             'ConnectFour.GameWon': this._onGameWon,
-            'ConnectFour.GameDrawn': this._onGameFinished,
-            'ConnectFour.GameAborted': this._onGameFinished,
-            'ConnectFour.GameResigned': this._onGameFinished,
-            'ConnectFour.GameTimedOut': this._onGameFinished
+            'ConnectFour.GameDrawn': this._onGameDrawn,
+            'ConnectFour.GameAborted': this._onGameAborted,
+            'ConnectFour.GameResigned': this._onGameResigned,
+            'ConnectFour.GameTimedOut': this._onGameTimedOut
         }, this._sseAbortController.signal);
     }
 });
