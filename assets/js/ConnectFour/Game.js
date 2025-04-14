@@ -2,6 +2,24 @@ import {service} from './GameService.js'
 import {Game as GameModel} from './Model/Game.js'
 import {html} from 'uhtml/node.js'
 
+function play(sheet) {
+    import('https://cdn.jsdelivr.net/gh/marein/js-scriptune@main/src/scriptune.js')
+        .then(m => m.play(sheet));
+}
+
+const sounds = {
+    error: () => play(`-:s F2:s C2:e`),
+    move: () => play(`#BPM 300
+    C4:s C5:s`),
+    next: () => sounds.move(),
+    previous: () => play(`#BPM 300
+    C5:s C4:s`),
+    win: () => play(`-:s C4:s E4:s G4:s C5:e G4:s C5:e`),
+    loss: () => play(`#BPM 180
+    -:s C4:s E4:s G4:s C5:e -:s C5:s -:s C5:s -:e C1:h`),
+    join: () => play(`C4:s E4:s G4:s C5:e`)
+};
+
 customElements.define('connect-four-game', class extends HTMLElement {
     connectedCallback() {
         let game = JSON.parse(this.getAttribute('game'));
@@ -36,9 +54,9 @@ customElements.define('connect-four-game', class extends HTMLElement {
         window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
         window.removeEventListener('ConnectFour.GameWon', this._onGameWon);
-        window.removeEventListener('ConnectFour.GameDrawn', this._onGameFinished);
-        window.removeEventListener('ConnectFour.GameAborted', this._onGameFinished);
-        window.removeEventListener('ConnectFour.GameResigned', this._onGameFinished);
+        window.removeEventListener('ConnectFour.GameDrawn', this._onGameDrawn);
+        window.removeEventListener('ConnectFour.GameAborted', this._onGameAborted);
+        window.removeEventListener('ConnectFour.GameResigned', this._onGameResigned);
     }
 
     /**
@@ -150,9 +168,12 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         const field = this._lastFieldInColumn(event.target.closest('[data-column]').dataset.column);
         if (!field) {
+            sounds.error();
             this._isMoveInProgress = false;
             return;
         }
+
+        sounds.move();
 
         const eventOptions = {
             bubbles: true,
@@ -175,6 +196,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
             .catch(() => {
                 if (!this._game.hasPendingMove(eventOptions.detail)) return;
 
+                sounds.error();
                 this.dispatchEvent(new CustomEvent('ConnectFour.PlayerMovedFailed', eventOptions));
             })
             .finally(() => this._isMoveInProgress = false);
@@ -195,6 +217,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerJoined = event => {
+        sounds.join();
         this._game.redPlayerId = event.detail.redPlayerId;
         this._game.yellowPlayerId = event.detail.yellowPlayerId;
         this._changeCurrentPlayer(event.detail.redPlayerId);
@@ -204,6 +227,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._changeCurrentPlayer(event.detail.nextPlayerId);
         if (this._game.hasPendingMove(event.detail)) this._removePendingToken();
         if (this._game.hasMove(event.detail)) return;
+        if (event.detail.playerId !== this._playerId) sounds.move();
 
         if (!event.detail.pending) this._isMoveInProgress = false;
         if (this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView++;
@@ -221,19 +245,34 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onGameWon = event => {
+        if (event.detail.loserId === this._playerId) sounds.loss();
+        if (event.detail.winnerId === this._playerId) sounds.win();
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
         this._changeCurrentPlayer('');
         this._forceFollowMovesAnimation = this._numberOfCurrentMoveInView !== this._game.numberOfMoves();
     }
 
-    _onGameFinished = () => {
+    _onGameDrawn = () => {
+        sounds.win();
+        this._changeCurrentPlayer('');
+    }
+
+    _onGameResigned = event => {
+        if (event.detail.resignedPlayerId === this._playerId) sounds.loss();
+        if (event.detail.opponentPlayerId === this._playerId) sounds.win();
+        this._changeCurrentPlayer('');
+    }
+
+    _onGameAborted = () => {
+        sounds.error();
         this._changeCurrentPlayer('');
     }
 
     _onPreviousMoveClick(event) {
         event.preventDefault();
 
+        sounds.previous();
         this._numberOfCurrentMoveInView--;
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
@@ -241,6 +280,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _onNextMoveClick(event) {
         event.preventDefault();
 
+        sounds.next();
         this._numberOfCurrentMoveInView++;
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
@@ -248,6 +288,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     _onFollowMovesClick(event) {
         event.preventDefault();
 
+        sounds.next();
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
@@ -258,9 +299,9 @@ customElements.define('connect-four-game', class extends HTMLElement {
         window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
         window.addEventListener('ConnectFour.GameWon', this._onGameWon);
-        window.addEventListener('ConnectFour.GameDrawn', this._onGameFinished);
-        window.addEventListener('ConnectFour.GameAborted', this._onGameFinished);
-        window.addEventListener('ConnectFour.GameResigned', this._onGameFinished);
+        window.addEventListener('ConnectFour.GameDrawn', this._onGameDrawn);
+        window.addEventListener('ConnectFour.GameAborted', this._onGameAborted);
+        window.addEventListener('ConnectFour.GameResigned', this._onGameResigned);
 
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
