@@ -51,7 +51,7 @@ customElements.define('volume-control', class extends HTMLElement {
 
         this._storageKey = this.getAttribute('storage-key') || 'volume-control';
         this._volume = this._volume;
-        this._debounceTimeout = null;
+        this._abortController = new AbortController();
 
         this._control.addEventListener('input', this._onVolumeChange.bind(this));
     }
@@ -80,7 +80,8 @@ customElements.define('volume-control', class extends HTMLElement {
     _onVolumeChange(event) {
         this._volume = parseFloat(event.target.value);
 
-        clearTimeout(this._debounceTimeout);
-        this._debounceTimeout = setTimeout(() => scriptune.play('C4:s'), 150);
+        this._abortController.abort();
+        this._abortController = new AbortController();
+        scriptune.play('C4:s', {signal: this._abortController.signal});
     }
 });
