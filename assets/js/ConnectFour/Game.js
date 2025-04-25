@@ -10,14 +10,11 @@ function play(sheet) {
 
 const sounds = {
     error: () => play(`-:s F2:s C2:e`),
-    move: () => play(`#BPM 300
-    C4:s C5:s`),
+    move: () => play(`#BPM 300\nC4:s C5:s`),
     next: () => sounds.move(),
-    previous: () => play(`#BPM 300
-    C5:s C4:s`),
+    previous: () => play(`#BPM 300\nC5:s C4:s`),
     win: () => play(`-:s C4:s E4:s G4:s C5:e G4:s C5:e`),
-    loss: () => play(`#BPM 180
-    -:s C4:s E4:s G4:s C5:e -:s C5:s -:s C5:s -:e C1:h`),
+    loss: () => play(`#BPM 180\n-:s C4:s E4:s G4:s C5:e -:s C5:s -:s C5:s -:e C1:h`),
     join: () => play(`C4:s E4:s G4:s C5:e`)
 };
 
