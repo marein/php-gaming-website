@@ -103,6 +103,11 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
         return $game;
     }
 
+    public function findMany(array $gameIds): array
+    {
+        return [];
+    }
+
     private function normalizeGame(Game $game): mixed
     {
         return $this->normalizer->normalize($game, Game::class);

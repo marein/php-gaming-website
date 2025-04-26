@@ -17,7 +17,7 @@
         <div class="col-lg-3 order-first order-lg-last">
             <div class="card">
                 <div class="card-body">
-                    {{ render_ssi(controller('connect-four.fragment-controller::openAction')) }}
+                    {{ render_ssi(controller('connect-four.fragment-controller::openAction', {}, {wide: 1})) }}
                 </div>
             </div>
         </div>

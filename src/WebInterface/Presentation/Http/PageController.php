@@ -7,6 +7,7 @@ namespace Gaming\WebInterface\Presentation\Http;
 use Gaming\Common\Bus\Bus;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 use Gaming\WebInterface\Infrastructure\Security\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,9 +42,9 @@ final class PageController
     {
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
-                'games' => $user !== null
-                    ? $this->connectFourQueryBus->handle(new GamesByPlayerQuery($user->getUserIdentifier()))->games()
-                    : []
+                'gamesByPlayer' => $user !== null
+                    ? $this->connectFourQueryBus->handle(new GamesByPlayerQuery($user->getUserIdentifier()))
+                    : new GamesByPlayer(0, [])
             ])
         );
     }

@@ -13,7 +13,7 @@ services:
 
     connect-four.games-by-player-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisGamesByPlayerStore
-        arguments: ['@connect-four.predis', 'games-by-player:']
+        arguments: ['@connect-four.predis', 'games-by-player:', '@connect-four.game-store']
 
     connect-four.open-game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisOpenGameStore
