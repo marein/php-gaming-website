@@ -5,7 +5,7 @@
 const eventTarget = new EventTarget();
 const globalConfig = document.querySelector('meta[name="sse-config"]');
 let currentSubscriptionId = 0;
-let subscriptions = {};
+const subscriptions = {};
 let eventSource = null;
 const baseUrl = globalConfig?.getAttribute('data-base-url') || '/sse/sub?id=';
 let debounceTimeout = null;
@@ -27,10 +27,9 @@ function connect(debounceTimeoutMs = null) {
 }
 
 function onMessage(event) {
-    let [, type, payload] = event.data.split(/([^:]+):(.*)/);
-    let detail = JSON.parse(payload);
+    const [, type, payload] = event.data.split(/([^:]+):(.*)/);
 
-    Object.values(subscriptions).forEach(s => s.listeners[type]?.({type, detail}));
+    Object.values(subscriptions).forEach(s => s.listeners[type]?.({type, detail: JSON.parse(payload)}));
 }
 
 function onOpen() {
