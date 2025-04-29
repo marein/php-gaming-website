@@ -8,7 +8,6 @@ let currentSubscriptionId = 0;
 let subscriptions = {};
 let eventSource = null;
 const baseUrl = globalConfig?.getAttribute('data-base-url') || '/sse/sub?id=';
-let lastEventId = null;
 let debounceTimeout = null;
 const globalDebounceTimeoutMs = globalConfig?.getAttribute('data-debounce-ms') ?? 150;
 
@@ -28,8 +27,6 @@ function connect(debounceTimeoutMs = null) {
 }
 
 function onMessage(event) {
-    lastEventId = event.lastEventId;
-
     let [, type, payload] = event.data.split(/([^:]+):(.*)/);
     let detail = JSON.parse(payload);
 
