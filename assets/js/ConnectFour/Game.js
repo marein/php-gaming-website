@@ -1,9 +1,11 @@
 import {service} from './GameService.js'
 import {Game as GameModel} from './Model/Game.js'
 import {html} from 'uhtml/node.js'
+import * as sse from '../Common/EventSource.js'
 
 customElements.define('connect-four-game', class extends HTMLElement {
     connectedCallback() {
+        this._sseAbortController = new AbortController();
         let game = JSON.parse(this.getAttribute('game'));
 
         this.append(this._gameNode = html`
@@ -33,12 +35,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     disconnectedCallback() {
-        window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
-        window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
-        window.removeEventListener('ConnectFour.GameWon', this._onGameWon);
-        window.removeEventListener('ConnectFour.GameDrawn', this._onGameFinished);
-        window.removeEventListener('ConnectFour.GameAborted', this._onGameFinished);
-        window.removeEventListener('ConnectFour.GameResigned', this._onGameFinished);
+        this._sseAbortController.abort();
     }
 
     /**
@@ -254,13 +251,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
     _registerEventHandler() {
         this.addEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed.bind(this));
-
-        window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
-        window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
-        window.addEventListener('ConnectFour.GameWon', this._onGameWon);
-        window.addEventListener('ConnectFour.GameDrawn', this._onGameFinished);
-        window.addEventListener('ConnectFour.GameAborted', this._onGameFinished);
-        window.addEventListener('ConnectFour.GameResigned', this._onGameFinished);
+        this.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
 
         this._fields.forEach(field => {
             field.addEventListener('click', this._onFieldClick.bind(this));
@@ -271,5 +262,16 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._previousMoveButton.addEventListener('click', this._onPreviousMoveClick.bind(this));
         this._nextMoveButton.addEventListener('click', this._onNextMoveClick.bind(this));
         this._followMovesButton.addEventListener('click', this._onFollowMovesClick.bind(this));
+
+        if (!['open', 'running'].includes(this._game.state)) return;
+
+        sse.subscribe(`connect-four-${this._game.gameId}`, {
+            'ConnectFour.PlayerJoined': this._onPlayerJoined,
+            'ConnectFour.PlayerMoved': this._onPlayerMoved,
+            'ConnectFour.GameWon': this._onGameWon,
+            'ConnectFour.GameDrawn': this._onGameFinished,
+            'ConnectFour.GameAborted': this._onGameFinished,
+            'ConnectFour.GameResigned': this._onGameFinished
+        }, this._sseAbortController.signal);
     }
 });

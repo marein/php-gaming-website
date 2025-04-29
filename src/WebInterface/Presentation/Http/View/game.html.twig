@@ -107,12 +107,10 @@
             </div>
             <chat-widget id="chat"
                          chat-id="{{ game.chatId|e('html_attr') }}"
+                         game-channel="connect-four-{{ game.gameId|e('html_attr') }}"
                          author-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
                          seconds-before-retry="3">
             </chat-widget>
         </div>
     </div>
-    <event-source subscriptions="connect-four-{{ game.id }}{{ game.chatId ? ',chat-' ~ game.chatId }}"
-                  {% if app.environment == 'dev' %}verbose{% endif %}>
-    </event-source>
 {% endblock %}

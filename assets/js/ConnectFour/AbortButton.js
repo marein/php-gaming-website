@@ -1,9 +1,12 @@
 import {service} from './GameService.js'
 import 'confirmation-button'
 import {html} from 'uhtml/node.js'
+import * as sse from '../Common/EventSource.js'
 
 customElements.define('connect-four-abort-button', class extends HTMLElement {
     connectedCallback() {
+        this._sseAbortController = new AbortController();
+
         this.replaceChildren(html`
             <confirmation-button @confirmation-button:yes="${this._onYes.bind(this)}">
                 ${Array.from(this.children)}
@@ -16,23 +19,22 @@ customElements.define('connect-four-abort-button', class extends HTMLElement {
 
         this._changeVisibility();
 
-        window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
         window.addEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed);
-        window.addEventListener('ConnectFour.GameAborted', this._remove);
-        window.addEventListener('ConnectFour.GameWon', this._remove);
-        window.addEventListener('ConnectFour.GameResigned', this._remove);
-        window.addEventListener('ConnectFour.GameDrawn', this._remove);
+        sse.subscribe(`connect-four-${this.getAttribute('game-id')}`, {
+            'ConnectFour.PlayerJoined': this._onPlayerJoined,
+            'ConnectFour.PlayerMoved': this._onPlayerMoved,
+            'ConnectFour.GameAborted': this._remove,
+            'ConnectFour.GameWon': this._remove,
+            'ConnectFour.GameResigned': this._remove,
+            'ConnectFour.GameDrawn': this._remove
+        }, this._sseAbortController.signal);
     }
 
     disconnectedCallback() {
-        window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
         window.removeEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed);
-        window.removeEventListener('ConnectFour.GameWon', this._remove);
-        window.removeEventListener('ConnectFour.GameAborted', this._remove);
-        window.removeEventListener('ConnectFour.GameResigned', this._remove);
-        window.removeEventListener('ConnectFour.GameDrawn', this._remove);
+        this._sseAbortController.abort();
     }
 
     _onYes(e) {

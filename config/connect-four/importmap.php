@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+    'connect-four-redirect' => ['path' => 'js/ConnectFour/Redirect.js'],
     'connect-four-running-games' => ['path' => 'js/ConnectFour/RunningGames.js'],
     'connect-four-game-list' => ['path' => 'js/ConnectFour/GameList.js'],
     'connect-four-game' => ['path' => 'js/ConnectFour/Game.js'],
