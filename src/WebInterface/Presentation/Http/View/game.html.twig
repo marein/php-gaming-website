@@ -9,7 +9,8 @@
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body">
-                            <connect-four-players player-id="{{ app.user ? app.user.userIdentifier }}"
+                            <connect-four-players game-id="{{ game.id }}"
+                                                  player-id="{{ app.user ? app.user.userIdentifier }}"
                                                   red-player-id="{{ game.redPlayerId }}"
                                                   yellow-player-id="{{ game.yellowPlayerId }}"
                                                   current-player-id="{{ game.currentPlayerId }}"
