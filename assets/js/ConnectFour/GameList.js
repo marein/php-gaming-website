@@ -1,9 +1,10 @@
 import {service} from './GameService.js'
 import {html} from 'uhtml/node.js'
+import * as sse from '../Common/EventSource.js'
 
 customElements.define('connect-four-game-list', class extends HTMLElement {
     connectedCallback() {
-        this._onDisconnect = [];
+        this._sseAbortController = new AbortController();
 
         this.append(html`
             <div class="card">
@@ -33,7 +34,8 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     }
 
     disconnectedCallback() {
-        this._onDisconnect.forEach(f => f());
+        window.removeEventListener('WebInterface.UserArrived', this._onUserArrived);
+        this._sseAbortController.abort();
     }
 
     /**
@@ -214,7 +216,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         this._scheduleRemovingOfGame(event.detail.gameId);
     }
 
-    _onUserArrived(event) {
+    _onUserArrived = event => {
         this._playerId = event.detail.userId;
 
         this.querySelectorAll(`[data-player-id="${this._playerId}"]`)
@@ -222,24 +224,11 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     }
 
     _registerEventHandler() {
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.GameOpened', this._onGameOpened.bind(this));
-
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.PlayerJoined', this._onPlayerJoinedOrGameAborted.bind(this));
-
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.GameAborted', this._onPlayerJoinedOrGameAborted.bind(this));
-
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('WebInterface.UserArrived', this._onUserArrived.bind(this));
+        window.addEventListener('WebInterface.UserArrived', this._onUserArrived);
+        sse.subscribe('lobby', {
+            'ConnectFour.GameOpened': this._onGameOpened.bind(this),
+            'ConnectFour.PlayerJoined': this._onPlayerJoinedOrGameAborted.bind(this),
+            'ConnectFour.GameAborted': this._onPlayerJoinedOrGameAborted.bind(this)
+        }, this._sseAbortController.signal);
     }
 });

@@ -1,18 +1,15 @@
+import * as sse from '../Common/EventSource.js'
+
 customElements.define('connect-four-running-games', class extends HTMLElement {
     connectedCallback() {
-        this._onDisconnect = [];
+        this._sseAbortController = new AbortController();
 
-        ((n, f) => {
-            window.addEventListener(n, f);
-            this._onDisconnect.push(() => window.removeEventListener(n, f));
-        })('ConnectFour.RunningGamesUpdated', this._onRunningGamesUpdated.bind(this));
+        sse.subscribe('lobby', {
+            'ConnectFour.RunningGamesUpdated': e => this.innerText = e.detail.count
+        }, this._sseAbortController.signal);
     }
 
     disconnectedCallback() {
-        this._onDisconnect.forEach(f => f());
-    }
-
-    _onRunningGamesUpdated(event) {
-        this.innerText = event.detail.count;
+        this._sseAbortController.abort();
     }
 });

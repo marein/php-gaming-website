@@ -17,7 +17,6 @@ namespace {
 
     $map = [
         'app' => ['path' => 'js/app.js', 'entrypoint' => true],
-        'event-source' => ['path' => 'js/Common/EventSource.js'],
         'notification-list' => ['path' => 'js/Common/NotificationList.js'],
         'event-source-status' => ['path' => 'js/Common/EventSourceStatus.js'],
         'confirmation-button' => ['path' => 'js/Common/ConfirmationButton.js'],

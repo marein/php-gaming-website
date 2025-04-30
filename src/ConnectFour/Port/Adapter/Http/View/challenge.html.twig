@@ -39,6 +39,7 @@
                                 </span>
                             {% endfor %}
                         </div>
+                        <connect-four-redirect game-id="{{ game.gameId|e('html_attr') }}"></connect-four-redirect>
                         <form action="{{ path('connect_four_abort_challenge', {id: game.gameId}) }}"
                               method="post"
                               data-abort-form>
@@ -53,15 +54,4 @@
             </div>
         </div>
     </div>
-    <event-source id="event-source"
-                  subscriptions="connect-four-{{ game.gameId }}"
-                  {% if app.environment == 'dev' %}verbose{% endif %}>
-    </event-source>
-    {# Replace this inline script with a component that notifies the user on every page when a player joins. #}
-    {# See https://github.com/marein/php-gaming-website/issues/123. #}
-    <script type="module">
-        document.getElementById('event-source').addEventListener('ConnectFour.PlayerJoined', () => {
-            window.app.navigate({{ path('game', {id: game.gameId})|json_encode|raw }});
-        });
-    </script>
 {% endblock %}

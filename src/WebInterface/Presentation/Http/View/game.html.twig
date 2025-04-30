@@ -9,7 +9,8 @@
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body">
-                            <connect-four-players player-id="{{ app.user ? app.user.userIdentifier }}"
+                            <connect-four-players game-id="{{ game.id }}"
+                                                  player-id="{{ app.user ? app.user.userIdentifier }}"
                                                   red-player-id="{{ game.redPlayerId }}"
                                                   yellow-player-id="{{ game.yellowPlayerId }}"
                                                   current-player-id="{{ game.currentPlayerId }}"
@@ -107,12 +108,10 @@
             </div>
             <chat-widget id="chat"
                          chat-id="{{ game.chatId|e('html_attr') }}"
+                         game-channel="connect-four-{{ game.gameId|e('html_attr') }}"
                          author-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
                          seconds-before-retry="3">
             </chat-widget>
         </div>
     </div>
-    <event-source subscriptions="connect-four-{{ game.id }}{{ game.chatId ? ',chat-' ~ game.chatId }}"
-                  {% if app.environment == 'dev' %}verbose{% endif %}>
-    </event-source>
 {% endblock %}

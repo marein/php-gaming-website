@@ -8,6 +8,7 @@ export class Game {
     /**
      * @param {{
      *   gameId: String,
+     *   state: String,
      *   redPlayerId: String,
      *   yellowPlayerId: String,
      *   currentPlayerId: String,
@@ -17,6 +18,7 @@ export class Game {
      */
     constructor(game) {
         this.gameId = game.gameId;
+        this.state = game.state;
         this.redPlayerId = game.redPlayerId;
         this.yellowPlayerId = game.yellowPlayerId;
         this.currentPlayerId = game.currentPlayerId;

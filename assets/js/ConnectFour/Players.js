@@ -1,19 +1,27 @@
 import {html} from 'uhtml/node.js';
+import * as sse from '../Common/EventSource.js'
 
 customElements.define('connect-four-players', class extends HTMLElement {
     connectedCallback() {
+        this._sseAbortController = new AbortController();
+
         this._appendPlayerBadges(this._redPlayerElement = this.querySelector('[data-red-player]'));
         this._appendPlayerBadges(this._yellowPlayerElement = this.querySelector('[data-yellow-player]'));
 
         this._render();
 
-        window.addEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
+        if (!['open', 'running'].includes(this.getAttribute('game-state'))) return;
+
         window.addEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
         window.addEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed);
-        window.addEventListener('ConnectFour.GameAborted', this._onGameAborted);
-        window.addEventListener('ConnectFour.GameWon', this._onGameWon);
-        window.addEventListener('ConnectFour.GameResigned', this._onGameResigned);
-        window.addEventListener('ConnectFour.GameDrawn', this._onGameDrawn);
+        sse.subscribe(`connect-four-${this.getAttribute('game-id')}`, {
+            'ConnectFour.PlayerJoined': this._onPlayerJoined,
+            'ConnectFour.PlayerMoved': this._onPlayerMoved,
+            'ConnectFour.GameAborted': this._onGameAborted,
+            'ConnectFour.GameWon': this._onGameWon,
+            'ConnectFour.GameResigned': this._onGameResigned,
+            'ConnectFour.GameDrawn': this._onGameDrawn
+        }, this._sseAbortController.signal);
     }
 
     disconnectedCallback() {
@@ -119,12 +127,8 @@ customElements.define('connect-four-players', class extends HTMLElement {
     }
 
     _removeEventListeners() {
-        window.removeEventListener('ConnectFour.PlayerJoined', this._onPlayerJoined);
         window.removeEventListener('ConnectFour.PlayerMoved', this._onPlayerMoved);
         window.removeEventListener('ConnectFour.PlayerMovedFailed', this._onPlayerMovedFailed);
-        window.removeEventListener('ConnectFour.GameWon', this._onGameWon);
-        window.removeEventListener('ConnectFour.GameAborted', this._onGameAborted);
-        window.removeEventListener('ConnectFour.GameResigned', this._onGameResigned);
-        window.removeEventListener('ConnectFour.GameDrawn', this._onGameDrawn);
+        this._sseAbortController.abort();
     }
 });

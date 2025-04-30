@@ -1,4 +1,5 @@
 import {html} from 'uhtml/node.js'
+import * as sse from '../Common/EventSource.js'
 
 customElements.define('event-source-status', class extends HTMLElement {
     connectedCallback() {
@@ -13,19 +14,14 @@ customElements.define('event-source-status', class extends HTMLElement {
         this._isInErrorState = false;
         this._tooltipTimeout = null;
 
-        document.addEventListener('sse:open', this._open);
-        document.addEventListener('sse:error', this._error);
-        window.addEventListener('app:load', this._appLoad);
+        this._open();
+        sse.addEventListener('open', this._open);
+        sse.addEventListener('error', this._error);
     }
 
     disconnectedCallback() {
-        document.removeEventListener('sse:connected', this._open);
-        document.removeEventListener('sse:disconnected', this._error);
-        window.removeEventListener('app:load', this._appLoad);
-    }
-
-    _appLoad = () => {
-        if (!document.querySelector('event-source')) this._open();
+        sse.removeEventListener('open', this._open);
+        sse.removeEventListener('error', this._error);
     }
 
     _open = () => {

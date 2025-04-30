@@ -1,63 +1,63 @@
-customElements.define('event-source', class extends HTMLElement {
-    connectedCallback() {
-        this._eventSource = null;
-        this._lastEventId = null;
-        this._reconnectTimeout = null;
-        this._subscriptions = this.getAttribute('subscriptions')?.split(',') ?? [];
-        this._verbose = this.hasAttribute('verbose');
+/**
+ * @typedef {{[key: string]: Function}} Listeners
+ */
 
-        window.addEventListener('sse:addsubscription', this._onAddSubscription);
-        window.addEventListener('app:load', this._connect);
-    }
+const eventTarget = new EventTarget();
+const globalConfig = document.querySelector('meta[name="sse-config"]');
+let currentSubscriptionId = 0;
+const subscriptions = {};
+let eventSource = null;
+const baseUrl = globalConfig?.getAttribute('data-base-url') || '/sse/sub?id=';
+let debounceTimeout = null;
+const globalDebounceTimeoutMs = globalConfig?.getAttribute('data-debounce-ms') ?? 150;
 
-    disconnectedCallback() {
-        window.removeEventListener('sse:addsubscription', this._onAddSubscription);
-        window.removeEventListener('app:load', this._connect);
+function connect(debounceTimeoutMs = null) {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+        if (eventSource) eventSource.close();
 
-        this._eventSource && this._eventSource.close();
-        clearTimeout(this._reconnectTimeout);
-    }
+        const uniqueChannels = [...new Set(Object.values(subscriptions).map(s => s.channel))];
+        if (uniqueChannels.length === 0) return;
 
-    _connect = () => {
-        this._eventSource && this._eventSource.close();
-        clearTimeout(this._reconnectTimeout);
+        eventSource = new EventSource(baseUrl + uniqueChannels.join(','));
+        eventSource.onmessage = onMessage;
+        eventSource.onopen = onOpen;
+        eventSource.onerror = onError;
+    }, debounceTimeoutMs ?? globalDebounceTimeoutMs);
+}
 
-        let url = '/sse/sub?id=' + this._subscriptions.join(',');
-        if (this._lastEventId !== null) url += '&last_event_id=' + this._lastEventId;
+function onMessage(event) {
+    const [, type, payload] = event.data.split(/([^:]+):(.*)/);
 
-        this._eventSource = new EventSource(url);
-        this._eventSource.onmessage = this._onMessage;
-        this._eventSource.onopen = this._onOpen;
-        this._eventSource.onerror = this._onError;
-    }
+    Object.values(subscriptions).forEach(s => s.listeners[type]?.({type, detail: JSON.parse(payload)}));
+}
 
-    _onMessage = (message) => {
-        this._lastEventId = message.lastEventId;
+function onOpen() {
+    eventTarget.dispatchEvent(new CustomEvent('open'))
+}
 
-        let [, eventName, eventData] = message.data.split(/([^:]+):(.*)/);
-        let payload = JSON.parse(eventData);
+function onError () {
+    eventTarget.dispatchEvent(new CustomEvent('error'));
 
-        this.dispatchEvent(new CustomEvent(eventName, {bubbles: true, detail: payload}));
+    if (eventSource.readyState !== EventSource.CLOSED) return;
 
-        this._verbose && console.log(eventName, payload);
-    };
+    connect(3000 + Math.floor(Math.random() * 2000));
+}
 
-    _onOpen = () => {
-        this.dispatchEvent(new CustomEvent('sse:open', {bubbles: true}))
-    }
+/**
+ * @param {String} channel
+ * @param {Listeners} listeners
+ * @param {AbortSignal|null} signal
+ */
+export function subscribe(channel, listeners, signal = null) {
+    const subscriptionId = ++currentSubscriptionId;
+    subscriptions[subscriptionId] = {channel, listeners};
+    signal?.addEventListener('abort', () => {
+        delete subscriptions[subscriptionId];
+        connect();
+    });
+    connect();
+}
 
-    _onError = () => {
-        this.dispatchEvent(new CustomEvent('sse:error', {bubbles: true}));
-
-        if (this._eventSource.readyState !== EventSource.CLOSED) return;
-
-        this._reconnectTimeout = setTimeout(() => this._connect(), 3000 + Math.floor(Math.random() * 2000));
-    }
-
-    _onAddSubscription = (event) => {
-        if (this._subscriptions.indexOf(event.detail.name) !== -1) return;
-
-        this._subscriptions.push(event.detail.name);
-        this._connect();
-    }
-});
+export const addEventListener = (...args) => eventTarget.addEventListener(...args);
+export const removeEventListener = (...args) => eventTarget.removeEventListener(...args);
