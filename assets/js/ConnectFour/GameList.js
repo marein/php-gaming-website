@@ -34,6 +34,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     }
 
     disconnectedCallback() {
+        window.removeEventListener('WebInterface.UserArrived', this._onUserArrived);
         this._sseAbortController.abort();
     }
 
@@ -215,7 +216,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         this._scheduleRemovingOfGame(event.detail.gameId);
     }
 
-    _onUserArrived(event) {
+    _onUserArrived = event => {
         this._playerId = event.detail.userId;
 
         this.querySelectorAll(`[data-player-id="${this._playerId}"]`)
@@ -223,11 +224,11 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     }
 
     _registerEventHandler() {
+        window.addEventListener('WebInterface.UserArrived', this._onUserArrived);
         sse.subscribe('lobby', {
             'ConnectFour.GameOpened': this._onGameOpened.bind(this),
             'ConnectFour.PlayerJoined': this._onPlayerJoinedOrGameAborted.bind(this),
-            'ConnectFour.GameAborted': this._onPlayerJoinedOrGameAborted.bind(this),
-            'ConnectFour.UserArrived': this._onUserArrived.bind(this)
+            'ConnectFour.GameAborted': this._onPlayerJoinedOrGameAborted.bind(this)
         }, this._sseAbortController.signal);
     }
 });
