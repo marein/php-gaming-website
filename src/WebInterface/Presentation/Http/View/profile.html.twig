@@ -63,7 +63,7 @@
                                         <span data-username>Anonymous</span>
                                     </p>
                                 </connect-four-players>
-                                <connect-four-game class="flex-fill align-content-center"
+                                <connect-four-game class="flex-fill align-content-end"
                                                    game="{{ game|json_encode|e('html_attr') }}"
                                                    player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}">
                                     <div style="aspect-ratio: {{ game.width }}/{{ game.height }};"></div>
