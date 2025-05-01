@@ -9,3 +9,4 @@ parameters:
     - message: '#^While loop condition is always true\.$#'
     - message: "#^Property Gaming\\\\Identity\\\\Domain\\\\Model\\\\User\\\\User\\:\\:\\$version#"
     - message: "#^Property Gaming\\\\Memory\\\\Domain\\\\Model\\\\Game\\\\Game\\:\\:\\$cards is never read, only written\\.$#"
+    - message: '#^Cannot access offset [0-9]+ .*Predis.*Pipeline\.$#'

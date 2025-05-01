@@ -6,6 +6,10 @@ html:has(.navbar.sticky-top) {
     scroll-padding-top: 66px;
 }
 
+html:has(.navbar.sticky-top) .page-body .sticky-md-top {
+    top: 66px;
+}
+
 [data-title] {
     position: relative;
 }
@@ -51,6 +55,27 @@ html:has(.navbar.sticky-top) {
 
 .gp-dropdown-toggle:checked + label + .dropdown-menu {
     display: block;
+}
+
+.gp-expand-toggle {
+    clip: rect(0 0 0 0);
+    position: absolute;
+}
+
+.gp-expand-toggle + label {
+    margin-bottom: var(--tblr-spacer-3);
+}
+
+.gp-expand-toggle:checked + label {
+    margin-bottom: var(--tblr-spacer-2);
+}
+
+.gp-expand-toggle + label + * {
+    display: none;
+}
+
+.gp-expand-toggle:checked + label + * {
+    display: initial;
 }
 
 .gp-page-progress {
@@ -117,6 +142,7 @@ notification-list {
 
 .gp-cf-game {
     --grid-cols: 7;
+    --border-size-base: 26px;
     display: grid;
     grid-template-columns: repeat(var(--grid-cols), 1fr);
     grid-gap: var(--tblr-spacer-1);
@@ -136,7 +162,7 @@ notification-list {
     width: 100%;
     aspect-ratio: 1;
     background-color: var(--tblr-body-bg);
-    border: var(--tblr-border-width) solid #323232;
+    border: var(--tblr-border-width) solid var(--tblr-dark);
     border-radius: 50%;
     cursor: pointer;
 }
@@ -174,9 +200,13 @@ notification-list {
     }
 }
 
+.gp-cf-game-list .gp-cf-game {
+    --border-size-base: 13px;
+}
+
 .gp-cf-game__field .gp-cf-token {
     position: absolute;
-    --border-size: calc(35px / var(--grid-cols));
+    --border-size: calc(var(--border-size-base) / var(--grid-cols));
 }
 
 .gp-cf-token {

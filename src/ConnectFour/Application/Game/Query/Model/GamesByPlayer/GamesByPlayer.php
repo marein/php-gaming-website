@@ -4,26 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer;
 
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
+
 final class GamesByPlayer
 {
     /**
-     * @var GameByPlayer[]
+     * @param Game[] $games
      */
-    private array $games;
-
-    /**
-     * @param GameByPlayer[] $games
-     */
-    public function __construct(array $games)
-    {
-        $this->games = $games;
-    }
-
-    /**
-     * @return GameByPlayer[]
-     */
-    public function games(): array
-    {
-        return $this->games;
+    public function __construct(
+        public readonly int $count,
+        public readonly array $games
+    ) {
     }
 }

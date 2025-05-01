@@ -8,7 +8,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         this._sseAbortController = new AbortController();
         let game = JSON.parse(this.getAttribute('game'));
 
-        this.append(this._gameNode = html`
+        this.replaceChildren(this._gameNode = html`
             <div style="${`--grid-cols: ${game.width}`}"
                  class="gp-cf-game">${[...Array(game.height * game.width).keys()].map(n => html`
                 <div class="gp-cf-game__field"
@@ -19,9 +19,15 @@ customElements.define('connect-four-game', class extends HTMLElement {
         `);
 
         this._playerId = this.getAttribute('player-id');
-        this._previousMoveButton = document.querySelector(this.getAttribute('previous-move-selector'));
-        this._nextMoveButton = document.querySelector(this.getAttribute('next-move-selector'));
-        this._followMovesButton = document.querySelector(this.getAttribute('follow-moves-selector'));
+        this._previousMoveButton = this.hasAttribute('previous-move-selector')
+            ? document.querySelector(this.getAttribute('previous-move-selector'))
+            : null;
+        this._nextMoveButton = this.hasAttribute('next-move-selector')
+            ? document.querySelector(this.getAttribute('next-move-selector'))
+            : null;
+        this._followMovesButton = this.hasAttribute('follow-moves-selector')
+            ? document.querySelector(this.getAttribute('follow-moves-selector'))
+            : null;
         this._game = new GameModel(game);
         this._numberOfCurrentMoveInView = this._game.numberOfMoves();
         this._fields = this._gameNode.querySelectorAll('.gp-cf-game__field');
@@ -98,11 +104,13 @@ customElements.define('connect-four-game', class extends HTMLElement {
         const isCurrentPlayer = this._game.currentPlayerId === this._playerId;
         const showAnimation = this._forceFollowMovesAnimation || (isCurrentPlayer && !isCurrentMoveTheLastMove);
 
-        this._previousMoveButton.disabled = this._numberOfCurrentMoveInView === 0;
-        this._nextMoveButton.disabled = isCurrentMoveTheLastMove;
-        this._followMovesButton.disabled = isCurrentMoveTheLastMove;
-        this._followMovesButton.classList.toggle('btn-warning', showAnimation);
-        this._followMovesButton.classList.toggle('icon-tada', showAnimation);
+        if (this._previousMoveButton) this._previousMoveButton.disabled = this._numberOfCurrentMoveInView === 0;
+        if (this._nextMoveButton) this._nextMoveButton.disabled = isCurrentMoveTheLastMove;
+        if (this._followMovesButton) {
+            this._followMovesButton.disabled = isCurrentMoveTheLastMove;
+            this._followMovesButton.classList.toggle('btn-warning', showAnimation);
+            this._followMovesButton.classList.toggle('icon-tada', showAnimation);
+        }
     }
 
     _showWinningSequences() {
@@ -111,9 +119,9 @@ customElements.define('connect-four-game', class extends HTMLElement {
 
         this._fields.forEach(field => field.classList.remove('gp-cf-game__field--highlight'));
         this._game.winningSequences.forEach(winningSequence => {
-            winningSequence.points.forEach((point, i) => setTimeout(
+            winningSequence.points.forEach(point => setTimeout(
                 () => this._fieldByPoint(point).classList.add('gp-cf-game__field--highlight'),
-                i * 100
+                0
             ));
         });
     }
@@ -154,6 +162,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
         const eventOptions = {
             bubbles: true,
             detail: {
+                gameId: this._game.gameId,
                 x: parseInt(field.dataset.column),
                 y: parseInt(field.dataset.row),
                 color: this._playerId === this._game.redPlayerId ? 1 : 2,
@@ -192,25 +201,28 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerJoined = event => {
+        if (event.detail.gameId !== this._game.gameId) return;
         this._game.redPlayerId = event.detail.redPlayerId;
         this._game.yellowPlayerId = event.detail.yellowPlayerId;
         this._changeCurrentPlayer(event.detail.redPlayerId);
     }
 
     _onPlayerMoved = event => {
+        if (event.detail.gameId !== this._game.gameId) return;
         this._changeCurrentPlayer(event.detail.nextPlayerId);
         if (this._game.hasPendingMove(event.detail)) this._removePendingToken();
         if (this._game.hasMove(event.detail)) return;
 
         if (!event.detail.pending) this._isMoveInProgress = false;
-        if (this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView++;
+        if (!this._followMovesButton || this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView++;
 
         this._game.appendMove(event.detail);
         this._showMovesUpTo(this._numberOfCurrentMoveInView);
     }
 
     _onPlayerMovedFailed(event) {
-        if (this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView--;
+        if (event.detail.gameId !== this._game.gameId) return;
+        if (!this._followMovesButton || this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView--;
         this._game.removeMove(event.detail);
 
         this._changeCurrentPlayer(event.detail.playerId);
@@ -218,13 +230,15 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onGameWon = event => {
+        if (event.detail.gameId !== this._game.gameId) return;
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
         this._changeCurrentPlayer('');
         this._forceFollowMovesAnimation = this._numberOfCurrentMoveInView !== this._game.numberOfMoves();
     }
 
-    _onGameFinished = () => {
+    _onGameFinished = event => {
+        if (event.detail.gameId !== this._game.gameId) return;
         this._changeCurrentPlayer('');
     }
 
@@ -259,9 +273,9 @@ customElements.define('connect-four-game', class extends HTMLElement {
             field.addEventListener('mouseleave', this._onFieldMouseleave.bind(this));
         });
 
-        this._previousMoveButton.addEventListener('click', this._onPreviousMoveClick.bind(this));
-        this._nextMoveButton.addEventListener('click', this._onNextMoveClick.bind(this));
-        this._followMovesButton.addEventListener('click', this._onFollowMovesClick.bind(this));
+        this._previousMoveButton?.addEventListener('click', this._onPreviousMoveClick.bind(this));
+        this._nextMoveButton?.addEventListener('click', this._onNextMoveClick.bind(this));
+        this._followMovesButton?.addEventListener('click', this._onFollowMovesClick.bind(this));
 
         if (!['open', 'running'].includes(this._game.state)) return;
 

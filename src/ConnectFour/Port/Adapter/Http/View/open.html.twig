@@ -1,8 +1,8 @@
 <div class="dropdown">
     <input type="checkbox" class="gp-dropdown-toggle" id="open-game-dropdown">
-    <label class="btn btn-primary w-100 dropdown-toggle"
+    <label class="btn btn-primary dropdown-toggle{{ app.request.query.get('wide', '') == '1' ? ' w-100' }}"
            for="open-game-dropdown">
-        Open a new game
+        New game
     </label>
     <div class="dropdown-menu dropdown-menu-card dropdown-menu-arrow dropdown-menu-end"
          data-bs-popper>

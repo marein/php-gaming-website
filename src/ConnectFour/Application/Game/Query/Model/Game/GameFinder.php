@@ -13,4 +13,11 @@ interface GameFinder
      * @throws GameNotFoundException
      */
     public function find(GameId $gameId): Game;
+
+    /**
+     * @param GameId[] $gameIds
+     *
+     * @return Game[]
+     */
+    public function findMany(array $gameIds): array;
 }
