@@ -21,13 +21,20 @@
             <div class="d-md-block sticky-md-top">
                 <div class="subheader mb-2">State</div>
                 <div class="list-group mb-3">
-                    <a href="{{ path('profile') }}"
-                       class="list-group-item list-group-item-action d-flex align-items-center active">
-                        All
-                        <small class="text-secondary ms-auto">{{ gamesByPlayer.count }}</small>
-                    </a>
+                    {% for state, total in gamesByPlayer.totals %}
+                        <a href="{{ path('profile', state == 'all' ? {} :{state: state}) }}"
+                           class="list-group-item list-group-item-action d-flex align-items-center{{ app.request.query.get('state', 'all') == state ? ' active' }}">
+                            {{ state|capitalize }}
+                            <small class="text-secondary ms-auto">{{ total }}</small>
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
+            <p class="d-md-none small text-secondary mb-1">
+                State: {{ app.request.query.get('state', 'all')|capitalize }}
+                •
+                Page: {{ max(1, app.request.query.getInt('page', 1)) }}
+            </p>
         </div>
         <div class="col-md-8 col-lg-9 gp-cf-game-list">
             <div class="row row-deck row-gap-2">
@@ -87,6 +94,17 @@
                         </div>
                     </div>
                 {% endfor %}
+                {% if gamesByPlayer.total > 0 %}
+                    <div class="col-12">
+                        {% include 'include/pagination.html.twig' with {
+                            'page': app.request.query.getInt('page', 1),
+                            'total': gamesByPlayer.total,
+                            'limit': gamesPerPage,
+                            'previousTitle': 'Games',
+                            'nextTitle': 'Games'
+                        } %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
