@@ -1,6 +1,6 @@
 {% set totalPages = (total / limit)|round(0, 'ceil') %}
-{% set previousPage = max(page - 1, 1) %}
-{% set nextPage = min(page + 1, totalPages) %}
+{% set previousPage = min(max(page - 1, 1), totalPages) %}
+{% set nextPage = max(min(page + 1, totalPages), 2) %}
 <div class="card">
     <div class="card-body">
         <ul class="pagination">
