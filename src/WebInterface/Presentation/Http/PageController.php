@@ -45,7 +45,7 @@ final class PageController
             $this->twig->render('@web-interface/profile.html.twig', [
                 'gamesPerPage' => $gamesPerPage = 12,
                 'gamesByPlayer' => $user === null
-                    ? new GamesByPlayer(['all' => 0], 0, [])
+                    ? new GamesByPlayer(0, [])
                     : $this->connectFourQueryBus->handle(
                         new GamesByPlayerQuery(
                             $user->getUserIdentifier(),

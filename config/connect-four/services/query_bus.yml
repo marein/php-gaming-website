@@ -22,3 +22,7 @@ services:
     Gaming\ConnectFour\Application\Game\Query\RunningGamesHandler:
         arguments: ['@connect-four.running-games-store']
         tags: [{ name: 'gaming_platform_bus.handler', bus: 'connect_four_query' }]
+
+    Gaming\ConnectFour\Application\Game\Query\PlayerSearchStatistics\PlayerSearchStatisticsHandler:
+        arguments: ['@connect-four.games-by-player-store']
+        tags: [{ name: 'gaming_platform_bus.handler', bus: 'connect_four_query' }]

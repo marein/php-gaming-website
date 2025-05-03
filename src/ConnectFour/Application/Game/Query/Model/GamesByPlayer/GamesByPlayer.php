@@ -9,11 +9,9 @@ use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 final class GamesByPlayer
 {
     /**
-     * @param array<string, int> $totals
      * @param Game[] $games
      */
     public function __construct(
-        public readonly array $totals,
         public readonly int $total,
         public readonly array $games
     ) {
