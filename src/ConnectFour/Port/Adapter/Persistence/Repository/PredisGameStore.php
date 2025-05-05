@@ -42,10 +42,13 @@ final class PredisGameStore implements GameStore
         }
 
         return array_map(
-            fn(string $storedGame): Game => $this->deserializeGame($storedGame),
+            fn(?string $storedGame, GameId $gameId): Game => $storedGame !== null
+                ? $this->deserializeGame($storedGame)
+                : $this->fallbackGameFinder->find($gameId),
             $this->predis->mget(
                 array_map(fn(GameId $gameId): string => $this->storageKeyPrefix . $gameId, $gameIds)
-            )
+            ),
+            $gameIds
         );
     }
 
