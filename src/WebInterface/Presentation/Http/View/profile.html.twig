@@ -14,13 +14,25 @@
     </div>
     <div class="row">
         <div class="col-md-4 col-lg-3">
-            {{ render_ssi(controller('connect-four.fragment-controller::playerSearchFilterAction', {}, app.request.query.all)) }}
+            {{ render_ssi(controller(
+                'connect-four.fragment-controller::playerSearchFilterAction',
+                {},
+                app.request.query.all|filter((v, k) => k == 'state')
+            )) }}
         </div>
         <div class="col-md-8 col-lg-9 gp-cf-game-list">
-            <p class="small text-secondary mb-1">
-                State: {{ app.request.query.get('state', 'all')|capitalize }}
-                •
-                Page: {{ max(1, app.request.query.getInt('page', 1)) }}
+            <p class="small mb-1">
+                <span class="text-secondary">
+                    State: {{ app.request.query.get('state', 'all')|capitalize }}
+                    •
+                    Page: {{ max(1, app.request.query.getInt('page', 1)) }}
+                </span>
+                {% if app.request.query.get('state', 'all') != 'all' or app.request.query.get('page', 1) != 1 %}
+                    <span class="text-secondary">•</span>
+                    <a href="{{ path('profile') }}">
+                        Clear all filters
+                    </a>
+                {% endif %}
             </p>
             <div class="row row-deck row-cards">
                 {% for game in gamesByPlayer.games %}
