@@ -18,8 +18,11 @@ final class GamesByPlayerHandler
 
     public function __invoke(GamesByPlayerQuery $query): GamesByPlayer
     {
-        return $this->gamesByPlayerFinder->all(
-            $query->playerId()
+        return $this->gamesByPlayerFinder->search(
+            $query->playerId,
+            $query->state,
+            $query->page,
+            $query->limit
         );
     }
 }

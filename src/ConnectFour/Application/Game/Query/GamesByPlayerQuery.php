@@ -6,6 +6,7 @@ namespace Gaming\ConnectFour\Application\Game\Query;
 
 use Gaming\Common\Bus\Request;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\State;
 
 /**
  * @implements Request<GamesByPlayer>
@@ -13,12 +14,10 @@ use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 final class GamesByPlayerQuery implements Request
 {
     public function __construct(
-        private readonly string $playerId
+        public readonly string $playerId,
+        public readonly State $state,
+        public readonly int $page,
+        public readonly int $limit
     ) {
-    }
-
-    public function playerId(): string
-    {
-        return $this->playerId;
     }
 }

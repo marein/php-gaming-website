@@ -1,0 +1,16 @@
+<input type="checkbox" id="filters-toggle" class="gp-expand-toggle">
+<label for="filters-toggle" class="d-md-none w-100 btn dropdown-toggle">
+    Apply filters
+</label>
+<div class="d-md-block sticky-md-top">
+    <div class="subheader mb-2">State</div>
+    <div class="list-group mb-3">
+        {% for state, total in playerSearchStatistics.states %}
+            <a href="{{ path('profile', state == 'all' ? {} :{state: state}) }}"
+               class="list-group-item list-group-item-action d-flex align-items-center{{ app.request.query.get('state', 'all') == state ? ' active' }}">
+                {{ state|capitalize }}
+                <small class="text-secondary ms-auto">{{ total }}</small>
+            </a>
+        {% endfor %}
+    </div>
+</div>

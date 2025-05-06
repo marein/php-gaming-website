@@ -12,7 +12,7 @@ final class GamesByPlayer
      * @param Game[] $games
      */
     public function __construct(
-        public readonly int $count,
+        public readonly int $total,
         public readonly array $games
     ) {
     }

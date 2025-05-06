@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
+use Gaming\ConnectFour\Application\Game\Query\PlayerSearchStatistics\PlayerSearchStatisticsQuery;
 use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
 use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Gaming\ConnectFour\Port\Adapter\Http\Form\OpenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 final class FragmentController extends AbstractController
 {
@@ -39,6 +42,15 @@ final class FragmentController extends AbstractController
     {
         return $this->render('@connect-four/open.html.twig', [
             'form' => $this->createForm(OpenType::class)
+        ]);
+    }
+
+    public function playerSearchFilterAction(#[CurrentUser] ?UserInterface $user): Response
+    {
+        return $this->render('@connect-four/player-search-filter.html.twig', [
+            'playerSearchStatistics' => $this->queryBus->handle(
+                new PlayerSearchStatisticsQuery($user?->getUserIdentifier())
+            )
         ]);
     }
 }

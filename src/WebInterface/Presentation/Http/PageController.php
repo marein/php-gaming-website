@@ -8,6 +8,7 @@ use Gaming\Common\Bus\Bus;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\State;
 use Gaming\WebInterface\Infrastructure\Security\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,9 +43,17 @@ final class PageController
     {
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
-                'gamesByPlayer' => $user !== null
-                    ? $this->connectFourQueryBus->handle(new GamesByPlayerQuery($user->getUserIdentifier()))
-                    : new GamesByPlayer(0, [])
+                'gamesPerPage' => $gamesPerPage = 12,
+                'gamesByPlayer' => $user === null
+                    ? new GamesByPlayer(0, [])
+                    : $this->connectFourQueryBus->handle(
+                        new GamesByPlayerQuery(
+                            $user->getUserIdentifier(),
+                            State::tryFrom($request->query->getString('state', State::ALL->value)) ?? State::ALL,
+                            $request->query->getInt('page', 1),
+                            $gamesPerPage
+                        )
+                    )
             ])
         );
     }

@@ -1,0 +1,23 @@
+{% set totalPages = (total / limit)|round(0, 'ceil') %}
+{% set previousPage = min(max(page - 1, 1), totalPages) %}
+{% set nextPage = max(min(page + 1, totalPages), 2) %}
+<div class="card">
+    <div class="card-body">
+        <ul class="pagination">
+            <li class="page-item page-prev{{ page <= 1 ? ' disabled' }}">
+                <a class="page-link"
+                   href="{{ path('profile', app.request.query.all|merge({'page': previousPage})) }}">
+                    <div class="page-item-subtitle">previous</div>
+                    <div class="page-item-title">{{ previousTitle }}</div>
+                </a>
+            </li>
+            <li class="page-item page-next{{ page >= totalPages ? ' disabled' }}">
+                <a class="page-link"
+                   href="{{ path('profile', app.request.query.all|merge({'page': nextPage})) }}">
+                    <div class="page-item-subtitle">next</div>
+                    <div class="page-item-title">{{ nextTitle }}</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
