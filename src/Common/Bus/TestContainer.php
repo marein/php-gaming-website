@@ -30,7 +30,7 @@ final class TestContainer implements ContainerInterface
 
     public function get(string $id)
     {
-        return $this->services[$id] ?? new class ($id) extends Exception implements NotFoundExceptionInterface {
+        return $this->services[$id] ?? throw new class ($id) extends Exception implements NotFoundExceptionInterface {
             public function __construct(
                 public readonly string $serviceId
             ) {

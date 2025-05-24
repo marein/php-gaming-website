@@ -72,7 +72,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _toggleInteractivity() {
-        const isCurrentPlayer = this._game.currentPlayerId === this._playerId;
+        const isCurrentPlayer = this._playerId !== '' && this._game.currentPlayerId === this._playerId;
         const isInHistoryMode = this._numberOfCurrentMoveInView !== this._game.numberOfMoves();
 
         this._gameNode.classList.toggle('gp-cf-game--disabled', !isCurrentPlayer || isInHistoryMode);
