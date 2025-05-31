@@ -6,20 +6,21 @@ namespace Gaming\ConnectFour\Domain\Game;
 
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerHasInvalidStoneException;
+use Gaming\ConnectFour\Domain\Game\Timer\Timer;
 
 final class Player
 {
-    private string $playerId;
-
-    private Stone $stone;
+    private readonly Timer $timer;
 
     /**
      * @throws PlayerHasInvalidStoneException
      */
-    public function __construct(string $playerId, Stone $stone)
-    {
-        $this->playerId = $playerId;
-        $this->stone = $stone;
+    public function __construct(
+        private readonly string $playerId,
+        private readonly Stone $stone,
+        ?Timer $timer = null
+    ) {
+        $this->timer = $timer ?? Timer::set(60 * 5);
 
         $this->guardPlayerHasCorrectStone($stone);
     }

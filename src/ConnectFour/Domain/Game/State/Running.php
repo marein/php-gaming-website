@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\State;
 
+use DateTimeImmutable;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
@@ -39,8 +40,12 @@ final class Running implements State
         $this->players = $players;
     }
 
-    public function move(GameId $gameId, string $playerId, int $column): Transition
-    {
+    public function move(
+        GameId $gameId,
+        string $playerId,
+        int $column,
+        ?DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition {
         $this->guardExpectedPlayer($playerId);
 
         $board = $this->board->dropStone($this->players->current()->stone(), $column);
