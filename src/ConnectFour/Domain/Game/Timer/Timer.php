@@ -10,13 +10,13 @@ final class Timer
 {
     private function __construct(
         public readonly int $remainingMilliseconds,
-        public readonly ?DateTimeImmutable $endsAt
+        public readonly ?DateTimeImmutable $endsAt = null
     ) {
     }
 
     public static function set(int $remainingSeconds): self
     {
-        return new self($remainingSeconds * 1000, null);
+        return new self($remainingSeconds * 1000);
     }
 
     public function start(DateTimeImmutable $now = new DateTimeImmutable()): self
@@ -29,6 +29,10 @@ final class Timer
 
     public function stop(DateTimeImmutable $now = new DateTimeImmutable()): self
     {
+        if ($this->endsAt === null) {
+            return $this;
+        }
+
         if ($now >= $this->endsAt) {
             throw new \Exception('timeout');
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
 
+use DateTimeImmutable;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 
@@ -26,11 +27,11 @@ final class Players
         $this->nextPlayer = $nextPlayer;
     }
 
-    public function switch(): Players
+    public function switch(DateTimeImmutable $now = new DateTimeImmutable()): Players
     {
         return new self(
-            $this->nextPlayer,
-            $this->currentPlayer
+            $this->nextPlayer->startTurn($now),
+            $this->currentPlayer->endTurn()
         );
     }
 

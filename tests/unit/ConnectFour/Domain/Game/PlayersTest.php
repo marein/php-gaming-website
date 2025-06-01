@@ -34,7 +34,7 @@ class PlayersTest extends TestCase
     {
         $players = $this->players();
 
-        $this->assertEquals($this->redPlayer(), $players->switch()->current());
+        $this->assertEquals($this->redPlayer()->id(), $players->switch()->current()->id());
     }
 
     /**

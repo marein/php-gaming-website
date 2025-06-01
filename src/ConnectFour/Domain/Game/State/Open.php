@@ -41,7 +41,7 @@ final class Open implements State
                     $playerId,
                     $this->playerId,
                     $players->current()->id(),
-                    $players->switch()->current()->id()
+                    $players->opponentOf($players->current()->id())->id()
                 )
             ]
         );

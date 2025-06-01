@@ -55,8 +55,8 @@ final class Running implements State
                 $gameId,
                 $board->lastUsedField()->point(),
                 $board->lastUsedField()->stone(),
-                $this->players->current()->id(),
-                $this->players->switch()->current()->id()
+                $playerId,
+                $this->players->opponentOf($playerId)->id()
             )
         ];
 
@@ -65,8 +65,8 @@ final class Running implements State
         if (count($winningSequences) !== 0) {
             $domainEvents[] = new GameWon(
                 $gameId,
-                $this->players->current()->id(),
-                $this->players->switch()->current()->id(),
+                $playerId,
+                $this->players->opponentOf($playerId)->id(),
                 $winningSequences
             );
 
@@ -81,7 +81,7 @@ final class Running implements State
         if ($numberOfMovesUntilDraw === 0) {
             $domainEvents[] = new GameDrawn(
                 $gameId,
-                [$this->players->current()->id(), $this->players->switch()->current()->id()]
+                [$playerId, $this->players->opponentOf($playerId)->id()]
             );
 
             return new Transition(
@@ -95,7 +95,7 @@ final class Running implements State
                 $this->winningRules,
                 $numberOfMovesUntilDraw,
                 $board,
-                $this->players->switch()
+                $this->players->switch($now)
             ),
             $domainEvents
         );
