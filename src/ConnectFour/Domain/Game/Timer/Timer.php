@@ -19,7 +19,7 @@ final class Timer
         return new self($remainingSeconds * 1000, null);
     }
 
-    public function start(DateTimeImmutable $now = new DateTimeImmutable())
+    public function start(DateTimeImmutable $now = new DateTimeImmutable()): self
     {
         return new self(
             $this->remainingMilliseconds,
@@ -33,7 +33,7 @@ final class Timer
             throw new \Exception('timeout');
         }
 
-        $diff = $now->diff($this->endsAt);
+        $diff = $now->diff($this->endsAt ?? $now);
         $remainingMs = $diff->m * 2630000000
             + $diff->d * 86400000
             + $diff->h * 3600000

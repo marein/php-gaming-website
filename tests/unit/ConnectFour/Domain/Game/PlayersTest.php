@@ -9,6 +9,7 @@ use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Gaming\ConnectFour\Domain\Game\Player;
 use Gaming\ConnectFour\Domain\Game\Players;
+use Gaming\ConnectFour\Domain\Game\Timer\Timer;
 use PHPUnit\Framework\TestCase;
 
 class PlayersTest extends TestCase
@@ -21,8 +22,8 @@ class PlayersTest extends TestCase
         $this->expectException(PlayersNotUniqueException::class);
 
         new Players(
-            new Player('0', Stone::Yellow),
-            new Player('0', Stone::Yellow)
+            new Player('0', Stone::Yellow, Timer::set(60 * 5)),
+            new Player('0', Stone::Yellow, Timer::set(60 * 5))
         );
     }
 
@@ -110,11 +111,11 @@ class PlayersTest extends TestCase
 
     private function yellowPlayer(): Player
     {
-        return new Player('0', Stone::Yellow);
+        return new Player('0', Stone::Yellow, Timer::set(60 * 5));
     }
 
     private function redPlayer(): Player
     {
-        return new Player('1', Stone::Red);
+        return new Player('1', Stone::Red, Timer::set(60 * 5));
     }
 }

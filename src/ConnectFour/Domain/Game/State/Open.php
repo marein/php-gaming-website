@@ -73,7 +73,7 @@ final class Open implements State
         GameId $gameId,
         string $playerId,
         int $column,
-        ?DateTimeImmutable $now = new DateTimeImmutable()
+        DateTimeImmutable $now = new DateTimeImmutable()
     ): Transition {
         throw new GameNotRunningException();
     }

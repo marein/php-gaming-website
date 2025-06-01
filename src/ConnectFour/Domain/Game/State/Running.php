@@ -44,7 +44,7 @@ final class Running implements State
         GameId $gameId,
         string $playerId,
         int $column,
-        ?DateTimeImmutable $now = new DateTimeImmutable()
+        DateTimeImmutable $now = new DateTimeImmutable()
     ): Transition {
         $this->guardExpectedPlayer($playerId);
 
