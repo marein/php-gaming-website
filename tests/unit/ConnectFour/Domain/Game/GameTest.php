@@ -462,8 +462,6 @@ class GameTest extends TestCase
 
         assert($domainEvents[0] instanceof PlayerJoined);
         self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
-        self::assertEquals('playerId1', $domainEvents[0]->opponentPlayerId());
-        self::assertEquals('playerId2', $domainEvents[0]->joinedPlayerId());
         self::assertEquals('playerId1', $domainEvents[0]->redPlayerId);
         self::assertEquals('playerId2', $domainEvents[0]->yellowPlayerId);
 
@@ -573,8 +571,6 @@ class GameTest extends TestCase
 
         assert($domainEvents[1] instanceof PlayerJoined);
         self::assertEquals($game->id()->toString(), $domainEvents[1]->aggregateId());
-        self::assertEquals('playerId2', $domainEvents[1]->joinedPlayerId());
-        self::assertEquals('playerId1', $domainEvents[1]->opponentPlayerId());
         self::assertEquals('playerId1', $domainEvents[1]->redPlayerId);
         self::assertEquals('playerId2', $domainEvents[1]->yellowPlayerId);
 

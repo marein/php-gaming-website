@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
 
+use DateTimeImmutable;
 use Gaming\Common\Domain\AggregateRoot;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\Domain\IsAggregateRoot;
@@ -67,9 +68,9 @@ final class Game implements AggregateRoot
     /**
      * @throws GameException
      */
-    public function move(string $playerId, int $column): void
+    public function move(string $playerId, int $column, DateTimeImmutable $now = new DateTimeImmutable()): void
     {
-        $transition = $this->state->move($this->id(), $playerId, $column);
+        $transition = $this->state->move($this->id(), $playerId, $column, $now);
 
         $this->applyTransition($transition);
     }

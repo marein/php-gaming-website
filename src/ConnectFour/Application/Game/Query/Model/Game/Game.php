@@ -39,7 +39,9 @@ final class Game
         public private(set) string $chatId = '',
         public private(set) string $openedBy = '',
         public private(set) string $redPlayerId = '',
+        public private(set) int $redPlayerRemainingMs = 0,
         public private(set) string $yellowPlayerId = '',
+        public private(set) int $yellowPlayerRemainingMs = 0,
         public private(set) string $currentPlayerId = '',
         public private(set) string $winnerId = '',
         public private(set) string $loserId = '',
@@ -109,7 +111,9 @@ final class Game
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
     {
         $this->currentPlayerId = $this->redPlayerId = $playerJoined->redPlayerId;
+        $this->redPlayerRemainingMs = $playerJoined->redPlayerRemainingMs;
         $this->yellowPlayerId = $playerJoined->yellowPlayerId;
+        $this->yellowPlayerRemainingMs = $playerJoined->yellowPlayerRemainingMs;
 
         $this->state = self::STATE_RUNNING;
     }
@@ -117,6 +121,12 @@ final class Game
     private function handlePlayerMoved(PlayerMoved $playerMoved): void
     {
         $this->currentPlayerId = $playerMoved->nextPlayerId;
+        $this->redPlayerRemainingMs = $this->redPlayerId === $playerMoved->playerId
+            ? $playerMoved->playerRemainingMs
+            : $playerMoved->nextPlayerRemainingMs;
+        $this->yellowPlayerRemainingMs = $this->yellowPlayerId === $playerMoved->playerId
+            ? $playerMoved->playerRemainingMs
+            : $playerMoved->nextPlayerRemainingMs;
 
         $move = new Move(
             $playerMoved->x(),

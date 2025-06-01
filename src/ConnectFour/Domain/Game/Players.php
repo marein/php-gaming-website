@@ -31,7 +31,7 @@ final class Players
     {
         return new self(
             $this->nextPlayer->startTurn($now),
-            $this->currentPlayer->endTurn()
+            $this->currentPlayer->endTurn($now)
         );
     }
 

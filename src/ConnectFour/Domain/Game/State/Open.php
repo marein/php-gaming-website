@@ -27,6 +27,8 @@ final class Open implements State
         $width = $size->width();
         $height = $size->height();
         $players = $this->configuration->createPlayers($this->playerId, $playerId);
+        $redPlayer = $players->current();
+        $yellowPlayer = $players->opponentOf($redPlayer->id());
 
         return new Transition(
             new Running(
@@ -38,10 +40,10 @@ final class Open implements State
             [
                 new PlayerJoined(
                     $gameId,
-                    $playerId,
-                    $this->playerId,
-                    $players->current()->id(),
-                    $players->opponentOf($players->current()->id())->id()
+                    $redPlayer->id(),
+                    $redPlayer->remainingMs(),
+                    $yellowPlayer->id(),
+                    $yellowPlayer->remainingMs()
                 )
             ]
         );

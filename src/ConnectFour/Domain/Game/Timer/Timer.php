@@ -9,7 +9,7 @@ use DateTimeImmutable;
 final class Timer
 {
     private function __construct(
-        public readonly int $remainingMilliseconds,
+        public readonly int $remainingMs,
         public readonly ?DateTimeImmutable $endsAt = null
     ) {
     }
@@ -22,8 +22,8 @@ final class Timer
     public function start(DateTimeImmutable $now = new DateTimeImmutable()): self
     {
         return new self(
-            $this->remainingMilliseconds,
-            $now->modify('+' . $this->remainingMilliseconds . ' milliseconds')
+            $this->remainingMs,
+            $now->modify('+' . $this->remainingMs . ' milliseconds')
         );
     }
 

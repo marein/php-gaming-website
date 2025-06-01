@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Application\Game\Query\Model\Game;
 
+use DateTimeImmutable;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
@@ -18,6 +19,7 @@ class GameTest extends TestCase
      */
     public function itShouldProjectEvents(): void
     {
+        $now = new DateTimeImmutable();
         $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
 
         $expectedGameId = $domainGame->id()->toString();
@@ -27,8 +29,10 @@ class GameTest extends TestCase
                 'chatId' => 'chatId',
                 'openedBy' => 'player1',
                 'redPlayerId' => 'player1',
+                'redPlayerRemainingMs' => 1000 * 60 * 3,
                 'yellowPlayerId' => 'player2',
-                'currentPlayerId' => 'player1',
+                'yellowPlayerRemainingMs' => 1000 * 60 * 4,
+                'currentPlayerId' => 'player2',
                 'winnerId' => '',
                 'loserId' => '',
                 'resignedBy' => '',
@@ -47,6 +51,11 @@ class GameTest extends TestCase
                         'x' => 1,
                         'y' => 5,
                         'color' => 2
+                    ],
+                    [
+                        'x' => 1,
+                        'y' => 4,
+                        'color' => 1
                     ]
                 ],
                 'winningSequences' => []
@@ -56,8 +65,9 @@ class GameTest extends TestCase
 
         $domainGame->assignChat('chatId');
         $domainGame->join('player2');
-        $domainGame->move('player1', 1);
-        $domainGame->move('player2', 1);
+        $domainGame->move('player1', 1, $now = $now->modify('+10 seconds'));
+        $domainGame->move('player2', 1, $now = $now->modify('+1 minute'));
+        $domainGame->move('player1', 1, $now->modify('+2 minutes'));
 
         $game = new Game();
 

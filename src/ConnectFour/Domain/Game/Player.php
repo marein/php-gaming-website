@@ -51,12 +51,17 @@ final class Player
         );
     }
 
-    public function endTurn(): self
+    public function endTurn(DateTimeImmutable $now = new DateTimeImmutable()): self
     {
         return new self(
             $this->playerId,
             $this->stone,
-            $this->timer->stop()
+            $this->timer->stop($now)
         );
+    }
+
+    public function remainingMs(): int
+    {
+        return $this->timer->remainingMs;
     }
 }

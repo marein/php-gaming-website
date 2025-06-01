@@ -48,6 +48,9 @@ final class Running implements State
     ): Transition {
         $this->guardExpectedPlayer($playerId);
 
+        $switchedPlayers = $this->players->switch($now);
+        $currentPlayer = $switchedPlayers->get($playerId);
+        $nextPlayer = $switchedPlayers->current();
         $board = $this->board->dropStone($this->players->current()->stone(), $column);
 
         $domainEvents = [
@@ -55,20 +58,17 @@ final class Running implements State
                 $gameId,
                 $board->lastUsedField()->point(),
                 $board->lastUsedField()->stone(),
-                $playerId,
-                $this->players->opponentOf($playerId)->id()
+                $currentPlayer->id(),
+                $currentPlayer->remainingMs(),
+                $nextPlayer->id(),
+                $nextPlayer->remainingMs()
             )
         ];
 
         $winningSequences = $this->winningRules->findWinningSequences($board);
 
         if (count($winningSequences) !== 0) {
-            $domainEvents[] = new GameWon(
-                $gameId,
-                $playerId,
-                $this->players->opponentOf($playerId)->id(),
-                $winningSequences
-            );
+            $domainEvents[] = new GameWon($gameId, $currentPlayer->id(), $nextPlayer->id(), $winningSequences);
 
             return new Transition(
                 new Won(),
@@ -79,10 +79,7 @@ final class Running implements State
         $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
 
         if ($numberOfMovesUntilDraw === 0) {
-            $domainEvents[] = new GameDrawn(
-                $gameId,
-                [$playerId, $this->players->opponentOf($playerId)->id()]
-            );
+            $domainEvents[] = new GameDrawn($gameId, [$currentPlayer->id(), $nextPlayer->id()]);
 
             return new Transition(
                 new Drawn(),
@@ -95,7 +92,7 @@ final class Running implements State
                 $this->winningRules,
                 $numberOfMovesUntilDraw,
                 $board,
-                $this->players->switch($now)
+                $switchedPlayers
             ),
             $domainEvents
         );

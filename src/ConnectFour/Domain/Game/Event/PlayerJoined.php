@@ -13,10 +13,10 @@ final class PlayerJoined implements DomainEvent
 
     public function __construct(
         GameId $gameId,
-        private readonly string $joinedPlayerId,
-        private readonly string $opponentPlayerId,
         public readonly string $redPlayerId,
-        public readonly string $yellowPlayerId
+        public readonly int $redPlayerRemainingMs,
+        public readonly string $yellowPlayerId,
+        public readonly int $yellowPlayerRemainingMs
     ) {
         $this->gameId = $gameId->toString();
     }
@@ -24,15 +24,5 @@ final class PlayerJoined implements DomainEvent
     public function aggregateId(): string
     {
         return $this->gameId;
-    }
-
-    public function joinedPlayerId(): string
-    {
-        return $this->joinedPlayerId;
-    }
-
-    public function opponentPlayerId(): string
-    {
-        return $this->opponentPlayerId;
     }
 }
