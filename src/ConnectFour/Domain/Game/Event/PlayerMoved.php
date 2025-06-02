@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Event;
 
+use DateTimeImmutable;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
@@ -26,7 +27,7 @@ final class PlayerMoved implements DomainEvent
         public readonly string $playerId,
         public readonly int $playerRemainingMs,
         public readonly string $nextPlayerId,
-        public readonly int $nextPlayerRemainingMs
+        public readonly ?DateTimeImmutable $nextPlayerTurnEndsAt = null
     ) {
         $this->gameId = $gameId->toString();
         $this->x = $point->x();

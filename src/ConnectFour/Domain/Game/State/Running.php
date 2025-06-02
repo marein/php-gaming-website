@@ -61,7 +61,7 @@ final class Running implements State
                 $currentPlayer->id(),
                 $currentPlayer->remainingMs(),
                 $nextPlayer->id(),
-                $nextPlayer->remainingMs()
+                $nextPlayer->turnEndsAt()
             )
         ];
 

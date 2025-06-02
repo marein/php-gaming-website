@@ -25,14 +25,28 @@
                                                   text-draw="Draw"
                                                   text-resigned="Resigned"
                                                   text-aborted="Aborted">
-                                <p class="mb-1" data-red-player>
+                                <p class="mb-0" data-red-player>
                                     <span class="status-dot status-red"></span>
                                     <span data-username>Anonymous</span>
                                 </p>
+                                <div class="mb-3">
+                                    <connect-four-timer game-id="{{ game.id }}"
+                                                        player-id="{{ game.redPlayerId }}"
+                                                        remaining-ms="{{ game.redPlayerRemainingMs }}"
+                                                        turn-ends-at="{{ game.redPlayerTurnEndsAt ? game.redPlayerTurnEndsAt|date(constant('DateTimeInterface::ATOM')) }}">
+                                        <span class="h2">00:00</span>
+                                    </connect-four-timer>
+                                </div>
                                 <p class="mb-0" data-yellow-player>
                                     <span class="status-dot status-yellow"></span>
                                     <span data-username>Anonymous</span>
                                 </p>
+                                <connect-four-timer game-id="{{ game.id }}"
+                                                    player-id="{{ game.yellowPlayerId }}"
+                                                    remaining-ms="{{ game.yellowPlayerRemainingMs }}"
+                                                    turn-ends-at="{{ game.yellowPlayerTurnEndsAt ? game.yellowPlayerTurnEndsAt|date(constant('DateTimeInterface::ATOM')) }}">
+                                    <span class="h2">00:00</span>
+                                </connect-four-timer>
                             </connect-four-players>
                         </div>
                     </div>
