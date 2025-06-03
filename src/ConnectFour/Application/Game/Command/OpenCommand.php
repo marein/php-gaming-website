@@ -15,7 +15,8 @@ final class OpenCommand implements Request
         public readonly string $playerId,
         public readonly int $width,
         public readonly int $height,
-        public readonly int $stone
+        public readonly int $stone,
+        public readonly string $timeControl
     ) {
     }
 }

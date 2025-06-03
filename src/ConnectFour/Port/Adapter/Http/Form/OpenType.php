@@ -41,6 +41,15 @@ final class OpenType extends AbstractType
                     new Choice(choices: self::variants())
                 ]
             ])
+            ->add('timer', ChoiceType::class, [
+                'data' => 'move:60',
+                'label' => 'Time control',
+                'choices' => self::timeControls(),
+                'constraints' => [
+                    new NotBlank(),
+                    new Choice(choices: self::timeControls())
+                ]
+            ])
             ->add('color', ChoiceType::class, [
                 'data' => -1,
                 'label' => 'Color',
@@ -75,6 +84,14 @@ final class OpenType extends AbstractType
     private static function variants(): array
     {
         return ['Standard' => 'standard', 'PopOut' => 'popout'];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function timeControls(): array
+    {
+        return ['60s per move' => 'move:60', '5m per game' => 'game:300', 'Fischer 5m + 3s' => 'fischer:300:3'];
     }
 
     /**

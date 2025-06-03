@@ -7,8 +7,7 @@ namespace Gaming\ConnectFour\Domain\Game;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
-use Gaming\ConnectFour\Domain\Game\Timer\Fischer;
-use Gaming\ConnectFour\Domain\Game\Timer\TimePerGame;
+use Gaming\ConnectFour\Domain\Game\Timer\TimerFactory;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 
 final class Configuration
@@ -16,7 +15,8 @@ final class Configuration
     public function __construct(
         private readonly Size $size,
         private readonly WinningRules $winningRules,
-        public readonly ?Stone $preferredStone = null
+        public readonly ?Stone $preferredStone = null,
+        public readonly string $timeControl = 'game:300'
     ) {
     }
 
@@ -44,7 +44,7 @@ final class Configuration
      */
     public function createPlayers(string $playerId, string $joinedPlayerId): Players
     {
-        $timer = Fischer::set(60 * 5, 5);
+        $timer = TimerFactory::fromString($this->timeControl);
 
         $players = match ($this->preferredStone ?? Stone::random()) {
             Stone::Red => [
