@@ -1,5 +1,6 @@
 import {html} from 'uhtml/node.js';
 import * as sse from '../Common/EventSource.js'
+import * as serverTime from '../Common/ServerTime.js';
 
 customElements.define('connect-four-timer', class extends HTMLElement {
     connectedCallback() {
@@ -29,7 +30,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
 
     _render = () => {
         let remainingMs = this._turnEndsAt
-            ? Math.max(0, new Date(this._turnEndsAt) - new Date())
+            ? Math.max(0, new Date(this._turnEndsAt) - serverTime.now())
             : this._remainingMs;
 
         const hours = Math.floor(remainingMs / (1000 * 60 * 60)).toString().padStart(2, '0');
