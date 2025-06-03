@@ -9,8 +9,8 @@ export async function sync() {
     const response = await fetch(url);
     const serverTime = await response.json();
     const roundTripTime = Date.now() - requestTime;
-    const roundTripTimeMidpoint = requestTime + roundTripTime / 2;
-    offsetMs = new Date(serverTime) - roundTripTimeMidpoint;
+    const timeWhenServerCreatedServerTime = requestTime + roundTripTime / 2;
+    offsetMs = new Date(serverTime) - timeWhenServerCreatedServerTime;
 }
 
 /**

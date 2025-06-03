@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Application\Game\Query\Model\Game;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
@@ -30,8 +31,10 @@ class GameTest extends TestCase
                 'openedBy' => 'player1',
                 'redPlayerId' => 'player1',
                 'redPlayerRemainingMs' => 1000 * 60 * 3,
+                'redPlayerTurnEndsAt' => null,
                 'yellowPlayerId' => 'player2',
                 'yellowPlayerRemainingMs' => 1000 * 60 * 4,
+                'yellowPlayerTurnEndsAt' => $now->modify('+7 minutes +10 seconds')->format(DateTimeInterface::ATOM),
                 'currentPlayerId' => 'player2',
                 'winnerId' => '',
                 'loserId' => '',
