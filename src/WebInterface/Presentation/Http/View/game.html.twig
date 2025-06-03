@@ -42,6 +42,7 @@
                                     <span data-username>Anonymous</span>
                                 </p>
                                 <connect-four-timer game-id="{{ game.id }}"
+                                                    color="yellow"
                                                     player-id="{{ game.yellowPlayerId }}"
                                                     remaining-ms="{{ game.yellowPlayerRemainingMs }}"
                                                     turn-ends-at="{{ game.yellowPlayerTurnEndsAt ? game.yellowPlayerTurnEndsAt|date(constant('DateTimeInterface::ATOM')) }}">

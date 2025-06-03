@@ -6,6 +6,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
     connectedCallback() {
         this._sseAbortController = new AbortController();
         this._gameId = this.getAttribute('game-id');
+        this._color = this.getAttribute('color') || 'red';
         this._playerId = this.getAttribute('player-id');
         this._remainingMs = parseInt(this.getAttribute('remaining-ms'));
         this._turnEndsAt = this.getAttribute('turn-ends-at');
@@ -38,7 +39,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         const seconds = Math.floor((remainingMs % (1000 * 60)) / 1000).toString().padStart(2, '0');
 
         this._timerNode.innerText = hours > 0
-            ? `${hours}:${minutes}:${seconds}s`
+            ? `${hours}:${minutes}:${seconds}`
             : `${minutes}:${seconds}`;
 
         window.requestAnimationFrame(this._render);
@@ -47,6 +48,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
     _onPlayerJoined = e => {
         if (e.detail.gameId !== this._gameId) return;
 
+        this._playerId = this._color === 'red' ? e.detail.redPlayerId : e.detail.yellowPlayerId;
         this._remainingMs = e.detail.redPlayerId === this._playerId
             ? e.detail.redPlayerRemainingMs
             : e.detail.yellowPlayerRemainingMs;
