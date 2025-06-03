@@ -4,3 +4,4 @@ Gaming\ConnectFour\Domain\Game\Timer\Timer:
     map:
       per_game: Gaming\ConnectFour\Domain\Game\Timer\TimePerGame
       per_move: Gaming\ConnectFour\Domain\Game\Timer\TimePerMove
+      fischer: Gaming\ConnectFour\Domain\Game\Timer\Fischer

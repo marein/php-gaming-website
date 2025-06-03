@@ -126,11 +126,11 @@ final class Game
         $this->currentPlayerId = $playerMoved->nextPlayerId;
         if ($this->redPlayerId === $playerMoved->playerId) {
             $this->redPlayerRemainingMs = $playerMoved->playerRemainingMs;
-            $this->yellowPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt->format(DateTimeInterface::ATOM);
+            $this->yellowPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt?->format(DateTimeInterface::ATOM);
             $this->redPlayerTurnEndsAt = null;
         } else {
             $this->yellowPlayerRemainingMs = $playerMoved->playerRemainingMs;
-            $this->redPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt->format(DateTimeInterface::ATOM);
+            $this->redPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt?->format(DateTimeInterface::ATOM);
             $this->yellowPlayerTurnEndsAt = null;
         }
 
