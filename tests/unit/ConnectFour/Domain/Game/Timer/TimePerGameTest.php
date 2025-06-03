@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Timer;
 
 use DateTimeImmutable;
-use Gaming\ConnectFour\Domain\Game\Timer\Timer;
+use Gaming\ConnectFour\Domain\Game\Timer\TimePerGame;
 use PHPUnit\Framework\TestCase;
 
-class TimerTest extends TestCase
+class TimePerGameTest extends TestCase
 {
     /**
      * @test
@@ -17,7 +17,7 @@ class TimerTest extends TestCase
     {
         $now = new DateTimeImmutable();
 
-        $timer = Timer::set(60);
+        $timer = TimePerGame::set(60);
         $this->assertEquals(60000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
