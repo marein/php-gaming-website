@@ -3,67 +3,81 @@
 {% set page_title = 'Anonymous vs. Anonymous' %}
 
 {% block content %}
-    <div class="row row-gap-2">
-        <div class="col-md-7 col-xl-9">
-            <div class="row row-gap-2">
-                <div class="col-xl-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <connect-four-players game-id="{{ game.id }}"
-                                                  player-id="{{ app.user ? app.user.userIdentifier }}"
-                                                  red-player-id="{{ game.redPlayerId }}"
-                                                  yellow-player-id="{{ game.yellowPlayerId }}"
-                                                  current-player-id="{{ game.currentPlayerId }}"
-                                                  winner-id="{{ game.winnerId }}"
-                                                  loser-id="{{ game.loserId }}"
-                                                  resigned-by="{{ game.resignedBy }}"
-                                                  aborted-by="{{ game.abortedBy }}"
-                                                  game-state="{{ game.state }}"
-                                                  text-you="You"
-                                                  text-won="Won"
-                                                  text-lost="Lost"
-                                                  text-draw="Draw"
-                                                  text-resigned="Resigned"
-                                                  text-aborted="Aborted">
-                                <p class="mb-0" data-red-player>
-                                    <span class="status-dot status-red"></span>
-                                    <span data-username>Anonymous</span>
-                                </p>
-                                <div class="mb-3">
-                                    <connect-four-timer game-id="{{ game.id }}"
-                                                        player-id="{{ game.redPlayerId }}"
-                                                        remaining-ms="{{ game.redPlayerRemainingMs }}"
-                                                        turn-ends-at="{{ game.redPlayerTurnEndsAt ? game.redPlayerTurnEndsAt|date(constant('DateTimeInterface::ATOM')) }}">
-                                        <span class="h2">00:00</span>
-                                    </connect-four-timer>
+    <div class="row row-gap-2 justify-content-center">
+        <div class="col-12 col-sm-7 col-lg-5">
+            <div class="row mb-2 row-deck">
+                <div class="col-6">
+                    <div class="card bg-red-lt">
+                        <div class="card-body p-2">
+                            <div class="row">
+                                <div class="col pe-0">
+                                    <p class="mb-0 text-truncate bold">Anonymous</p>
                                 </div>
-                                <p class="mb-0" data-yellow-player>
-                                    <span class="status-dot status-yellow"></span>
-                                    <span data-username>Anonymous</span>
-                                </p>
-                                <connect-four-timer game-id="{{ game.id }}"
+                                <div class="col-auto ps-0">
+                                    <connect-four-player-status game-id="{{ game.id }}"
+                                                          you-id="{{ app.user ? app.user.userIdentifier }}"
+                                                          player-id="{{ game.redPlayerId }}"
+                                                          current-player-id="{{ game.currentPlayerId }}"
+                                                          winner-id="{{ game.winnerId }}"
+                                                          loser-id="{{ game.loserId }}"
+                                                          resigned-by="{{ game.resignedBy }}"
+                                                          aborted-by="{{ game.abortedBy }}"
+                                                          game-state="{{ game.state }}"></connect-four-player-status>
+                                </div>
+                            </div>
+                            <p class="fs-2 fw-bolder">
+                                <connect-four-timer game-id="{{ game.gameId }}"
+                                                    player-id="{{ game.redPlayerId }}"
+                                                    remaining-ms="{{ game.redPlayerRemainingMs }}"
+                                                    turn-ends-at="{{ game.redPlayerTurnEndsAt ? game.redPlayerTurnEndsAt|date(constant('DateTimeInterface::ATOM')) }}">
+                                    00:00
+                                </connect-four-timer>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card bg-yellow-lt">
+                        <div class="card-body p-2">
+                            <div class="row">
+                                <div class="col pe-0">
+                                    <p class="mb-0 text-truncate bold">Anonymous</p>
+                                </div>
+                                <div class="col-auto ps-0">
+                                    <connect-four-player-status game-id="{{ game.id }}"
+                                                          you-id="{{ app.user ? app.user.userIdentifier }}"
+                                                          color="yellow"
+                                                          player-id="{{ game.yellowPlayerId }}"
+                                                          current-player-id="{{ game.currentPlayerId }}"
+                                                          winner-id="{{ game.winnerId }}"
+                                                          loser-id="{{ game.loserId }}"
+                                                          resigned-by="{{ game.resignedBy }}"
+                                                          aborted-by="{{ game.abortedBy }}"
+                                                          game-state="{{ game.state }}"></connect-four-player-status>
+                                </div>
+                            </div>
+                            <p class="fs-2 fw-bolder">
+                                <connect-four-timer game-id="{{ game.gameId }}"
                                                     color="yellow"
                                                     player-id="{{ game.yellowPlayerId }}"
                                                     remaining-ms="{{ game.yellowPlayerRemainingMs }}"
                                                     turn-ends-at="{{ game.yellowPlayerTurnEndsAt ? game.yellowPlayerTurnEndsAt|date(constant('DateTimeInterface::ATOM')) }}">
-                                    <span class="h2">00:00</span>
+                                    00:00
                                 </connect-four-timer>
-                            </connect-four-players>
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-8">
-                    <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
-                                       player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
-                                       previous-move-selector="#previous-move"
-                                       next-move-selector="#next-move"
-                                       follow-moves-selector="#follow-moves">
-                        <div style="aspect-ratio: {{ game.width }}/{{ game.height }};"></div>
-                    </connect-four-game>
-                </div>
             </div>
+            <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
+                               player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
+                               previous-move-selector="#previous-move"
+                               next-move-selector="#next-move"
+                               follow-moves-selector="#follow-moves">
+                <div style="aspect-ratio: {{ game.width }}/{{ game.height }};"></div>
+            </connect-four-game>
         </div>
-        <div class="col-md-5 col-xl-3">
+        <div class="col-12 col-sm-5 col-lg-4">
             <div class="card mb-2">
                 <div class="card-body">
                     <div class="row row-gap-2">
