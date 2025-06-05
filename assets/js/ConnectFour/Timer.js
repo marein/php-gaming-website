@@ -8,7 +8,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._gameId = this.getAttribute('game-id');
         this._playerId = this.getAttribute('player-id');
         this._remainingMs = parseInt(this.getAttribute('remaining-ms'));
-        this._turnEndsAt = this.getAttribute('turn-ends-at');
+        this._turnEndsAt = parseInt(this.getAttribute('turn-ends-at'));
 
         window.requestAnimationFrame(this._render);
 
@@ -28,7 +28,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
 
     _render = () => {
         const remainingMs = this._turnEndsAt
-            ? Math.max(0, new Date(this._turnEndsAt) - serverTime.now())
+            ? Math.max(0, this._turnEndsAt - serverTime.now())
             : this._remainingMs;
 
         const remainingSeconds = Math.ceil(remainingMs / 1000);
@@ -66,6 +66,6 @@ customElements.define('connect-four-timer', class extends HTMLElement {
     _onFinished = e => {
         if (e.detail.gameId !== this._gameId) return;
 
-        this._turnEndsAt = '';
+        this._turnEndsAt = null;
     }
 });

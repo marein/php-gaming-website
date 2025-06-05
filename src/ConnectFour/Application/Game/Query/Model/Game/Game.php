@@ -41,10 +41,10 @@ final class Game
         public private(set) string $openedBy = '',
         public private(set) string $redPlayerId = '',
         public private(set) int $redPlayerRemainingMs = 0,
-        public private(set) ?string $redPlayerTurnEndsAt = null,
+        public private(set) ?int $redPlayerTurnEndsAt = null,
         public private(set) string $yellowPlayerId = '',
         public private(set) int $yellowPlayerRemainingMs = 0,
-        public private(set) ?string $yellowPlayerTurnEndsAt = null,
+        public private(set) ?int $yellowPlayerTurnEndsAt = null,
         public private(set) string $currentPlayerId = '',
         public private(set) string $winnerId = '',
         public private(set) string $loserId = '',
@@ -126,11 +126,11 @@ final class Game
         $this->currentPlayerId = $playerMoved->nextPlayerId;
         if ($this->redPlayerId === $playerMoved->playerId) {
             $this->redPlayerRemainingMs = $playerMoved->playerRemainingMs;
-            $this->yellowPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt?->format(DateTimeInterface::ATOM);
+            $this->yellowPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt;
             $this->redPlayerTurnEndsAt = null;
         } else {
             $this->yellowPlayerRemainingMs = $playerMoved->playerRemainingMs;
-            $this->redPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt?->format(DateTimeInterface::ATOM);
+            $this->redPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt;
             $this->yellowPlayerTurnEndsAt = null;
         }
 

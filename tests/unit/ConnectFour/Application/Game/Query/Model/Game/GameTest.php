@@ -21,6 +21,7 @@ class GameTest extends TestCase
     public function itShouldProjectEvents(): void
     {
         $now = new DateTimeImmutable();
+        $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
         $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
 
         $expectedGameId = $domainGame->id()->toString();
@@ -34,7 +35,7 @@ class GameTest extends TestCase
                 'redPlayerTurnEndsAt' => null,
                 'yellowPlayerId' => 'player2',
                 'yellowPlayerRemainingMs' => 1000 * 60 * 4,
-                'yellowPlayerTurnEndsAt' => $now->modify('+7 minutes +10 seconds')->format(DateTimeInterface::ATOM),
+                'yellowPlayerTurnEndsAt' => $nowMs + 7 * 60 * 1000 + 10 * 1000,
                 'currentPlayerId' => 'player2',
                 'winnerId' => '',
                 'loserId' => '',

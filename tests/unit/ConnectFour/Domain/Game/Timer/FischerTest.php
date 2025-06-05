@@ -16,6 +16,7 @@ class FischerTest extends TestCase
     public function itWorks(): void
     {
         $now = new DateTimeImmutable();
+        $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
 
         $timer = Fischer::set(60, 5);
         $this->assertEquals(60000, $timer->remainingMs);
@@ -23,23 +24,31 @@ class FischerTest extends TestCase
 
         $timer = $timer->start($now);
         $this->assertEquals(60000, $timer->remainingMs);
-        $this->assertEquals($now->modify('+60 seconds'), $timer->endsAt);
+        $this->assertEquals($nowMs + 60000, $timer->endsAt);
 
-        $timer = $timer->stop($now = $now->modify('+30 seconds'));
+        $now = $now->modify('+30 seconds');
+        $nowMs += 30000;
+        $timer = $timer->stop($now);
         $this->assertEquals(35000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
-        $timer = $timer->start($now = $now->modify('+10 seconds'));
+        $now = $now->modify('+10 seconds');
+        $nowMs += 10000;
+        $timer = $timer->start($now);
         $this->assertEquals(35000, $timer->remainingMs);
-        $this->assertEquals($now->modify('+35 seconds'), $timer->endsAt);
+        $this->assertEquals($nowMs + 35000, $timer->endsAt);
 
-        $timer = $timer->stop($now = $now->modify('+34999 milliseconds'));
+        $now = $now->modify('+34999 milliseconds');
+        $nowMs += 34999;
+        $timer = $timer->stop($now);
         $this->assertEquals(5001, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
-        $timer = $timer->start($now = $now->modify('+10 seconds'));
+        $now = $now->modify('+10 seconds');
+        $nowMs += 10000;
+        $timer = $timer->start($now);
         $this->assertEquals(5001, $timer->remainingMs);
-        $this->assertEquals($now->modify('+5001 millisecond'), $timer->endsAt);
+        $this->assertEquals($nowMs + 5001, $timer->endsAt);
 
         $this->expectException(\Exception::class);
         $timer->stop($now->modify('+5001 millisecond'));

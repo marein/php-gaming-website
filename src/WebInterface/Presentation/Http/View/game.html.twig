@@ -29,7 +29,7 @@
                                 <connect-four-timer game-id="{{ game.gameId }}"
                                                     player-id="{{ game.redPlayerId }}"
                                                     remaining-ms="{{ game.redPlayerRemainingMs }}"
-                                                    turn-ends-at="{{ game.redPlayerTurnEndsAt ? game.redPlayerTurnEndsAt|date(constant('DateTimeInterface::ATOM')) }}">
+                                                    turn-ends-at="{{ game.redPlayerTurnEndsAt }}">
                                     00:00
                                 </connect-four-timer>
                             </p>
@@ -61,7 +61,7 @@
                                                     color="yellow"
                                                     player-id="{{ game.yellowPlayerId }}"
                                                     remaining-ms="{{ game.yellowPlayerRemainingMs }}"
-                                                    turn-ends-at="{{ game.yellowPlayerTurnEndsAt ? game.yellowPlayerTurnEndsAt|date(constant('DateTimeInterface::ATOM')) }}">
+                                                    turn-ends-at="{{ game.yellowPlayerTurnEndsAt }}">
                                     00:00
                                 </connect-four-timer>
                             </p>

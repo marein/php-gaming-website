@@ -14,5 +14,5 @@ interface Timer
 
     public function remainingMs(): int;
 
-    public function endsAt(): ?DateTimeImmutable;
+    public function endsAt(): ?int;
 }

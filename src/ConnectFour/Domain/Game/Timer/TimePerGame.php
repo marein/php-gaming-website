@@ -10,7 +10,7 @@ final class TimePerGame implements Timer
 {
     private function __construct(
         public readonly int $remainingMs,
-        public readonly ?DateTimeImmutable $endsAt = null
+        public readonly ?int $endsAt = null
     ) {
     }
 
@@ -23,7 +23,7 @@ final class TimePerGame implements Timer
     {
         return new self(
             $this->remainingMs,
-            $now->modify('+' . $this->remainingMs . ' milliseconds')
+            $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000) + $this->remainingMs
         );
     }
 
@@ -33,20 +33,13 @@ final class TimePerGame implements Timer
             return $this;
         }
 
-        if ($now >= $this->endsAt) {
+        $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
+        if ($nowMs >= $this->endsAt) {
             throw new \Exception('timeout');
         }
 
-        $diff = $now->diff($this->endsAt ?? $now);
-        $remainingMs = $diff->m * 2630000000
-            + $diff->d * 86400000
-            + $diff->h * 3600000
-            + $diff->i * 60000
-            + $diff->s * 1000
-            + (int)ceil($diff->f * 1000);
-
         return new self(
-            $remainingMs,
+            max(0, $this->endsAt - $nowMs),
             null
         );
     }
@@ -56,7 +49,7 @@ final class TimePerGame implements Timer
         return $this->remainingMs;
     }
 
-    public function endsAt(): ?DateTimeImmutable
+    public function endsAt(): ?int
     {
         return $this->endsAt;
     }

@@ -65,7 +65,7 @@ final class Player
         return $this->timer->remainingMs();
     }
 
-    public function turnEndsAt(): ?DateTimeImmutable
+    public function turnEndsAt(): ?int
     {
         return $this->timer->endsAt();
     }

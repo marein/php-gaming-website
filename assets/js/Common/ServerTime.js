@@ -10,12 +10,12 @@ export async function sync() {
     const serverTime = await response.json();
     const roundTripTime = Date.now() - requestTime;
     const timeWhenServerCreatedServerTime = requestTime + roundTripTime / 2;
-    offsetMs = new Date(serverTime) - timeWhenServerCreatedServerTime;
+    offsetMs = serverTime - timeWhenServerCreatedServerTime;
 }
 
 /**
- * @returns {Date}
+ * @returns {int}
  */
 export function now() {
-    return new Date(Date.now() + offsetMs);
+    return Date.now() + offsetMs;
 }

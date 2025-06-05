@@ -16,6 +16,7 @@ class TimePerMoveTest extends TestCase
     public function itWorks(): void
     {
         $now = new DateTimeImmutable();
+        $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
 
         $timer = TimePerMove::set(60);
         $this->assertEquals(60000, $timer->msPerMove);
@@ -25,20 +26,24 @@ class TimePerMoveTest extends TestCase
         $timer = $timer->start($now);
         $this->assertEquals(60000, $timer->msPerMove);
         $this->assertEquals(60000, $timer->remainingMs);
-        $this->assertEquals($now->modify('+60 seconds'), $timer->endsAt);
+        $this->assertEquals($nowMs + 60000, $timer->endsAt);
 
-        $timer = $timer->stop($now = $now->modify('+30 seconds'));
+        $now = $now->modify('+30 seconds');
+        $nowMs += 30000;
+        $timer = $timer->stop($now);
         $this->assertEquals(60000, $timer->msPerMove);
         $this->assertEquals(30000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
-        $timer = $timer->start($now = $now->modify('+10 seconds'));
+        $now = $now->modify('+10 seconds');
+        $nowMs += 10000;
+        $timer = $timer->start($now);
         $this->assertEquals(60000, $timer->msPerMove);
         $this->assertEquals(60000, $timer->remainingMs);
-        $this->assertEquals($now->modify('+60 seconds'), $timer->endsAt);
+        $this->assertEquals($nowMs + 60000, $timer->endsAt);
 
         $timer = $timer->stop($now)->start($now);
         $this->expectException(\Exception::class);
-        $timer->stop($now->modify('+60001 milliseconds'));
+        $timer->stop($now->modify('+60000 milliseconds'));
     }
 }

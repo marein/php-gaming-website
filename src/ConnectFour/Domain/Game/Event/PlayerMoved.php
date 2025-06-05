@@ -27,7 +27,7 @@ final class PlayerMoved implements DomainEvent
         public readonly string $playerId,
         public readonly int $playerRemainingMs,
         public readonly string $nextPlayerId,
-        public readonly ?DateTimeImmutable $nextPlayerTurnEndsAt = null
+        public readonly ?int $nextPlayerTurnEndsAt = null
     ) {
         $this->gameId = $gameId->toString();
         $this->x = $point->x();
