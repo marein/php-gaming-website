@@ -109,23 +109,14 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         const playerId = this.getAttribute('player-id');
         if (!playerId) return;
 
-        const isYou = playerId === this.getAttribute('you-id');
-        const isCurrentPlayer = playerId === this.getAttribute('current-player-id');
-        const isWinner = playerId === this.getAttribute('winner-id');
-        const isLoser = playerId === this.getAttribute('loser-id');
-        const hasResigned = playerId === this.getAttribute('resigned-by');
-        const hasTimedOut = playerId === this.getAttribute('timed-out-by');
-        const hasAborted = playerId === this.getAttribute('aborted-by');
-        const isDraw = this.getAttribute('game-state') === 'draw';
-
-        this._currentPlayerElement.classList.toggle('d-none', !isCurrentPlayer);
-        this._youElement.classList.toggle('d-none', !isYou);
-        this._wonElement.classList.toggle('d-none', !isWinner);
-        this._lostElement.classList.toggle('d-none', !isLoser);
-        this._drawElement.classList.toggle('d-none', !isDraw);
-        this._resignedElement.classList.toggle('d-none', !hasResigned);
-        this._timedOutElement.classList.toggle('d-none', !hasTimedOut);
-        this._abortedElement.classList.toggle('d-none', !hasAborted);
+        this._currentPlayerElement.classList.toggle('d-none', playerId !== this.getAttribute('current-player-id'));
+        this._youElement.classList.toggle('d-none', playerId !== this.getAttribute('you-id'));
+        this._wonElement.classList.toggle('d-none', playerId !== this.getAttribute('winner-id'));
+        this._lostElement.classList.toggle('d-none', playerId !== this.getAttribute('loser-id'));
+        this._drawElement.classList.toggle('d-none', this.getAttribute('game-state') !== 'draw');
+        this._resignedElement.classList.toggle('d-none', playerId !== this.getAttribute('resigned-by'));
+        this._timedOutElement.classList.toggle('d-none', playerId !== this.getAttribute('timed-out-by'));
+        this._abortedElement.classList.toggle('d-none', playerId !== this.getAttribute('aborted-by'));
     }
 
     _onPlayerJoined = e => {
