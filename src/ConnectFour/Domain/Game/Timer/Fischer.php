@@ -66,4 +66,3 @@ final class Fischer implements Timer
         return $this->endsAt;
     }
 }
-

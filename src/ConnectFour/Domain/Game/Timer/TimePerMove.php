@@ -9,6 +9,7 @@ use DateTimeImmutable;
 final class TimePerMove implements Timer
 {
     private function __construct(
+        public readonly int $remainingMs,
         public readonly int $msPerMove,
         public readonly ?DateTimeImmutable $endsAt = null
     ) {
@@ -16,12 +17,13 @@ final class TimePerMove implements Timer
 
     public static function set(int $secondsPerMove): self
     {
-        return new self($secondsPerMove * 1000);
+        return new self($secondsPerMove * 1000, $secondsPerMove * 1000);
     }
 
     public function start(DateTimeImmutable $now = new DateTimeImmutable()): self
     {
         return new self(
+            $this->msPerMove,
             $this->msPerMove,
             $now->modify('+' . $this->msPerMove . ' milliseconds')
         );
@@ -37,7 +39,16 @@ final class TimePerMove implements Timer
             throw new \Exception('timeout');
         }
 
+        $diff = $now->diff($this->endsAt ?? $now);
+        $remainingMs = $diff->m * 2630000000
+            + $diff->d * 86400000
+            + $diff->h * 3600000
+            + $diff->i * 60000
+            + $diff->s * 1000
+            + (int)ceil($diff->f * 1000);
+
         return new self(
+            $remainingMs,
             $this->msPerMove,
             null
         );
@@ -45,7 +56,7 @@ final class TimePerMove implements Timer
 
     public function remainingMs(): int
     {
-        return $this->msPerMove;
+        return $this->remainingMs;
     }
 
     public function endsAt(): ?DateTimeImmutable
@@ -53,4 +64,3 @@ final class TimePerMove implements Timer
         return $this->endsAt;
     }
 }
-

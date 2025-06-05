@@ -19,18 +19,22 @@ class TimePerMoveTest extends TestCase
 
         $timer = TimePerMove::set(60);
         $this->assertEquals(60000, $timer->msPerMove);
+        $this->assertEquals(60000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
         $timer = $timer->start($now);
         $this->assertEquals(60000, $timer->msPerMove);
+        $this->assertEquals(60000, $timer->remainingMs);
         $this->assertEquals($now->modify('+60 seconds'), $timer->endsAt);
 
         $timer = $timer->stop($now = $now->modify('+30 seconds'));
         $this->assertEquals(60000, $timer->msPerMove);
+        $this->assertEquals(30000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
         $timer = $timer->start($now = $now->modify('+10 seconds'));
         $this->assertEquals(60000, $timer->msPerMove);
+        $this->assertEquals(60000, $timer->remainingMs);
         $this->assertEquals($now->modify('+60 seconds'), $timer->endsAt);
 
         $timer = $timer->stop($now)->start($now);
