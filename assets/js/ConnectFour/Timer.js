@@ -31,7 +31,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
             ? Math.max(0, this._turnEndsAt - serverTime.now())
             : this._remainingMs;
 
-        const remainingSeconds = Math.ceil(remainingMs / 1000);
+        const remainingSeconds = Math.floor(remainingMs / 1000);
         const hours = Math.floor(remainingSeconds / 3600).toString().padStart(2, '0');
         const minutes = Math.floor((remainingSeconds % 3600) / 60).toString().padStart(2, '0');
         const seconds = (remainingSeconds % 60).toString().padStart(2, '0');
