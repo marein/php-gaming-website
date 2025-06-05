@@ -10,6 +10,7 @@ use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
@@ -49,6 +50,7 @@ final class Game
         public private(set) string $winnerId = '',
         public private(set) string $loserId = '',
         public private(set) string $resignedBy = '',
+        public private(set) string $timedOutBy = '',
         public private(set) string $abortedBy = '',
         public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
@@ -96,6 +98,7 @@ final class Game
             GameAborted::class => $this->handleGameAborted($domainEvent),
             GameDrawn::class => $this->handleGameDrawn($domainEvent),
             GameResigned::class => $this->handleGameResigned($domainEvent),
+            GameTimedOut::class => $this->handleGameTimedOut($domainEvent),
             GameWon::class => $this->handleGameWon($domainEvent),
             ChatAssigned::class => $this->handleChatAssigned($domainEvent),
             default => throw new RuntimeException($domainEvent::class . ' must be handled.')
@@ -161,6 +164,14 @@ final class Game
     {
         $this->winnerId = $gameResigned->opponentPlayerId();
         $this->resignedBy = $gameResigned->resignedPlayerId();
+
+        $this->markAsFinished();
+    }
+
+    private function handleGameTimedOut(GameTimedOut $gameTimedOut): void
+    {
+        $this->winnerId = $gameTimedOut->opponentPlayerId;
+        $this->timedOutBy = $gameTimedOut->timedOutPlayerId;
 
         $this->markAsFinished();
     }

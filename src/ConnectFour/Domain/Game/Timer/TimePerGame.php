@@ -34,9 +34,6 @@ final class TimePerGame implements Timer
         }
 
         $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
-        if ($nowMs >= $this->endsAt) {
-            throw new \Exception('timeout');
-        }
 
         return new self(
             max(0, $this->endsAt - $nowMs),

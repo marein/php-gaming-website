@@ -38,20 +38,18 @@ class TimePerGameTest extends TestCase
         $this->assertEquals(30000, $timer->remainingMs);
         $this->assertEquals($nowMs + 30000, $timer->endsAt);
 
-        $now = $now->modify('+29999 milliseconds');
-        $nowMs += 29999;
+        $now = $now->modify('+30000 milliseconds');
+        $nowMs += 30000;
         $timer = $timer->stop($now);
-        $this->assertEquals(1, $timer->remainingMs);
+        $this->assertEquals(0, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
-        $now = $now->modify('+10 seconds');
-        $nowMs += 10000;
         $timer = $timer->start($now);
-        $this->assertEquals(1, $timer->remainingMs);
-        $this->assertEquals($nowMs + 1, $timer->endsAt);
+        $this->assertEquals(0, $timer->remainingMs);
+        $this->assertEquals($nowMs, $timer->endsAt);
 
-        $timer = $timer->stop($now)->start($now);
-        $this->expectException(\Exception::class);
-        $timer->stop($now->modify('+1 millisecond'));
+        $timer = $timer->stop($now);
+        $this->assertEquals(0, $timer->remainingMs);
+        $this->assertEquals(null, $timer->endsAt);
     }
 }

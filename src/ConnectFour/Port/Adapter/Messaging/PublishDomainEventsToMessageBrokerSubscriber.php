@@ -14,6 +14,7 @@ use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
@@ -68,6 +69,7 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
             GameDrawn::class => 'GameDrawn',
             GameWon::class => 'GameWon',
             GameResigned::class => 'GameResigned',
+            GameTimedOut::class => 'GameTimedOut',
             ChatAssigned::class => 'ChatAssigned',
             default => throw new RuntimeException($domainEvent::class . ' must be handled.')
         };

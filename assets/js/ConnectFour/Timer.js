@@ -15,6 +15,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         sse.subscribe(`connect-four-${this._gameId}`, {
             'ConnectFour.PlayerJoined': this._onPlayerJoined,
             'ConnectFour.PlayerMoved': this._onPlayerMoved,
+            'ConnectFour.GameTimedOut': this._onFinished,
             'ConnectFour.GameAborted': this._onFinished,
             'ConnectFour.GameWon': this._onFinished,
             'ConnectFour.GameResigned': this._onFinished,

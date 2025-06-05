@@ -42,8 +42,18 @@ class TimePerMoveTest extends TestCase
         $this->assertEquals(60000, $timer->remainingMs);
         $this->assertEquals($nowMs + 60000, $timer->endsAt);
 
-        $timer = $timer->stop($now)->start($now);
-        $this->expectException(\Exception::class);
-        $timer->stop($now->modify('+60000 milliseconds'));
+        $now = $now->modify('+60000 milliseconds');
+        $nowMs += 60000;
+        $timer = $timer->stop($now);
+        $this->assertEquals(0, $timer->remainingMs);
+        $this->assertEquals(null, $timer->endsAt);
+
+        $timer = $timer->start($now);
+        $this->assertEquals(0, $timer->remainingMs);
+        $this->assertEquals($nowMs, $timer->endsAt);
+
+        $timer = $timer->stop($now);
+        $this->assertEquals(0, $timer->remainingMs);
+        $this->assertEquals(null, $timer->endsAt);
     }
 }

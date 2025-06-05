@@ -23,9 +23,9 @@ final class TimePerMove implements Timer
     public function start(DateTimeImmutable $now = new DateTimeImmutable()): self
     {
         return new self(
+            $remainingMs = $this->remainingMs > 0 ? $this->msPerMove : 0,
             $this->msPerMove,
-            $this->msPerMove,
-            $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000) + $this->msPerMove
+            $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000) + $remainingMs
         );
     }
 
@@ -36,9 +36,6 @@ final class TimePerMove implements Timer
         }
 
         $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
-        if ($nowMs >= $this->endsAt) {
-            throw new \Exception('timeout');
-        }
 
         return new self(
             max(0, $this->endsAt - $nowMs),

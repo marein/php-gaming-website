@@ -36,12 +36,10 @@ final class Fischer implements Timer
         }
 
         $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
-        if ($nowMs >= $this->endsAt) {
-            throw new \Exception('timeout');
-        }
+        $remainingMs = max(0, $this->endsAt - $nowMs);
 
         return new self(
-            max(0, $this->endsAt - $nowMs + $this->incrementMs),
+            $remainingMs > 0 ? $remainingMs + $this->incrementMs : 0,
             $this->incrementMs,
             null
         );

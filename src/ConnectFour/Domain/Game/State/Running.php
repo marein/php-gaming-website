@@ -9,6 +9,7 @@ use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
@@ -51,6 +52,14 @@ final class Running implements State
         $switchedPlayers = $this->players->switch($now);
         $currentPlayer = $switchedPlayers->get($playerId);
         $nextPlayer = $switchedPlayers->current();
+
+        if ($currentPlayer->remainingMs() <= 0) {
+            return new Transition(
+                new TimedOut(),
+                [new GameTimedOut($gameId->toString(), $currentPlayer->id(), $nextPlayer->id())]
+            );
+        }
+
         $board = $this->board->dropStone($this->players->current()->stone(), $column);
 
         $domainEvents = [

@@ -57,6 +57,15 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
                     <path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1 -7 0a5 5 0 0 0 -7 0v-9z"/>
                     <path d="M5 21v-7"/>
                 </svg>`,
+            this._timedOutElement = html`
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="icon d-none">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M5.633 5.64a9 9 0 1 0 12.735 12.72m1.674 -2.32a9 9 0 0 0 -12.082 -12.082"/>
+                    <path d="M12 7v1"/>
+                    <path d="M3 3l18 18"/>
+                </svg>`,
             this._abortedElement = html`
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -87,6 +96,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
             'ConnectFour.GameAborted': this._onGameAborted,
             'ConnectFour.GameWon': this._onGameWon,
             'ConnectFour.GameResigned': this._onGameResigned,
+            'ConnectFour.GameTimedOut': this._onGameTimedOut,
             'ConnectFour.GameDrawn': this._onGameDrawn
         }, this._sseAbortController.signal);
     }
@@ -104,6 +114,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         const isWinner = playerId === this.getAttribute('winner-id');
         const isLoser = playerId === this.getAttribute('loser-id');
         const hasResigned = playerId === this.getAttribute('resigned-by');
+        const hasTimedOut = playerId === this.getAttribute('timed-out-by');
         const hasAborted = playerId === this.getAttribute('aborted-by');
         const isDraw = this.getAttribute('game-state') === 'draw';
 
@@ -113,6 +124,7 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         this._lostElement.classList.toggle('d-none', !isLoser);
         this._drawElement.classList.toggle('d-none', !isDraw);
         this._resignedElement.classList.toggle('d-none', !hasResigned);
+        this._timedOutElement.classList.toggle('d-none', !hasTimedOut);
         this._abortedElement.classList.toggle('d-none', !hasAborted);
     }
 
@@ -166,6 +178,16 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
         this.setAttribute('current-player-id', '');
         this.setAttribute('winner-id', e.detail.opponentPlayerId);
         this.setAttribute('resigned-by', e.detail.resignedPlayerId);
+
+        this._render();
+        this._removeEventListeners();
+    }
+
+    _onGameTimedOut = e => {
+        if (e.detail.gameId !== this.getAttribute('game-id')) return;
+        this.setAttribute('current-player-id', '');
+        this.setAttribute('winner-id', e.detail.opponentPlayerId);
+        this.setAttribute('timed-out-by', e.detail.timedOutPlayerId);
 
         this._render();
         this._removeEventListeners();

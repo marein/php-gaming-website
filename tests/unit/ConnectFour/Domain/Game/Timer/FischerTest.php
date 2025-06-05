@@ -38,19 +38,18 @@ class FischerTest extends TestCase
         $this->assertEquals(35000, $timer->remainingMs);
         $this->assertEquals($nowMs + 35000, $timer->endsAt);
 
-        $now = $now->modify('+34999 milliseconds');
-        $nowMs += 34999;
+        $now = $now->modify('+35000 milliseconds');
+        $nowMs += 35000;
         $timer = $timer->stop($now);
-        $this->assertEquals(5001, $timer->remainingMs);
+        $this->assertEquals(0, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
-        $now = $now->modify('+10 seconds');
-        $nowMs += 10000;
         $timer = $timer->start($now);
-        $this->assertEquals(5001, $timer->remainingMs);
-        $this->assertEquals($nowMs + 5001, $timer->endsAt);
+        $this->assertEquals(0, $timer->remainingMs);
+        $this->assertEquals($nowMs, $timer->endsAt);
 
-        $this->expectException(\Exception::class);
-        $timer->stop($now->modify('+5001 millisecond'));
+        $timer = $timer->stop($now);
+        $this->assertEquals(0, $timer->remainingMs);
+        $this->assertEquals(null, $timer->endsAt);
     }
 }
