@@ -18,7 +18,7 @@ class TimePerGameTest extends TestCase
         $now = new DateTimeImmutable();
         $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
 
-        $timer = TimePerGame::set(60);
+        $timer = TimePerGame::set(60, 5);
         $this->assertEquals(60000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
@@ -29,17 +29,17 @@ class TimePerGameTest extends TestCase
         $now = $now->modify('+30 seconds');
         $nowMs += 30000;
         $timer = $timer->stop($now);
-        $this->assertEquals(30000, $timer->remainingMs);
+        $this->assertEquals(35000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
         $now = $now->modify('+10 seconds');
         $nowMs += 10000;
         $timer = $timer->start($now);
-        $this->assertEquals(30000, $timer->remainingMs);
-        $this->assertEquals($nowMs + 30000, $timer->endsAt);
+        $this->assertEquals(35000, $timer->remainingMs);
+        $this->assertEquals($nowMs + 35000, $timer->endsAt);
 
-        $now = $now->modify('+30000 milliseconds');
-        $nowMs += 30000;
+        $now = $now->modify('+35000 milliseconds');
+        $nowMs += 35000;
         $timer = $timer->stop($now);
         $this->assertEquals(0, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);

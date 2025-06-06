@@ -16,7 +16,7 @@ final class Configuration
         private readonly Size $size,
         private readonly WinningRules $winningRules,
         public readonly ?Stone $preferredStone = null,
-        public readonly string $timeControl = 'game:300'
+        public readonly string $timeControl = 'game:300:0'
     ) {
     }
 

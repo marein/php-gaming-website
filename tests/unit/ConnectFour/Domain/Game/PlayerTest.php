@@ -20,7 +20,7 @@ class PlayerTest extends TestCase
         $id = uniqid();
         $stone = Stone::Red;
 
-        $player = new Player($id, $stone, TimePerGame::set(60 * 5));
+        $player = new Player($id, $stone, TimePerGame::set(300, 5));
 
         $this->assertEquals($id, $player->id());
         $this->assertEquals($stone, $player->stone());
@@ -36,6 +36,6 @@ class PlayerTest extends TestCase
         $id = uniqid();
         $stone = Stone::None;
 
-        new Player($id, $stone, TimePerGame::set(60 * 5));
+        new Player($id, $stone, TimePerGame::set(300, 5));
     }
 }

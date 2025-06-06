@@ -22,8 +22,8 @@ class PlayersTest extends TestCase
         $this->expectException(PlayersNotUniqueException::class);
 
         new Players(
-            new Player('0', Stone::Yellow, TimePerGame::set(60 * 5)),
-            new Player('0', Stone::Yellow, TimePerGame::set(60 * 5))
+            new Player('0', Stone::Yellow, TimePerGame::set(300, 5)),
+            new Player('0', Stone::Yellow, TimePerGame::set(300, 5))
         );
     }
 
@@ -111,11 +111,11 @@ class PlayersTest extends TestCase
 
     private function yellowPlayer(): Player
     {
-        return new Player('0', Stone::Yellow, TimePerGame::set(60 * 5));
+        return new Player('0', Stone::Yellow, TimePerGame::set(300, 5));
     }
 
     private function redPlayer(): Player
     {
-        return new Player('1', Stone::Red, TimePerGame::set(60 * 5));
+        return new Player('1', Stone::Red, TimePerGame::set(300, 5));
     }
 }

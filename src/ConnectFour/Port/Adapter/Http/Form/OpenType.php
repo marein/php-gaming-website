@@ -91,7 +91,7 @@ final class OpenType extends AbstractType
      */
     private static function timeControls(): array
     {
-        return ['60s per move' => 'move:60', '5m per game' => 'game:300', 'Fischer 5m + 3s' => 'fischer:300:3'];
+        return ['1m/move' => 'move:60', '5+0 (5m + 0s/move)' => 'game:300:0', '5+3 (5m + 3s/move)' => 'game:300:3'];
     }
 
     /**

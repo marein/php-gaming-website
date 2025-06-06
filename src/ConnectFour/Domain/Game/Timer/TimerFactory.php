@@ -2,12 +2,12 @@
 
 namespace Gaming\ConnectFour\Domain\Game\Timer;
 
-use Exception;
+use InvalidArgumentException;
 
 final class TimerFactory
 {
     /**
-     * @throws Exception
+     * @throws InvalidArgumentException
      */
     public static function fromString(string $config): Timer
     {
@@ -17,14 +17,11 @@ final class TimerFactory
         return match ($type) {
             'move' => count($parts) === 1
                 ? TimePerMove::set((int)$parts[0])
-                : throw new Exception('Format: move:<durationMs>'),
-            'game' => count($parts) === 1
-                ? TimePerGame::set((int)$parts[0])
-                : throw new Exception('Format: game:<durationMs>'),
-            'fischer' => count($parts) === 2
-                ? Fischer::set((int)$parts[0], (int)$parts[1])
-                : throw new Exception('Format: fischer:<baseSeconds>:<incrementSeconds>'),
-            default => throw new Exception('Unknown timer type: ' . $type),
+                : throw new InvalidArgumentException('Format: move:<secondsPerMove>'),
+            'game' => count($parts) === 2
+                ? TimePerGame::set((int)$parts[0], (int)$parts[1])
+                : throw new InvalidArgumentException('Format: game:<baseSeconds>:<incrementSeconds>'),
+            default => throw new InvalidArgumentException('Unknown timer type: ' . $type),
         };
     }
 }
