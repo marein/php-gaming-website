@@ -19,3 +19,10 @@ services:
             -   name: console.command
                 command: connect-four:publish-running-games-count-to-nchan
                 description: 'Publish number of running games to the browser.'
+
+    Gaming\ConnectFour\Port\Adapter\Console\HandleTimeoutsCommand:
+        arguments: ['@connect-four.command-bus', '@connect-four.timer-store']
+        tags:
+            -   name: console.command
+                command: connect-four:handle-timeouts
+                description: 'Handle timeouts.'

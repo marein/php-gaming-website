@@ -33,4 +33,9 @@ final class Aborted implements State
     ): Transition {
         throw new GameFinishedException();
     }
+
+    public function timeout(GameId $gameId, DateTimeImmutable $now = new DateTimeImmutable()): Transition
+    {
+        throw new GameFinishedException();
+    }
 }

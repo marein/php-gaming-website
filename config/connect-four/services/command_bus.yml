@@ -35,3 +35,7 @@ services:
     Gaming\ConnectFour\Application\Game\Command\OpenHandler:
         arguments: ['@connect-four.game-repository']
         tags: [{ name: 'gaming_platform_bus.handler', bus: 'connect_four_command' }]
+
+    Gaming\ConnectFour\Application\Game\Command\TimeoutHandler:
+        arguments: ['@connect-four.game-repository']
+        tags: [{ name: 'gaming_platform_bus.handler', bus: 'connect_four_command' }]

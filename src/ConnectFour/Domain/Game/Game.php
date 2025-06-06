@@ -105,6 +105,13 @@ final class Game implements AggregateRoot
         $this->applyTransition($transition);
     }
 
+    public function timeout(): void
+    {
+        $transition = $this->state->timeout($this->id());
+
+        $this->applyTransition($transition);
+    }
+
     public function assignChat(string $chatId): void
     {
         // This is an idempotent operation.

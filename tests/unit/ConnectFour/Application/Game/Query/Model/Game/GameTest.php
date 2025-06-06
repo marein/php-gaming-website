@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Application\Game\Query\Model\Game;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;

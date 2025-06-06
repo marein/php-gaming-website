@@ -79,4 +79,9 @@ final class Open implements State
     ): Transition {
         throw new GameNotRunningException();
     }
+
+    public function timeout(GameId $gameId, DateTimeImmutable $now = new DateTimeImmutable()): Transition
+    {
+        throw new GameNotRunningException();
+    }
 }

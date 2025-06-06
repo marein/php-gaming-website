@@ -14,6 +14,7 @@ use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
 use Gaming\ConnectFour\Domain\Game\Exception\GameRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\NoTimeoutException;
 use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Players;
@@ -145,6 +146,19 @@ final class Running implements State
                     $this->players->opponentOf($playerId)
                 )
             ]
+        );
+    }
+
+    public function timeout(GameId $gameId, DateTimeImmutable $now = new DateTimeImmutable()): Transition
+    {
+        $currentPlayer = $this->players->current()->endTurn($now);
+        if ($currentPlayer->remainingMs() > 0) {
+            throw new NoTimeoutException();
+        }
+
+        return new Transition(
+            new TimedOut(),
+            [new GameTimedOut($gameId->toString(), $currentPlayer->id(), $this->players->next()->id())]
         );
     }
 

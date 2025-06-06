@@ -40,6 +40,11 @@ final class Players
         return $this->currentPlayer;
     }
 
+    public function next(): Player
+    {
+        return $this->nextPlayer;
+    }
+
     /**
      * @throws PlayerNotOwnerException
      */

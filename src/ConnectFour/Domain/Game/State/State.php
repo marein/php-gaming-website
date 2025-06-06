@@ -34,4 +34,9 @@ interface State
         int $column,
         DateTimeImmutable $now = new DateTimeImmutable()
     ): Transition;
+
+    /**
+     * @throws GameException
+     */
+    public function timeout(GameId $gameId, DateTimeImmutable $now = new DateTimeImmutable()): Transition;
 }

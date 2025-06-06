@@ -22,3 +22,7 @@ services:
     connect-four.running-games-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGameStore
         arguments: ['@connect-four.predis', 'running-games']
+
+    connect-four.timer-store:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisTimerStore
+        arguments: ['@connect-four.predis', 'timer']
