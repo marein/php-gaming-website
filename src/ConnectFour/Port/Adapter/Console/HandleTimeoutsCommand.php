@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class HandleTimeoutsCommand extends Command
 {
-    private const int MIN_SLEEP = 250000;
+    private const int MAX_SLEEP = 250000;
     private const int LOOKAHEAD_WINDOW = 3000;
 
     public function __construct(
@@ -27,7 +27,7 @@ final class HandleTimeoutsCommand extends Command
     {
         while (true) {
             $nowMs = (int)(microtime(true) * 1000);
-            $estimatedSleepTime = self::MIN_SLEEP;
+            $estimatedSleepTime = self::MAX_SLEEP;
 
             $gameIds = $this->predisTimerStore->findGamesToTimeout($nowMs + self::LOOKAHEAD_WINDOW);
             $handledGameIds = [];
@@ -42,7 +42,7 @@ final class HandleTimeoutsCommand extends Command
             }
             $this->predisTimerStore->remove($handledGameIds);
 
-            usleep(min(self::MIN_SLEEP, $estimatedSleepTime));
+            usleep(min(self::MAX_SLEEP, $estimatedSleepTime));
         }
     }
 }
