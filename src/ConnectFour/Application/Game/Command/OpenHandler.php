@@ -27,7 +27,8 @@ final class OpenHandler
             new Configuration(
                 new Size($command->width, $command->height),
                 WinningRules::standard(),
-                Stone::tryFrom($command->stone)
+                Stone::tryFrom($command->stone),
+                $command->timeControl
             ),
             $command->playerId
         );

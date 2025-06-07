@@ -11,6 +11,7 @@ use Gaming\ConnectFour\Application\Game\Query\Model\RunningGames\RunningGameStor
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 
@@ -32,6 +33,7 @@ final class RunningGamesProjection implements StoredEventSubscriber
             GameAborted::class,
             GameDrawn::class,
             GameResigned::class,
+            GameTimedOut::class,
             GameWon::class => $this->runningGameStore->remove($domainEvent->streamId),
             default => true
         };

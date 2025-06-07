@@ -11,6 +11,7 @@ use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerS
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 
@@ -32,6 +33,7 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
             GameDrawn::class => $this->handleGameDrawn($content),
             GameWon::class => $this->handleGameWon($content),
             GameResigned::class => $this->handleGameResigned($content),
+            GameTimedOut::class => $this->handleGameTimedOut($content),
             GameAborted::class => $this->handleGameAborted($content),
             default => true
         };
@@ -70,6 +72,15 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
             $gameResigned->aggregateId(),
             $gameResigned->opponentPlayerId(),
             $gameResigned->resignedPlayerId()
+        );
+    }
+
+    private function handleGameTimedOut(GameTimedOut $gameTimedOut): void
+    {
+        $this->gamesByPlayerStore->addWin(
+            $gameTimedOut->aggregateId(),
+            $gameTimedOut->opponentPlayerId,
+            $gameTimedOut->timedOutPlayerId
         );
     }
 

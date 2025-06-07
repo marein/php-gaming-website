@@ -1,0 +1,6 @@
+Gaming\ConnectFour\Domain\Game\Timer\Timer:
+  discriminator:
+    field_name: type
+    map:
+      per_game: Gaming\ConnectFour\Domain\Game\Timer\TimePerGame
+      per_move: Gaming\ConnectFour\Domain\Game\Timer\TimePerMove

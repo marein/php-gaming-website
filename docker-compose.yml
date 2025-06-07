@@ -153,6 +153,9 @@ services:
     php-connect-four-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/restartOnChange bin/console connect-four:publish-running-games-count-to-nchan
+    php-connect-four-handle-timeouts:
+        <<: *php-container
+        command: bin/restartOnChange bin/console connect-four:handle-timeouts
     php-chat-follow-event-store:
         <<: *php-container
         command: bin/restartOnChange bin/console chat:follow-event-store pointer all

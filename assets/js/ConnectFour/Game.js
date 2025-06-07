@@ -285,7 +285,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
             'ConnectFour.GameWon': this._onGameWon,
             'ConnectFour.GameDrawn': this._onGameFinished,
             'ConnectFour.GameAborted': this._onGameFinished,
-            'ConnectFour.GameResigned': this._onGameFinished
+            'ConnectFour.GameResigned': this._onGameFinished,
+            'ConnectFour.GameTimedOut': this._onGameFinished
         }, this._sseAbortController.signal);
     }
 });

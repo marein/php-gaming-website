@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\State;
 
+use DateTimeImmutable;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
@@ -26,6 +27,8 @@ final class Open implements State
         $width = $size->width();
         $height = $size->height();
         $players = $this->configuration->createPlayers($this->playerId, $playerId);
+        $redPlayer = $players->current();
+        $yellowPlayer = $players->opponentOf($redPlayer->id());
 
         return new Transition(
             new Running(
@@ -37,10 +40,10 @@ final class Open implements State
             [
                 new PlayerJoined(
                     $gameId,
-                    $playerId,
-                    $this->playerId,
-                    $players->current()->id(),
-                    $players->switch()->current()->id()
+                    $redPlayer->id(),
+                    $redPlayer->remainingMs(),
+                    $yellowPlayer->id(),
+                    $yellowPlayer->remainingMs()
                 )
             ]
         );
@@ -68,7 +71,16 @@ final class Open implements State
         throw new GameNotRunningException();
     }
 
-    public function move(GameId $gameId, string $playerId, int $column): Transition
+    public function move(
+        GameId $gameId,
+        string $playerId,
+        int $column,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition {
+        throw new GameNotRunningException();
+    }
+
+    public function timeout(GameId $gameId, DateTimeImmutable $now = new DateTimeImmutable()): Transition
     {
         throw new GameNotRunningException();
     }

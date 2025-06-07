@@ -9,6 +9,7 @@ use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
@@ -39,11 +40,16 @@ final class Game
         public private(set) string $chatId = '',
         public private(set) string $openedBy = '',
         public private(set) string $redPlayerId = '',
+        public private(set) int $redPlayerRemainingMs = 0,
+        public private(set) ?int $redPlayerTurnEndsAt = null,
         public private(set) string $yellowPlayerId = '',
+        public private(set) int $yellowPlayerRemainingMs = 0,
+        public private(set) ?int $yellowPlayerTurnEndsAt = null,
         public private(set) string $currentPlayerId = '',
         public private(set) string $winnerId = '',
         public private(set) string $loserId = '',
         public private(set) string $resignedBy = '',
+        public private(set) string $timedOutBy = '',
         public private(set) string $abortedBy = '',
         public private(set) string $state = self::STATE_OPEN,
         public private(set) int $height = 0,
@@ -91,6 +97,7 @@ final class Game
             GameAborted::class => $this->handleGameAborted($domainEvent),
             GameDrawn::class => $this->handleGameDrawn($domainEvent),
             GameResigned::class => $this->handleGameResigned($domainEvent),
+            GameTimedOut::class => $this->handleGameTimedOut($domainEvent),
             GameWon::class => $this->handleGameWon($domainEvent),
             ChatAssigned::class => $this->handleChatAssigned($domainEvent),
             default => throw new RuntimeException($domainEvent::class . ' must be handled.')
@@ -109,7 +116,9 @@ final class Game
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
     {
         $this->currentPlayerId = $this->redPlayerId = $playerJoined->redPlayerId;
+        $this->redPlayerRemainingMs = $playerJoined->redPlayerRemainingMs;
         $this->yellowPlayerId = $playerJoined->yellowPlayerId;
+        $this->yellowPlayerRemainingMs = $playerJoined->yellowPlayerRemainingMs;
 
         $this->state = self::STATE_RUNNING;
     }
@@ -117,6 +126,15 @@ final class Game
     private function handlePlayerMoved(PlayerMoved $playerMoved): void
     {
         $this->currentPlayerId = $playerMoved->nextPlayerId;
+        if ($this->redPlayerId === $playerMoved->playerId) {
+            $this->redPlayerRemainingMs = $playerMoved->playerRemainingMs;
+            $this->yellowPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt;
+            $this->redPlayerTurnEndsAt = null;
+        } else {
+            $this->yellowPlayerRemainingMs = $playerMoved->playerRemainingMs;
+            $this->redPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt;
+            $this->yellowPlayerTurnEndsAt = null;
+        }
 
         $move = new Move(
             $playerMoved->x(),
@@ -149,6 +167,14 @@ final class Game
         $this->markAsFinished();
     }
 
+    private function handleGameTimedOut(GameTimedOut $gameTimedOut): void
+    {
+        $this->winnerId = $gameTimedOut->opponentPlayerId;
+        $this->timedOutBy = $gameTimedOut->timedOutPlayerId;
+
+        $this->markAsFinished();
+    }
+
     private function handleGameWon(GameWon $gameWon): void
     {
         $this->winningSequences = $gameWon->winningSequences();
@@ -167,5 +193,6 @@ final class Game
     {
         $this->state = $state;
         $this->currentPlayerId = '';
+        $this->redPlayerTurnEndsAt = $this->yellowPlayerTurnEndsAt = null;
     }
 }
