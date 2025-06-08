@@ -15,7 +15,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         sse.subscribe(`connect-four-${this._gameId}`, {
             'ConnectFour.PlayerJoined': this._onPlayerJoined,
             'ConnectFour.PlayerMoved': this._onPlayerMoved,
-            'ConnectFour.GameTimedOut': this._onFinished,
+            'ConnectFour.GameTimedOut': this._onGameTimedOut,
             'ConnectFour.GameAborted': this._onFinished,
             'ConnectFour.GameWon': this._onFinished,
             'ConnectFour.GameResigned': this._onFinished,
@@ -62,6 +62,13 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._turnEndsAt = e.detail.nextPlayerId === this._playerId
             ? e.detail.nextPlayerTurnEndsAt
             : null;
+    }
+
+    _onGameTimedOut = e => {
+        if (e.detail.gameId !== this._gameId) return;
+
+        this._turnEndsAt = null;
+        this._remainingMs = e.detail.timedOutPlayerId === this._playerId ? 0 : this._remainingMs;
     }
 
     _onFinished = e => {

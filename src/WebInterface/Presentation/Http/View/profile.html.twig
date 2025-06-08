@@ -44,7 +44,15 @@
                                 </p>
                                 <div class="row mb-0 text-red">
                                     <div class="col pe-0">
-                                        <p class="mb-0 text-truncate bold">Anonymous</p>
+                                        <p class="mb-0 text-truncate bold">
+                                            Anonymous -
+                                            <connect-four-timer game-id="{{ game.gameId }}"
+                                                                player-id="{{ game.redPlayerId }}"
+                                                                remaining-ms="{{ game.redPlayerRemainingMs }}"
+                                                                turn-ends-at="{{ game.redPlayerTurnEndsAt }}">
+                                                00:00
+                                            </connect-four-timer>
+                                        </p>
                                     </div>
                                     <div class="col-auto ps-0">
                                         <connect-four-player-status game-id="{{ game.id }}"
@@ -61,7 +69,16 @@
                                 </div>
                                 <div class="row mb-1 text-yellow">
                                     <div class="col pe-0">
-                                        <p class="mb-0 text-truncate bold">Anonymous</p>
+                                        <p class="mb-0 text-truncate bold">
+                                            Anonymous -
+                                            <connect-four-timer game-id="{{ game.gameId }}"
+                                                                color="yellow"
+                                                                player-id="{{ game.yellowPlayerId }}"
+                                                                remaining-ms="{{ game.yellowPlayerRemainingMs }}"
+                                                                turn-ends-at="{{ game.yellowPlayerTurnEndsAt }}">
+                                                00:00
+                                            </connect-four-timer>
+                                        </p>
                                     </div>
                                     <div class="col-auto ps-0">
                                         <connect-four-player-status game-id="{{ game.id }}"

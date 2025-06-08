@@ -126,7 +126,7 @@ final class Game
     private function handlePlayerMoved(PlayerMoved $playerMoved): void
     {
         $this->currentPlayerId = $playerMoved->nextPlayerId;
-        if ($this->redPlayerId === $playerMoved->playerId) {
+        if ($playerMoved->playerId === $this->redPlayerId) {
             $this->redPlayerRemainingMs = $playerMoved->playerRemainingMs;
             $this->yellowPlayerTurnEndsAt = $playerMoved->nextPlayerTurnEndsAt;
             $this->redPlayerTurnEndsAt = null;
@@ -171,6 +171,11 @@ final class Game
     {
         $this->winnerId = $gameTimedOut->opponentPlayerId;
         $this->timedOutBy = $gameTimedOut->timedOutPlayerId;
+        if ($gameTimedOut->timedOutPlayerId === $this->redPlayerId) {
+            $this->redPlayerRemainingMs = 0;
+        } else {
+            $this->yellowPlayerRemainingMs = 0;
+        }
 
         $this->markAsFinished();
     }
