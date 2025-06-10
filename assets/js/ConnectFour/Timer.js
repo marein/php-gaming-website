@@ -9,6 +9,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._playerId = this.getAttribute('player-id');
         this._remainingMs = parseInt(this.getAttribute('remaining-ms'));
         this._turnEndsAt = parseInt(this.getAttribute('turn-ends-at'));
+        this._showMsBelow = parseInt(this.getAttribute('show-ms-below') || 10000);
 
         window.requestAnimationFrame(this._render);
 
@@ -36,9 +37,12 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         const hours = Math.floor(remainingSeconds / 3600).toString().padStart(2, '0');
         const minutes = Math.floor((remainingSeconds % 3600) / 60).toString().padStart(2, '0');
         const seconds = (remainingSeconds % 60).toString().padStart(2, '0');
+        const milliseconds = Math.floor(remainingMs % 1000 / 100);
 
         this.replaceChildren(
-            hours > 0 ? html`${hours}:${minutes}:${seconds}` : html`${minutes}:${seconds}`
+            hours > 0
+                ? html`${hours}:${minutes}:${seconds}`
+                : html`${minutes}:${seconds}${remainingMs < this._showMsBelow ? html`<sup>${milliseconds}</sup>` : ''}`
         );
 
         window.requestAnimationFrame(this._render);

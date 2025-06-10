@@ -42,7 +42,7 @@ final class OpenType extends AbstractType
                 ]
             ])
             ->add('timer', ChoiceType::class, [
-                'data' => 'move:60',
+                'data' => 'move:15',
                 'label' => 'Time control',
                 'choices' => self::timeControls(),
                 'constraints' => [
@@ -91,7 +91,7 @@ final class OpenType extends AbstractType
      */
     private static function timeControls(): array
     {
-        return ['1m/move' => 'move:5', '5+0 (5m + 0s/move)' => 'game:300:0', '5+3 (5m + 3s/move)' => 'game:300:3'];
+        return ['15s/move' => 'move:15', '1m/game' => 'game:60:0', '1m/game + 3s/move' => 'game:60:3'];
     }
 
     /**
