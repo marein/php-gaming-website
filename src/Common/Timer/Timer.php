@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\ConnectFour\Domain\Game\Timer;
+namespace Gaming\Common\Timer;
 
 use DateTimeImmutable;
 

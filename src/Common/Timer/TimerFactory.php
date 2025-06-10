@@ -1,6 +1,6 @@
 <?php
 
-namespace Gaming\ConnectFour\Domain\Game\Timer;
+namespace Gaming\Common\Timer;
 
 use InvalidArgumentException;
 

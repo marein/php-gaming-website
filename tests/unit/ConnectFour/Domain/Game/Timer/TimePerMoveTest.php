@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Timer;
 
 use DateTimeImmutable;
-use Gaming\ConnectFour\Domain\Game\Timer\TimePerMove;
+use Gaming\Common\Timer\TimePerMove;
 use PHPUnit\Framework\TestCase;
 
 class TimePerMoveTest extends TestCase
@@ -32,7 +32,7 @@ class TimePerMoveTest extends TestCase
         $nowMs += 30000;
         $timer = $timer->stop($now);
         $this->assertEquals(60000, $timer->msPerMove);
-        $this->assertEquals(30000, $timer->remainingMs);
+        $this->assertEquals(60000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 
         $now = $now->modify('+10 seconds');

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
 
+use Gaming\Common\Timer\TimerFactory;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
-use Gaming\ConnectFour\Domain\Game\Timer\TimerFactory;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 
 final class Configuration

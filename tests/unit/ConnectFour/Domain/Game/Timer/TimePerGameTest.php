@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Timer;
 
 use DateTimeImmutable;
-use Gaming\ConnectFour\Domain\Game\Timer\TimePerGame;
+use Gaming\Common\Timer\TimePerGame;
 use PHPUnit\Framework\TestCase;
 
 class TimePerGameTest extends TestCase

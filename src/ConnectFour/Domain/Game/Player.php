@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Domain\Game;
 
 use DateTimeImmutable;
+use Gaming\Common\Timer\Timer;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerHasInvalidStoneException;
-use Gaming\ConnectFour\Domain\Game\Timer\Timer;
 
 final class Player
 {

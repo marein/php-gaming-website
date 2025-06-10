@@ -21,7 +21,7 @@ services:
 
     connect-four.timer-projection:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\TimerProjection
-        arguments: ['@connect-four.timer-store']
+        arguments: ['@connect-four.timeout-service']
         tags: [{ name: 'connect-four.stored-event-subscriber', key: 'timer-projection' }]
 
     connect-four.publish-stored-events-subscriber:

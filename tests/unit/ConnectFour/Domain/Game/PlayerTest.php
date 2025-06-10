@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
+use Gaming\Common\Timer\TimePerGame;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerHasInvalidStoneException;
 use Gaming\ConnectFour\Domain\Game\Player;
-use Gaming\ConnectFour\Domain\Game\Timer\TimePerGame;
 use PHPUnit\Framework\TestCase;
 
 class PlayerTest extends TestCase
