@@ -289,14 +289,6 @@ notification-list {
     }
 }
 
-connect-four-players .status-dot {
-    --tblr-status-size: .7rem;
-}
-
-connect-four-players .status-dot-animated:before {
-    animation-delay: 0s;
-}
-
 [data-bs-theme=dark] .gp-cf-game {
     background-color: var(--tblr-bg-surface);
     border-color: var(--tblr-blue-darken);

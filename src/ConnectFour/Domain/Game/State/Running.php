@@ -159,6 +159,13 @@ final class Running implements State
             throw new NoTimeoutException();
         }
 
+        if ($this->isAbortable()) {
+            return new Transition(
+                new Aborted(),
+                [new GameAborted($gameId, $currentPlayer->id(), $this->players->next()->id())]
+            );
+        }
+
         return new Transition(
             new TimedOut(),
             [new GameTimedOut($gameId->toString(), $currentPlayer->id(), $this->players->next()->id())]
