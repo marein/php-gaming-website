@@ -6,26 +6,26 @@ namespace Gaming\Common\Timer;
 
 use DateTimeImmutable;
 
-final class TimePerGame implements Timer
+final class MoveTimer implements Timer
 {
-    public function __construct(
+    private function __construct(
         public readonly int $remainingMs,
-        public readonly int $incrementMs,
+        public readonly int $msPerMove,
         public readonly ?int $endsAt = null
     ) {
     }
 
-    public static function set(int $baseSeconds, int $incrementSeconds): self
+    public static function set(int $secondsPerMove): self
     {
-        return new self($baseSeconds * 1000, $incrementSeconds * 1000);
+        return new self($secondsPerMove * 1000, $secondsPerMove * 1000);
     }
 
     public function start(DateTimeImmutable $now = new DateTimeImmutable()): self
     {
         return new self(
-            $this->remainingMs,
-            $this->incrementMs,
-            $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000) + $this->remainingMs
+            $remainingMs = $this->remainingMs > 0 ? $this->msPerMove : 0,
+            $this->msPerMove,
+            $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000) + $remainingMs
         );
     }
 
@@ -36,11 +36,10 @@ final class TimePerGame implements Timer
         }
 
         $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
-        $remainingMs = max(0, $this->endsAt - $nowMs);
 
         return new self(
-            $remainingMs > 0 ? $remainingMs + $this->incrementMs : 0,
-            $this->incrementMs,
+            $this->endsAt - $nowMs <= 0 ? 0 : $this->msPerMove,
+            $this->msPerMove,
             null
         );
     }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
 
-use Gaming\Common\Timer\TimePerGame;
+use DateTimeImmutable;
+use Gaming\Common\Timer\GameTimer;
 use Gaming\Common\Timer\Timer;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
@@ -21,7 +22,7 @@ final class Configuration
         public readonly ?Stone $preferredStone = null,
         ?Timer $timer = null
     ) {
-        $this->timer = $timer ?? TimePerGame::set(60, 0);
+        $this->timer = $timer ?? GameTimer::set(60, 0);
     }
 
     public static function common(): Configuration
@@ -46,9 +47,12 @@ final class Configuration
     /**
      * @throws PlayersNotUniqueException
      */
-    public function createPlayers(string $playerId, string $joinedPlayerId): Players
-    {
-        $players = match ($this->preferredStone ?? Stone::random()) {
+    public function createPlayers(
+        string $playerId,
+        string $joinedPlayerId,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Players {
+        [$currentPlayer, $nextPlayer] = match ($this->preferredStone ?? Stone::random()) {
             Stone::Red => [
                 new Player($playerId, Stone::Red, $this->timer),
                 new Player($joinedPlayerId, Stone::Yellow, $this->timer)
@@ -59,6 +63,6 @@ final class Configuration
             ]
         };
 
-        return new Players(...$players);
+        return Players::start($currentPlayer, $nextPlayer, $now);
     }
 }

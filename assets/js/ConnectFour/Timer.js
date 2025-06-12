@@ -38,11 +38,12 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         const minutes = Math.floor((remainingSeconds % 3600) / 60).toString().padStart(2, '0');
         const seconds = (remainingSeconds % 60).toString().padStart(2, '0');
         const milliseconds = Math.floor(remainingMs % 1000 / 100);
+        const showMs = remainingMs > 0 && remainingMs < this._showMsBelow;
 
         this.replaceChildren(
             hours > 0
                 ? html`${hours}:${minutes}:${seconds}`
-                : html`${minutes}:${seconds}${remainingMs < this._showMsBelow ? html`<sup>${milliseconds}</sup>` : ''}`
+                : html`${minutes}:${seconds}${showMs ? html`<sup>${milliseconds}</sup>` : ''}`
         );
 
         window.requestAnimationFrame(this._render);
@@ -55,6 +56,9 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._remainingMs = e.detail.redPlayerId === this._playerId
             ? e.detail.redPlayerRemainingMs
             : e.detail.yellowPlayerRemainingMs;
+        this._turnEndsAt = e.detail.redPlayerId === this._playerId
+            ? e.detail.redPlayerTurnEndsAt
+            : null;
     }
 
     _onPlayerMoved = e => {

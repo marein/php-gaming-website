@@ -117,6 +117,7 @@ final class Game
     {
         $this->currentPlayerId = $this->redPlayerId = $playerJoined->redPlayerId;
         $this->redPlayerRemainingMs = $playerJoined->redPlayerRemainingMs;
+        $this->redPlayerTurnEndsAt = $playerJoined->redPlayerTurnEndsAt;
         $this->yellowPlayerId = $playerJoined->yellowPlayerId;
         $this->yellowPlayerRemainingMs = $playerJoined->yellowPlayerRemainingMs;
 

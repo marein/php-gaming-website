@@ -15,6 +15,7 @@ final class PlayerJoined implements DomainEvent
         GameId $gameId,
         public readonly string $redPlayerId,
         public readonly int $redPlayerRemainingMs,
+        public readonly ?int $redPlayerTurnEndsAt,
         public readonly string $yellowPlayerId,
         public readonly int $yellowPlayerRemainingMs
     ) {

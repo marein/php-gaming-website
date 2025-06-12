@@ -12,6 +12,7 @@ use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
+use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 
 final class TimerProjection implements StoredEventSubscriber
@@ -36,6 +37,7 @@ final class TimerProjection implements StoredEventSubscriber
         $content = $domainEvent->content;
 
         match ($content::class) {
+            PlayerJoined::class => $this->additions[$domainEvent->streamId] = (int)$content->redPlayerTurnEndsAt,
             PlayerMoved::class => $this->additions[$domainEvent->streamId] = (int)$content->nextPlayerTurnEndsAt,
             GameAborted::class,
             GameDrawn::class,

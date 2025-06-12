@@ -10,21 +10,27 @@ use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 
 final class Players
 {
-    private Player $currentPlayer;
-
-    private Player $nextPlayer;
-
     /**
      * @throws PlayersNotUniqueException
      */
-    public function __construct(Player $currentPlayer, Player $nextPlayer)
-    {
+    private function __construct(
+        private readonly Player $currentPlayer,
+        private readonly Player $nextPlayer
+    ) {
         if ($currentPlayer->id() === $nextPlayer->id()) {
             throw new PlayersNotUniqueException();
         }
+    }
 
-        $this->currentPlayer = $currentPlayer;
-        $this->nextPlayer = $nextPlayer;
+    public static function start(
+        Player $currentPlayer,
+        Player $nextPlayer,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): self {
+        return new self(
+            $currentPlayer->startTurn($now),
+            $nextPlayer
+        );
     }
 
     public function switch(DateTimeImmutable $now = new DateTimeImmutable()): Players

@@ -21,14 +21,17 @@ final class Open implements State
     ) {
     }
 
-    public function join(GameId $gameId, string $playerId): Transition
-    {
+    public function join(
+        GameId $gameId,
+        string $playerId,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition {
         $size = $this->configuration->size();
         $width = $size->width();
         $height = $size->height();
-        $players = $this->configuration->createPlayers($this->playerId, $playerId);
+        $players = $this->configuration->createPlayers($this->playerId, $playerId, $now);
         $redPlayer = $players->current();
-        $yellowPlayer = $players->opponentOf($redPlayer->id());
+        $yellowPlayer = $players->next();
 
         return new Transition(
             new Running(
@@ -42,6 +45,7 @@ final class Open implements State
                     $gameId,
                     $redPlayer->id(),
                     $redPlayer->remainingMs(),
+                    $redPlayer->turnEndsAt(),
                     $yellowPlayer->id(),
                     $yellowPlayer->remainingMs()
                 )

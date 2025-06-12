@@ -16,10 +16,10 @@ final class TimerFactory
 
         return match ($type) {
             'move' => count($parts) === 1
-                ? TimePerMove::set((int)$parts[0])
+                ? MoveTimer::set((int)$parts[0])
                 : throw new InvalidArgumentException('Format: move:<secondsPerMove>'),
             'game' => count($parts) === 2
-                ? TimePerGame::set((int)$parts[0], (int)$parts[1])
+                ? GameTimer::set((int)$parts[0], (int)$parts[1])
                 : throw new InvalidArgumentException('Format: game:<baseSeconds>:<incrementSeconds>'),
             default => throw new InvalidArgumentException('Unknown timer type: ' . $type),
         };

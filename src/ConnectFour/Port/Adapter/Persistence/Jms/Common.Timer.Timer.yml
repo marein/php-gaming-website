@@ -2,5 +2,5 @@ Gaming\Common\Timer\Timer:
   discriminator:
     field_name: type
     map:
-      per_game: Gaming\Common\Timer\TimePerGame
-      per_move: Gaming\Common\Timer\TimePerMove
+      game: Gaming\Common\Timer\GameTimer
+      move: Gaming\Common\Timer\MoveTimer

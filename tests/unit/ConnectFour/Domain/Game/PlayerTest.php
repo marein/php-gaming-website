@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
-use Gaming\Common\Timer\TimePerGame;
+use Gaming\Common\Timer\GameTimer;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerHasInvalidStoneException;
 use Gaming\ConnectFour\Domain\Game\Player;
@@ -20,7 +20,7 @@ class PlayerTest extends TestCase
         $id = uniqid();
         $stone = Stone::Red;
 
-        $player = new Player($id, $stone, TimePerGame::set(300, 5));
+        $player = new Player($id, $stone, GameTimer::set(300, 5));
 
         $this->assertEquals($id, $player->id());
         $this->assertEquals($stone, $player->stone());
@@ -36,6 +36,6 @@ class PlayerTest extends TestCase
         $id = uniqid();
         $stone = Stone::None;
 
-        new Player($id, $stone, TimePerGame::set(300, 5));
+        new Player($id, $stone, GameTimer::set(300, 5));
     }
 }

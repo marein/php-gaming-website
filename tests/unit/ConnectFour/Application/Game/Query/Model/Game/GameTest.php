@@ -30,7 +30,7 @@ class GameTest extends TestCase
                 'chatId' => 'chatId',
                 'openedBy' => 'player1',
                 'redPlayerId' => 'player1',
-                'redPlayerRemainingMs' => 30000,
+                'redPlayerRemainingMs' => 20000,
                 'redPlayerTurnEndsAt' => null,
                 'yellowPlayerId' => 'player2',
                 'yellowPlayerRemainingMs' => 40000,
@@ -68,7 +68,7 @@ class GameTest extends TestCase
         );
 
         $domainGame->assignChat('chatId');
-        $domainGame->join('player2');
+        $domainGame->join('player2', $now);
         $domainGame->move('player1', 1, $now = $now->modify('+10 seconds'));
         $domainGame->move('player2', 1, $now = $now->modify('+20 seconds'));
         $domainGame->move('player1', 1, $now->modify('+30 seconds'));

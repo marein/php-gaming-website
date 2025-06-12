@@ -13,7 +13,11 @@ interface State
     /**
      * @throws GameException
      */
-    public function join(GameId $gameId, string $playerId): Transition;
+    public function join(
+        GameId $gameId,
+        string $playerId,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition;
 
     /**
      * @throws GameException

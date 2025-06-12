@@ -10,8 +10,11 @@ use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class Aborted implements State
 {
-    public function join(GameId $gameId, string $playerId): Transition
-    {
+    public function join(
+        GameId $gameId,
+        string $playerId,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition {
         throw new GameFinishedException();
     }
 

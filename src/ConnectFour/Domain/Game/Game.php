@@ -78,9 +78,9 @@ final class Game implements AggregateRoot
     /**
      * @throws GameException
      */
-    public function join(string $playerId): void
+    public function join(string $playerId, DateTimeImmutable $now = new DateTimeImmutable()): void
     {
-        $transition = $this->state->join($this->id(), $playerId);
+        $transition = $this->state->join($this->id(), $playerId, $now);
 
         $this->applyTransition($transition);
     }
