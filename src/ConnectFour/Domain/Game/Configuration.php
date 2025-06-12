@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
 
-use Gaming\Common\Timer\TimerFactory;
+use Gaming\Common\Timer\TimePerGame;
+use Gaming\Common\Timer\Timer;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
@@ -12,12 +13,15 @@ use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 
 final class Configuration
 {
+    public readonly Timer $timer;
+
     public function __construct(
         private readonly Size $size,
         private readonly WinningRules $winningRules,
         public readonly ?Stone $preferredStone = null,
-        public readonly string $timeControl = 'game:300:0'
+        ?Timer $timer = null
     ) {
+        $this->timer = $timer ?? TimePerGame::set(60, 0);
     }
 
     public static function common(): Configuration
@@ -44,16 +48,14 @@ final class Configuration
      */
     public function createPlayers(string $playerId, string $joinedPlayerId): Players
     {
-        $timer = TimerFactory::fromString($this->timeControl);
-
         $players = match ($this->preferredStone ?? Stone::random()) {
             Stone::Red => [
-                new Player($playerId, Stone::Red, $timer),
-                new Player($joinedPlayerId, Stone::Yellow, $timer)
+                new Player($playerId, Stone::Red, $this->timer),
+                new Player($joinedPlayerId, Stone::Yellow, $this->timer)
             ],
             default => [
-                new Player($joinedPlayerId, Stone::Red, $timer),
-                new Player($playerId, Stone::Yellow, $timer)
+                new Player($joinedPlayerId, Stone::Red, $this->timer),
+                new Player($playerId, Stone::Yellow, $this->timer)
             ]
         };
 

@@ -16,7 +16,7 @@ final class OpenCommand implements Request
         public readonly int $width,
         public readonly int $height,
         public readonly int $stone,
-        public readonly string $timeControl
+        public readonly string $timer
     ) {
     }
 }
