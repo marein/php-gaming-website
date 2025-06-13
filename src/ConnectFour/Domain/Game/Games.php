@@ -7,7 +7,6 @@ namespace Gaming\ConnectFour\Domain\Game;
 use Closure;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
 use Gaming\ConnectFour\Domain\Game\Exception\GameException;
-use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 
 /**
  * This repository is very persistence oriented to highlight the transactional scope (technical-wise).

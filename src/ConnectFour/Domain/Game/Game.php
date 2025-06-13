@@ -46,11 +46,8 @@ final class Game implements AggregateRoot
         return $this->gameId;
     }
 
-    public static function open(
-        GameId $gameId,
-        Configuration $configuration,
-        string $playerId
-    ): Game {
+    public static function open(GameId $gameId, Configuration $configuration, string $playerId): Game
+    {
         return new self(
             $gameId,
             new Open(
@@ -109,6 +106,9 @@ final class Game implements AggregateRoot
         $this->applyTransition($transition);
     }
 
+    /**
+     * @throws GameException
+     */
     public function timeout(): void
     {
         $transition = $this->state->timeout($this->id());

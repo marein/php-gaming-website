@@ -42,7 +42,7 @@ final class OpenType extends AbstractType
                 ]
             ])
             ->add('timer', ChoiceType::class, [
-                'data' => 'move:15',
+                'data' => 'move:15000',
                 'label' => 'Timer',
                 'choices' => self::timers(),
                 'constraints' => [

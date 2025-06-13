@@ -22,6 +22,9 @@ final class Players
         }
     }
 
+    /**
+     * @throws PlayersNotUniqueException
+     */
     public static function start(
         Player $currentPlayer,
         Player $nextPlayer,
