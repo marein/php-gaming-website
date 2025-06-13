@@ -20,6 +20,7 @@ final class GameOpened implements DomainEvent
         GameId $gameId,
         Size $size,
         public readonly ?int $preferredStone,
+        public readonly string $timer,
         private readonly string $playerId
     ) {
         $this->gameId = $gameId->toString();

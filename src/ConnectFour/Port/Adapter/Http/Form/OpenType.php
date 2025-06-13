@@ -41,6 +41,15 @@ final class OpenType extends AbstractType
                     new Choice(choices: self::variants())
                 ]
             ])
+            ->add('timer', ChoiceType::class, [
+                'data' => 'move:15000',
+                'label' => 'Timer',
+                'choices' => self::timers(),
+                'constraints' => [
+                    new NotBlank(),
+                    new Choice(choices: self::timers())
+                ]
+            ])
             ->add('color', ChoiceType::class, [
                 'data' => -1,
                 'label' => 'Color',
@@ -78,10 +87,18 @@ final class OpenType extends AbstractType
     }
 
     /**
+     * @return array<string, string>
+     */
+    private static function timers(): array
+    {
+        return array_combine($timers = ['move:15000', 'game:60000:0', 'game:60000:3000'], $timers);
+    }
+
+    /**
      * @return array<string, int>
      */
     private static function colors(): array
     {
-        return ['Red' => 1, 'Yellow' => 2, 'Random' => -1];
+        return ['color_1' => 1, 'color_2' => 2, 'color_random' => -1];
     }
 }

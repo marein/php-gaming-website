@@ -8,6 +8,7 @@ framework:
     secret: '%env(APP_KERNEL_SECRET)%'
     validation:
         enabled: true
+    enabled_locales: ['en']
     router:
         resource: '%kernel.project_dir%/config/routing.yml'
     asset_mapper:

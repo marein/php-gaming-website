@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Application\Game\Command;
 
+use Gaming\Common\Timer\TimerFactory;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Configuration;
@@ -27,7 +28,8 @@ final class OpenHandler
             new Configuration(
                 new Size($command->width, $command->height),
                 WinningRules::standard(),
-                Stone::tryFrom($command->stone)
+                Stone::tryFrom($command->stone),
+                TimerFactory::fromString($command->timer)
             ),
             $command->playerId
         );

@@ -34,3 +34,7 @@ services:
         class: Gaming\WebInterface\Presentation\Http\ConnectFourController
         arguments: ['@connect-four.command-bus', '@web-interface.security']
         tags: ['controller.service_arguments']
+
+    web-interface.server-time-controller:
+        class: Gaming\WebInterface\Presentation\Http\ServerTimeController
+        tags: ['controller.service_arguments']

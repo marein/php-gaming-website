@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
+use Gaming\Common\Timer\MoveTimer;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
@@ -447,6 +448,7 @@ class GameTest extends TestCase
         self::assertEquals(7, $domainEvents[0]->width());
         self::assertEquals(6, $domainEvents[0]->height());
         self::assertEquals(1, $domainEvents[0]->preferredStone);
+        self::assertEquals('game:60000:0', $domainEvents[0]->timer);
 
         return $game;
     }
@@ -462,8 +464,6 @@ class GameTest extends TestCase
 
         assert($domainEvents[0] instanceof PlayerJoined);
         self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
-        self::assertEquals('playerId1', $domainEvents[0]->opponentPlayerId());
-        self::assertEquals('playerId2', $domainEvents[0]->joinedPlayerId());
         self::assertEquals('playerId1', $domainEvents[0]->redPlayerId);
         self::assertEquals('playerId2', $domainEvents[0]->yellowPlayerId);
 
@@ -550,7 +550,8 @@ class GameTest extends TestCase
             new Configuration(
                 new Size(2, 2),
                 WinningRules::standard(),
-                Stone::Red
+                Stone::Red,
+                MoveTimer::set(15000)
             ),
             'playerId1'
         );
@@ -570,11 +571,10 @@ class GameTest extends TestCase
         self::assertEquals(2, $domainEvents[0]->width());
         self::assertEquals(2, $domainEvents[0]->height());
         self::assertEquals(1, $domainEvents[0]->preferredStone);
+        self::assertEquals('move:15000', $domainEvents[0]->timer);
 
         assert($domainEvents[1] instanceof PlayerJoined);
         self::assertEquals($game->id()->toString(), $domainEvents[1]->aggregateId());
-        self::assertEquals('playerId2', $domainEvents[1]->joinedPlayerId());
-        self::assertEquals('playerId1', $domainEvents[1]->opponentPlayerId());
         self::assertEquals('playerId1', $domainEvents[1]->redPlayerId);
         self::assertEquals('playerId2', $domainEvents[1]->yellowPlayerId);
 

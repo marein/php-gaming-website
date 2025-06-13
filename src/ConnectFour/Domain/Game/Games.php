@@ -6,7 +6,7 @@ namespace Gaming\ConnectFour\Domain\Game;
 
 use Closure;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
-use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 
 /**
  * This repository is very persistence oriented to highlight the transactional scope (technical-wise).
@@ -23,7 +23,7 @@ interface Games
      * @params Closure(Game): void $operation
      *
      * @throws ConcurrencyException
-     * @throws GameNotFoundException
+     * @throws GameException
      */
     public function update(GameId $gameId, Closure $operation): void;
 }

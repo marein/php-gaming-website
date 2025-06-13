@@ -1,0 +1,6 @@
+Gaming\Common\Timer\Timer:
+  discriminator:
+    field_name: type
+    map:
+      game: Gaming\Common\Timer\GameTimer
+      move: Gaming\Common\Timer\MoveTimer

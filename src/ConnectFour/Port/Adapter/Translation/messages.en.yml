@@ -1,0 +1,6 @@
+move:15000: '15s/move'
+game:60000:0: '1m/game'
+game:60000:3000: '1m/game + 3s/move'
+color_random: 'Random'
+color_1: 'Red'
+color_2: 'Yellow'

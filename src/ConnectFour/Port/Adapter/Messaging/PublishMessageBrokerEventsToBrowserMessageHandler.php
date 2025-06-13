@@ -25,6 +25,7 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
                 $message->body()
             ),
             'ConnectFour.GameResigned',
+            'ConnectFour.GameTimedOut',
             'ConnectFour.GameWon',
             'ConnectFour.GameDrawn',
             'ConnectFour.PlayerMoved',
