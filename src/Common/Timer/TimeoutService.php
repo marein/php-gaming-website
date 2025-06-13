@@ -33,12 +33,12 @@ final class TimeoutService
     public function listen(
         Closure $handler,
         int $lookaheadWindowMs = 3000,
-        int $maxSleepMs = 250000,
+        int $maxSleepMs = 250,
         bool &$shouldRun = true
     ): void {
         while ($shouldRun) {
             $nowMs = (int)(microtime(true) * 1000);
-            $estimatedSleepTime = $maxSleepMs;
+            $estimatedSleepTime = $maxSleepMs * 1000;
 
             $timeouts = $this->timeoutStore->find($nowMs + $lookaheadWindowMs);
             $handledTimeoutIds = [];
@@ -53,7 +53,7 @@ final class TimeoutService
             }
             $this->timeoutStore->remove($handledTimeoutIds);
 
-            usleep(min($maxSleepMs, $estimatedSleepTime));
+            usleep(min($maxSleepMs * 1000, $estimatedSleepTime));
         }
     }
 }

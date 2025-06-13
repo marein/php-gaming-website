@@ -18,7 +18,7 @@ class GameTimerTest extends TestCase
         $now = new DateTimeImmutable();
         $nowMs = $now->getTimestamp() * 1000 + (int)($now->getMicrosecond() / 1000);
 
-        $timer = GameTimer::set(60, 5);
+        $timer = GameTimer::set(60000, 5000);
         $this->assertEquals(60000, $timer->remainingMs);
         $this->assertEquals(null, $timer->endsAt);
 

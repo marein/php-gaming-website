@@ -1,5 +1,10 @@
 imports: [{ resource: services/ }]
 
+framework:
+    translator:
+        paths:
+            - '%kernel.project_dir%/src/ConnectFour/Port/Adapter/Translation'
+
 gaming_platform_bus:
     buses:
         connect_four_command: ~

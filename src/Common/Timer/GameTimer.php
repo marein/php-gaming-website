@@ -15,9 +15,9 @@ final class GameTimer implements Timer
     ) {
     }
 
-    public static function set(int $baseSeconds, int $incrementSeconds): self
+    public static function set(int $baseMs, int $incrementMs): self
     {
-        return new self($baseSeconds * 1000, $incrementSeconds * 1000);
+        return new self($baseMs, $incrementMs);
     }
 
     public function start(DateTimeImmutable $now = new DateTimeImmutable()): self
@@ -53,5 +53,10 @@ final class GameTimer implements Timer
     public function endsAt(): ?int
     {
         return $this->endsAt;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('game:%s:%s', $this->remainingMs, $this->incrementMs);
     }
 }

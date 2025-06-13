@@ -45,6 +45,7 @@ class GameTest extends TestCase
                 'height' => 6,
                 'width' => 7,
                 'preferredStone' => 1,
+                'timer' => 'game:60000:0',
                 'moves' => [
                     [
                         'x' => 1,

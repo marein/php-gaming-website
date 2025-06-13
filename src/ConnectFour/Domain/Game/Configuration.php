@@ -22,7 +22,7 @@ final class Configuration
         public readonly ?Stone $preferredStone = null,
         ?Timer $timer = null
     ) {
-        $this->timer = $timer ?? GameTimer::set(60, 0);
+        $this->timer = $timer ?? GameTimer::set(60000, 0);
     }
 
     public static function common(): Configuration

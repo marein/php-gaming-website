@@ -55,6 +55,7 @@ final class Game
         public private(set) int $height = 0,
         public private(set) int $width = 0,
         public private(set) ?int $preferredStone = null,
+        public private(set) string $timer = '',
         public private(set) array $moves = [],
         public private(set) array $winningSequences = []
     ) {
@@ -110,6 +111,7 @@ final class Game
         $this->width = $gameOpened->width();
         $this->height = $gameOpened->height();
         $this->preferredStone = $gameOpened->preferredStone;
+        $this->timer = $gameOpened->timer;
         $this->openedBy = $gameOpened->playerId();
     }
 

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Gaming\Common\Timer;
 
 use DateTimeImmutable;
+use Stringable;
 
-interface Timer
+interface Timer extends Stringable
 {
     public function start(DateTimeImmutable $now = new DateTimeImmutable()): self;
 

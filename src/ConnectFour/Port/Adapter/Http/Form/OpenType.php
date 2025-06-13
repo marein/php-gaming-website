@@ -91,7 +91,7 @@ final class OpenType extends AbstractType
      */
     private static function timers(): array
     {
-        return ['15s/move' => 'move:15', '1m/game' => 'game:60:0', '1m/game + 3s/move' => 'game:60:3'];
+        return array_combine($timers = ['move:15000', 'game:60000:0', 'game:60000:3000'], $timers);
     }
 
     /**
@@ -99,6 +99,6 @@ final class OpenType extends AbstractType
      */
     private static function colors(): array
     {
-        return ['Red' => 1, 'Yellow' => 2, 'Random' => -1];
+        return ['color_1' => 1, 'color_2' => 2, 'color_random' => -1];
     }
 }

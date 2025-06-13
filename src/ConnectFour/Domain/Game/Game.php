@@ -46,8 +46,11 @@ final class Game implements AggregateRoot
         return $this->gameId;
     }
 
-    public static function open(GameId $gameId, Configuration $configuration, string $playerId): Game
-    {
+    public static function open(
+        GameId $gameId,
+        Configuration $configuration,
+        string $playerId
+    ): Game {
         return new self(
             $gameId,
             new Open(
@@ -59,6 +62,7 @@ final class Game implements AggregateRoot
                     $gameId,
                     $configuration->size(),
                     $configuration->preferredStone?->value,
+                    (string)$configuration->timer,
                     $playerId
                 )
             ]

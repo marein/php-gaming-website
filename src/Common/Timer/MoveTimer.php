@@ -15,9 +15,9 @@ final class MoveTimer implements Timer
     ) {
     }
 
-    public static function set(int $secondsPerMove): self
+    public static function set(int $msPerMove): self
     {
-        return new self($secondsPerMove * 1000, $secondsPerMove * 1000);
+        return new self($msPerMove, $msPerMove);
     }
 
     public function start(DateTimeImmutable $now = new DateTimeImmutable()): self
@@ -52,5 +52,10 @@ final class MoveTimer implements Timer
     public function endsAt(): ?int
     {
         return $this->endsAt;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('move:%s', $this->remainingMs);
     }
 }
