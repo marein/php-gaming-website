@@ -1,7 +1,8 @@
 const globalConfig = document.querySelector('meta[name="server-time-config"]');
 const url = globalConfig?.getAttribute('data-url') || '/api/server-time';
-const defaultMaxJitter = parseInt(globalConfig?.getAttribute('data-max-jitter') || 1000);
+const defaultRetries = parseInt(globalConfig?.getAttribute('data-retries') || 5);
 const defaultDelay = parseInt(globalConfig?.getAttribute('data-delay') || 100);
+const defaultMaxJitter = parseInt(globalConfig?.getAttribute('data-max-jitter') || 1000);
 let offsetMs = 0;
 
 sync();
@@ -11,7 +12,7 @@ sync();
  * @param {Number} delay
  * @param {Number} maxJitter
  */
-export async function sync(retries = 5, delay = defaultDelay, maxJitter = defaultMaxJitter) {
+export async function sync(retries = defaultRetries, delay = defaultDelay, maxJitter = defaultMaxJitter) {
     try {
         const requestTime = Date.now();
         const response = await fetch(url);
