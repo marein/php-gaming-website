@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\State;
 
+use DateTimeImmutable;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
 use Gaming\ConnectFour\Domain\Game\Exception\GameRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\NoTimeoutException;
 use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Players;
@@ -39,9 +42,24 @@ final class Running implements State
         $this->players = $players;
     }
 
-    public function move(GameId $gameId, string $playerId, int $column): Transition
-    {
+    public function move(
+        GameId $gameId,
+        string $playerId,
+        int $column,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition {
         $this->guardExpectedPlayer($playerId);
+
+        $switchedPlayers = $this->players->switch($now);
+        $currentPlayer = $switchedPlayers->get($playerId);
+        $nextPlayer = $switchedPlayers->current();
+
+        if ($currentPlayer->remainingMs() <= 0) {
+            return new Transition(
+                new TimedOut(),
+                [new GameTimedOut($gameId->toString(), $currentPlayer->id(), $nextPlayer->id())]
+            );
+        }
 
         $board = $this->board->dropStone($this->players->current()->stone(), $column);
 
@@ -50,20 +68,17 @@ final class Running implements State
                 $gameId,
                 $board->lastUsedField()->point(),
                 $board->lastUsedField()->stone(),
-                $this->players->current()->id(),
-                $this->players->switch()->current()->id()
+                $currentPlayer->id(),
+                $currentPlayer->remainingMs(),
+                $nextPlayer->id(),
+                $nextPlayer->turnEndsAt()
             )
         ];
 
         $winningSequences = $this->winningRules->findWinningSequences($board);
 
         if (count($winningSequences) !== 0) {
-            $domainEvents[] = new GameWon(
-                $gameId,
-                $this->players->current()->id(),
-                $this->players->switch()->current()->id(),
-                $winningSequences
-            );
+            $domainEvents[] = new GameWon($gameId, $currentPlayer->id(), $nextPlayer->id(), $winningSequences);
 
             return new Transition(
                 new Won(),
@@ -74,10 +89,7 @@ final class Running implements State
         $numberOfMovesUntilDraw = $this->numberOfMovesUntilDraw - 1;
 
         if ($numberOfMovesUntilDraw === 0) {
-            $domainEvents[] = new GameDrawn(
-                $gameId,
-                [$this->players->current()->id(), $this->players->switch()->current()->id()]
-            );
+            $domainEvents[] = new GameDrawn($gameId, [$currentPlayer->id(), $nextPlayer->id()]);
 
             return new Transition(
                 new Drawn(),
@@ -90,14 +102,17 @@ final class Running implements State
                 $this->winningRules,
                 $numberOfMovesUntilDraw,
                 $board,
-                $this->players->switch()
+                $switchedPlayers
             ),
             $domainEvents
         );
     }
 
-    public function join(GameId $gameId, string $playerId): Transition
-    {
+    public function join(
+        GameId $gameId,
+        string $playerId,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition {
         throw new GameRunningException();
     }
 
@@ -134,6 +149,26 @@ final class Running implements State
                     $this->players->opponentOf($playerId)
                 )
             ]
+        );
+    }
+
+    public function timeout(GameId $gameId, DateTimeImmutable $now = new DateTimeImmutable()): Transition
+    {
+        $currentPlayer = $this->players->current()->endTurn($now);
+        if ($currentPlayer->remainingMs() > 0) {
+            throw new NoTimeoutException();
+        }
+
+        if ($this->isAbortable()) {
+            return new Transition(
+                new Aborted(),
+                [new GameAborted($gameId, $currentPlayer->id(), $this->players->next()->id())]
+            );
+        }
+
+        return new Transition(
+            new TimedOut(),
+            [new GameTimedOut($gameId->toString(), $currentPlayer->id(), $this->players->next()->id())]
         );
     }
 

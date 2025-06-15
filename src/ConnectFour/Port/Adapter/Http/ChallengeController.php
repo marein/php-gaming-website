@@ -38,7 +38,8 @@ final class ChallengeController extends AbstractController
                         $this->security->forceUser()->getUserIdentifier(),
                         (int)$width,
                         (int)$height,
-                        (int)$form->get('color')->getData()
+                        (int)$form->get('color')->getData(),
+                        $form->get('timer')->getData()
                     )
                 )
             ]);

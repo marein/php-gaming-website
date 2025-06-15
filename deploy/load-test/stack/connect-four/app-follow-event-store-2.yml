@@ -15,7 +15,7 @@ services:
                     - "node.labels.long-running==1"
     connect-four-follow-event-store-projection-2:
         image: marein/php-gaming-website:php-fpm
-        command: bin/console connect-four:follow-event-store projection-2 game-projection,games-by-player-projection,running-games-projection,open-games-projection -p 3
+        command: bin/console connect-four:follow-event-store projection-2 game-projection,games-by-player-projection,running-games-projection,open-games-projection,timer-projection -p 3
         env_file: ../app.env
         environment:
             APP_CONNECT_FOUR_DOCTRINE_DBAL_DATABASE: "connect-four-2"

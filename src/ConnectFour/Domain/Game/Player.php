@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
 
+use DateTimeImmutable;
+use Gaming\Common\Timer\Timer;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerHasInvalidStoneException;
 
 final class Player
 {
-    private string $playerId;
-
-    private Stone $stone;
-
     /**
      * @throws PlayerHasInvalidStoneException
      */
-    public function __construct(string $playerId, Stone $stone)
-    {
-        $this->playerId = $playerId;
-        $this->stone = $stone;
-
+    public function __construct(
+        private readonly string $playerId,
+        private readonly Stone $stone,
+        private readonly Timer $timer
+    ) {
         $this->guardPlayerHasCorrectStone($stone);
     }
 
@@ -42,5 +40,33 @@ final class Player
     public function stone(): Stone
     {
         return $this->stone;
+    }
+
+    public function startTurn(DateTimeImmutable $now = new DateTimeImmutable()): self
+    {
+        return new self(
+            $this->playerId,
+            $this->stone,
+            $this->timer->start($now)
+        );
+    }
+
+    public function endTurn(DateTimeImmutable $now = new DateTimeImmutable()): self
+    {
+        return new self(
+            $this->playerId,
+            $this->stone,
+            $this->timer->stop($now)
+        );
+    }
+
+    public function remainingMs(): int
+    {
+        return $this->timer->remainingMs();
+    }
+
+    public function turnEndsAt(): ?int
+    {
+        return $this->timer->endsAt();
     }
 }

@@ -19,6 +19,11 @@ services:
         arguments: ['@connect-four.games-by-player-store']
         tags: [{ name: 'connect-four.stored-event-subscriber', key: 'games-by-player-projection' }]
 
+    connect-four.timer-projection:
+        class: Gaming\ConnectFour\Port\Adapter\Persistence\Projection\TimerProjection
+        arguments: ['@connect-four.timeout-service']
+        tags: [{ name: 'connect-four.stored-event-subscriber', key: 'timer-projection' }]
+
     connect-four.publish-stored-events-subscriber:
         class: Gaming\ConnectFour\Port\Adapter\Messaging\PublishDomainEventsToMessageBrokerSubscriber
         arguments: ['@gaming.message-broker.gaming-exchange-publisher', '@connect-four.normalizer']

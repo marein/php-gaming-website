@@ -49,6 +49,12 @@ login_check_inbox:
 login_check:
     path: /login/check
 
+server_time:
+    path: /api/server-time
+    methods: [GET]
+    controller: web-interface.server-time-controller::serverTimeAction
+    defaults: { _format: json }
+
 ###############################################
 #                Chat Service                 #
 ###############################################

@@ -36,7 +36,7 @@ function open(jar) {
     let url = `${baseUrl}/api/connect-four/games/open`;
     let response = http.post(
         url,
-        {'open[size]': '7x6', 'open[variant]': 'standard', 'open[color]': '1'},
+        {'open[size]': '7x6', 'open[variant]': 'standard', 'open[timer]': 'game:60000:0', 'open[color]': '1'},
         {jar, headers, redirects: 0}
     );
     return response.headers['Location'].match(/\/challenge\/(.*)$/)[1];

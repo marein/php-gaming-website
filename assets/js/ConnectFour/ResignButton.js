@@ -27,6 +27,7 @@ customElements.define('connect-four-resign-button', class extends HTMLElement {
             'ConnectFour.GameAborted': this._remove,
             'ConnectFour.GameWon': this._remove,
             'ConnectFour.GameResigned': this._remove,
+            'ConnectFour.GameTimedOut': this._remove,
             'ConnectFour.GameDrawn': this._remove
         }, this._sseAbortController.signal);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game;
 
+use DateTimeImmutable;
 use Gaming\Common\Domain\AggregateRoot;
 use Gaming\Common\Domain\DomainEvent;
 use Gaming\Common\Domain\IsAggregateRoot;
@@ -58,6 +59,7 @@ final class Game implements AggregateRoot
                     $gameId,
                     $configuration->size(),
                     $configuration->preferredStone?->value,
+                    (string)$configuration->timer,
                     $playerId
                 )
             ]
@@ -67,9 +69,9 @@ final class Game implements AggregateRoot
     /**
      * @throws GameException
      */
-    public function move(string $playerId, int $column): void
+    public function move(string $playerId, int $column, DateTimeImmutable $now = new DateTimeImmutable()): void
     {
-        $transition = $this->state->move($this->id(), $playerId, $column);
+        $transition = $this->state->move($this->id(), $playerId, $column, $now);
 
         $this->applyTransition($transition);
     }
@@ -77,9 +79,9 @@ final class Game implements AggregateRoot
     /**
      * @throws GameException
      */
-    public function join(string $playerId): void
+    public function join(string $playerId, DateTimeImmutable $now = new DateTimeImmutable()): void
     {
-        $transition = $this->state->join($this->id(), $playerId);
+        $transition = $this->state->join($this->id(), $playerId, $now);
 
         $this->applyTransition($transition);
     }
@@ -100,6 +102,16 @@ final class Game implements AggregateRoot
     public function resign(string $playerId): void
     {
         $transition = $this->state->resign($this->id(), $playerId);
+
+        $this->applyTransition($transition);
+    }
+
+    /**
+     * @throws GameException
+     */
+    public function timeout(DateTimeImmutable $now = new DateTimeImmutable()): void
+    {
+        $transition = $this->state->timeout($this->id(), $now);
 
         $this->applyTransition($transition);
     }

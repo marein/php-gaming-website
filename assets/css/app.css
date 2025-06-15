@@ -19,6 +19,7 @@ html:has(.navbar.sticky-top) .page-body .sticky-md-top {
     content: attr(data-title);
     pointer-events: none;
     position: absolute;
+    margin-top: 1px;
     padding: var(--tblr-spacer-2);
     opacity: .9;
     top: 100%;
@@ -287,14 +288,6 @@ notification-list {
     30% {
         scale: .9;
     }
-}
-
-connect-four-players .status-dot {
-    --tblr-status-size: .7rem;
-}
-
-connect-four-players .status-dot-animated:before {
-    animation-delay: 0s;
 }
 
 [data-bs-theme=dark] .gp-cf-game {

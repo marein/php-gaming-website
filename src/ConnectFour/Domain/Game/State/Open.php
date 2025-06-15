@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\State;
 
+use DateTimeImmutable;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
@@ -20,12 +21,17 @@ final class Open implements State
     ) {
     }
 
-    public function join(GameId $gameId, string $playerId): Transition
-    {
+    public function join(
+        GameId $gameId,
+        string $playerId,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition {
         $size = $this->configuration->size();
         $width = $size->width();
         $height = $size->height();
-        $players = $this->configuration->createPlayers($this->playerId, $playerId);
+        $players = $this->configuration->createPlayers($this->playerId, $playerId, $now);
+        $redPlayer = $players->current();
+        $yellowPlayer = $players->next();
 
         return new Transition(
             new Running(
@@ -37,10 +43,11 @@ final class Open implements State
             [
                 new PlayerJoined(
                     $gameId,
-                    $playerId,
-                    $this->playerId,
-                    $players->current()->id(),
-                    $players->switch()->current()->id()
+                    $redPlayer->id(),
+                    $redPlayer->remainingMs(),
+                    $redPlayer->turnEndsAt(),
+                    $yellowPlayer->id(),
+                    $yellowPlayer->remainingMs()
                 )
             ]
         );
@@ -68,7 +75,16 @@ final class Open implements State
         throw new GameNotRunningException();
     }
 
-    public function move(GameId $gameId, string $playerId, int $column): Transition
+    public function move(
+        GameId $gameId,
+        string $playerId,
+        int $column,
+        DateTimeImmutable $now = new DateTimeImmutable()
+    ): Transition {
+        throw new GameNotRunningException();
+    }
+
+    public function timeout(GameId $gameId, DateTimeImmutable $now = new DateTimeImmutable()): Transition
     {
         throw new GameNotRunningException();
     }
