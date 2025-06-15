@@ -169,6 +169,37 @@ class GameTest extends TestCase
         $this->assertEquals('', $game->currentPlayerId);
     }
 
+    /**
+     * @test
+     */
+    public function itShouldHandleTimeouts(): void
+    {
+        // First player
+        $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
+        $domainGame->join('player2');
+        $domainGame->move('player1', 1, new DateTimeImmutable('+1 year'));
+
+        $game = new Game();
+        $this->applyFromDomainGame($game, $domainGame);
+
+        $this->assertEquals($game::STATE_FINISHED, $game->state);
+        $this->assertEquals('player1', $game->timedOutBy);
+        $this->assertEquals('player2', $game->winnerId);
+
+        // Second player
+        $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
+        $domainGame->join('player2');
+        $domainGame->move('player1', 1);
+        $domainGame->move('player2', 1, new DateTimeImmutable('+1 year'));
+
+        $game = new Game();
+        $this->applyFromDomainGame($game, $domainGame);
+
+        $this->assertEquals($game::STATE_FINISHED, $game->state);
+        $this->assertEquals('player1', $game->winnerId);
+        $this->assertEquals('player2', $game->timedOutBy);
+    }
+
     private function applyFromDomainGame(Game $game, DomainGame $domainGame): void
     {
         foreach ($domainGame->flushDomainEvents() as $domainEvent) {

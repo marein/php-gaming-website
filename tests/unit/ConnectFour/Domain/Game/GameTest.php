@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
+use Closure;
+use DateTimeImmutable;
 use Gaming\Common\Timer\MoveTimer;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
@@ -14,12 +16,14 @@ use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
+use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
 use Gaming\ConnectFour\Domain\Game\Exception\GameFinishedException;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
 use Gaming\ConnectFour\Domain\Game\Exception\GameRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\NoTimeoutException;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
@@ -54,30 +58,6 @@ class GameTest extends TestCase
         // If this happens twice, nothing should happen.
         $game->assignChat('anotherChatId');
         self::assertCount(0, $game->flushDomainEvents());
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotResignAnOpenGame(): void
-    {
-        $this->expectException(GameNotRunningException::class);
-
-        $this
-            ->createOpenGame()
-            ->resign('playerId1');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotMoveOnAnOpenGame(): void
-    {
-        $this->expectException(GameNotRunningException::class);
-
-        $this
-            ->createOpenGame()
-            ->move('playerId1', 1);
     }
 
     /**
@@ -230,205 +210,100 @@ class GameTest extends TestCase
     /**
      * @test
      */
-    public function playerCanNotJoinARunningGame(): void
+    public function timeoutHappensOnMove(): Game
     {
-        $this->expectException(GameRunningException::class);
+        $game = $this->createRunningGame();
 
-        $this
-            ->createRunningGame()
-            ->join('playerId3');
+        $game->move('playerId1', 1);
+        $game->move('playerId2', 2);
+        $game->move('playerId1', 1, new DateTimeImmutable('+1 year'));
+
+        $domainEvents = $game->flushDomainEvents();
+        self::assertCount(3, $domainEvents);
+
+        assert($domainEvents[2] instanceof GameTimedOut);
+        self::assertEquals($game->id()->toString(), $domainEvents[2]->gameId);
+        self::assertEquals('playerId1', $domainEvents[2]->timedOutPlayerId);
+        self::assertEquals('playerId2', $domainEvents[2]->opponentPlayerId);
+
+        return $game;
     }
 
     /**
      * @test
      */
-    public function playerCanNotResignAnAbortedGame(): void
+    public function timeoutAbortsInTheFirstTwoMoves(): void
     {
-        $this->expectException(GameFinishedException::class);
+        // First move
+        $game = $this->createRunningGame();
 
-        $this
-            ->createAbortedGame()
-            ->resign('playerId1');
+        $game->timeout(new DateTimeImmutable('+1 year'));
+
+        $domainEvents = $game->flushDomainEvents();
+        self::assertCount(1, $domainEvents);
+
+        assert($domainEvents[0] instanceof GameAborted);
+        self::assertEquals($game->id()->toString(), $domainEvents[0]->aggregateId());
+        self::assertEquals('playerId1', $domainEvents[0]->abortedPlayerId());
+        self::assertEquals('playerId2', $domainEvents[0]->opponentPlayerId());
+
+        // Second move
+        $game = $this->createRunningGame();
+
+        $game->move('playerId1', 1);
+        $game->timeout(new DateTimeImmutable('+1 year'));
+
+        $domainEvents = $game->flushDomainEvents();
+        self::assertCount(2, $domainEvents);
+
+        assert($domainEvents[1] instanceof GameAborted);
+        self::assertEquals($game->id()->toString(), $domainEvents[1]->aggregateId());
+        self::assertEquals('playerId1', $domainEvents[1]->opponentPlayerId());
+        self::assertEquals('playerId2', $domainEvents[1]->abortedPlayerId());
     }
 
     /**
      * @test
+     * @dataProvider unallowedTransitionsProvider
      */
-    public function playerCanNotJoinAnAbortedGame(): void
+    public function unallowedTransitions(Closure $prepare, string $exceptionClass): void
     {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createAbortedGame()
-            ->join('playerId2');
+        $this->expectException($exceptionClass);
+        $prepare();
     }
 
-    /**
-     * @test
-     */
-    public function playerCanNotMoveOnAnAbortedGame(): void
+    public function unallowedTransitionsProvider(): iterable
     {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createAbortedGame()
-            ->move('playerId1', 1);
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotAbortAnAbortedGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createAbortedGame()
-            ->abort('playerId1');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotResignAResignedGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createResignedGame()
-            ->resign('playerId1');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotJoinAResignedGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createResignedGame()
-            ->join('playerId2');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotMoveOnAResignedGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createResignedGame()
-            ->move('playerId1', 1);
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotAbortAResignedGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createResignedGame()
-            ->abort('playerId1');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotResignAWonGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createWonGame()
-            ->resign('playerId1');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotJoinAWonGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createWonGame()
-            ->join('playerId2');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotMoveOnAWonGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createWonGame()
-            ->move('playerId1', 1);
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotAbortAWonGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createWonGame()
-            ->abort('playerId1');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotResignADrawnGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createDrawnGame()
-            ->resign('playerId1');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotJoinADrawnGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createDrawnGame()
-            ->join('playerId2');
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotMoveOnADrawnGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createDrawnGame()
-            ->move('playerId1', 1);
-    }
-
-    /**
-     * @test
-     */
-    public function playerCanNotAbortADrawnGame(): void
-    {
-        $this->expectException(GameFinishedException::class);
-
-        $this
-            ->createDrawnGame()
-            ->abort('playerId1');
+        yield [fn() => $this->createOpenGame()->resign('playerId1'), GameNotRunningException::class];
+        yield [fn() => $this->createOpenGame()->move('playerId1', 1), GameNotRunningException::class];
+        yield [fn() => $this->createOpenGame()->timeout(), GameNotRunningException::class];
+        yield [fn() => $this->createRunningGame()->join('playerId2'), GameRunningException::class];
+        yield [fn() => $this->createRunningGame()->timeout(), NoTimeoutException::class];
+        yield [fn() => $this->createWonGame()->join('playerId2'), GameFinishedException::class];
+        yield [fn() => $this->createWonGame()->move('playerId1', 1), GameFinishedException::class];
+        yield [fn() => $this->createWonGame()->resign('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createWonGame()->abort('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createWonGame()->timeout(), GameFinishedException::class];
+        yield [fn() => $this->createResignedGame()->join('playerId2'), GameFinishedException::class];
+        yield [fn() => $this->createResignedGame()->move('playerId1', 1), GameFinishedException::class];
+        yield [fn() => $this->createResignedGame()->resign('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createResignedGame()->abort('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createResignedGame()->timeout(), GameFinishedException::class];
+        yield [fn() => $this->createDrawnGame()->join('playerId2'), GameFinishedException::class];
+        yield [fn() => $this->createDrawnGame()->move('playerId1', 1), GameFinishedException::class];
+        yield [fn() => $this->createDrawnGame()->resign('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createDrawnGame()->abort('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createDrawnGame()->timeout(), GameFinishedException::class];
+        yield [fn() => $this->createAbortedGame()->join('playerId2'), GameFinishedException::class];
+        yield [fn() => $this->createAbortedGame()->move('playerId1', 1), GameFinishedException::class];
+        yield [fn() => $this->createAbortedGame()->resign('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createAbortedGame()->abort('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createAbortedGame()->timeout(), GameFinishedException::class];
+        yield [fn() => $this->createTimedOutGame()->join('playerId2'), GameFinishedException::class];
+        yield [fn() => $this->createTimedOutGame()->move('playerId1', 1), GameFinishedException::class];
+        yield [fn() => $this->createTimedOutGame()->resign('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createTimedOutGame()->abort('playerId1'), GameFinishedException::class];
+        yield [fn() => $this->createTimedOutGame()->timeout(), GameFinishedException::class];
     }
 
     private function createOpenGame(): Game
@@ -586,6 +461,28 @@ class GameTest extends TestCase
         assert($domainEvents[6] instanceof GameDrawn);
         self::assertEquals($game->id()->toString(), $domainEvents[6]->aggregateId());
         self::assertEquals(['playerId2', 'playerId1'], $domainEvents[6]->playerIds);
+
+        return $game;
+    }
+
+    private function createTimedOutGame(): Game
+    {
+        $game = $this->createRunningGame();
+
+        $game->move('playerId1', 1);
+        $game->move('playerId2', 2);
+        $game->timeout(new DateTimeImmutable('+1 year'));
+
+        $domainEvents = $game->flushDomainEvents();
+        self::assertCount(3, $domainEvents);
+
+        $this->assertPlayerMoved($domainEvents[0], $game->id(), 1, 6, Stone::Red, 'playerId1', 'playerId2');
+        $this->assertPlayerMoved($domainEvents[1], $game->id(), 2, 6, Stone::Yellow, 'playerId2', 'playerId1');
+
+        assert($domainEvents[2] instanceof GameTimedOut);
+        self::assertEquals($game->id()->toString(), $domainEvents[2]->gameId);
+        self::assertEquals('playerId1', $domainEvents[2]->timedOutPlayerId);
+        self::assertEquals('playerId2', $domainEvents[2]->opponentPlayerId);
 
         return $game;
     }

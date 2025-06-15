@@ -109,9 +109,9 @@ final class Game implements AggregateRoot
     /**
      * @throws GameException
      */
-    public function timeout(): void
+    public function timeout(DateTimeImmutable $now = new DateTimeImmutable()): void
     {
-        $transition = $this->state->timeout($this->id());
+        $transition = $this->state->timeout($this->id(), $now);
 
         $this->applyTransition($transition);
     }
