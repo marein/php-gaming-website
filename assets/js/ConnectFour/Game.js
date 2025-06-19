@@ -240,7 +240,6 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMovedFailed(event) {
-        if (event.detail.gameId !== this._game.gameId) return;
         if (!this._followMovesButton || this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView--;
         this._game.removeMove(event.detail);
 

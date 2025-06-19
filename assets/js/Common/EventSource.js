@@ -54,13 +54,15 @@ function onError () {
  * @param {AbortSignal|null} signal
  */
 export function subscribe(channel, listeners, signal = null) {
+    const doesChannelExist = Object.values(subscriptions).some(s => s.channel === channel);
     const subscriptionId = ++currentSubscriptionId;
     subscriptions[subscriptionId] = {channel, listeners};
     signal?.addEventListener('abort', () => {
         delete subscriptions[subscriptionId];
-        connect();
+        const doesChannelExist = Object.values(subscriptions).some(s => s.channel === channel);
+        !doesChannelExist && connect();
     });
-    connect();
+    !doesChannelExist && connect();
 }
 
 export const addEventListener = (...args) => eventTarget.addEventListener(...args);
