@@ -8,6 +8,7 @@ use Gaming\Common\Bus\Bus;
 use Gaming\Common\Usernames\Usernames;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\State;
 use Gaming\WebInterface\Infrastructure\Security\User;
@@ -47,7 +48,7 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
                 'gamesPerPage' => $gamesPerPage = 12,
-                'gamesByPlayer' => $user === null
+                'gamesByPlayer' => $gamesByPlayer = $user === null
                     ? new GamesByPlayer(0, [])
                     : $this->connectFourQueryBus->handle(
                         new GamesByPlayerQuery(
@@ -55,6 +56,13 @@ final class PageController
                             State::tryFrom($request->query->getString('state', State::ALL->value)) ?? State::ALL,
                             $request->query->getInt('page', 1),
                             $gamesPerPage
+                        )
+                    ),
+                    'usernames' => $this->usernames->byIds(
+                        array_unique(
+                            array_merge(
+                                ...array_map(static fn(Game $game): array => $game->players(), $gamesByPlayer->games)
+                            )
                         )
                     )
             ])
