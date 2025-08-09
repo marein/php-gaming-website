@@ -11,7 +11,9 @@
                         <div class="card-body p-2">
                             <div class="row">
                                 <div class="col pe-0">
-                                    <p class="mb-0 text-truncate bold">Anonymous</p>
+                                    <p class="mb-0 text-truncate bold">
+                                        {{ usernames[game.redPlayerId]|default('Anonymous') }}
+                                    </p>
                                 </div>
                                 <div class="col-auto ps-0">
                                     <connect-four-player-status game-id="{{ game.id }}"
@@ -42,7 +44,9 @@
                         <div class="card-body p-2">
                             <div class="row">
                                 <div class="col pe-0">
-                                    <p class="mb-0 text-truncate bold">Anonymous</p>
+                                    <p class="mb-0 text-truncate bold">
+                                        {{ usernames[game.yellowPlayerId]|default('Anonymous') }}
+                                    </p>
                                 </div>
                                 <div class="col-auto ps-0">
                                     <connect-four-player-status game-id="{{ game.id }}"

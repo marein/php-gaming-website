@@ -1,0 +1,4 @@
+services:
+    web-interface.usernames:
+        class: Gaming\Common\Usernames\Integration\InProcessUsernames
+        arguments: ['@identity.query-bus']

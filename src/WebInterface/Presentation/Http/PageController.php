@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Presentation\Http;
 
 use Gaming\Common\Bus\Bus;
+use Gaming\Common\Usernames\Usernames;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
@@ -19,7 +20,8 @@ final class PageController
 {
     public function __construct(
         private readonly Environment $twig,
-        private readonly Bus $connectFourQueryBus
+        private readonly Bus $connectFourQueryBus,
+        private readonly Usernames $usernames
     ) {
     }
 
@@ -34,7 +36,8 @@ final class PageController
     {
         return new Response(
             $this->twig->render('@web-interface/game.html.twig', [
-                'game' => $this->connectFourQueryBus->handle(new GameQuery($id))
+                'game' => $game = $this->connectFourQueryBus->handle(new GameQuery($id)),
+                'usernames' => $this->usernames->byIds($game->players())
             ])
         );
     }

@@ -28,4 +28,11 @@ interface Users
     public function get(UserId $userId): User;
 
     public function getByEmail(string $email): ?User;
+
+    /**
+     * @param string[] $userIds
+     *
+     * @return User[]
+     */
+    public function getByIds(array $userIds): array;
 }

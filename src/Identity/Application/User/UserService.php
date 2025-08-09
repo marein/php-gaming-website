@@ -6,6 +6,8 @@ namespace Gaming\Identity\Application\User;
 
 use Gaming\Identity\Application\User\Command\ArriveCommand;
 use Gaming\Identity\Application\User\Command\SignUpCommand;
+use Gaming\Identity\Application\User\Query\GetUsernames\GetUsernames;
+use Gaming\Identity\Application\User\Query\GetUsernames\GetUsernamesResponse;
 use Gaming\Identity\Application\User\Query\User as UserResponse;
 use Gaming\Identity\Application\User\Query\UserByEmailQuery;
 use Gaming\Identity\Application\User\Query\UserQuery;
@@ -70,5 +72,19 @@ final class UserService
             $user->username(),
             $user->isSignedUp()
         );
+    }
+
+    public function getUsernames(GetUsernames $query): GetUsernamesResponse
+    {
+        $users = $this->users->getByIds(
+            array_map(static fn(string $userId): UserId => UserId::fromString($userId), $query->userIds)
+        );
+
+        $usernames = array_combine($query->userIds, array_fill(0, count($query->userIds), ''));
+        foreach ($users as $user) {
+            $usernames[$user->id()->toString()] = $user->username();
+        }
+
+        return new GetUsernamesResponse($usernames);
     }
 }
