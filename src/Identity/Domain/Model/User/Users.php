@@ -30,7 +30,7 @@ interface Users
     public function getByEmail(string $email): ?User;
 
     /**
-     * @param string[] $userIds
+     * @param UserId[] $userIds
      *
      * @return User[]
      */

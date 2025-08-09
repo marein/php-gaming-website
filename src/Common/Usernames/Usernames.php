@@ -9,7 +9,7 @@ interface Usernames
     /**
      * @param string[] $userIds
      *
-     * @return array<string, string>
+     * @return array<string, ?string>
      */
     public function byIds(array $userIds): array;
 }

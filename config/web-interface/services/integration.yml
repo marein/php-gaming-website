@@ -2,3 +2,10 @@ services:
     web-interface.usernames:
         class: Gaming\Common\Usernames\Integration\InProcessUsernames
         arguments: ['@identity.query-bus']
+
+    web-interface.usernames.cache:
+        class: Gaming\Common\Usernames\Integration\CachedUsernames
+        decorates: 'web-interface.usernames'
+        arguments:
+            - '@.inner'
+            - 60

@@ -17,6 +17,10 @@ final class InProcessUsernames implements Usernames
 
     public function byIds(array $userIds): array
     {
+        if (count($userIds) === 0) {
+            return [];
+        }
+
         return $this->identityBus
             ->handle(new GetUsernames($userIds))
             ->usernames;
