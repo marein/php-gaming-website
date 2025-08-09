@@ -27,7 +27,7 @@ services:
 
     web-interface.chat-controller:
         class: Gaming\WebInterface\Presentation\Http\ChatController
-        arguments: ['@chat.command-bus', '@chat.query-bus', '@web-interface.security']
+        arguments: ['@chat.command-bus', '@chat.query-bus', '@web-interface.security', '@web-interface.usernames']
         tags: ['controller.service_arguments']
 
     web-interface.connect-four-controller:

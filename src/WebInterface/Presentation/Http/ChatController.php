@@ -7,6 +7,7 @@ namespace Gaming\WebInterface\Presentation\Http;
 use Gaming\Chat\Application\Command\WriteMessageCommand;
 use Gaming\Chat\Application\Query\MessagesQuery;
 use Gaming\Common\Bus\Bus;
+use Gaming\Common\Usernames\Usernames;
 use Gaming\WebInterface\Infrastructure\Security\Security;
 use Gaming\WebInterface\Infrastructure\Security\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +19,8 @@ final class ChatController
     public function __construct(
         private readonly Bus $chatCommandBus,
         private readonly Bus $chatQueryBus,
-        private readonly Security $security
+        private readonly Security $security,
+        private readonly Usernames $usernames
     ) {
     }
 
@@ -37,16 +39,15 @@ final class ChatController
 
     public function messagesAction(#[CurrentUser] ?User $user, string $chatId): JsonResponse
     {
+        $messages = $this->chatQueryBus->handle(
+            new MessagesQuery($chatId, $user?->getUserIdentifier() ?? '', 0, 10000)
+        );
+        $authorIds = array_unique(array_column($messages, 'authorId'));
+
         return new JsonResponse(
             [
-                'messages' => $this->chatQueryBus->handle(
-                    new MessagesQuery(
-                        $chatId,
-                        $user?->getUserIdentifier() ?? '',
-                        0,
-                        10000
-                    )
-                )
+                'messages' => $messages,
+                'usernames' => $this->usernames->byIds($authorIds)
             ]
         );
     }
