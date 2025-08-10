@@ -1,7 +1,7 @@
 services:
     connect-four.fragment-controller:
         class: Gaming\ConnectFour\Port\Adapter\Http\FragmentController
-        arguments: ['@connect-four.query-bus']
+        arguments: ['@connect-four.query-bus', '@shared.usernames']
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']
 

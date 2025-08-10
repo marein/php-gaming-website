@@ -22,6 +22,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         `);
 
         this._games = this.querySelector('tbody');
+        this._usernames = JSON.parse(this.getAttribute('usernames'));
         this._playerId = this.getAttribute('player-id');
         this._maximumNumberOfGamesInList = parseInt(this.getAttribute('maximum-number-of-games'));
         this._currentGamesInList = [];
@@ -146,7 +147,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         let row = html`
             <tr data="${{gameId, playerId}}"
                 class="${this._playerId === playerId ? 'table-success' : 'table-light'}">
-                <td>Anonymous</td><td></td>
+                <td>${this._usernames[playerId] ?? 'Anonymous'}</td><td></td>
             </tr>
         `;
 
