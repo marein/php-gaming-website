@@ -22,7 +22,9 @@
                         {% if app.user ? app.user.userIdentifier == game.openedBy %}
                             Once another player joins, you'll be automatically redirected.
                         {% else %}
-                            Player <strong>Anonymous</strong> is waiting for an opponent.
+                            Player
+                            <strong>{{ usernames[game.openedBy]|default('Anonymous') }}</strong>
+                            is waiting for an opponent.
                         {% endif %}
                     </p>
                     <p class="fw-bold">

@@ -1,11 +1,11 @@
 services:
-    web-interface.usernames:
+    shared.usernames:
         class: Gaming\Common\Usernames\Integration\InProcessUsernames
         arguments: ['@identity.query-bus']
 
-    web-interface.usernames.cache:
+    shared.usernames.cache:
         class: Gaming\Common\Usernames\Integration\CachedUsernames
-        decorates: 'web-interface.usernames'
+        decorates: 'shared.usernames'
         arguments:
             - '@.inner'
             - 60

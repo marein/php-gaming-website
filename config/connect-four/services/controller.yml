@@ -7,6 +7,10 @@ services:
 
     connect-four.challenge-controller:
         class: Gaming\ConnectFour\Port\Adapter\Http\ChallengeController
-        arguments: ['@connect-four.command-bus', '@connect-four.query-bus', '@web-interface.security']
+        arguments:
+            - '@connect-four.command-bus'
+            - '@connect-four.query-bus'
+            - '@web-interface.security'
+            - '@shared.usernames'
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']
