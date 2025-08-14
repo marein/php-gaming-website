@@ -3,8 +3,8 @@ services:
         class: Gaming\Common\Usernames\Integration\InProcessUsernames
         arguments: ['@identity.query-bus']
 
-    shared.usernames.cache:
-        class: Gaming\Common\Usernames\Integration\CachedUsernames
+    shared.usernames.apcu:
+        class: Gaming\Common\Usernames\Integration\ApcuUsernames
         decorates: 'shared.usernames'
         arguments:
             - '@.inner'
