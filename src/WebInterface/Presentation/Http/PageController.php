@@ -38,7 +38,9 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/game.html.twig', [
                 'game' => $game = $this->connectFourQueryBus->handle(new GameQuery($id)),
-                'usernames' => $this->usernames->byIds($game->players())
+                'usernames' => $game->state !== $game::STATE_OPEN
+                    ? $this->usernames->byIds($game->players())
+                    : []
             ])
         );
     }
