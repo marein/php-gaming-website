@@ -32,7 +32,7 @@ services:
         arguments:
             - !service
                 class: Gaming\ConnectFour\Port\Adapter\Messaging\PublishMessageBrokerEventsToBrowserMessageHandler
-                arguments: ['@gaming.browser-notifier']
+                arguments: ['@gaming.browser-notifier', '@shared.usernames']
             - !service
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueueWithLeastConsumers
                 arguments:
