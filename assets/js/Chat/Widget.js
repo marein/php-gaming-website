@@ -134,7 +134,7 @@ customElements.define('chat-widget', class extends HTMLElement {
                         <div class="chat-bubble-title">
                             <div class="row">
                                 <div class="col chat-bubble-author">
-                                    ${usernames[message.authorId] ?? 'Anonymous'}
+                                    ${message.authorUsername ?? usernames[message.authorId] ?? 'Anonymous'}
                                 </div>
                                 <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
                             </div>
