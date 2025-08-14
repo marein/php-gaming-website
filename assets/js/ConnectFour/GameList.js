@@ -182,10 +182,13 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     _onGameOpened(event) {
         let gameId = event.detail.gameId;
         let playerId = event.detail.playerId;
+        let playerUsername = event.detail.playerUsername;
         let pendingGameToAdd = {
             gameId: gameId,
             playerId: playerId
         };
+
+        this._usernames[playerId] = playerUsername;
 
         if (this._currentGamesInList.length < this._maximumNumberOfGamesInList) {
             this._pendingGamesToAdd.push(pendingGameToAdd);
