@@ -42,13 +42,12 @@ final class ChatController
         $messages = $this->chatQueryBus->handle(
             new MessagesQuery($chatId, $user?->getUserIdentifier() ?? '', 0, 10000)
         );
-        $authorIds = array_unique(array_column($messages, 'authorId'));
-
-        return new JsonResponse(
-            [
-                'messages' => $messages,
-                'usernames' => $this->usernames->byIds($authorIds)
-            ]
+        $usernames = $this->usernames->byIds(array_unique(array_column($messages, 'authorId')));
+        array_walk(
+            $messages,
+            static fn(array &$message) => $message['authorUsername'] = $usernames[$message['authorId']] ?? null
         );
+
+        return new JsonResponse(['messages' => $messages]);
     }
 }

@@ -2,9 +2,9 @@ import * as sse from '../Common/EventSource.js'
 
 customElements.define('connect-four-player-username', class extends HTMLElement {
     connectedCallback() {
-        if (!['open', 'running'].includes(this.getAttribute('game-state'))) return;
-
         this._sseAbortController = new AbortController();
+
+        if (!['open'].includes(this.getAttribute('game-state'))) return;
 
         sse.subscribe(`connect-four-${this.getAttribute('game-id')}`, {
             'ConnectFour.PlayerJoined': this._onPlayerJoined

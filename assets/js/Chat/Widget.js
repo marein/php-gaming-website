@@ -69,7 +69,7 @@ customElements.define('chat-widget', class extends HTMLElement {
     _loadMessages(chatId) {
         service.messages(chatId)
             .then(response => {
-                response.messages.forEach(message => this._appendMessage(message, response.usernames));
+                response.messages.forEach(message => this._appendMessage(message));
 
                 this._isAlreadyInitialized = true;
 
@@ -87,12 +87,11 @@ customElements.define('chat-widget', class extends HTMLElement {
 
     /**
      * @param {Object} message
-     * @param {Object} usernames
      */
-    _appendMessage(message, usernames = {}) {
+    _appendMessage(message) {
         if (!this._isDuplicate(message)) {
             this._messageHolder.append(
-                this._createMessageNode(message, usernames)
+                this._createMessageNode(message)
             );
 
             this._scrollElement.scrollTop = this._scrollElement.scrollHeight;
@@ -117,10 +116,9 @@ customElements.define('chat-widget', class extends HTMLElement {
 
     /**
      * @param {Object} message
-     * @param {Object} usernames
      * @returns {Node}
      */
-    _createMessageNode(message, usernames) {
+    _createMessageNode(message) {
         const writtenAt = new Date(message.writtenAt);
         const hours = ('0' + writtenAt.getHours()).slice(-2);
         const minutes = ('0' + writtenAt.getMinutes()).slice(-2);
@@ -134,7 +132,7 @@ customElements.define('chat-widget', class extends HTMLElement {
                         <div class="chat-bubble-title">
                             <div class="row">
                                 <div class="col chat-bubble-author">
-                                    ${message.authorUsername ?? usernames[message.authorId] ?? 'Anonymous'}
+                                    ${message.authorUsername ?? 'Anonymous'}
                                 </div>
                                 <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
                             </div>
