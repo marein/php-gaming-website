@@ -2,6 +2,10 @@ import {service} from './GameService.js'
 import {html} from 'uhtml/node.js'
 import * as sse from '../Common/EventSource.js'
 
+/**
+ * @typedef {{gameId: String, playerId: String, playerUsername: String|null}} OpenGame
+ */
+
 customElements.define('connect-four-game-list', class extends HTMLElement {
     connectedCallback() {
         this._sseAbortController = new AbortController();
@@ -22,12 +26,14 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         `);
 
         this._games = this.querySelector('tbody');
-        this._usernames = JSON.parse(this.getAttribute('usernames'));
         this._playerId = this.getAttribute('player-id');
         this._maximumNumberOfGamesInList = parseInt(this.getAttribute('maximum-number-of-games'));
         this._currentGamesInList = [];
         this._pendingGamesToRemove = [];
-        this._pendingGamesToAdd = JSON.parse(this.getAttribute("open-games"));
+        const usernames = JSON.parse(this.getAttribute('usernames'));
+        this._pendingGamesToAdd = JSON.parse(this.getAttribute("open-games")).map(game => {
+            return {...game, playerUsername: usernames[game.playerId] || null}
+        });
         this._renderListTimeout = null;
 
         this._registerEventHandler();
@@ -40,13 +46,12 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     }
 
     /**
-     * @param {String} gameId
-     * @param {String} playerId
+     * @param {OpenGame} openGame
      */
-    _addGame(gameId, playerId) {
-        if (this._currentGamesInList.indexOf(gameId) === -1) {
+    _addGame(openGame) {
+        if (this._currentGamesInList.indexOf(openGame.gameId) === -1) {
             this._games.appendChild(
-                this._createGameNode(gameId, playerId)
+                this._createGameNode(openGame)
             );
         }
     }
@@ -100,10 +105,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
 
         for (let i = 0; i < limit; i++) {
             let pendingGameToAdd = this._pendingGamesToAdd.shift();
-            this._addGame(
-                pendingGameToAdd.gameId,
-                pendingGameToAdd.playerId
-            );
+            this._addGame(pendingGameToAdd);
             this._currentGamesInList.push(pendingGameToAdd.gameId);
         }
     }
@@ -139,15 +141,15 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     }
 
     /**
-     * @param {String} gameId
-     * @param {String} playerId
+     * @param {OpenGame} openGame
      * @returns {Node}
      */
-    _createGameNode(gameId, playerId) {
+    _createGameNode(openGame) {
         let row = html`
-            <tr data="${{gameId, playerId}}"
-                class="${this._playerId === playerId ? 'table-success' : 'table-light'}">
-                <td>${this._usernames[playerId] ?? 'Anonymous'}</td><td></td>
+            <tr data="${openGame}"
+                class="${this._playerId === openGame.playerId ? 'table-success' : 'table-light'}">
+                <td>${openGame.playerUsername ?? 'Anonymous'}</td>
+                <td></td>
             </tr>
         `;
 
@@ -159,19 +161,19 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
             row.classList.add('table-secondary', 'cursor-default');
             row.classList.remove('table-success', 'table-light');
 
-            if (this._playerId === playerId) {
-                service.abort(gameId)
+            if (this._playerId === openGame.playerId) {
+                service.abort(openGame.gameId)
                     .then(() => true)
                     .catch(() => {
                         // Remove the game on any error.
-                        this._scheduleRemovingOfGame(gameId);
+                        this._scheduleRemovingOfGame(openGame.gameId);
                     });
             } else {
-                service.join(gameId)
-                    .then(() => service.redirectTo(gameId))
+                service.join(openGame.gameId)
+                    .then(() => service.redirectTo(openGame.gameId))
                     .catch(() => {
                         // Remove the game on any error.
-                        this._scheduleRemovingOfGame(gameId);
+                        this._scheduleRemovingOfGame(openGame.gameId);
                     });
             }
         });
@@ -183,12 +185,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         let gameId = event.detail.gameId;
         let playerId = event.detail.playerId;
         let playerUsername = event.detail.playerUsername;
-        let pendingGameToAdd = {
-            gameId: gameId,
-            playerId: playerId
-        };
-
-        this._usernames[playerId] = playerUsername;
+        let pendingGameToAdd = {gameId, playerId, playerUsername};
 
         if (this._currentGamesInList.length < this._maximumNumberOfGamesInList) {
             this._pendingGamesToAdd.push(pendingGameToAdd);
@@ -203,7 +200,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
                 if (indexOfGameIdInAddList !== -1) {
                     this._pendingGamesToAdd.splice(indexOfGameIdInAddList, 1);
                     if (indexOfGameIdInCurrentList === -1) {
-                        this._addGame(gameId, playerId);
+                        this._addGame(pendingGameToAdd);
                         this._currentGamesInList.push(gameId);
                     }
                 }
