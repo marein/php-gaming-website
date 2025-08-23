@@ -69,7 +69,10 @@ customElements.define('chat-widget', class extends HTMLElement {
     _loadMessages(chatId) {
         service.messages(chatId)
             .then(response => {
-                response.messages.forEach(message => this._appendMessage(message));
+                response.messages.forEach(message => {
+                    message.authorUsername = response.usernames[message.authorId] ?? null;
+                    this._appendMessage(message);
+                });
 
                 this._isAlreadyInitialized = true;
 
