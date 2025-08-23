@@ -27,7 +27,7 @@ services:
         arguments:
             - !service
                 class: Gaming\Chat\Infrastructure\Messaging\PublishMessageBrokerEventsToBrowserMessageHandler
-                arguments: ['@gaming.browser-notifier', '@shared.usernames']
+                arguments: ['@gaming.browser-notifier', '@gaming.usernames']
             - !service
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
                 arguments: ['@chat.publish-to-browser-message-handler.topology']
