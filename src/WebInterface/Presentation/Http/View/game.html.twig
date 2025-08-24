@@ -1,6 +1,8 @@
 {% extends 'layout/condensed.html.twig' %}
 
-{% set page_title = usernames[game.redPlayerId]|default('?') ~ ' vs. ' ~ usernames[game.yellowPlayerId]|default('?') %}
+{% set page_title = game.redPlayerId and game.yellowPlayerId
+    ? usernames[game.redPlayerId]|default('Anonymous') ~ ' vs. ' ~ usernames[game.yellowPlayerId]|default('Anonymous')
+    : '? vs. ?' %}
 
 {% block content %}
     <connect-four-game-page game-id="{{ game.gameId }}" game-state="{{ game.state }}">
