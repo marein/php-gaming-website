@@ -57,8 +57,10 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
     private function handlePlayerJoined(Message $message): void
     {
         $body = json_decode($message->body(), true, flags: JSON_THROW_ON_ERROR);
-        $body['redPlayerUsername'] = $this->usernames->byIds([$body['redPlayerId']])[$body['redPlayerId']] ?? null;
-        $body['yellowPlayerUsername'] = $this->usernames->byIds([$body['yellowPlayerId']])[$body['yellowPlayerId']] ?? null;
+
+        $usernames = $this->usernames->byIds([$body['redPlayerId'], $body['yellowPlayerId']]);
+        $body['redPlayerUsername'] = $usernames[$body['redPlayerId']] ?? null;
+        $body['yellowPlayerUsername'] = $usernames[$body['yellowPlayerId']] ?? null;
 
         $this->browserNotifier->publish(
             ['lobby', 'connect-four-' . $message->streamId()],

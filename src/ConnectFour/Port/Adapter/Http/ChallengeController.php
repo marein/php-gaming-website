@@ -84,9 +84,7 @@ final class ChallengeController extends AbstractController
 
         return $this->render('@connect-four/challenge.html.twig', [
             'game' => $game,
-            'usernames' => $this->usernames->byIds([
-                $game->openedBy
-            ]),
+            'usernames' => $this->usernames->byIds([$game->openedBy]),
         ]);
     }
 }
