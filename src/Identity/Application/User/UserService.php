@@ -13,6 +13,7 @@ use Gaming\Identity\Application\User\Query\UserByEmailQuery;
 use Gaming\Identity\Application\User\Query\UserQuery;
 use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
+use Gaming\Identity\Domain\Model\User\GuestUsernameGenerator;
 use Gaming\Identity\Domain\Model\User\User;
 use Gaming\Identity\Domain\Model\User\UserId;
 use Gaming\Identity\Domain\Model\User\Users;
@@ -80,9 +81,12 @@ final class UserService
             array_map(static fn(string $userId): UserId => UserId::fromString($userId), $query->userIds)
         );
 
-        $usernames = array_combine($query->userIds, array_fill(0, count($query->userIds), null));
+        $usernames = array_combine(
+            $query->userIds,
+            array_fill(0, count($query->userIds), GuestUsernameGenerator::dummy())
+        );
         foreach ($users as $user) {
-            $usernames[$user->id()->toString()] = $user->username() !== '' ? $user->username() : null;
+            $usernames[$user->id()->toString()] = $user->username();
         }
 
         return new GetUsernamesResponse($usernames);

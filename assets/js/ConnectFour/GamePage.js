@@ -20,7 +20,7 @@ customElements.define('connect-four-game-page', class extends HTMLElement {
 
                 document.title = document.title.replace(
                     '? vs. ?',
-                    `${e.detail.redPlayerUsername ?? 'Anonymous'} vs. ${e.detail.yellowPlayerUsername ?? 'Anonymous'}`
+                    `${e.detail.redPlayerUsername} vs. ${e.detail.yellowPlayerUsername}`
                 );
 
                 this._sseAbortController.abort();

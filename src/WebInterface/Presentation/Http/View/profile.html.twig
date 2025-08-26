@@ -45,7 +45,7 @@
                                 <div class="row mb-0 text-red">
                                     <div class="col pe-0">
                                         <p class="mb-0 text-truncate bold">
-                                            {{ usernames[game.redPlayerId]|default('Anonymous') }} -
+                                            {{ usernames[game.redPlayerId] }} -
                                             <connect-four-timer game-id="{{ game.gameId }}"
                                                                 player-id="{{ game.redPlayerId }}"
                                                                 remaining-ms="{{ game.redPlayerRemainingMs }}"
@@ -70,7 +70,7 @@
                                 <div class="row mb-1 text-yellow">
                                     <div class="col pe-0">
                                         <p class="mb-0 text-truncate bold">
-                                            {{ usernames[game.yellowPlayerId]|default('Anonymous') }} -
+                                            {{ usernames[game.yellowPlayerId] }} -
                                             <connect-four-timer game-id="{{ game.gameId }}"
                                                                 color="yellow"
                                                                 player-id="{{ game.yellowPlayerId }}"

@@ -23,7 +23,7 @@
                             Once another player joins, you'll be automatically redirected.
                         {% else %}
                             Player
-                            <strong>{{ usernames[game.openedBy]|default('Anonymous') }}</strong>
+                            <strong>{{ usernames[game.openedBy] }}</strong>
                             is waiting for an opponent.
                         {% endif %}
                     </p>

@@ -1,7 +1,7 @@
 {% extends 'layout/condensed.html.twig' %}
 
 {% set page_title = game.redPlayerId and game.yellowPlayerId
-    ? usernames[game.redPlayerId]|default('Anonymous') ~ ' vs. ' ~ usernames[game.yellowPlayerId]|default('Anonymous')
+    ? usernames[game.redPlayerId] ~ ' vs. ' ~ usernames[game.yellowPlayerId]
     : '? vs. ?' %}
 
 {% block content %}
@@ -18,7 +18,7 @@
                                             <connect-four-player-username game-id="{{ game.gameId }}"
                                                                           color="red"
                                                                           game-state="{{ game.state }}">
-                                                {{ usernames[game.redPlayerId]|default('Anonymous') }}
+                                                {{ usernames[game.redPlayerId] }}
                                             </connect-four-player-username>
                                         </p>
                                     </div>
@@ -55,7 +55,7 @@
                                             <connect-four-player-username game-id="{{ game.gameId }}"
                                                                           color="yellow"
                                                                           game-state="{{ game.state }}">
-                                                {{ usernames[game.yellowPlayerId]|default('Anonymous') }}
+                                                {{ usernames[game.yellowPlayerId] }}
                                             </connect-four-player-username>
                                         </p>
                                     </div>

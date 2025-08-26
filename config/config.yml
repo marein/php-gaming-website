@@ -119,7 +119,7 @@ services:
         decorates: 'gaming.usernames'
         arguments:
             - '@.inner'
-            - 60
+            - 30
 
     gaming.browser-notifier:
         class: Gaming\Common\BrowserNotifier\Integration\NchanBrowserNotifier

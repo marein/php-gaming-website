@@ -19,8 +19,8 @@ customElements.define('connect-four-player-username', class extends HTMLElement 
         if (e.detail.gameId !== this.getAttribute('game-id')) return;
 
         this.innerText = this.getAttribute('color') === 'yellow'
-            ? (e.detail.yellowPlayerUsername ?? 'Anonymous')
-            : (e.detail.redPlayerUsername ?? 'Anonymous');
+            ? (e.detail.yellowPlayerUsername)
+            : (e.detail.redPlayerUsername);
 
         this._sseAbortController.abort();
     }
