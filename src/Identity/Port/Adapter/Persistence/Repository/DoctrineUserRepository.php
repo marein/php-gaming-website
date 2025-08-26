@@ -58,13 +58,13 @@ final class DoctrineUserRepository implements Users
 
     public function getByIds(array $userIds): array
     {
-        return $this->manager->getRepository(User::class)->createQueryBuilder('u')
-            ->where('u.userId.userId IN (:userIds)')
-            ->setParameter('userIds', array_map(
-                static fn(UserId $userId): string => Uuid::fromRfc4122($userId->toString())->toBinary(),
-                $userIds
-            ))
-            ->getQuery()
-            ->getResult();
+        return $this->manager->getRepository(User::class)->findBy(
+            [
+                'userId.userId' => array_map(
+                    static fn(UserId $userId): string => Uuid::fromRfc4122($userId->toString())->toBinary(),
+                    $userIds
+                )
+            ]
+        );
     }
 }

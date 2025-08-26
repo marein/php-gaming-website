@@ -18,7 +18,7 @@
                                             <connect-four-player-username game-id="{{ game.gameId }}"
                                                                           color="red"
                                                                           game-state="{{ game.state }}">
-                                                {{ usernames[game.redPlayerId] }}
+                                                {{ usernames[game.redPlayerId]|default('?') }}
                                             </connect-four-player-username>
                                         </p>
                                     </div>
@@ -55,7 +55,7 @@
                                             <connect-four-player-username game-id="{{ game.gameId }}"
                                                                           color="yellow"
                                                                           game-state="{{ game.state }}">
-                                                {{ usernames[game.yellowPlayerId] }}
+                                                {{ usernames[game.yellowPlayerId]|default('?') }}
                                             </connect-four-player-username>
                                         </p>
                                     </div>
