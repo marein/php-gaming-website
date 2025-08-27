@@ -1,6 +1,7 @@
 import {service} from './GameService.js'
 import {html} from 'uhtml/node.js'
 import * as sse from '../Common/EventSource.js'
+import {createUsernameNode} from '../Identity/utils.js'
 
 /**
  * @typedef {{gameId: String, playerId: String, playerUsername: String|null}} OpenGame
@@ -148,7 +149,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         let row = html`
             <tr data="${openGame}"
                 class="${this._playerId === openGame.playerId ? 'table-success' : 'table-light'}">
-                <td>${openGame.playerUsername}</td>
+                <td>${createUsernameNode(openGame.playerUsername)}</td>
                 <td></td>
             </tr>
         `;

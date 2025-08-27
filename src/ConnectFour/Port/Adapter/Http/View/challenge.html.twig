@@ -1,4 +1,5 @@
 {% extends 'layout/condensed.html.twig' %}
+{% from "macro/username.html.twig" import render as renderUsername %}
 
 {% if app.user ? app.user.userIdentifier == game.openedBy %}
     {% set page_title = 'Waiting for opponent...' %}
@@ -23,7 +24,7 @@
                             Once another player joins, you'll be automatically redirected.
                         {% else %}
                             Player
-                            <strong>{{ usernames[game.openedBy] }}</strong>
+                            <strong>{{ renderUsername(usernames[game.openedBy]) }}</strong>
                             is waiting for an opponent.
                         {% endif %}
                     </p>

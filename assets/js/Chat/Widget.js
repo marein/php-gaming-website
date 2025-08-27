@@ -1,6 +1,7 @@
 import {service} from './ChatService.js'
 import {html} from 'uhtml/node.js'
 import * as sse from '../Common/EventSource.js'
+import {createUsernameNode} from '../Identity/utils.js'
 
 customElements.define('chat-widget', class extends HTMLElement {
     connectedCallback() {
@@ -134,7 +135,9 @@ customElements.define('chat-widget', class extends HTMLElement {
                     <div class="${`chat-bubble${isSameAuthor ? ' chat-bubble-me' : ''}`}">
                         <div class="chat-bubble-title">
                             <div class="row">
-                                <div class="col chat-bubble-author">${message.authorUsername}</div>
+                                <div class="col chat-bubble-author">
+                                    ${createUsernameNode(message.authorUsername)}
+                                </div>
                                 <div class="col-auto chat-bubble-date">${hours + ':' + minutes}</div>
                             </div>
                         </div>
