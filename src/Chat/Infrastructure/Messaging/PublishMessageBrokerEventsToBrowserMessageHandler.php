@@ -40,7 +40,7 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
                     'messageId' => $messageWritten->getMessageId(),
                     'authorId' => $messageWritten->getAuthorId(),
                     'authorUsername' => $this->usernames
-                            ->byIds([$messageWritten->getAuthorId()])[$messageWritten->getAuthorId()] ?? null,
+                            ->byIds([$messageWritten->getAuthorId()])[$messageWritten->getAuthorId()],
                     'message' => $messageWritten->getMessage(),
                     'writtenAt' => $messageWritten->getWrittenAt(),
                 ],

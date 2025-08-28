@@ -46,8 +46,10 @@
                                 <div class="row mb-0 text-red">
                                     <div class="col pe-0">
                                         <p class="mb-0 text-truncate bold">
-                                            <connect-four-player-username>
-                                                {{ renderUsername(usernames[game.redPlayerId]) }}
+                                            <connect-four-player-username game-id="{{ game.gameId }}"
+                                                                          color="red"
+                                                                          game-state="{{ game.state }}">
+                                                {{ renderUsername(usernames[game.redPlayerId]|default('?')) }}
                                             </connect-four-player-username>
                                             -
                                             <connect-four-timer game-id="{{ game.gameId }}"
@@ -74,8 +76,10 @@
                                 <div class="row mb-1 text-yellow">
                                     <div class="col pe-0">
                                         <p class="mb-0 text-truncate bold">
-                                            <connect-four-player-username>
-                                                {{ renderUsername(usernames[game.yellowPlayerId]) }}
+                                            <connect-four-player-username game-id="{{ game.gameId }}"
+                                                                          color="yellow"
+                                                                          game-state="{{ game.state }}">
+                                                {{ renderUsername(usernames[game.yellowPlayerId]|default('?')) }}
                                             </connect-four-player-username>
                                             -
                                             <connect-four-timer game-id="{{ game.gameId }}"

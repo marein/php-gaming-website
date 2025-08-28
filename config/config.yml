@@ -117,9 +117,7 @@ services:
     gaming.usernames.apcu:
         class: Gaming\Common\Usernames\Integration\ApcuUsernames
         decorates: 'gaming.usernames'
-        arguments:
-            - '@.inner'
-            - 30
+        arguments: ['@.inner', 30]
 
     gaming.browser-notifier:
         class: Gaming\Common\BrowserNotifier\Integration\NchanBrowserNotifier

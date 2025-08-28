@@ -45,7 +45,7 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
     private function handleGameOpened(Message $message): void
     {
         $body = json_decode($message->body(), true, flags: JSON_THROW_ON_ERROR);
-        $body['playerUsername'] = $this->usernames->byIds([$body['playerId']])[$body['playerId']] ?? null;
+        $body['playerUsername'] = $this->usernames->byIds([$body['playerId']])[$body['playerId']];
 
         $this->browserNotifier->publish(
             ['lobby'],
@@ -59,8 +59,8 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
         $body = json_decode($message->body(), true, flags: JSON_THROW_ON_ERROR);
 
         $usernames = $this->usernames->byIds([$body['redPlayerId'], $body['yellowPlayerId']]);
-        $body['redPlayerUsername'] = $usernames[$body['redPlayerId']] ?? null;
-        $body['yellowPlayerUsername'] = $usernames[$body['yellowPlayerId']] ?? null;
+        $body['redPlayerUsername'] = $usernames[$body['redPlayerId']];
+        $body['yellowPlayerUsername'] = $usernames[$body['yellowPlayerId']];
 
         $this->browserNotifier->publish(
             ['lobby', 'connect-four-' . $message->streamId()],

@@ -73,7 +73,7 @@ class User implements CollectsDomainEvents
 
     public function username(): string
     {
-        return $this->username ?? GuestUsernameGenerator::forUserId($this->userId);
+        return $this->username ?? UsernameGenerator::forUserId($this->userId);
     }
 
     public function isSignedUp(): bool

@@ -71,7 +71,7 @@ customElements.define('chat-widget', class extends HTMLElement {
         service.messages(chatId)
             .then(response => {
                 response.messages.forEach(message => {
-                    message.authorUsername = response.usernames[message.authorId] ?? null;
+                    message.authorUsername = response.usernames[message.authorId];
                     this._appendMessage(message);
                 });
 

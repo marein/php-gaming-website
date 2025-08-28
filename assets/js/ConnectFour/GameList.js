@@ -4,7 +4,7 @@ import * as sse from '../Common/EventSource.js'
 import {createUsernameNode} from '../Identity/utils.js'
 
 /**
- * @typedef {{gameId: String, playerId: String, playerUsername: String|null}} OpenGame
+ * @typedef {{gameId: String, playerId: String, playerUsername: String}} OpenGame
  */
 
 customElements.define('connect-four-game-list', class extends HTMLElement {
@@ -33,7 +33,7 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         this._pendingGamesToRemove = [];
         const usernames = JSON.parse(this.getAttribute('usernames'));
         this._pendingGamesToAdd = JSON.parse(this.getAttribute("open-games")).map(game => {
-            return {...game, playerUsername: usernames[game.playerId] ?? null}
+            return {...game, playerUsername: usernames[game.playerId]}
         });
         this._renderListTimeout = null;
 
