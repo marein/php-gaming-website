@@ -14,6 +14,7 @@ use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use Gaming\Identity\Domain\Model\User\User;
 use Gaming\Identity\Domain\Model\User\UserId;
 use Gaming\Identity\Domain\Model\User\Users;
+use Symfony\Component\Uid\Uuid;
 
 final class DoctrineUserRepository implements Users
 {
@@ -53,5 +54,17 @@ final class DoctrineUserRepository implements Users
     {
         return $this->manager->getRepository(User::class)
             ->findOneBy(['email' => $email]);
+    }
+
+    public function getByIds(array $userIds): array
+    {
+        return $this->manager->getRepository(User::class)->findBy(
+            [
+                'userId.userId' => array_map(
+                    static fn(UserId $userId): string => Uuid::fromRfc4122($userId->toString())->toBinary(),
+                    $userIds
+                )
+            ]
+        );
     }
 }

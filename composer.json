@@ -26,6 +26,7 @@
   },
   "require": {
     "php": "^8.4",
+    "ext-apcu": "*",
     "ext-pcntl": "*",
     "ext-posix": "*",
     "ext-session": "*",

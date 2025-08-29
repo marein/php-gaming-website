@@ -1,7 +1,7 @@
 services:
     web-interface.page-controller:
         class: Gaming\WebInterface\Presentation\Http\PageController
-        arguments: ['@twig', '@connect-four.query-bus']
+        arguments: ['@twig', '@connect-four.query-bus', '@gaming.usernames']
         tags: ['controller.service_arguments']
 
     web-interface.signup-controller:
@@ -27,7 +27,7 @@ services:
 
     web-interface.chat-controller:
         class: Gaming\WebInterface\Presentation\Http\ChatController
-        arguments: ['@chat.command-bus', '@chat.query-bus', '@web-interface.security']
+        arguments: ['@chat.command-bus', '@chat.query-bus', '@web-interface.security', '@gaming.usernames']
         tags: ['controller.service_arguments']
 
     web-interface.connect-four-controller:

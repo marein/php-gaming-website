@@ -110,6 +110,15 @@ services:
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
 
+    gaming.usernames:
+        class: Gaming\Common\Usernames\Integration\InProcessUsernames
+        arguments: ['@identity.query-bus']
+
+    gaming.usernames.apcu:
+        class: Gaming\Common\Usernames\Integration\ApcuUsernames
+        decorates: 'gaming.usernames'
+        arguments: ['@.inner', 30]
+
     gaming.browser-notifier:
         class: Gaming\Common\BrowserNotifier\Integration\NchanBrowserNotifier
         arguments:

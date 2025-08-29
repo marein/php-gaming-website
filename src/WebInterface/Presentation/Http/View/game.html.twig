@@ -1,149 +1,166 @@
 {% extends 'layout/condensed.html.twig' %}
+{% from "macro/username.html.twig" import render as renderUsername %}
 
-{% set page_title = 'Anonymous vs. Anonymous' %}
+{% set page_title = game.redPlayerId and game.yellowPlayerId
+    ? usernames[game.redPlayerId] ~ ' vs. ' ~ usernames[game.yellowPlayerId]
+    : '? vs. ?' %}
 
 {% block content %}
-    <div class="row row-gap-2 justify-content-center">
-        <div class="col-12 col-sm-7 col-lg-5">
-            <div class="row mb-2 row-deck">
-                <div class="col-6">
-                    <div class="card bg-red-lt">
-                        <div class="card-body p-2">
-                            <div class="row">
-                                <div class="col pe-0">
-                                    <p class="mb-0 text-truncate bold">Anonymous</p>
+    <connect-four-game-page game-id="{{ game.gameId }}" game-state="{{ game.state }}">
+        <div class="row row-gap-2 justify-content-center">
+            <div class="col-12 col-sm-7 col-lg-5">
+                <div class="row mb-2 row-deck">
+                    <div class="col-6">
+                        <div class="card bg-red-lt">
+                            <div class="card-body p-2">
+                                <div class="row">
+                                    <div class="col pe-0">
+                                        <p class="mb-0 text-truncate bold">
+                                            <connect-four-player-username game-id="{{ game.gameId }}"
+                                                                          color="red"
+                                                                          game-state="{{ game.state }}">
+                                                {{ renderUsername(usernames[game.redPlayerId]|default('?')) }}
+                                            </connect-four-player-username>
+                                        </p>
+                                    </div>
+                                    <div class="col-auto ps-0">
+                                        <connect-four-player-status game-id="{{ game.id }}"
+                                                                    you-id="{{ app.user ? app.user.userIdentifier }}"
+                                                                    player-id="{{ game.redPlayerId }}"
+                                                                    current-player-id="{{ game.currentPlayerId }}"
+                                                                    winner-id="{{ game.winnerId }}"
+                                                                    loser-id="{{ game.loserId }}"
+                                                                    resigned-by="{{ game.resignedBy }}"
+                                                                    timed-out-by="{{ game.timedOutBy }}"
+                                                                    aborted-by="{{ game.abortedBy }}"
+                                                                    game-state="{{ game.state }}"></connect-four-player-status>
+                                    </div>
                                 </div>
-                                <div class="col-auto ps-0">
-                                    <connect-four-player-status game-id="{{ game.id }}"
-                                                                you-id="{{ app.user ? app.user.userIdentifier }}"
-                                                                player-id="{{ game.redPlayerId }}"
-                                                                current-player-id="{{ game.currentPlayerId }}"
-                                                                winner-id="{{ game.winnerId }}"
-                                                                loser-id="{{ game.loserId }}"
-                                                                resigned-by="{{ game.resignedBy }}"
-                                                                timed-out-by="{{ game.timedOutBy }}"
-                                                                aborted-by="{{ game.abortedBy }}"
-                                                                game-state="{{ game.state }}"></connect-four-player-status>
-                                </div>
+                                <p class="fs-2 fw-bolder">
+                                    <connect-four-timer game-id="{{ game.gameId }}"
+                                                        player-id="{{ game.redPlayerId }}"
+                                                        remaining-ms="{{ game.redPlayerRemainingMs }}"
+                                                        turn-ends-at="{{ game.redPlayerTurnEndsAt }}">
+                                        00:00
+                                    </connect-four-timer>
+                                </p>
                             </div>
-                            <p class="fs-2 fw-bolder">
-                                <connect-four-timer game-id="{{ game.gameId }}"
-                                                    player-id="{{ game.redPlayerId }}"
-                                                    remaining-ms="{{ game.redPlayerRemainingMs }}"
-                                                    turn-ends-at="{{ game.redPlayerTurnEndsAt }}">
-                                    00:00
-                                </connect-four-timer>
-                            </p>
                         </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="card bg-yellow-lt">
-                        <div class="card-body p-2">
-                            <div class="row">
-                                <div class="col pe-0">
-                                    <p class="mb-0 text-truncate bold">Anonymous</p>
+                    <div class="col-6">
+                        <div class="card bg-yellow-lt">
+                            <div class="card-body p-2">
+                                <div class="row">
+                                    <div class="col pe-0">
+                                        <p class="mb-0 text-truncate bold">
+                                            <connect-four-player-username game-id="{{ game.gameId }}"
+                                                                          color="yellow"
+                                                                          game-state="{{ game.state }}">
+                                                {{ renderUsername(usernames[game.yellowPlayerId]|default('?')) }}
+                                            </connect-four-player-username>
+                                        </p>
+                                    </div>
+                                    <div class="col-auto ps-0">
+                                        <connect-four-player-status game-id="{{ game.id }}"
+                                                                    you-id="{{ app.user ? app.user.userIdentifier }}"
+                                                                    color="yellow"
+                                                                    player-id="{{ game.yellowPlayerId }}"
+                                                                    current-player-id="{{ game.currentPlayerId }}"
+                                                                    winner-id="{{ game.winnerId }}"
+                                                                    loser-id="{{ game.loserId }}"
+                                                                    resigned-by="{{ game.resignedBy }}"
+                                                                    timed-out-by="{{ game.timedOutBy }}"
+                                                                    aborted-by="{{ game.abortedBy }}"
+                                                                    game-state="{{ game.state }}"></connect-four-player-status>
+                                    </div>
                                 </div>
-                                <div class="col-auto ps-0">
-                                    <connect-four-player-status game-id="{{ game.id }}"
-                                                                you-id="{{ app.user ? app.user.userIdentifier }}"
-                                                                color="yellow"
-                                                                player-id="{{ game.yellowPlayerId }}"
-                                                                current-player-id="{{ game.currentPlayerId }}"
-                                                                winner-id="{{ game.winnerId }}"
-                                                                loser-id="{{ game.loserId }}"
-                                                                resigned-by="{{ game.resignedBy }}"
-                                                                timed-out-by="{{ game.timedOutBy }}"
-                                                                aborted-by="{{ game.abortedBy }}"
-                                                                game-state="{{ game.state }}"></connect-four-player-status>
-                                </div>
+                                <p class="fs-2 fw-bolder">
+                                    <connect-four-timer game-id="{{ game.gameId }}"
+                                                        color="yellow"
+                                                        player-id="{{ game.yellowPlayerId }}"
+                                                        remaining-ms="{{ game.yellowPlayerRemainingMs }}"
+                                                        turn-ends-at="{{ game.yellowPlayerTurnEndsAt }}">
+                                        00:00
+                                    </connect-four-timer>
+                                </p>
                             </div>
-                            <p class="fs-2 fw-bolder">
-                                <connect-four-timer game-id="{{ game.gameId }}"
-                                                    color="yellow"
-                                                    player-id="{{ game.yellowPlayerId }}"
-                                                    remaining-ms="{{ game.yellowPlayerRemainingMs }}"
-                                                    turn-ends-at="{{ game.yellowPlayerTurnEndsAt }}">
-                                    00:00
-                                </connect-four-timer>
-                            </p>
                         </div>
                     </div>
                 </div>
+                <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
+                                   player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
+                                   previous-move-selector="#previous-move"
+                                   next-move-selector="#next-move"
+                                   follow-moves-selector="#follow-moves">
+                    <div style="aspect-ratio: {{ game.width }}/{{ game.height }};"></div>
+                </connect-four-game>
             </div>
-            <connect-four-game game="{{ game|json_encode|e('html_attr') }}"
-                               player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
-                               previous-move-selector="#previous-move"
-                               next-move-selector="#next-move"
-                               follow-moves-selector="#follow-moves">
-                <div style="aspect-ratio: {{ game.width }}/{{ game.height }};"></div>
-            </connect-four-game>
-        </div>
-        <div class="col-12 col-sm-5 col-lg-4">
-            <div class="card mb-2">
-                <div class="card-body">
-                    <div class="row row-gap-2">
-                        <div class="col-3">
-                            <button class="btn btn-icon w-100" id="previous-move">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="icon">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M15 6l-6 6l6 6"/>
-                                </svg>
-                            </button>
+            <div class="col-12 col-sm-5 col-lg-4">
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="row row-gap-2">
+                            <div class="col-3">
+                                <button class="btn btn-icon w-100" id="previous-move">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="icon">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M15 6l-6 6l6 6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="col-3">
+                                <button class="btn btn-icon w-100" id="next-move">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="icon">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M9 6l6 6l-6 6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-icon w-100" id="follow-moves">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="icon">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M7 4v16l13 -8z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            {% if not game.finished %}
+                                <connect-four-abort-button game-id="{{ game.id }}"
+                                                           player-id="{{ app.user ? app.user.userIdentifier }}"
+                                                           players="{{ game.players|json_encode }}"
+                                                           moves="{{ game.moves[:2]|json_encode }}">
+                                    <div class="col-12">
+                                        <button id="abort-game" class="btn btn-outline-danger w-100">
+                                            Abort
+                                        </button>
+                                    </div>
+                                </connect-four-abort-button>
+                                <connect-four-resign-button game-id="{{ game.id }}"
+                                                            player-id="{{ app.user ? app.user.userIdentifier }}"
+                                                            players="{{ game.players|json_encode }}"
+                                                            moves="{{ game.moves[:2]|json_encode }}">
+                                    <div class="col-12">
+                                        <button class="btn w-100">
+                                            Resign
+                                        </button>
+                                    </div>
+                                </connect-four-resign-button>
+                            {% endif %}
                         </div>
-                        <div class="col-3">
-                            <button class="btn btn-icon w-100" id="next-move">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="icon">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M9 6l6 6l-6 6"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-icon w-100" id="follow-moves">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="icon">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M7 4v16l13 -8z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        {% if not game.finished %}
-                            <connect-four-abort-button game-id="{{ game.id }}"
-                                                       player-id="{{ app.user ? app.user.userIdentifier }}"
-                                                       players="{{ game.players|json_encode }}"
-                                                       moves="{{ game.moves[:2]|json_encode }}">
-                                <div class="col-12">
-                                    <button id="abort-game" class="btn btn-outline-danger w-100">
-                                        Abort
-                                    </button>
-                                </div>
-                            </connect-four-abort-button>
-                            <connect-four-resign-button game-id="{{ game.id }}"
-                                                        player-id="{{ app.user ? app.user.userIdentifier }}"
-                                                        players="{{ game.players|json_encode }}"
-                                                        moves="{{ game.moves[:2]|json_encode }}">
-                                <div class="col-12">
-                                    <button class="btn w-100">
-                                        Resign
-                                    </button>
-                                </div>
-                            </connect-four-resign-button>
-                        {% endif %}
                     </div>
                 </div>
+                <chat-widget id="chat"
+                             chat-id="{{ game.chatId|e('html_attr') }}"
+                             game-channel="connect-four-{{ game.gameId|e('html_attr') }}"
+                             author-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
+                             seconds-before-retry="3">
+                </chat-widget>
             </div>
-            <chat-widget id="chat"
-                         chat-id="{{ game.chatId|e('html_attr') }}"
-                         game-channel="connect-four-{{ game.gameId|e('html_attr') }}"
-                         author-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
-                         seconds-before-retry="3">
-            </chat-widget>
         </div>
-    </div>
+    </connect-four-game-page>
 {% endblock %}

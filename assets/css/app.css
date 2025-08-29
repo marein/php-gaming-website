@@ -299,6 +299,11 @@ notification-list {
     border-color: var(--tblr-blue-darken);
 }
 
+.gp-id-username-tag {
+    opacity: .85;
+    font-size: .75em;
+}
+
 /** Fix specificity for checked buttons on hover */
 .btn-check:checked + .btn:hover {
     color: var(--tblr-btn-active-color);

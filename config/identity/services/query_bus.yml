@@ -6,3 +6,8 @@ services:
         class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
         decorates: identity.query-bus
         arguments: ['@.inner', '@validator']
+
+    identity.clear-manager-query-bus:
+        class: Gaming\Common\Bus\Integration\DoctrineClearManagerBus
+        decorates: identity.query-bus
+        arguments: ['@.inner', '@identity.doctrine-orm']
