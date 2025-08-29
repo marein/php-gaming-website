@@ -7,6 +7,8 @@ namespace Gaming\Common\Usernames;
 interface Usernames
 {
     /**
+     * It's guaranteed that all provided user IDs will be present in the result.
+     *
      * @param string[] $userIds
      *
      * @return array<string, string>

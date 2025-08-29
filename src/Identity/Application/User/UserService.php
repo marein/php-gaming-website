@@ -81,10 +81,7 @@ final class UserService
             array_map(static fn(string $userId): UserId => UserId::fromString($userId), $query->userIds)
         );
 
-        $usernames = array_combine(
-            $query->userIds,
-            array_fill(0, count($query->userIds), UsernameGenerator::dummy())
-        );
+        $usernames = array_combine($query->userIds, array_fill(0, count($query->userIds), UsernameGenerator::dummy()));
         foreach ($users as $user) {
             $usernames[$user->id()->toString()] = $user->username();
         }
