@@ -8,6 +8,7 @@ services:
                 arguments: ['@connect-four.predis']
             - !tagged_locator { tag: 'connect-four.stored-event-subscriber', index_by: 'key' }
             - '@event_dispatcher'
+            - '@gaming.prometheus.task'
         tags:
             -   name: console.command
                 command: connect-four:follow-event-store

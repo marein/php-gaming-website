@@ -8,6 +8,8 @@ x-php-container:
     environment:
         APP_ENV: "prod"
         APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
+        APP_TRUSTED_PROXIES: "PRIVATE_SUBNETS"
+        APP_METRICS_ALLOWED_IPS: "0.0.0.0/0"
         APP_WAIT_FOR: "unix:///var/run/proxysql/proxysql.sock,mysql:3306,redis:6379,rabbitmq:5672,nchan:81"
         APP_RUN_MIGRATIONS: "1"
         APP_RABBIT_MQ_DSN: "amqp://guest:guest@rabbitmq:5672?heartbeat=60&prefetchCount=30"
@@ -21,6 +23,8 @@ x-php-container:
         APP_IDENTITY_DOCTRINE_DBAL_URL: "mysqli://root:password@localhost/identity?persistent=1&unix_socket=/var/run/proxysql/proxysql.sock"
         APP_WEB_INTERFACE_PREDIS_CLIENT_URL: "redis://redis:6379?persistent=1"
         APP_NCHAN_BASE_URL: "http://nchan:81"
+        PHP_FPM_PM: "static"
+        PHP_FPM_PM_MAX_CHILDREN: "16"
     depends_on:
         - mysql
         - proxysql
@@ -147,9 +151,12 @@ services:
             - "traefik.http.routers.web-interface-http.priority=10"
             - "traefik.http.routers.web-interface-http.rule=PathPrefix(`/`)"
             - "traefik.http.services.web-interface-http.loadbalancer.server.port=80"
+            - "prometheus-job=web-interface-http"
     connect-four-follow-event-store:
         <<: *php-container
         command: bin/console connect-four:follow-event-store pointer all
+        labels:
+            - "prometheus-job=connect-four-follow-event-store"
     connect-four-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/console connect-four:publish-running-games-count-to-nchan
@@ -159,12 +166,18 @@ services:
     chat-follow-event-store:
         <<: *php-container
         command: bin/console chat:follow-event-store pointer all
+        labels:
+            - "prometheus-job=chat-follow-event-store"
     identity-follow-event-store:
         <<: *php-container
         command: bin/console identity:follow-event-store pointer all
+        labels:
+            - "prometheus-job=identity-follow-event-store"
     consume-messages:
         <<: *php-container
         command: bin/console gaming:consume-messages all
+        labels:
+            - "prometheus-job=consume-messages"
 
 volumes:
     mysql:

@@ -143,6 +143,7 @@ services:
             - "traefik.http.routers.php-fpm.priority=10"
             - "traefik.http.routers.php-fpm.rule=PathPrefix(`/`)"
             - "traefik.http.services.php-fpm.loadbalancer.server.port=80"
+            - "prometheus-job=php-fpm"
 
     ##############################
     #   Long running processes   #
@@ -150,6 +151,8 @@ services:
     php-connect-four-follow-event-store:
         <<: *php-container
         command: bin/restartOnChange bin/console connect-four:follow-event-store pointer all
+        labels:
+            - "prometheus-job=connect-four-follow-event-store"
     php-connect-four-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/restartOnChange bin/console connect-four:publish-running-games-count-to-nchan
@@ -159,12 +162,18 @@ services:
     php-chat-follow-event-store:
         <<: *php-container
         command: bin/restartOnChange bin/console chat:follow-event-store pointer all
+        labels:
+            - "prometheus-job=chat-follow-event-store"
     php-identity-follow-event-store:
         <<: *php-container
         command: bin/restartOnChange bin/console identity:follow-event-store pointer all
+        labels:
+            - "prometheus-job=identity-follow-event-store"
     php-consume-messages:
         <<: *php-container
         command: bin/restartOnChange bin/console gaming:consume-messages all
+        labels:
+            - "prometheus-job=consume-messages"
 
     ##############################
     #     Development helper     #
