@@ -53,7 +53,7 @@ services:
             - "prometheus-job=traefik"
             - "prometheus-port=8080"
     grafana:
-        image: ghcr.io/gaming-platform/docker-grafana:10.0
+        image: ghcr.io/gaming-platform/docker-grafana:12.2
         restart: on-failure
         ports:
             - "8083:3000"
