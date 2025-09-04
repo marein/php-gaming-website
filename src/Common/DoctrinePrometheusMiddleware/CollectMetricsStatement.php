@@ -24,6 +24,6 @@ final class CollectMetricsStatement extends AbstractStatementMiddleware
 
     public function execute(): Result
     {
-        return ($this->observeSql)(parent::execute(...), $this->sql);
+        return ($this->observeSql)($this->statement->execute(...), $this->sql);
     }
 }
