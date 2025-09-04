@@ -108,6 +108,8 @@ final class ConsumeMessagesCommand extends Command
 
     private function replicateConsumerIfNeeded(Consumer $consumer, int $replicas): Consumer
     {
-        return new ForkPoolConsumer(array_fill(0, $replicas, $consumer), $this->exposeMetricsTask);
+        return $replicas <= 1 && !$this->exposeMetricsTask
+            ? $consumer
+            : new ForkPoolConsumer(array_fill(0, $replicas, $consumer), $this->exposeMetricsTask);
     }
 }

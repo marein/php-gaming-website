@@ -34,7 +34,7 @@ final class CollectMetricsListener
                 $this->recordedAtFormat,
                 (string)($lastDomainEvent->headers[$this->recordedAtHeader] ?? '')
             );
-            $lag = $recordedAt !== false ? time() - $recordedAt->getTimestamp() : 0;
+            $lag = $recordedAt !== false ? max(0, time() - $recordedAt->getTimestamp()) : 0;
         }
 
         $this->registry->getOrRegisterGauge(
