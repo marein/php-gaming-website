@@ -6,9 +6,7 @@ namespace Gaming\Common\DoctrinePrometheusMiddleware;
 
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\Middleware\AbstractDriverMiddleware;
-use Gaming\Common\Scheduler\Scheduler;
 use Prometheus\RegistryInterface;
-use Psr\Clock\ClockInterface;
 
 final class CollectMetricsDriver extends AbstractDriverMiddleware
 {
