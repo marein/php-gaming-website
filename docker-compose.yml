@@ -36,7 +36,7 @@ services:
             - --providers.docker
             - --providers.docker.exposedbydefault=false
         ports:
-            - "80:80"
+            - { published: 80, target: 80, mode: host }
         depends_on:
             - nchan
             - php-fpm
