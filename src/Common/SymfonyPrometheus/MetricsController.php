@@ -27,7 +27,7 @@ final class MetricsController
         return new Response(
             new RenderTextFormat()->render($this->registry->getMetricFamilySamples()),
             200,
-            ['Content-Type' => 'text/plain']
+            ['Content-Type' => RenderTextFormat::MIME_TYPE]
         );
     }
 }
