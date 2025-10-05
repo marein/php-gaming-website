@@ -16,6 +16,7 @@ services:
                 - "traefik.http.routers.web-interface-http.priority=10"
                 - "traefik.http.routers.web-interface-http.rule=PathPrefix(`/`)"
                 - "traefik.http.services.web-interface-http.loadbalancer.server.port=80"
+                - "prometheus-job=web-interface-http"
 
 volumes:
     proxysql.sock:

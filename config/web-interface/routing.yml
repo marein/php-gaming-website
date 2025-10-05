@@ -11,6 +11,11 @@ lobby:
     methods: [GET]
     controller: web-interface.page-controller::lobbyAction
 
+metrics:
+    path: /metrics
+    methods: [GET]
+    controller: web-interface.metrics-controller::showAction
+
 profile:
     path: /profile
     methods: [GET]

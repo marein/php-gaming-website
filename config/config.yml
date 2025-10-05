@@ -6,6 +6,7 @@ imports: [{ resource: '*/config.yml' }]
 
 framework:
     secret: '%env(APP_KERNEL_SECRET)%'
+    trusted_proxies: '%env(APP_TRUSTED_PROXIES)%'
     validation:
         enabled: true
     enabled_locales: ['en']
@@ -85,7 +86,7 @@ services:
             - '@event_dispatcher'
 
     Gaming\Common\MessageBroker\Integration\Symfony\ConsumeMessagesCommand:
-        arguments: [!tagged_locator { tag: 'gaming.consumer', index_by: 'key' }]
+        arguments: [!tagged_locator { tag: 'gaming.consumer', index_by: 'key' }, '@gaming.prometheus.task']
         tags: [{ name: console.command, command: gaming:consume-messages, description: 'Consume messages.' }]
 
     Gaming\Common\MessageBroker\Integration\Symfony\ResetServicesListener:
@@ -103,6 +104,36 @@ services:
     Gaming\Common\EventStore\Integration\Symfony\ResetServicesListener:
         arguments: ['@services_resetter', 10]
         tags: [{ name: kernel.event_listener, method: 'eventsCommitted', priority: -50 }]
+
+    Gaming\Common\EventStore\Integration\Prometheus\CollectMetricsListener:
+        arguments: ['@gaming.prometheus.registry', 'app']
+        tags: [{ name: kernel.event_listener, method: 'eventsCommitted', priority: -50 }]
+
+    Gaming\Common\SymfonyPrometheus\CollectMetricsListener:
+        arguments: ['@gaming.prometheus.registry', 'app']
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, priority: 1024 }]
+            - { name: kernel.event_listener, event: kernel.response, priority: -1024 }]
+            - { name: kernel.event_listener, event: kernel.exception, priority: 1024 }]
+
+    Gaming\Common\DoctrinePrometheusMiddleware\CollectMetricsMiddleware:
+        arguments: ['@gaming.prometheus.registry', 'app']
+        tags: [{ name: doctrine.middleware }]
+
+    Gaming\Common\MessageBroker\Integration\Prometheus\CollectMetricsListener:
+        arguments: ['@gaming.prometheus.registry', 'app']
+        tags:
+            - { name: kernel.event_listener, method: 'messageReceived' }
+            - { name: kernel.event_listener, method: 'messageHandled' }
+            - { name: kernel.event_listener, method: 'messageFailed' }
+
+    gaming.prometheus.registry:
+        class: Prometheus\CollectorRegistry
+        arguments: [!service {class: 'Prometheus\Storage\APCng'}, false]
+
+    gaming.prometheus.task:
+        class: Gaming\Common\ForkPool\Integration\Prometheus\ExposeMetricsTask
+        arguments: ['%env(APP_METRICS_SOCKET)%', '@gaming.prometheus.registry', 'app', '@logger']
 
     gaming.form-violation-mapper:
         class: Gaming\Common\Bus\Integration\FormViolationMapper

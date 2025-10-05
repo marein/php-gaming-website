@@ -14,6 +14,7 @@ use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\ForkPool\Channel\StreamChannelPairFactory;
 use Gaming\Common\ForkPool\ForkPool;
+use Gaming\Common\ForkPool\Task;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -33,6 +34,7 @@ final class FollowEventStoreCommand extends Command
         private readonly EventStorePointerFactory $eventStorePointerFactory,
         private readonly ServiceProviderInterface $storedEventSubscribers,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ?Task $exposeMetricsTask = null,
         private readonly string $allSubscribersName = 'all'
     ) {
         parent::__construct();
@@ -102,9 +104,7 @@ final class FollowEventStoreCommand extends Command
             )
         );
 
-        $forkPool = new ForkPool(
-            new StreamChannelPairFactory()
-        );
+        $forkPool = new ForkPool(new StreamChannelPairFactory());
 
         $publisher = $forkPool->fork(
             new Publisher(
@@ -125,6 +125,10 @@ final class FollowEventStoreCommand extends Command
                 )
             )
         );
+
+        if ($this->exposeMetricsTask !== null) {
+            $forkPool->fork($this->exposeMetricsTask);
+        }
 
         $forkPool->signal()
             ->enableAsyncDispatch()

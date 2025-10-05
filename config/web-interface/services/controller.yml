@@ -38,3 +38,8 @@ services:
     web-interface.server-time-controller:
         class: Gaming\WebInterface\Presentation\Http\ServerTimeController
         tags: ['controller.service_arguments']
+
+    web-interface.metrics-controller:
+        class: Gaming\Common\SymfonyPrometheus\MetricsController
+        arguments: ['@gaming.prometheus.registry', 'app']
+        tags: ['controller.service_arguments']

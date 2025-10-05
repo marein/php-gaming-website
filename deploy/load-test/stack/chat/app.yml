@@ -11,6 +11,8 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=chat-follow-event-store"
     chat-command:
         image: marein/php-gaming-website:php-fpm
         command: bin/console gaming:consume-messages chat.command -r 3
@@ -22,6 +24,8 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=chat-command"
     chat-publish-to-browser:
         image: marein/php-gaming-website:php-fpm
         command: bin/console gaming:consume-messages chat.publish-to-browser -r 3
@@ -32,6 +36,8 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=chat-publish-to-browser"
 
 volumes:
     proxysql.sock:

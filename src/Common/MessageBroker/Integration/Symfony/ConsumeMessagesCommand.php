@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Common\MessageBroker\Integration\Symfony;
 
+use Gaming\Common\ForkPool\Task;
 use Gaming\Common\MessageBroker\Consumer;
 use Gaming\Common\MessageBroker\Integration\ForkPool\ForkPoolConsumer;
 use Symfony\Component\Console\Command\Command;
@@ -21,6 +22,7 @@ final class ConsumeMessagesCommand extends Command
      */
     public function __construct(
         private readonly ServiceProviderInterface $consumers,
+        private readonly ?Task $exposeMetricsTask = null,
         private readonly string $allConsumersName = 'all'
     ) {
         parent::__construct();
@@ -106,6 +108,8 @@ final class ConsumeMessagesCommand extends Command
 
     private function replicateConsumerIfNeeded(Consumer $consumer, int $replicas): Consumer
     {
-        return $replicas <= 1 ? $consumer : new ForkPoolConsumer(array_fill(0, $replicas, $consumer));
+        return $replicas <= 1 && !$this->exposeMetricsTask
+            ? $consumer
+            : new ForkPoolConsumer(array_fill(0, $replicas, $consumer), $this->exposeMetricsTask);
     }
 }
