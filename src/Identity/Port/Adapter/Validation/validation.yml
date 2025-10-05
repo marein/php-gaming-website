@@ -12,7 +12,12 @@ Gaming\Identity\Application\User\Command\SignUpCommand:
     email:
       - Gaming\Identity\Port\Adapter\Validation\EmailRequirements: ~
     username:
+      - Gaming\Identity\Port\Adapter\Validation\ReservedUsernames: ~
       - Length: { min: 3, max: 20 }
+      - Regex:
+            pattern: '/(g|6|9)+_*(u|v|μ|µ)+_*(e|3)+_*(s|5|z)+_*(t|7)+_*/i'
+            match: false
+            message: 'The username {{ value }} is reserved.'
       - Regex:
           pattern: '/^(?!_)(?!.*__)[a-zA-Z0-9_]+(?<!_)+$/'
           message: Use only letters, numbers and underscores (no leading, trailing, or consecutive underscores).

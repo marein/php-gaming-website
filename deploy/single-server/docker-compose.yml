@@ -8,6 +8,9 @@ x-php-container:
     environment:
         APP_ENV: "prod"
         APP_KERNEL_SECRET: "ThisTokenIsNotSoSecretChangeIt"
+        APP_TRUSTED_PROXIES: "PRIVATE_SUBNETS"
+        APP_METRICS_TRUSTED_IPS: "10.0.0.0/8,172.16.0.0/12"
+        APP_METRICS_SOCKET: "0.0.0.0:80"
         APP_WAIT_FOR: "unix:///var/run/proxysql/proxysql.sock,mysql:3306,redis:6379,rabbitmq:5672,nchan:81"
         APP_RUN_MIGRATIONS: "1"
         APP_RABBIT_MQ_DSN: "amqp://guest:guest@rabbitmq:5672?heartbeat=60&prefetchCount=30"
@@ -39,7 +42,7 @@ services:
             - --providers.docker
             - --providers.docker.exposedbydefault=false
         ports:
-            - "80:80"
+            - { published: 80, target: 80, mode: host }
         depends_on:
             - nchan
             - web-interface-http
@@ -49,7 +52,7 @@ services:
             - "prometheus-job=traefik"
             - "prometheus-port=8080"
     grafana:
-        image: ghcr.io/gaming-platform/docker-grafana:10.0
+        image: ghcr.io/gaming-platform/docker-grafana:12.2
         restart: on-failure
         ports:
             - "8083:3000"
@@ -147,9 +150,12 @@ services:
             - "traefik.http.routers.web-interface-http.priority=10"
             - "traefik.http.routers.web-interface-http.rule=PathPrefix(`/`)"
             - "traefik.http.services.web-interface-http.loadbalancer.server.port=80"
+            - "prometheus-job=web-interface-http"
     connect-four-follow-event-store:
         <<: *php-container
         command: bin/console connect-four:follow-event-store pointer all
+        labels:
+            - "prometheus-job=connect-four-follow-event-store"
     connect-four-publish-running-games-count-to-nchan:
         <<: *php-container
         command: bin/console connect-four:publish-running-games-count-to-nchan
@@ -159,12 +165,18 @@ services:
     chat-follow-event-store:
         <<: *php-container
         command: bin/console chat:follow-event-store pointer all
+        labels:
+            - "prometheus-job=chat-follow-event-store"
     identity-follow-event-store:
         <<: *php-container
         command: bin/console identity:follow-event-store pointer all
+        labels:
+            - "prometheus-job=identity-follow-event-store"
     consume-messages:
         <<: *php-container
         command: bin/console gaming:consume-messages all
+        labels:
+            - "prometheus-job=consume-messages"
 
 volumes:
     mysql:

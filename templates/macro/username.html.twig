@@ -1,0 +1,7 @@
+{%- macro render(username) -%}
+    {% set parts = username|split('#', 2) %}
+    {{ parts[0] }}
+    {%- if parts|length > 1 -%}
+        <span class="gp-id-username-tag">#{{ parts[1] }}</span>
+    {%- endif -%}
+{%- endmacro -%}

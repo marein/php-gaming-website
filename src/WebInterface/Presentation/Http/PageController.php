@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Presentation\Http;
 
 use Gaming\Common\Bus\Bus;
+use Gaming\Common\Usernames\Usernames;
 use Gaming\ConnectFour\Application\Game\Query\GameQuery;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
+use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayer;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\State;
 use Gaming\WebInterface\Infrastructure\Security\User;
@@ -19,7 +21,8 @@ final class PageController
 {
     public function __construct(
         private readonly Environment $twig,
-        private readonly Bus $connectFourQueryBus
+        private readonly Bus $connectFourQueryBus,
+        private readonly Usernames $usernames
     ) {
     }
 
@@ -34,7 +37,8 @@ final class PageController
     {
         return new Response(
             $this->twig->render('@web-interface/game.html.twig', [
-                'game' => $this->connectFourQueryBus->handle(new GameQuery($id))
+                'game' => $game = $this->connectFourQueryBus->handle(new GameQuery($id)),
+                'usernames' => $game->state !== $game::STATE_OPEN ? $this->usernames->byIds($game->players()) : []
             ])
         );
     }
@@ -44,7 +48,7 @@ final class PageController
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
                 'gamesPerPage' => $gamesPerPage = 12,
-                'gamesByPlayer' => $user === null
+                'gamesByPlayer' => $gamesByPlayer = $user === null
                     ? new GamesByPlayer(0, [])
                     : $this->connectFourQueryBus->handle(
                         new GamesByPlayerQuery(
@@ -52,6 +56,13 @@ final class PageController
                             State::tryFrom($request->query->getString('state', State::ALL->value)) ?? State::ALL,
                             $request->query->getInt('page', 1),
                             $gamesPerPage
+                        )
+                    ),
+                    'usernames' => $this->usernames->byIds(
+                        array_unique(
+                            array_merge(
+                                ...array_map(static fn(Game $game): array => $game->players(), $gamesByPlayer->games)
+                            )
                         )
                     )
             ])

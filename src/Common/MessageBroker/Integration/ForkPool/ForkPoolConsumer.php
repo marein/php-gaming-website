@@ -6,6 +6,7 @@ namespace Gaming\Common\MessageBroker\Integration\ForkPool;
 
 use Gaming\Common\ForkPool\Channel\NullChannelPairFactory;
 use Gaming\Common\ForkPool\ForkPool;
+use Gaming\Common\ForkPool\Task;
 use Gaming\Common\MessageBroker\Consumer;
 
 final class ForkPoolConsumer implements Consumer
@@ -16,7 +17,8 @@ final class ForkPoolConsumer implements Consumer
      * @param iterable<Consumer> $consumers
      */
     public function __construct(
-        private readonly iterable $consumers
+        private readonly iterable $consumers,
+        private readonly ?Task $exposeMetricsTask = null
     ) {
         $this->forkPool = new ForkPool(new NullChannelPairFactory());
     }
@@ -25,6 +27,10 @@ final class ForkPoolConsumer implements Consumer
     {
         foreach ($this->consumers as $consumer) {
             $this->forkPool->fork(new ConsumerTask($consumer, $parallelism));
+        }
+
+        if ($this->exposeMetricsTask !== null) {
+            $this->forkPool->fork($this->exposeMetricsTask);
         }
 
         $this->forkPool->signal()->enableAsyncDispatch()->forwardSignalAndWait([SIGINT, SIGTERM]);

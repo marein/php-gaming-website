@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
+use Gaming\Common\Usernames\Usernames;
 use Gaming\ConnectFour\Application\Game\Command\AbortCommand;
 use Gaming\ConnectFour\Application\Game\Command\JoinCommand;
 use Gaming\ConnectFour\Application\Game\Command\OpenCommand;
@@ -20,7 +21,8 @@ final class ChallengeController extends AbstractController
     public function __construct(
         private readonly Bus $commandBus,
         private readonly Bus $queryBus,
-        private readonly Security $security
+        private readonly Security $security,
+        private readonly Usernames $usernames
     ) {
     }
 
@@ -81,7 +83,8 @@ final class ChallengeController extends AbstractController
         }
 
         return $this->render('@connect-four/challenge.html.twig', [
-            'game' => $game
+            'game' => $game,
+            'usernames' => $this->usernames->byIds([$game->openedBy]),
         ]);
     }
 }

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
-use Gaming\ConnectFour\Application\Game\Query\PlayerSearchStatistics\PlayerSearchStatisticsQuery;
+use Gaming\Common\Usernames\Usernames;
+use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
 use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
+use Gaming\ConnectFour\Application\Game\Query\PlayerSearchStatistics\PlayerSearchStatisticsQuery;
 use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Gaming\ConnectFour\Port\Adapter\Http\Form\OpenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +20,8 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 final class FragmentController extends AbstractController
 {
     public function __construct(
-        private readonly Bus $queryBus
+        private readonly Bus $queryBus,
+        private readonly Usernames $usernames
     ) {
     }
 
@@ -33,7 +36,13 @@ final class FragmentController extends AbstractController
     public function openGamesAction(): Response
     {
         return $this->render('@connect-four/open-games.html.twig', [
-            'openGames' => $this->queryBus->handle(new OpenGamesQuery())
+            'openGames' => $openGames = $this->queryBus->handle(new OpenGamesQuery()),
+            'usernames' => $this->usernames->byIds(
+                array_map(
+                    static fn(OpenGame $openGame) => $openGame->playerId,
+                    $openGames->games()
+                )
+            )
         ]);
     }
 

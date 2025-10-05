@@ -11,6 +11,8 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=identity-follow-event-store"
 
 volumes:
     proxysql.sock:

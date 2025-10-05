@@ -1,4 +1,5 @@
 {% extends 'layout/condensed.html.twig' %}
+{% from "macro/username.html.twig" import render as renderUsername %}
 
 {% set page_title = 'Profile' %}
 
@@ -45,7 +46,12 @@
                                 <div class="row mb-0 text-red">
                                     <div class="col pe-0">
                                         <p class="mb-0 text-truncate bold">
-                                            Anonymous -
+                                            <connect-four-player-username game-id="{{ game.gameId }}"
+                                                                          color="red"
+                                                                          game-state="{{ game.state }}">
+                                                {{ renderUsername(usernames[game.redPlayerId]|default('?')) }}
+                                            </connect-four-player-username>
+                                            -
                                             <connect-four-timer game-id="{{ game.gameId }}"
                                                                 player-id="{{ game.redPlayerId }}"
                                                                 remaining-ms="{{ game.redPlayerRemainingMs }}"
@@ -70,7 +76,12 @@
                                 <div class="row mb-1 text-yellow">
                                     <div class="col pe-0">
                                         <p class="mb-0 text-truncate bold">
-                                            Anonymous -
+                                            <connect-four-player-username game-id="{{ game.gameId }}"
+                                                                          color="yellow"
+                                                                          game-state="{{ game.state }}">
+                                                {{ renderUsername(usernames[game.yellowPlayerId]|default('?')) }}
+                                            </connect-four-player-username>
+                                            -
                                             <connect-four-timer game-id="{{ game.gameId }}"
                                                                 color="yellow"
                                                                 player-id="{{ game.yellowPlayerId }}"

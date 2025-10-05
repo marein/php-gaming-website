@@ -12,6 +12,8 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=connect-four-referee"
     connect-four-publish-running-games-count-to-nchan:
         image: marein/php-gaming-website:php-fpm
         command: bin/console connect-four:publish-running-games-count-to-nchan
@@ -43,6 +45,8 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=connect-four-publish-to-browser"
 
 volumes:
     proxysql.sock:
