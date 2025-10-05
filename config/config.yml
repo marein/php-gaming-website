@@ -133,7 +133,7 @@ services:
 
     gaming.prometheus.task:
         class: Gaming\Common\ForkPool\Integration\Prometheus\ExposeMetricsTask
-        arguments: ['0.0.0.0:80', '@gaming.prometheus.registry', 'app', '@logger']
+        arguments: ['%env(APP_METRICS_SOCKET)%', '@gaming.prometheus.registry', 'app', '@logger']
 
     gaming.form-violation-mapper:
         class: Gaming\Common\Bus\Integration\FormViolationMapper
