@@ -29,7 +29,7 @@ security:
             logout:
                 path: /logout
     access_control:
-        - { path: '^/metrics', roles: PUBLIC_ACCESS, ips: ['%env(APP_METRICS_ALLOWED_IPS)%'] }
+        - { path: '^/metrics', roles: PUBLIC_ACCESS, ips: ['%env(APP_METRICS_TRUSTED_IPS)%'] }
         - { path: '^/metrics', roles: ROLE_NO_ACCESS }
 
 when@dev:
