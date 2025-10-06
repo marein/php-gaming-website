@@ -14,6 +14,7 @@ use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\State;
 use Gaming\WebInterface\Infrastructure\Security\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Twig\Environment;
 
@@ -45,26 +46,28 @@ final class PageController
 
     public function profileAction(#[CurrentUser] ?User $user, Request $request): Response
     {
+        $state = State::tryFrom($request->query->getString('state', State::All->value));
+        if ($state === null) {
+            throw new BadRequestHttpException('Invalid state.');
+        }
+
         return new Response(
             $this->twig->render('@web-interface/profile.html.twig', [
+                'page' => $page = $request->query->getInt('page', 1),
+                'state' => $state,
                 'gamesPerPage' => $gamesPerPage = 12,
                 'gamesByPlayer' => $gamesByPlayer = $user === null
                     ? new GamesByPlayer(0, [])
                     : $this->connectFourQueryBus->handle(
-                        new GamesByPlayerQuery(
-                            $user->getUserIdentifier(),
-                            State::tryFrom($request->query->getString('state', State::ALL->value)) ?? State::ALL,
-                            $request->query->getInt('page', 1),
-                            $gamesPerPage
-                        )
+                        new GamesByPlayerQuery($user->getUserIdentifier(), $state, $page, $gamesPerPage)
                     ),
-                    'usernames' => $this->usernames->byIds(
-                        array_unique(
-                            array_merge(
-                                ...array_map(static fn(Game $game): array => $game->players(), $gamesByPlayer->games)
-                            )
+                'usernames' => $this->usernames->byIds(
+                    array_unique(
+                        array_merge(
+                            ...array_map(static fn(Game $game): array => $game->players(), $gamesByPlayer->games)
                         )
                     )
+                )
             ])
         );
     }

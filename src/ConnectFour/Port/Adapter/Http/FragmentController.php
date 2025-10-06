@@ -6,14 +6,17 @@ namespace Gaming\ConnectFour\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Usernames\Usernames;
+use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\State;
 use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGame;
 use Gaming\ConnectFour\Application\Game\Query\OpenGamesQuery;
 use Gaming\ConnectFour\Application\Game\Query\PlayerSearchStatistics\PlayerSearchStatisticsQuery;
 use Gaming\ConnectFour\Application\Game\Query\RunningGamesQuery;
 use Gaming\ConnectFour\Port\Adapter\Http\Form\OpenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\Cache;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
@@ -54,9 +57,15 @@ final class FragmentController extends AbstractController
         ]);
     }
 
-    public function playerSearchFilterAction(#[CurrentUser] ?UserInterface $user): Response
+    public function playerSearchFilterAction(#[CurrentUser] ?UserInterface $user, Request $request): Response
     {
+        $state = State::tryFrom($request->query->getString('state', State::All->value));
+        if ($state === null) {
+            throw new BadRequestHttpException('Invalid state.');
+        }
+
         return $this->render('@connect-four/player-search-filter.html.twig', [
+            'activeState' => $state,
             'playerSearchStatistics' => $this->queryBus->handle(
                 new PlayerSearchStatisticsQuery($user?->getUserIdentifier())
             )

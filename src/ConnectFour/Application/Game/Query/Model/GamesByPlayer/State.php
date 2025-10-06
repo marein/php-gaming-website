@@ -6,9 +6,9 @@ namespace Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer;
 
 enum State: string
 {
-    case ALL = 'all';
-    case RUNNING = 'running';
-    case WON = 'won';
-    case LOST = 'lost';
-    case DRAWN = 'drawn';
+    case All = 'all';
+    case Running = 'running';
+    case Won = 'won';
+    case Lost = 'lost';
+    case Drawn = 'drawn';
 }
