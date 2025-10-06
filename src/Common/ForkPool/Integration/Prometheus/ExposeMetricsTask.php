@@ -7,7 +7,7 @@ namespace Gaming\Common\ForkPool\Integration\Prometheus;
 use Amp\Http\HttpStatus;
 use Amp\Http\Server\DefaultErrorHandler;
 use Amp\Http\Server\Request;
-use Amp\Http\Server\RequestHandler;
+use Amp\Http\Server\RequestHandler\ClosureRequestHandler;
 use Amp\Http\Server\Response;
 use Amp\Http\Server\SocketHttpServer;
 use Gaming\Common\ForkPool\Channel\Channel;
@@ -33,15 +33,8 @@ final class ExposeMetricsTask implements Task
         $server = SocketHttpServer::createForDirectAccess($this->logger);
         $server->expose($this->socketAddress);
         $server->start(
-            new class ($this->registry, $this->metricsNamespace) implements RequestHandler {
-                public function __construct(
-                    private readonly RegistryInterface $registry,
-                    private readonly string $metricsNamespace
-                ) {
-                }
-
-                public function handleRequest(Request $request): Response
-                {
+            new ClosureRequestHandler(
+                function (Request $request): Response {
                     $this->registry->getOrRegisterGauge(
                         $this->metricsNamespace,
                         'apcu_memory_available',
@@ -50,11 +43,11 @@ final class ExposeMetricsTask implements Task
 
                     return new Response(
                         HttpStatus::OK,
-                        ['Content-Type' => 'text/plain'],
+                        ['Content-Type' => RenderTextFormat::MIME_TYPE],
                         new RenderTextFormat()->render($this->registry->getMetricFamilySamples()),
                     );
                 }
-            },
+            ),
             new DefaultErrorHandler()
         );
 
