@@ -5,6 +5,10 @@ const headers = {'Origin': baseUrl};
 const jarPlayerOne = new http.CookieJar();
 const jarPlayerTwo = new http.CookieJar();
 
+export const options = {
+    insecureSkipTLSVerify: true
+};
+
 export default function () {
     const gameId = open(jarPlayerOne);
     join(jarPlayerTwo, gameId);

@@ -129,7 +129,7 @@ Choose a deployment environment below and follow the guide to get the applicatio
   then run it to start the load test:
 
   ```bash
-  docker run --rm -i --network=host -e BASE_URL=http://127.0.0.1 grafana/k6:0.43.1 run \
+  docker run --rm -i --network=host -e BASE_URL=https://127.0.0.1 grafana/k6:1.4.0 run \
     --vus 500 \
     --duration 1m \
     - < scenario/play-connect-four.js
@@ -195,6 +195,9 @@ Choose a deployment environment below and follow the guide to get the applicatio
   Achieving this requires fine-tuning factors like the number of message consumers, the sharding of RabbitMQ queues
   and MySQL databases, and the distribution of Swarm services.
 </details>
+
+> All environments are served via HTTPS using self-signed certificates.
+> For production deployments, it is recommended to use valid certificates from a trusted authority.
 
 ## System Design
 

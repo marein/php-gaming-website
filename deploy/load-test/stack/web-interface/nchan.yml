@@ -9,6 +9,7 @@ services:
                     - "node.labels.nchan==1"
             labels:
                 - "traefik.enable=true"
+                - "traefik.http.routers.nchan.entrypoints=https"
                 - "traefik.http.routers.nchan.priority=20"
                 - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
                 - "traefik.http.routers.nchan.middlewares=nchan-stripprefix"
