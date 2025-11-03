@@ -201,14 +201,12 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerJoined = event => {
-        if (event.detail.gameId !== this._game.gameId) return;
         this._game.redPlayerId = event.detail.redPlayerId;
         this._game.yellowPlayerId = event.detail.yellowPlayerId;
         this._changeCurrentPlayer(event.detail.redPlayerId);
     }
 
     _onPlayerMoved = event => {
-        if (event.detail.gameId !== this._game.gameId) return;
         this._changeCurrentPlayer(event.detail.nextPlayerId);
         if (this._game.hasPendingMove(event.detail)) this._removePendingToken();
         if (this._game.hasMove(event.detail)) return;
@@ -221,7 +219,6 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerMovedFailed(event) {
-        if (event.detail.gameId !== this._game.gameId) return;
         if (!this._followMovesButton || this._followMovesButton.disabled === true) this._numberOfCurrentMoveInView--;
         this._game.removeMove(event.detail);
 
@@ -230,7 +227,6 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onGameWon = event => {
-        if (event.detail.gameId !== this._game.gameId) return;
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
         this._changeCurrentPlayer('');
@@ -238,7 +234,6 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onGameFinished = event => {
-        if (event.detail.gameId !== this._game.gameId) return;
         this._changeCurrentPlayer('');
     }
 

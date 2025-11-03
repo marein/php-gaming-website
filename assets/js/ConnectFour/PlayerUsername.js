@@ -19,8 +19,6 @@ customElements.define('connect-four-player-username', class extends HTMLElement 
     }
 
     _onPlayerJoined = e => {
-        if (e.detail.gameId !== this.getAttribute('game-id')) return;
-
         this.replaceChildren(
             createUsernameNode(
                 this.getAttribute('color') === 'yellow'
