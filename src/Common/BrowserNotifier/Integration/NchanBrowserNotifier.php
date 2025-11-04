@@ -17,10 +17,12 @@ final class NchanBrowserNotifier implements BrowserNotifier
 
     public function publish(array $channels, string $name, string $message): void
     {
-        $this->nchan->channel('/pub?id=' . implode(',', $channels))->publish(
+        $joinedChannels = implode(',', $channels);
+
+        $this->nchan->channel('/pub?id=' . $joinedChannels)->publish(
             new PlainTextMessage(
                 '',
-                $name . ':' . $message
+                $name . ':' . $joinedChannels . ':' . $message
             )
         );
     }

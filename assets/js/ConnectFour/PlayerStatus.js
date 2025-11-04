@@ -142,8 +142,6 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
     }
 
     _onPlayerJoined = e => {
-        if (e.detail.gameId !== this.getAttribute('game-id')) return;
-
         this.setAttribute(
             'player-id',
             this.getAttribute('color') === 'yellow' ? e.detail.yellowPlayerId : e.detail.redPlayerId
@@ -168,7 +166,6 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
     }
 
     _onGameWon = e => {
-        if (e.detail.gameId !== this.getAttribute('game-id')) return;
         this.setAttribute('current-player-id', '');
         this.setAttribute('winner-id', e.detail.winnerId);
         this.setAttribute('loser-id', e.detail.loserId);
@@ -178,7 +175,6 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
     }
 
     _onGameAborted = e => {
-        if (e.detail.gameId !== this.getAttribute('game-id')) return;
         this.setAttribute('current-player-id', '');
         this.setAttribute('aborted-by', e.detail.abortedPlayerId);
 
@@ -187,7 +183,6 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
     }
 
     _onGameResigned = e => {
-        if (e.detail.gameId !== this.getAttribute('game-id')) return;
         this.setAttribute('current-player-id', '');
         this.setAttribute('winner-id', e.detail.opponentPlayerId);
         this.setAttribute('resigned-by', e.detail.resignedPlayerId);
@@ -197,7 +192,6 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
     }
 
     _onGameTimedOut = e => {
-        if (e.detail.gameId !== this.getAttribute('game-id')) return;
         this.setAttribute('current-player-id', '');
         this.setAttribute('winner-id', e.detail.opponentPlayerId);
         this.setAttribute('timed-out-by', e.detail.timedOutPlayerId);
@@ -207,7 +201,6 @@ customElements.define('connect-four-player-status', class extends HTMLElement {
     }
 
     _onGameDrawn = e => {
-        if (e.detail.gameId !== this.getAttribute('game-id')) return;
         this.setAttribute('current-player-id', '');
         this.setAttribute('game-state', 'draw');
 

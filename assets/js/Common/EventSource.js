@@ -27,9 +27,13 @@ function connect(debounceTimeoutMs = null) {
 }
 
 function onMessage(event) {
-    const [, type, payload] = event.data.split(/([^:]+):(.*)/);
+    let [, type, channels, payload] = event.data.match(/([^:]+):([^:]+):(.*)/);
+    channels = channels.split(',');
 
-    Object.values(subscriptions).forEach(s => s.listeners[type]?.({type, detail: JSON.parse(payload)}));
+    Object.values(subscriptions).forEach(s => {
+        if (channels.indexOf(s.channel) === -1) return;
+        s.listeners[type]?.({type, detail: JSON.parse(payload)})
+    });
 }
 
 function onOpen() {

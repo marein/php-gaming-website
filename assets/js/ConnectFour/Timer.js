@@ -5,7 +5,6 @@ import * as serverTime from '../Common/ServerTime.js';
 customElements.define('connect-four-timer', class extends HTMLElement {
     connectedCallback() {
         this._sseAbortController = new AbortController();
-        this._gameId = this.getAttribute('game-id');
         this._playerId = this.getAttribute('player-id');
         this._remainingMs = parseInt(this.getAttribute('remaining-ms'));
         this._turnEndsAt = parseInt(this.getAttribute('turn-ends-at'));
@@ -13,7 +12,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
 
         window.requestAnimationFrame(this._render);
 
-        sse.subscribe(`connect-four-${this._gameId}`, {
+        sse.subscribe(`connect-four-${this.getAttribute('game-id')}`, {
             'ConnectFour.PlayerJoined': this._onPlayerJoined,
             'ConnectFour.PlayerMoved': this._onPlayerMoved,
             'ConnectFour.GameTimedOut': this._onGameTimedOut,
@@ -50,8 +49,6 @@ customElements.define('connect-four-timer', class extends HTMLElement {
     }
 
     _onPlayerJoined = e => {
-        if (e.detail.gameId !== this._gameId) return;
-
         this._playerId = this.getAttribute('color') === 'yellow' ? e.detail.yellowPlayerId : e.detail.redPlayerId;
         this._remainingMs = e.detail.redPlayerId === this._playerId
             ? e.detail.redPlayerRemainingMs
@@ -62,8 +59,6 @@ customElements.define('connect-four-timer', class extends HTMLElement {
     }
 
     _onPlayerMoved = e => {
-        if (e.detail.gameId !== this._gameId) return;
-
         this._remainingMs = e.detail.playerId === this._playerId
             ? e.detail.playerRemainingMs
             : this._remainingMs;
@@ -73,15 +68,11 @@ customElements.define('connect-four-timer', class extends HTMLElement {
     }
 
     _onGameTimedOut = e => {
-        if (e.detail.gameId !== this._gameId) return;
-
         this._turnEndsAt = null;
         this._remainingMs = e.detail.timedOutPlayerId === this._playerId ? 0 : this._remainingMs;
     }
 
     _onFinished = e => {
-        if (e.detail.gameId !== this._gameId) return;
-
         this._turnEndsAt = null;
     }
 });

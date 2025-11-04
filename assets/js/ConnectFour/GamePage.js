@@ -16,8 +16,6 @@ customElements.define('connect-four-game-page', class extends HTMLElement {
 
         sse.subscribe(`connect-four-${this.getAttribute('game-id')}`, {
             'ConnectFour.PlayerJoined': e => {
-                if (e.detail.gameId !== this.getAttribute('game-id')) return;
-
                 document.title = document.title.replace(
                     '? vs. ?',
                     `${e.detail.redPlayerUsername} vs. ${e.detail.yellowPlayerUsername}`
