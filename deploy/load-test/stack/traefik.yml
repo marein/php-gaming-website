@@ -2,12 +2,11 @@ version: '3.4'
 
 services:
     traefik:
-        image: traefik:2.10
+        image: traefik:3.6
         command:
             - --metrics.prometheus=true
-            - --providers.docker
-            - --providers.docker.swarmmode=true
-            - --providers.docker.exposedbydefault=false
+            - --providers.swarm=true
+            - --providers.swarm.exposedByDefault=false
         ports:
             - { published: 80, target: 80, mode: host }
         volumes:

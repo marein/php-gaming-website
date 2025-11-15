@@ -10,7 +10,7 @@ services:
                 constraints:
                     - "node.labels.grafana==1"
     prometheus:
-        image: ghcr.io/gaming-platform/docker-prometheus:2.45
+        image: ghcr.io/gaming-platform/docker-prometheus:3.7
         command: --config.file=/etc/prometheus/dockerswarm.yml
         volumes:
             - prometheus:/prometheus

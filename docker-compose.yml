@@ -30,11 +30,11 @@ services:
     #  Database and application  #
     ##############################
     traefik:
-        image: traefik:2.10
+        image: traefik:3.6
         command:
             - --metrics.prometheus=true
             - --providers.docker
-            - --providers.docker.exposedbydefault=false
+            - --providers.docker.exposedByDefault=false
         ports:
             - { published: 80, target: 80, mode: host }
         depends_on:
@@ -50,7 +50,7 @@ services:
         ports:
             - "8083:3000"
     prometheus:
-        image: ghcr.io/gaming-platform/docker-prometheus:2.45
+        image: ghcr.io/gaming-platform/docker-prometheus:3.7
         command: --config.file=/etc/prometheus/docker.yml
         volumes:
             - prometheus:/prometheus
