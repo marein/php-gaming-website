@@ -189,7 +189,7 @@ Choose a deployment environment below and follow the guide to get the applicatio
     ```
   </details>
 
-  The highest load achieved was over `38k req/s` sustained for `10 minutes`, maintaining a snappy UI, no errors, and
+  The highest load achieved was over `50k req/s` sustained for `10 minutes`, maintaining a snappy UI, no errors, and
   ensuring transactional integrity without losing any messages. With more resources distributed across additional nodes,
   the `p95` latency can be kept consistently low, and messages flow through the system to the browser in real-time.
   Achieving this requires fine-tuning factors like the number of message consumers, the sharding of RabbitMQ queues

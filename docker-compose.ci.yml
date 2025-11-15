@@ -21,10 +21,10 @@ services:
     #  Database and application  #
     ##############################
     traefik:
-        image: traefik:2.10
+        image: traefik:3.6
         command:
             - --providers.docker
-            - --providers.docker.exposedbydefault=false
+            - --providers.docker.exposedByDefault=false
         depends_on:
             - nchan
             - php-fpm
