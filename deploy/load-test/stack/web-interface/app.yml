@@ -13,6 +13,7 @@ services:
                     - "node.labels.web-interface-http==1"
             labels:
                 - "traefik.enable=true"
+                - "traefik.http.routers.web-interface-http.entrypoints=https"
                 - "traefik.http.routers.web-interface-http.priority=10"
                 - "traefik.http.routers.web-interface-http.rule=PathPrefix(`/`)"
                 - "traefik.http.services.web-interface-http.loadbalancer.server.port=80"

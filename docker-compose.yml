@@ -35,8 +35,15 @@ services:
             - --metrics.prometheus=true
             - --providers.docker
             - --providers.docker.exposedByDefault=false
+            - --entrypoints.http.address=:80
+            - --entrypoints.http.http.redirections.entrypoint.to=https
+            - --entrypoints.http.http.redirections.entrypoint.scheme=https
+            - --entrypoints.http.http.redirections.entrypoint.permanent=true
+            - --entrypoints.https.address=:443
+            - --entrypoints.https.http.tls=true
         ports:
             - { published: 80, target: 80, mode: host }
+            - { published: 443, target: 443, mode: host }
         depends_on:
             - nchan
             - php-fpm
@@ -130,6 +137,7 @@ services:
         restart: on-failure
         labels:
             - "traefik.enable=true"
+            - "traefik.http.routers.nchan.entrypoints=https"
             - "traefik.http.routers.nchan.priority=20"
             - "traefik.http.routers.nchan.rule=PathPrefix(`/sse`)"
             - "traefik.http.routers.nchan.middlewares=nchan-stripprefix"
@@ -140,6 +148,7 @@ services:
         <<: *php-container
         labels:
             - "traefik.enable=true"
+            - "traefik.http.routers.php-fpm.entrypoints=https"
             - "traefik.http.routers.php-fpm.priority=10"
             - "traefik.http.routers.php-fpm.rule=PathPrefix(`/`)"
             - "traefik.http.services.php-fpm.loadbalancer.server.port=80"
