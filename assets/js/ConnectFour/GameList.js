@@ -8,7 +8,7 @@ import {createUsernameNode} from '../Identity/utils.js'
  */
 
 customElements.define('connect-four-game-list', class extends HTMLElement {
-    connectedCallback() {
+    async connectedCallback() {
         this._sseAbortController = new AbortController();
 
         this.append(html`
@@ -20,25 +20,23 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
                         <th>Rating</th>
                     </tr>
                     </thead>
-                    <tbody class="cursor-pointer border-0">
-                    </tbody>
+                    ${this._games = html`<tbody class="cursor-pointer border-0"></tbody>`}
                 </table>
             </div>
         `);
 
-        this._games = this.querySelector('tbody');
         this._playerId = this.getAttribute('player-id');
         this._maximumNumberOfGamesInList = parseInt(this.getAttribute('maximum-number-of-games'));
-        this._currentGamesInList = [];
-        this._pendingGamesToRemove = [];
+        this._pendingOpenGames = new Map();
+        this._scheduleRenderTimeout = null;
+        this._useScheduleRenderAfter = Date.now() + 750;
         const usernames = JSON.parse(this.getAttribute('usernames'));
-        this._pendingGamesToAdd = JSON.parse(this.getAttribute("open-games")).map(game => {
-            return {...game, playerUsername: usernames[game.playerId]}
+        JSON.parse(this.getAttribute("open-games")).forEach(game => {
+            this._pendingOpenGames.set(game.gameId, {...game, playerUsername: usernames[game.playerId]});
         });
-        this._renderListTimeout = null;
 
+        await this._render(false);
         this._registerEventHandler();
-        this._flushPendingGamesToAdd();
     }
 
     disconnectedCallback() {
@@ -46,107 +44,37 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
         this._sseAbortController.abort();
     }
 
-    /**
-     * @param {OpenGame} openGame
-     */
-    _addGame(openGame) {
-        if (this._currentGamesInList.indexOf(openGame.gameId) === -1) {
-            this._games.appendChild(
-                this._createGameNode(openGame)
-            );
-        }
-    }
-
-    /**
-     * @param {String} gameId
-     */
-    _removeGame(gameId) {
-        if (this._currentGamesInList.indexOf(gameId) !== -1) {
-            this._games.removeChild(this.querySelector('[data-game-id="' + gameId + '"]'));
-        }
-    }
-
-    /**
-     * @param {String} gameId
-     */
-    _scheduleRemovingOfGame(gameId) {
-        let indexOfGameInList = this._currentGamesInList.indexOf(gameId);
-
-        if (indexOfGameInList !== -1) {
-            this._pendingGamesToRemove.push(gameId);
-            this._markGameAsToBeRemovedSoon(gameId);
+    _render = async withLoading => {
+        this._scheduleRenderTimeout = null;
+        if (withLoading) {
+            this._games.classList.add('gp-loading');
+            await new Promise(r => setTimeout(r, 250));
         }
 
-        this._pendingGamesToAdd = this._pendingGamesToAdd.filter((pendingGameToAdd) => {
-            return pendingGameToAdd.gameId !== gameId;
-        });
+        this._games.querySelectorAll('[data-deleted]').forEach(row => row.remove());
 
-        if (this._renderListTimeout === null) {
-            this._renderListTimeout = setTimeout(this._renderList.bind(this), 3000);
+        let count = this._games.children.length;
+        for (const [gameId, openGame] of this._pendingOpenGames) {
+            if (count >= this._maximumNumberOfGamesInList) break;
+            this._games.appendChild(this._createGameNode(openGame));
+            this._pendingOpenGames.delete(gameId);
+            count++;
         }
-    }
 
-    /**
-     * @param {String} gameId
-     */
-    _markGameAsToBeRemovedSoon(gameId) {
-        if (this._currentGamesInList.indexOf(gameId) !== -1) {
-            const row = this.querySelector('[data-game-id="' + gameId + '"]');
-            row.classList.add('table-secondary', 'cursor-default');
-            row.classList.remove('table-success', 'table-light');
-        }
-    }
-
-    _flushPendingGamesToAdd() {
-        // Limited by the maximum number of games in list.
-        let limit = Math.min(
-            this._pendingGamesToAdd.length,
-            this._maximumNumberOfGamesInList - this._currentGamesInList.length
-        );
-
-        for (let i = 0; i < limit; i++) {
-            let pendingGameToAdd = this._pendingGamesToAdd.shift();
-            this._addGame(pendingGameToAdd);
-            this._currentGamesInList.push(pendingGameToAdd.gameId);
-        }
-    }
-
-    _flushPendingGamesToRemove() {
-        let gamesToRemove = this._currentGamesInList.filter((gameId) => {
-            let indexOfGameIdInRemoveList = this._pendingGamesToRemove.indexOf(gameId);
-            return indexOfGameIdInRemoveList !== -1;
-        });
-
-        gamesToRemove.forEach((gameId) => {
-            this._removeGame(gameId);
-        });
-
-        this._currentGamesInList = this._currentGamesInList.filter((gameId) => {
-            let indexOfGameIdInRemoveList = this._pendingGamesToRemove.indexOf(gameId);
-            return indexOfGameIdInRemoveList === -1;
-        });
-
-        this._pendingGamesToRemove = [];
-    }
-
-    async _renderList() {
-        this._renderListTimeout = null;
-
-        this._games.classList.add('gp-loading');
-
-        await new Promise(r => setTimeout(r, 250));
-
-        this._flushPendingGamesToRemove();
-        this._flushPendingGamesToAdd();
         this._games.classList.remove('gp-loading');
+    }
+
+    _scheduleRender = () => {
+        if (this._scheduleRenderTimeout) return;
+        this._scheduleRenderTimeout = setTimeout(() => this._render(true), 3000);
     }
 
     /**
      * @param {OpenGame} openGame
      * @returns {Node}
      */
-    _createGameNode(openGame) {
-        let row = html`
+    _createGameNode = openGame => {
+        const row = html`
             <tr data="${openGame}"
                 class="${this._playerId === openGame.playerId ? 'table-success' : 'table-light'}">
                 <td>${createUsernameNode(openGame.playerUsername)}</td>
@@ -154,9 +82,8 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
             </tr>
         `;
 
-        row.addEventListener('click', (event) => {
+        row.addEventListener('click', event => {
             event.preventDefault();
-
             if (row.classList.contains('table-secondary') || row.closest('.gp-loading')) return;
 
             row.classList.add('table-secondary', 'cursor-default');
@@ -165,58 +92,47 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
             if (this._playerId === openGame.playerId) {
                 service.abort(openGame.gameId)
                     .then(() => true)
-                    .catch(() => {
-                        // Remove the game on any error.
-                        this._scheduleRemovingOfGame(openGame.gameId);
-                    });
+                    .catch(() => this._removeGame(openGame.gameId));
             } else {
                 service.join(openGame.gameId)
                     .then(() => service.redirectTo(openGame.gameId))
-                    .catch(() => {
-                        // Remove the game on any error.
-                        this._scheduleRemovingOfGame(openGame.gameId);
-                    });
+                    .catch(() => this._removeGame(openGame.gameId));
             }
         });
 
         return row;
     }
 
-    _onGameOpened(event) {
-        let gameId = event.detail.gameId;
-        let playerId = event.detail.playerId;
-        let playerUsername = event.detail.playerUsername;
-        let pendingGameToAdd = {gameId, playerId, playerUsername};
+    _removeGame = gameId => {
+        this._pendingOpenGames.delete(gameId);
 
-        if (this._currentGamesInList.length < this._maximumNumberOfGamesInList) {
-            this._pendingGamesToAdd.push(pendingGameToAdd);
-            // Add game to list if field is after short amount of time still
-            // in pendingGamesToAdd. Games which are opened and immediately
-            // finished, take away space for open games. This is especially
-            // useful on page refresh, because nchan republish messages in buffer
-            // to new subscribers and hold that buffer for a short amount of time.
-            setTimeout(() => {
-                let indexOfGameIdInAddList = this._pendingGamesToAdd.indexOf(pendingGameToAdd);
-                let indexOfGameIdInCurrentList = this._currentGamesInList.indexOf(gameId);
-                if (indexOfGameIdInAddList !== -1) {
-                    this._pendingGamesToAdd.splice(indexOfGameIdInAddList, 1);
-                    if (indexOfGameIdInCurrentList === -1) {
-                        this._addGame(pendingGameToAdd);
-                        this._currentGamesInList.push(gameId);
-                    }
-                }
-            }, 50);
+        const row = this.querySelector('[data-game-id="' + gameId + '"]');
+        if (!row) return;
+
+        row.dataset.deleted = 'true';
+        row.classList.add('table-secondary', 'cursor-default');
+        row.classList.remove('table-success', 'table-light');
+
+        Date.now() > this._useScheduleRenderAfter ? this._scheduleRender() : this._render(false);
+    }
+
+    _onGameOpened = event => {
+        const openGame = {
+            gameId: event.detail.gameId,
+            playerId: event.detail.playerId,
+            playerUsername: event.detail.playerUsername
+        };
+
+        if (this._games.querySelector(`[data-game-id="${openGame.gameId}"]`)) return;
+
+        if (this._games.children.length < this._maximumNumberOfGamesInList) {
+            this._games.appendChild(this._createGameNode(openGame));
         } else {
-            let indexOfGameIdInAddList = this._pendingGamesToAdd.indexOf(gameId);
-            if (indexOfGameIdInAddList === -1) {
-                this._pendingGamesToAdd.push(pendingGameToAdd);
-            }
+            this._pendingOpenGames.set(openGame.gameId, openGame);
         }
     }
 
-    _onPlayerJoinedOrGameAborted(event) {
-        this._scheduleRemovingOfGame(event.detail.gameId);
-    }
+    _onPlayerJoinedOrGameAborted = event => this._removeGame(event.detail.gameId);
 
     _onUserArrived = event => {
         this._playerId = event.detail.userId;
@@ -228,9 +144,9 @@ customElements.define('connect-four-game-list', class extends HTMLElement {
     _registerEventHandler() {
         window.addEventListener('WebInterface.UserArrived', this._onUserArrived);
         sse.subscribe('lobby', {
-            'ConnectFour.GameOpened': this._onGameOpened.bind(this),
-            'ConnectFour.PlayerJoined': this._onPlayerJoinedOrGameAborted.bind(this),
-            'ConnectFour.GameAborted': this._onPlayerJoinedOrGameAborted.bind(this)
+            'ConnectFour.GameOpened': this._onGameOpened,
+            'ConnectFour.PlayerJoined': this._onPlayerJoinedOrGameAborted,
+            'ConnectFour.GameAborted': this._onPlayerJoinedOrGameAborted
         }, this._sseAbortController.signal);
     }
 });
