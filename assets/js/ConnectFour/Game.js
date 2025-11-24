@@ -2,20 +2,28 @@ import {service} from './GameService.js'
 import {Game as GameModel} from './Model/Game.js'
 import {html} from 'uhtml/node.js'
 import * as sse from '../Common/EventSource.js'
+import * as scriptune from 'https://cdn.jsdelivr.net/gh/marein/js-scriptune@main/src/scriptune.js'
 
-function play(sheet) {
-    import('https://cdn.jsdelivr.net/gh/marein/js-scriptune@main/src/scriptune.js')
-        .then(m => m.play(sheet));
+function play(sheet, deduplicationTimeMs = 3000) {
+    const map = new Map();
+
+    return (key = '') => {
+        const now = Date.now();
+        if (map.has(key) && map.get(key) >= now) return;
+        if (key) map.set(key, now + deduplicationTimeMs);
+        scriptune.play(sheet);
+        map.forEach((v, k) => v <= now && map.delete(k));
+    };
 }
 
 const sounds = {
-    error: () => play(`-:s F2:s C2:e`),
-    move: () => play(`#BPM 300\nC4:s C5:s`),
+    error: play(`-:s F2:s C2:e`),
+    move: play(`#BPM 300\nC4:s C5:s`),
     next: () => sounds.move(),
-    previous: () => play(`#BPM 300\nC5:s C4:s`),
-    win: () => play(`-:s C4:s E4:s G4:s C5:e G4:s C5:e`),
-    loss: () => play(`#BPM 180\n-:s C4:s E4:s G4:s C5:e -:s C5:s -:s C5:s -:e C1:h`),
-    join: () => play(`C4:s E4:s G4:s C5:e`)
+    previous: play(`#BPM 300\nC5:s C4:s`),
+    win: play(`-:s C4:s E4:s G4:s C5:e G4:s C5:e`),
+    loss: play(`#BPM 180\n-:s C4:s E4:s G4:s C5:e -:s C5:s -:s C5:s -:e C1:h`),
+    join: play(`C4:s E4:s G4:s C5:e`)
 };
 
 customElements.define('connect-four-game', class extends HTMLElement {
@@ -220,7 +228,7 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onPlayerJoined = event => {
-        sounds.join();
+        sounds.join(event.detail.gameId);
         this._game.redPlayerId = event.detail.redPlayerId;
         this._game.yellowPlayerId = event.detail.yellowPlayerId;
         this._changeCurrentPlayer(event.detail.redPlayerId);
@@ -248,8 +256,8 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onGameWon = event => {
-        if (event.detail.loserId === this._playerId) sounds.loss();
-        if (event.detail.winnerId === this._playerId) sounds.win();
+        if (event.detail.loserId === this._playerId) sounds.loss(event.detail.gameId);
+        if (event.detail.winnerId === this._playerId) sounds.win(event.detail.gameId);
         this._game.winningSequences = event.detail.winningSequences;
         this._showWinningSequences();
         this._changeCurrentPlayer('');
@@ -257,24 +265,24 @@ customElements.define('connect-four-game', class extends HTMLElement {
     }
 
     _onGameDrawn = event => {
-        sounds.win();
+        sounds.win(event.detail.gameId);
         this._changeCurrentPlayer('');
     }
 
     _onGameResigned = event => {
-        if (event.detail.resignedPlayerId === this._playerId) sounds.loss();
-        if (event.detail.opponentPlayerId === this._playerId) sounds.win();
+        if (event.detail.resignedPlayerId === this._playerId) sounds.loss(event.detail.gameId);
+        if (event.detail.opponentPlayerId === this._playerId) sounds.win(event.detail.gameId);
         this._changeCurrentPlayer('');
     }
 
     _onGameTimedOut = event => {
-        if (event.detail.timedOutPlayerId === this._playerId) sounds.loss();
-        if (event.detail.opponentPlayerId === this._playerId) sounds.win();
+        if (event.detail.timedOutPlayerId === this._playerId) sounds.loss(event.detail.gameId);
+        if (event.detail.opponentPlayerId === this._playerId) sounds.win(event.detail.gameId);
         this._changeCurrentPlayer('');
     }
 
     _onGameAborted = event => {
-        sounds.error();
+        sounds.error(event.detail.gameId);
         this._changeCurrentPlayer('');
     }
 
