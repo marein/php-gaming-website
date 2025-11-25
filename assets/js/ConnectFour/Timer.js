@@ -44,6 +44,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         const isPanicLevelOne = remainingMs > 0 && remainingMs < this._panicLevelOneBelowMs;
         const isPanicLevelTwo = remainingMs > 0 && remainingMs < this._panicLevelTwoBelowMs;
         const isPanicLevelThree = remainingMs > 0 && remainingMs < this._panicLevelThreeBelowMs;
+        const isCurrentPlayer = this.getAttribute('user-id') === this._playerId;
 
         this.replaceChildren(
             hours > 0
@@ -51,7 +52,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
                 : html`${minutes}:${seconds}${isPanicLevelOne ? html`<sup>${milliseconds}</sup>` : ''}`
         );
 
-        if (isPanicLevelTwo && this._currentTickSound !== remainingSeconds) {
+        if (isCurrentPlayer && isPanicLevelTwo && this._currentTickSound !== remainingSeconds) {
             this._currentTickSound = remainingSeconds;
             const volume = Math.min(
                 1,
