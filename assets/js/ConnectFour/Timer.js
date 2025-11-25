@@ -1,6 +1,7 @@
 import {html} from 'uhtml/node.js';
 import * as sse from '../Common/EventSource.js'
 import * as serverTime from '../Common/ServerTime.js';
+import * as scriptune from 'https://cdn.jsdelivr.net/gh/marein/js-scriptune@main/src/scriptune.js'
 
 customElements.define('connect-four-timer', class extends HTMLElement {
     connectedCallback() {
@@ -9,6 +10,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._remainingMs = parseInt(this.getAttribute('remaining-ms'));
         this._turnEndsAt = parseInt(this.getAttribute('turn-ends-at'));
         this._showMsBelow = parseInt(this.getAttribute('show-ms-below') || 10000);
+        this._currentTickSound = null;
 
         window.requestAnimationFrame(this._render);
 
@@ -45,6 +47,15 @@ customElements.define('connect-four-timer', class extends HTMLElement {
                 : html`${minutes}:${seconds}${showMs ? html`<sup>${milliseconds}</sup>` : ''}`
         );
 
+        if (showMs && this._currentTickSound !== remainingSeconds) {
+            this._currentTickSound = remainingSeconds;
+            const volume = Math.min(
+                1,
+                Math.round((.2 + (1 - (remainingMs / this._showMsBelow)) * 0.9) * 10) / 10
+            );
+            scriptune.play(`#VOLUME ${volume}\nC5:s`)
+        }
+
         window.requestAnimationFrame(this._render);
     }
 
@@ -59,6 +70,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
     }
 
     _onPlayerMoved = e => {
+        this._currentTickSound = null;
         this._remainingMs = e.detail.playerId === this._playerId
             ? e.detail.playerRemainingMs
             : this._remainingMs;
