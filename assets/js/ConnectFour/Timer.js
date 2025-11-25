@@ -9,9 +9,9 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._playerId = this.getAttribute('player-id');
         this._remainingMs = parseInt(this.getAttribute('remaining-ms'));
         this._turnEndsAt = parseInt(this.getAttribute('turn-ends-at'));
-        this._panicLevelOneBelowMs = parseInt(this.getAttribute('panic-one-ms-below') || 10000);
-        this._panicLevelTwoBelowMs = parseInt(this.getAttribute('panic-two-ms-below') || 7000);
-        this._panicLevelThreeBelowMs = parseInt(this.getAttribute('panic-three-ms-below') || 3000);
+        this._panicLevelOneBelowMs = parseInt(this.getAttribute('panic-one-below-ms') || 10000);
+        this._panicLevelTwoBelowMs = parseInt(this.getAttribute('panic-two-below-ms') || 7000);
+        this._panicLevelThreeBelowMs = parseInt(this.getAttribute('panic-three-below-ms') || 3000);
         this._currentTickSound = null;
 
         window.requestAnimationFrame(this._render);
@@ -54,11 +54,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
 
         if (isCurrentPlayer && isPanicLevelTwo && this._currentTickSound !== remainingSeconds) {
             this._currentTickSound = remainingSeconds;
-            const volume = Math.min(
-                1,
-                Math.round((.2 + (1 - (remainingMs / this._panicLevelOneBelowMs)) * 0.9) * 10) / 10
-            );
-            scriptune.play(`#BPM 300\n#VOLUME ${volume}\nC5:s ${isPanicLevelThree ? '-:s C5:s' : ''}`)
+            scriptune.play(`#BPM 300\nC5:s ${isPanicLevelThree ? '-:s C5:s' : ''}`)
         }
 
         window.requestAnimationFrame(this._render);
