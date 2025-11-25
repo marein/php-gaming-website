@@ -9,8 +9,9 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._playerId = this.getAttribute('player-id');
         this._remainingMs = parseInt(this.getAttribute('remaining-ms'));
         this._turnEndsAt = parseInt(this.getAttribute('turn-ends-at'));
-        this._panicLevelOneBelowMs = parseInt(this.getAttribute('show-ms-below') || 10000);
-        this._panicLevelTwoBelowMs = parseInt(this.getAttribute('show-ms-below') || 3000);
+        this._panicLevelOneBelowMs = parseInt(this.getAttribute('panic-one-ms-below') || 10000);
+        this._panicLevelTwoBelowMs = parseInt(this.getAttribute('panic-two-ms-below') || 7000);
+        this._panicLevelThreeBelowMs = parseInt(this.getAttribute('panic-three-ms-below') || 3000);
         this._currentTickSound = null;
 
         window.requestAnimationFrame(this._render);
@@ -42,6 +43,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         const milliseconds = Math.floor(remainingMs % 1000 / 100);
         const isPanicLevelOne = remainingMs > 0 && remainingMs < this._panicLevelOneBelowMs;
         const isPanicLevelTwo = remainingMs > 0 && remainingMs < this._panicLevelTwoBelowMs;
+        const isPanicLevelThree = remainingMs > 0 && remainingMs < this._panicLevelThreeBelowMs;
 
         this.replaceChildren(
             hours > 0
@@ -49,13 +51,13 @@ customElements.define('connect-four-timer', class extends HTMLElement {
                 : html`${minutes}:${seconds}${isPanicLevelOne ? html`<sup>${milliseconds}</sup>` : ''}`
         );
 
-        if (isPanicLevelOne && this._currentTickSound !== remainingSeconds) {
+        if (isPanicLevelTwo && this._currentTickSound !== remainingSeconds) {
             this._currentTickSound = remainingSeconds;
             const volume = Math.min(
                 1,
                 Math.round((.2 + (1 - (remainingMs / this._panicLevelOneBelowMs)) * 0.9) * 10) / 10
             );
-            scriptune.play(`#VOLUME ${volume}\nC5:s ${isPanicLevelTwo ? 'C5:s C5:s C5:s' : ''}`)
+            scriptune.play(`#BPM 300\n#VOLUME ${volume}\nC5:s ${isPanicLevelThree ? '-:s C5:s' : ''}`)
         }
 
         window.requestAnimationFrame(this._render);
