@@ -1,5 +1,5 @@
 import {html} from 'uhtml/node.js'
-import * as scriptune from 'https://cdn.jsdelivr.net/gh/marein/js-scriptune@main/src/scriptune.js'
+import * as scriptune from '@marein/js-scriptune'
 
 customElements.define('volume-control', class extends HTMLElement {
     connectedCallback() {

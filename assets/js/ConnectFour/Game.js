@@ -2,7 +2,7 @@ import {service} from './GameService.js'
 import {Game as GameModel} from './Model/Game.js'
 import {html} from 'uhtml/node.js'
 import * as sse from '../Common/EventSource.js'
-import * as scriptune from 'https://cdn.jsdelivr.net/gh/marein/js-scriptune@main/src/scriptune.js'
+import * as scriptune from '@marein/js-scriptune'
 
 const sounds = {
     error: scriptune.createThrottledPlay(`-:s F2:s C2:e`),
