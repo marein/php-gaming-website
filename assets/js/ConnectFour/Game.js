@@ -4,26 +4,14 @@ import {html} from 'uhtml/node.js'
 import * as sse from '../Common/EventSource.js'
 import * as scriptune from 'https://cdn.jsdelivr.net/gh/marein/js-scriptune@main/src/scriptune.js'
 
-function play(sheet, deduplicationTimeMs = 3000) {
-    const map = new Map();
-
-    return (key = '') => {
-        const now = Date.now();
-        if (map.has(key) && map.get(key) >= now) return;
-        if (key) map.set(key, now + deduplicationTimeMs);
-        scriptune.play(sheet);
-        map.forEach((v, k) => v <= now && map.delete(k));
-    };
-}
-
 const sounds = {
-    error: play(`-:s F2:s C2:e`),
-    move: play(`#BPM 300\nC4:s C5:s`),
+    error: scriptune.createThrottledPlay(`-:s F2:s C2:e`),
+    move: scriptune.createThrottledPlay(`#BPM 300\nC4:s C5:s`),
     next: () => sounds.move(),
-    previous: play(`#BPM 300\nC5:s C4:s`),
-    win: play(`-:s C4:s E4:s G4:s C5:e G4:s C5:e`),
-    loss: play(`#BPM 180\n-:s C4:s E4:s G4:s C5:e -:s C5:s -:s C5:s -:e C1:h`),
-    join: play(`C4:s E4:s G4:s C5:e`)
+    previous: scriptune.createThrottledPlay(`#BPM 300\nC5:s C4:s`),
+    win: scriptune.createThrottledPlay(`-:s C4:s E4:s G4:s C5:e G4:s C5:e`),
+    loss: scriptune.createThrottledPlay(`#BPM 180\n-:s C4:s E4:s G4:s C5:e -:s C5:s -:s C5:s -:e C1:h`),
+    join: scriptune.createThrottledPlay(`C4:s E4:s G4:s C5:e`)
 };
 
 customElements.define('connect-four-game', class extends HTMLElement {

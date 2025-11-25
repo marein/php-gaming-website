@@ -39,7 +39,8 @@ customElements.define('volume-control', class extends HTMLElement {
                 <div class="card">
                     <div class="card-body">
                         ${this._control = html`
-                            <input type="range" class="form-range" value="1" min="0" max="1" step=".1"/>
+                            <input type="range" class="form-range" value="${scriptune.getMasterVolume()}"min="0"
+                                   max="1" step=".1"/>
                         `}
                         ${this._output = html`
                             <span class="badge bg-primary-lt w-100"></span>
@@ -49,36 +50,23 @@ customElements.define('volume-control', class extends HTMLElement {
             </div>
         `);
 
-        this._storageKey = this.getAttribute('storage-key') || 'volume-control';
-        this._volume = this._volume;
+        this._updateElements();
         this._abortController = new AbortController();
 
         this._control.addEventListener('input', this._onVolumeChange.bind(this));
     }
 
-    /**
-     * @param {Number} value
-     */
-    set _volume(value) {
-        localStorage.setItem(this._storageKey, value);
-        this._control.value = value;
-        this._updateElements();
-        scriptune.setMasterVolume(value);
-    }
-
-    get _volume() {
-        return Math.max(0, Math.min(parseFloat(localStorage.getItem(this._storageKey) || 1), 1));
-    }
-
     _updateElements() {
-        this._output.innerText = `${this._volume * 100}%`;
-        this._iconHighVolume.classList.toggle('d-none', this._volume <= 0.6);
-        this._iconLowVolume.classList.toggle('d-none', this._volume === 0 || this._volume > 0.6);
-        this._iconMute.classList.toggle('d-none', this._volume !== 0);
+        const volume = scriptune.getMasterVolume();
+        this._output.innerText = `${volume * 100}%`;
+        this._iconHighVolume.classList.toggle('d-none', volume <= 0.6);
+        this._iconLowVolume.classList.toggle('d-none', volume === 0 || volume > 0.6);
+        this._iconMute.classList.toggle('d-none', volume !== 0);
     }
 
     _onVolumeChange(event) {
-        this._volume = parseFloat(event.target.value);
+        scriptune.setMasterVolume(parseFloat(event.target.value));
+        this._updateElements();
 
         this._abortController.abort();
         this._abortController = new AbortController();
