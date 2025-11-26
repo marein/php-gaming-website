@@ -1,6 +1,7 @@
 import {html} from 'uhtml/node.js';
 import * as sse from '../Common/EventSource.js'
 import * as serverTime from '../Common/ServerTime.js';
+import * as scriptune from '@marein/js-scriptune'
 
 customElements.define('connect-four-timer', class extends HTMLElement {
     connectedCallback() {
@@ -8,7 +9,10 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._playerId = this.getAttribute('player-id');
         this._remainingMs = parseInt(this.getAttribute('remaining-ms'));
         this._turnEndsAt = parseInt(this.getAttribute('turn-ends-at'));
-        this._showMsBelow = parseInt(this.getAttribute('show-ms-below') || 10000);
+        this._panicLevelOneBelowMs = parseInt(this.getAttribute('panic-one-below-ms') || 10000);
+        this._panicLevelTwoBelowMs = parseInt(this.getAttribute('panic-two-below-ms') || 7000);
+        this._panicLevelThreeBelowMs = parseInt(this.getAttribute('panic-three-below-ms') || 3000);
+        this._currentTickSound = null;
 
         window.requestAnimationFrame(this._render);
 
@@ -37,13 +41,21 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         const minutes = Math.floor((remainingSeconds % 3600) / 60).toString().padStart(2, '0');
         const seconds = (remainingSeconds % 60).toString().padStart(2, '0');
         const milliseconds = Math.floor(remainingMs % 1000 / 100);
-        const showMs = remainingMs > 0 && remainingMs < this._showMsBelow;
+        const isPanicLevelOne = remainingMs > 0 && remainingMs < this._panicLevelOneBelowMs;
+        const isPanicLevelTwo = remainingMs > 0 && remainingMs < this._panicLevelTwoBelowMs;
+        const isPanicLevelThree = remainingMs > 0 && remainingMs < this._panicLevelThreeBelowMs;
+        const isCurrentPlayer = this.getAttribute('user-id') === this._playerId;
 
         this.replaceChildren(
             hours > 0
                 ? html`${hours}:${minutes}:${seconds}`
-                : html`${minutes}:${seconds}${showMs ? html`<sup>${milliseconds}</sup>` : ''}`
+                : html`${minutes}:${seconds}${isPanicLevelOne ? html`<sup>${milliseconds}</sup>` : ''}`
         );
+
+        if (isCurrentPlayer && isPanicLevelTwo && this._currentTickSound !== remainingSeconds) {
+            this._currentTickSound = remainingSeconds;
+            scriptune.play(`#BPM 300\nC5:s ${isPanicLevelThree ? '-:s C5:s' : ''}`)
+        }
 
         window.requestAnimationFrame(this._render);
     }
@@ -59,6 +71,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
     }
 
     _onPlayerMoved = e => {
+        this._currentTickSound = null;
         this._remainingMs = e.detail.playerId === this._playerId
             ? e.detail.playerRemainingMs
             : this._remainingMs;

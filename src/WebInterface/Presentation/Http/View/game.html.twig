@@ -38,6 +38,7 @@
                                 </div>
                                 <p class="fs-2 fw-bolder">
                                     <connect-four-timer game-id="{{ game.gameId }}"
+                                                        user-id="{{ app.user ? app.user.userIdentifier }}"
                                                         player-id="{{ game.redPlayerId }}"
                                                         remaining-ms="{{ game.redPlayerRemainingMs }}"
                                                         turn-ends-at="{{ game.redPlayerTurnEndsAt }}">
@@ -76,6 +77,7 @@
                                 </div>
                                 <p class="fs-2 fw-bolder">
                                     <connect-four-timer game-id="{{ game.gameId }}"
+                                                        user-id="{{ app.user ? app.user.userIdentifier }}"
                                                         color="yellow"
                                                         player-id="{{ game.yellowPlayerId }}"
                                                         remaining-ms="{{ game.yellowPlayerRemainingMs }}"

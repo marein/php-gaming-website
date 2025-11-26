@@ -58,7 +58,8 @@ export function subscribe(channel, listeners, signal = null) {
     subscriptions[subscriptionId] = {channel, listeners};
     signal?.addEventListener('abort', () => {
         delete subscriptions[subscriptionId];
-        connect();
+        const doesChannelExist = Object.values(subscriptions).some(s => s.channel === channel);
+        !doesChannelExist && connect();
     });
     connect();
 }

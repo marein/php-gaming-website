@@ -18,9 +18,11 @@ namespace {
     $map = [
         'app' => ['path' => 'js/app.js', 'entrypoint' => true],
         'notification-list' => ['path' => 'js/Common/NotificationList.js'],
+        'volume-control' => ['path' => 'js/Common/VolumeControl.js'],
         'event-source-status' => ['path' => 'js/Common/EventSourceStatus.js'],
         'confirmation-button' => ['path' => 'js/Common/ConfirmationButton.js'],
         'uhtml/node.js' => ['version' => '4.7.0'],
+        '@marein/js-scriptune' => ['version' => '0.0.1'],
         '@tabler/core/dist/css/tabler.min.css' => ['version' => '1.1.1', 'type' => 'css']
     ];
 
