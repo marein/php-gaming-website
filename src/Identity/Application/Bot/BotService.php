@@ -6,7 +6,6 @@ namespace Gaming\Identity\Application\Bot;
 
 use Gaming\Identity\Application\Bot\Command\RegisterBot\RegisterBot;
 use Gaming\Identity\Application\Bot\Command\RegisterBot\RegisterBotResponse;
-use Gaming\Identity\Domain\Model\Account\UsernameGenerator;
 use Gaming\Identity\Domain\Model\Bot\Bot;
 use Gaming\Identity\Domain\Model\Bot\Bots;
 
