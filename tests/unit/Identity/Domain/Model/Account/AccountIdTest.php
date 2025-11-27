@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Tests\Unit\Identity\Domain\Model\User;
+namespace Gaming\Tests\Unit\Identity\Domain\Model\Account;
 
-use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
-use Gaming\Identity\Domain\Model\User\UserId;
+use Gaming\Identity\Domain\Model\Account\AccountId;
+use Gaming\Identity\Domain\Model\Account\Exception\AccountNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
-class UserIdTest extends TestCase
+class AccountIdTest extends TestCase
 {
     /**
      * @test
      */
     public function itCanBeGenerated(): void
     {
-        $userId = UserId::generate();
+        $accountId = AccountId::generate();
 
-        $this->assertTrue(Uuid::isValid($userId->toString()));
+        $this->assertTrue(Uuid::isValid($accountId->toString()));
     }
 
     /**
@@ -28,9 +28,9 @@ class UserIdTest extends TestCase
     {
         $expected = Uuid::v6()->toRfc4122();
 
-        $userId = UserId::fromString($expected);
+        $accountId = AccountId::fromString($expected);
 
-        $this->assertSame($expected, $userId->toString());
+        $this->assertSame($expected, $accountId->toString());
     }
 
     /**
@@ -38,10 +38,10 @@ class UserIdTest extends TestCase
      */
     public function itCanBeTypeCastedToString(): void
     {
-        $userId = UserId::generate();
+        $accountId = AccountId::generate();
 
-        $this->assertTrue(Uuid::isValid($userId->toString()));
-        $this->assertTrue(Uuid::isValid((string)$userId));
+        $this->assertTrue(Uuid::isValid($accountId->toString()));
+        $this->assertTrue(Uuid::isValid((string)$accountId));
     }
 
     /**
@@ -50,9 +50,9 @@ class UserIdTest extends TestCase
      */
     public function itShouldThrowUserNotFoundExceptionOnInvalidString(string $invalidString): void
     {
-        $this->expectException(UserNotFoundException::class);
+        $this->expectException(AccountNotFoundException::class);
 
-        UserId::fromString($invalidString);
+        AccountId::fromString($invalidString);
     }
 
     /**

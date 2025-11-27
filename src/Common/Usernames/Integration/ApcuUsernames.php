@@ -14,10 +14,10 @@ final class ApcuUsernames implements Usernames
     ) {
     }
 
-    public function byIds(array $userIds): array
+    public function byIds(array $accountIds): array
     {
-        $usernames = apcu_fetch($userIds);
-        $missingUserIds = array_diff($userIds, array_keys($usernames));
+        $usernames = apcu_fetch($accountIds);
+        $missingUserIds = array_diff($accountIds, array_keys($usernames));
 
         if (count($missingUserIds) !== 0) {
             $fetchedUsernames = $this->usernames->byIds($missingUserIds);

@@ -4,18 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Gaming\Identity\Domain\Model\User\User" table="user">
-        <embedded name="userId"
-                  class="Gaming\Identity\Domain\Model\User\UserId"
-                  use-column-prefix="false"/>
-        <field name="version"
-               type="integer"
-               version="true"/>
         <field name="email"
-               type="string"
-               length="255"
-               nullable="true"
-               unique="true"/>
-        <field name="username"
                type="string"
                length="255"
                nullable="true"

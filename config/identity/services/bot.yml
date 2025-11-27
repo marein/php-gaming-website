@@ -1,0 +1,9 @@
+services:
+    identity.bot-repository:
+        class: Gaming\Identity\Port\Adapter\Persistence\Repository\DoctrineBotRepository
+        arguments: ['@identity.doctrine-orm']
+
+    Gaming\Identity\Application\Bot\BotService:
+        arguments: ['@identity.bot-repository']
+        tags:
+            - { name: 'gaming_platform_bus.handler', bus: 'identity_command', match: '/\\Command\\/' }

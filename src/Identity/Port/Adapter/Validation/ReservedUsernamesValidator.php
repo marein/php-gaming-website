@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Port\Adapter\Validation;
 
-use Gaming\Identity\Domain\Model\User\UsernameGenerator;
+use Gaming\Identity\Domain\Model\Account\UsernameGenerator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;

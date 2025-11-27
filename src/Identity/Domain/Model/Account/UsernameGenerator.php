@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Identity\Domain\Model\User;
+namespace Gaming\Identity\Domain\Model\Account;
 
 final class UsernameGenerator
 {
     /**
-     * 7 verbs * 7 nouns * 58^4 = 554,508,304 combinations that yield ~9 collisions for 100,000 non-registered users.
+     * 7 verbs * 7 nouns * 58^4 = 554,508,304 combinations that yield ~9 collisions for 100,000 non-registered accounts.
      *
      * Doesn't need to be unique on the whole set, because we don't rely on it for identification.
      * It's just for display purposes and to make the experience a bit more personal. Also, the chance
-     * that users will meet each other is relatively low, because they will leave the page at some point.
-     * If the number of non-registered users increases significantly, the tag length can be increased.
+     * that accounts will meet each other is relatively low, because they will leave the page at some point.
+     * If the number of non-registered accounts increases significantly, the tag length can be increased.
      */
     private const string TAG_CHARACTER_SET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
     private const int TAG_LENGTH = 4;
@@ -20,9 +20,9 @@ final class UsernameGenerator
     public const array USERNAME_VERBS = ['Rolling', 'Laughing', 'Fighting', 'Running', 'Dancing', 'Jumping', 'Flying'];
     public const array USERNAME_NOUNS = ['Meeple', 'Pawn', 'Knight', 'Bishop', 'Rook', 'Queen', 'King'];
 
-    public static function forUserId(UserId $userId): string
+    public static function forAccountId(AccountId $accountId): string
     {
-        $bytes = (array)unpack('Nverb/Nnoun', hash('sha256', $userId->toString(), true));
+        $bytes = (array)unpack('Nverb/Nnoun', hash('sha256', $accountId->toString(), true));
         $username = sprintf(
             '%s%s',
             self::USERNAME_VERBS[$bytes['verb'] % count(self::USERNAME_VERBS)],
@@ -34,7 +34,7 @@ final class UsernameGenerator
         $tag = '';
         while (($remainingLength = self::TAG_LENGTH - strlen($tag)) > 0) {
             $blockId++;
-            $bytes = (array)unpack('N*', hash('sha256', $userId->toString() . $blockId, true));
+            $bytes = (array)unpack('N*', hash('sha256', $accountId->toString() . $blockId, true));
             $tag .= implode(
                 '',
                 array_map(
