@@ -17,10 +17,10 @@ final class ApcuUsernames implements Usernames
     public function byIds(array $accountIds): array
     {
         $usernames = apcu_fetch($accountIds);
-        $missingUserIds = array_diff($accountIds, array_keys($usernames));
+        $missingAccountIds = array_diff($accountIds, array_keys($usernames));
 
-        if (count($missingUserIds) !== 0) {
-            $fetchedUsernames = $this->usernames->byIds($missingUserIds);
+        if (count($missingAccountIds) !== 0) {
+            $fetchedUsernames = $this->usernames->byIds($missingAccountIds);
             apcu_add($fetchedUsernames, null, $this->ttlInSeconds);
             $usernames = array_merge($usernames, $fetchedUsernames);
         }

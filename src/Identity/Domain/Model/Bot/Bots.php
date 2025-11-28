@@ -6,6 +6,7 @@ namespace Gaming\Identity\Domain\Model\Bot;
 
 use Gaming\Common\Domain\Exception\ConcurrencyException;
 use Gaming\Identity\Domain\Model\Account\AccountId;
+use Gaming\Identity\Domain\Model\Bot\Exception\BotNotFoundException;
 use Gaming\Identity\Domain\Model\Bot\Exception\UsernameAlreadyExistsException;
 
 interface Bots
@@ -19,4 +20,9 @@ interface Bots
      * @throws UsernameAlreadyExistsException
      */
     public function save(Bot $bot): void;
+
+    /**
+     * @throws BotNotFoundException
+     */
+    public function getByUsername(string $username): ?Bot;
 }

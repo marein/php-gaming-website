@@ -6,6 +6,9 @@ namespace Gaming\Identity\Application\Bot;
 
 use Gaming\Identity\Application\Bot\Command\RegisterBot\RegisterBot;
 use Gaming\Identity\Application\Bot\Command\RegisterBot\RegisterBotResponse;
+use Gaming\Identity\Application\Bot\Query\Bot as BotQueryModel;
+use Gaming\Identity\Application\Bot\Query\GetBotByUsername\GetBotByUsername;
+use Gaming\Identity\Application\Bot\Query\GetBotByUsername\GetBotByUsernameResponse;
 use Gaming\Identity\Domain\Model\Bot\Bot;
 use Gaming\Identity\Domain\Model\Bot\Bots;
 
@@ -26,5 +29,16 @@ final class BotService
         );
 
         return new RegisterBotResponse($botId->toString());
+    }
+
+    public function getBotByUsername(GetBotByUsername $request): GetBotByUsernameResponse
+    {
+        if (!($bot = $this->bots->getByUsername($request->username))) {
+            return new GetBotByUsernameResponse(null);
+        }
+
+        return new GetBotByUsernameResponse(
+            new BotQueryModel($bot->id()->toString(), $bot->username())
+        );
     }
 }

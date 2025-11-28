@@ -12,7 +12,7 @@ use Gaming\Common\Bus\Request;
 final class GetUsernames implements Request
 {
     /**
-     * @param array<string, string> $accountIds
+     * @param string[] $accountIds
      */
     public function __construct(
         public readonly array $accountIds

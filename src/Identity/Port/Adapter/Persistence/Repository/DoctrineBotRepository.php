@@ -39,4 +39,10 @@ final class DoctrineBotRepository implements Bots
             };
         }
     }
+
+    public function getByUsername(string $username): ?Bot
+    {
+        return $this->manager->getRepository(Bot::class)
+            ->findOneBy(['username' => $username]);
+    }
 }

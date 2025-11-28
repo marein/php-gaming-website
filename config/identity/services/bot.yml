@@ -6,4 +6,5 @@ services:
     Gaming\Identity\Application\Bot\BotService:
         arguments: ['@identity.bot-repository']
         tags:
+            - { name: 'gaming_platform_bus.handler', bus: 'identity_query', match: '/\\Query\\/' }
             - { name: 'gaming_platform_bus.handler', bus: 'identity_command', match: '/\\Command\\/' }
