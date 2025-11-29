@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Gaming\Identity\Domain\Model\Account\Account" table="account" inheritance-type="JOINED">
+        <discriminator-column name="type" type="string"/>
+        <discriminator-map>
+            <discriminator-mapping value="bot" class="Gaming\Identity\Domain\Model\Bot\Bot"/>
+            <discriminator-mapping value="user" class="Gaming\Identity\Domain\Model\User\User"/>
+        </discriminator-map>
+        <embedded name="accountId"
+                  class="Gaming\Identity\Domain\Model\Account\AccountId"
+                  use-column-prefix="false"/>
+        <field name="version"
+               type="integer"
+               version="true"/>
+        <field name="username"
+               type="string"
+               length="20"
+               nullable="true"
+               unique="true"/>
+    </entity>
+</doctrine-mapping>

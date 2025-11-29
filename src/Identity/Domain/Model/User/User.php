@@ -4,46 +4,21 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\User;
 
-use Gaming\Common\EventStore\CollectsDomainEvents;
-use Gaming\Common\EventStore\DomainEvent;
+use Gaming\Identity\Domain\Model\Account\Account;
+use Gaming\Identity\Domain\Model\Account\AccountId;
 use Gaming\Identity\Domain\Model\User\Event\UserArrived;
 use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 
-class User implements CollectsDomainEvents
+class User extends Account
 {
-    private UserId $userId;
+    private ?string $email = null;
 
-    /**
-     * @var DomainEvent[]
-     */
-    private array $domainEvents = [];
-
-    /**
-     * This version is for optimistic concurrency control.
-     */
-    private ?int $version;
-
-    private ?string $email;
-
-    private ?string $username;
-
-    private function __construct(UserId $userId)
-    {
-        $this->userId = $userId;
-        $this->version = null;
-        $this->email = null;
-        $this->username = null;
-    }
-
-    public static function arrive(UserId $userId): User
+    public static function arrive(AccountId $userId): self
     {
         $user = new self($userId);
 
-        $user->domainEvents[] = new DomainEvent(
-            $user->userId->toString(),
-            new UserArrived($user->userId)
-        );
+        $user->record(new UserArrived($user->accountId));
 
         return $user;
     }
@@ -60,29 +35,11 @@ class User implements CollectsDomainEvents
         $this->email = $email;
         $this->username = $username;
 
-        $this->domainEvents[] = new DomainEvent(
-            $this->userId->toString(),
-            new UserSignedUp($this->userId, $this->email, $this->username)
-        );
-    }
-
-    public function id(): UserId
-    {
-        return $this->userId;
-    }
-
-    public function username(): string
-    {
-        return $this->username ?? UsernameGenerator::forUserId($this->userId);
+        $this->record(new UserSignedUp($this->accountId, $this->email, $this->username));
     }
 
     public function isSignedUp(): bool
     {
         return $this->email !== null && $this->username !== null;
-    }
-
-    public function flushDomainEvents(): array
-    {
-        return array_splice($this->domainEvents, 0);
     }
 }

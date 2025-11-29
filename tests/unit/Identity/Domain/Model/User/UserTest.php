@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Identity\Domain\Model\User;
 
+use Gaming\Identity\Domain\Model\Account\AccountId;
 use Gaming\Identity\Domain\Model\User\Event\UserArrived;
 use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 use Gaming\Identity\Domain\Model\User\User;
-use Gaming\Identity\Domain\Model\User\UserId;
 use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
@@ -18,7 +18,7 @@ final class UserTest extends TestCase
      */
     public function itShouldArrive(): void
     {
-        $userId = UserId::generate();
+        $userId = AccountId::generate();
         $user = User::arrive($userId);
 
         $domainEvents = $user->flushDomainEvents();
@@ -33,7 +33,7 @@ final class UserTest extends TestCase
      */
     public function itShouldSignUp(): void
     {
-        $userId = UserId::generate();
+        $userId = AccountId::generate();
         $user = User::arrive($userId);
         $user->signUp('marein@example.com', 'marein');
 
@@ -53,7 +53,7 @@ final class UserTest extends TestCase
     {
         $this->expectException(UserAlreadySignedUpException::class);
 
-        $user = User::arrive(UserId::generate());
+        $user = User::arrive(AccountId::generate());
         $user->signUp('marein@example.com', 'marein');
         $user->signUp('any@example.com', 'any');
     }

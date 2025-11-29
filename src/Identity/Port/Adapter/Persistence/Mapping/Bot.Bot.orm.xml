@@ -3,9 +3,6 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <embeddable name="Gaming\Identity\Domain\Model\User\UserId">
-        <id name="userId"
-            column="id"
-            type="uuid"/>
-    </embeddable>
+    <entity name="Gaming\Identity\Domain\Model\Bot\Bot" table="bot">
+    </entity>
 </doctrine-mapping>

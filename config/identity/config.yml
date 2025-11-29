@@ -25,7 +25,7 @@ doctrine:
             identity:
                 connection: identity
                 mappings:
-                    user:
+                    identity:
                         type: xml
-                        dir: '%kernel.project_dir%/src/Identity/Port/Adapter/Persistence/Mapping/User'
-                        prefix: Gaming\Identity\Domain\Model\User
+                        dir: '%kernel.project_dir%/src/Identity/Port/Adapter/Persistence/Mapping'
+                        prefix: Gaming\Identity\Domain\Model

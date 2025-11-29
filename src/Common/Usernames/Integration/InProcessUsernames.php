@@ -6,7 +6,7 @@ namespace Gaming\Common\Usernames\Integration;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Usernames\Usernames;
-use Gaming\Identity\Application\User\Query\GetUsernames\GetUsernames;
+use Gaming\Identity\Application\Account\Query\GetUsernames\GetUsernames;
 
 final class InProcessUsernames implements Usernames
 {
@@ -15,14 +15,14 @@ final class InProcessUsernames implements Usernames
     ) {
     }
 
-    public function byIds(array $userIds): array
+    public function byIds(array $accountIds): array
     {
-        if (count($userIds) === 0) {
+        if (count($accountIds) === 0) {
             return [];
         }
 
         return $this->identityBus
-            ->handle(new GetUsernames($userIds))
+            ->handle(new GetUsernames($accountIds))
             ->usernames;
     }
 }

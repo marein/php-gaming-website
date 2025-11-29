@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Identity\Application\User\Query\GetUsernames;
+namespace Gaming\Identity\Application\Account\Query\GetUsernames;
 
 final class GetUsernamesResponse
 {

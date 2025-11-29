@@ -2,5 +2,6 @@ Gaming\Common\Domain\DomainEvent:
   discriminator:
     field_name: '#'
     map:
+      BotRegistered: Gaming\Identity\Domain\Model\Bot\Event\BotRegistered
       UserArrived: Gaming\Identity\Domain\Model\User\Event\UserArrived
       UserSignedUp: Gaming\Identity\Domain\Model\User\Event\UserSignedUp

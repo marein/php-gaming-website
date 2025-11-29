@@ -9,14 +9,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Gaming\Common\Domain\Exception\ConcurrencyException;
 use Gaming\Identity\Domain\Model\Account\AccountId;
-use Gaming\Identity\Domain\Model\User\Exception\EmailAlreadyExistsException;
-use Gaming\Identity\Domain\Model\User\Exception\UsernameAlreadyExistsException;
-use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
-use Gaming\Identity\Domain\Model\User\User;
-use Gaming\Identity\Domain\Model\User\Users;
-use Symfony\Component\Uid\Uuid;
+use Gaming\Identity\Domain\Model\Bot\Bot;
+use Gaming\Identity\Domain\Model\Bot\Bots;
+use Gaming\Identity\Domain\Model\Bot\Exception\UsernameAlreadyExistsException;
 
-final class DoctrineUserRepository implements Users
+final class DoctrineBotRepository implements Bots
 {
     public function __construct(
         private readonly EntityManager $manager
@@ -28,31 +25,24 @@ final class DoctrineUserRepository implements Users
         return AccountId::generate();
     }
 
-    public function save(User $user): void
+    public function save(Bot $bot): void
     {
         try {
-            $this->manager->persist($user);
+            $this->manager->persist($bot);
             $this->manager->flush();
         } catch (OptimisticLockException) {
             throw new ConcurrencyException();
         } catch (UniqueConstraintViolationException $e) {
             match (true) {
-                str_contains($e->getMessage(), 'uniq_email') => throw new EmailAlreadyExistsException(),
                 str_contains($e->getMessage(), 'uniq_username') => throw new UsernameAlreadyExistsException(),
                 default => throw $e
             };
         }
     }
 
-    public function get(AccountId $userId): User
+    public function getByUsername(string $username): ?Bot
     {
-        return $this->manager->getRepository(User::class)
-            ->find($userId) ?? throw new UserNotFoundException();
-    }
-
-    public function getByEmail(string $email): ?User
-    {
-        return $this->manager->getRepository(User::class)
-            ->findOneBy(['email' => $email]);
+        return $this->manager->getRepository(Bot::class)
+            ->findOneBy(['username' => $username]);
     }
 }
