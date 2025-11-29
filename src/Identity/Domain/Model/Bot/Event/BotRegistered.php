@@ -12,10 +12,10 @@ final class BotRegistered implements DomainEvent
     public readonly string $botId;
 
     public function __construct(
-        AccountId $userId,
+        AccountId $botId,
         public readonly string $username
     ) {
-        $this->botId = $userId->toString();
+        $this->botId = $botId->toString();
     }
 
     public function aggregateId(): string

@@ -6,6 +6,7 @@ namespace Gaming\Tests\Unit\Identity\Domain\Model\Account;
 
 use Gaming\Identity\Domain\Model\Account\AccountId;
 use Gaming\Identity\Domain\Model\Account\Exception\AccountNotFoundException;
+use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
@@ -46,24 +47,30 @@ class AccountIdTest extends TestCase
 
     /**
      * @test
-     * @dataProvider invalidStringProvider
+     * @dataProvider invalidIdProvider
      */
-    public function itShouldThrowUserNotFoundExceptionOnInvalidString(string $invalidString): void
-    {
-        $this->expectException(AccountNotFoundException::class);
+    public function itShouldThrowNotFoundExceptionOnInvalidId(
+        string $methodName,
+        string $invalidId,
+        string $exceptionClass
+    ): void {
+        $this->expectException($exceptionClass);
 
-        AccountId::fromString($invalidString);
+        AccountId::$methodName($invalidId);
     }
 
     /**
-     * Returns data for itShouldThrowUserNotFoundExceptionOnInvalidString
+     * Returns data for itShouldThrowNotFoundExceptionOnInvalidId
      */
-    public function invalidStringProvider(): array
+    public function invalidIdProvider(): array
     {
         return [
-            ['invalid id'],
-            ['another-invalid-id'],
-            [uniqid()]
+            ['fromString', 'invalid id', AccountNotFoundException::class],
+            ['fromString', 'another-invalid-id', AccountNotFoundException::class],
+            ['fromString', uniqid(), AccountNotFoundException::class],
+            ['forUserId', 'invalid id', UserNotFoundException::class],
+            ['forUserId', 'another-invalid-id', UserNotFoundException::class],
+            ['forUserId', uniqid(), UserNotFoundException::class]
         ];
     }
 }

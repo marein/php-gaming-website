@@ -6,6 +6,7 @@ namespace Gaming\Identity\Domain\Model\Account;
 
 use Exception;
 use Gaming\Identity\Domain\Model\Account\Exception\AccountNotFoundException;
+use Gaming\Identity\Domain\Model\User\Exception\UserNotFoundException;
 use Symfony\Component\Uid\Uuid;
 
 final class AccountId
@@ -30,9 +31,19 @@ final class AccountId
         try {
             return new self(Uuid::fromRfc4122($accountId));
         } catch (Exception $exception) {
-            // This occurs if the given string is an invalid Uuid, hence an invalid AccountId.
-            // Throw exception, that the user can't be found.
-            throw new AccountNotFoundException();
+            throw new AccountNotFoundException(previous: $exception);
+        }
+    }
+
+    /**
+     * @throws UserNotFoundException
+     */
+    public static function forUserId(string $userId): AccountId
+    {
+        try {
+            return new self(Uuid::fromRfc4122($userId));
+        } catch (Exception $exception) {
+            throw new UserNotFoundException(previous: $exception);
         }
     }
 

@@ -34,8 +34,8 @@ final class Version20170526204325 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $schema->createTable('bot')->removeForeignKey('fk_bot_account');
-        $schema->createTable('user')->removeForeignKey('fk_user_account');
+        $schema->getTable('bot')->removeForeignKey('fk_bot_account');
+        $schema->getTable('user')->removeForeignKey('fk_user_account');
         $schema->dropTable('account');
         $schema->dropTable('bot');
         $schema->dropTable('user');

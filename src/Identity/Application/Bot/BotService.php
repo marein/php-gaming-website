@@ -11,6 +11,7 @@ use Gaming\Identity\Application\Bot\Query\GetBotByUsername\GetBotByUsername;
 use Gaming\Identity\Application\Bot\Query\GetBotByUsername\GetBotByUsernameResponse;
 use Gaming\Identity\Domain\Model\Bot\Bot;
 use Gaming\Identity\Domain\Model\Bot\Bots;
+use Gaming\Identity\Domain\Model\Bot\Exception\UsernameAlreadyExistsException;
 
 final class BotService
 {
@@ -19,6 +20,9 @@ final class BotService
     ) {
     }
 
+    /**
+     * @throws UsernameAlreadyExistsException
+     */
     public function registerBot(RegisterBot $request): RegisterBotResponse
     {
         $this->bots->save(
