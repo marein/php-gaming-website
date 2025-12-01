@@ -291,10 +291,14 @@ Check out the purpose and architectural decisions of each context in the section
 
   ### Identity
 
-  **Purpose**: [Identity](/src/Identity) supports the user’s journey, starting from arrival as an anonymous user,
-  through signup, to managing their profile.
+  **Purpose**: [Identity](/src/Identity) manages all account types in the system. It supports the user's journey,
+  starting from arrival as an anonymous user, through signup, to managing their profile, and it also handles bots,
+  which are registered and managed programmatically.
 
-  **Communication**: Its use cases are directly invoked by the Web Interface to reduce network hops and abstractions.
+  **Communication**: Its use cases are exposed via
+  [messaging](https://www.enterpriseintegrationpatterns.com/patterns/messaging/Messaging.html), utilizing
+  [Request-Reply](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html),
+  with some directly invoked by the Web Interface to reduce network hops and abstractions.
   To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
   are stored in a [transactional outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
   later published in [Protobuf](https://en.wikipedia.org/wiki/Protocol_Buffers) format using
@@ -307,7 +311,7 @@ Check out the purpose and architectural decisions of each context in the section
   [Application Layer](https://martinfowler.com/eaaCatalog/serviceLayer.html), routing requests to handlers
   and handling cross-cutting concerns like validation and transaction management. Business logic is organized using
   [Domain Models](https://martinfowler.com/eaaCatalog/domainModel.html), which are managed by an
-  [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping).
+  [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping) with features such as Class Table Inheritance.
 
   **Infrastructure**: MySQL is used to store users and events (Transactional Outbox), while RabbitMQ facilitates
   communication with other contexts.

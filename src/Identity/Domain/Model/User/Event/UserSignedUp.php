@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Gaming\Identity\Domain\Model\User\Event;
 
 use Gaming\Common\Domain\DomainEvent;
-use Gaming\Identity\Domain\Model\User\UserId;
+use Gaming\Identity\Domain\Model\Account\AccountId;
 
 final class UserSignedUp implements DomainEvent
 {
     public readonly string $userId;
 
     public function __construct(
-        UserId $userId,
+        AccountId $userId,
         public readonly string $email,
         public readonly string $username
     ) {

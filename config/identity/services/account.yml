@@ -1,0 +1,9 @@
+services:
+    identity.account-repository:
+        class: Gaming\Identity\Port\Adapter\Persistence\Repository\DoctrineAccountRepository
+        arguments: ['@identity.doctrine-orm']
+
+    Gaming\Identity\Application\Account\AccountService:
+        arguments: ['@identity.account-repository']
+        tags:
+            - { name: 'gaming_platform_bus.handler', bus: 'identity_query', match: '/\\Query\\/' }
