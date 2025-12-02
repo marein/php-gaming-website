@@ -3,7 +3,7 @@ Gaming\Identity\Application\Bot\Command\RegisterBot\RegisterBot:
     - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
         entityClass: 'Gaming\Identity\Domain\Model\Bot\Bot'
         fields: username
-        message: That username is already in use
+        message: That username is already in use.
   properties:
     username:
       - Gaming\Identity\Port\Adapter\Validation\UsernameRequirements:
