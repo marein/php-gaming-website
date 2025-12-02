@@ -55,7 +55,7 @@ final class CallbackFactory
                 $this->messageHandler->handle($message, $context);
             } catch (\Throwable $throwable) {
                 $this->eventDispatcher->dispatch(
-                    new MessageFailed($message, $throwable, ['queue' => $queueName])
+                    new MessageFailed($message, $context, $throwable, ['queue' => $queueName])
                 );
             }
 
