@@ -65,11 +65,12 @@ final class AmqpContext implements Context
 
         $routingKey = $this->incomingAmqpMessage->get('reply_to');
 
-        $this->publishAmqpMessage(
-            $this->messageTranslator->createAmqpMessageFromMessage($message),
-            '',
-            $routingKey
-        );
+        $amqpMessage = $this->messageTranslator->createAmqpMessageFromMessage($message);
+        if ($this->incomingAmqpMessage->has('correlation_id')) {
+            $amqpMessage->set('correlation_id', $this->incomingAmqpMessage->get('correlation_id'));
+        }
+
+        $this->publishAmqpMessage($amqpMessage, '', $routingKey);
 
         $this->eventDispatcher->dispatch(
             new ReplySent(
