@@ -36,7 +36,7 @@
     "doctrine/doctrine-migrations-bundle": "^3.3",
     "doctrine/migrations": "^3.7",
     "doctrine/orm": "^3.0",
-    "gaming-platform/api": "^1.4",
+    "gaming-platform/api": "dev-add-game-messages",
     "jms/serializer": "^3.17",
     "marein/php-nchan-client": "^3.1",
     "marein/symfony-lock-doctrine-migrations-bundle": "^1.0",
