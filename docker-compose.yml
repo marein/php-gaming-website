@@ -185,6 +185,22 @@ services:
         command: bin/restartOnChange bin/console gaming:consume-messages all
         labels:
             - "prometheus-job=consume-messages"
+    connect-four-bot:
+        image: ghcr.io/gaming-platform/service-connect-four-bot
+#        build: { context: ../service-connect-four-bot, target: development }
+        environment:
+            APP_USERNAME: 'BOT_random'
+            APP_LEVEL: '0'
+            APP_JOIN_AFTER: '5'
+            APP_RABBIT_MQ_DSN: 'amqp://guest:guest@rabbitmq:5672'
+            APP_NCHAN_SUB_URL: 'http://nchan/sub'
+            APP_RPC_TIMEOUT: '10s'
+            APP_RPC_EXCHANGE: 'gaming'
+        depends_on:
+            - rabbitmq
+            - nchan
+            - php-consume-messages
+        restart: on-failure
 
     ##############################
     #     Development helper     #

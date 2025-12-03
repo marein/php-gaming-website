@@ -61,6 +61,9 @@ services:
                     - "node.labels.long-running==1"
             labels:
                 - "prometheus-job=connect-four-transient-rpc"
+    connect-four-bot:
+        image: ghcr.io/gaming-platform/service-connect-four-bot
+        env_file: ../bot.env
 
 volumes:
     proxysql.sock:
