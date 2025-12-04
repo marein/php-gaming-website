@@ -4,7 +4,7 @@ services:
         arguments:
             - 'ConnectFour.GameRequests'
             - 'gaming'
-            - ['ConnectFour.JoinGame', 'ConnectFour.MakeMove', 'ConnectFour.GetGamesByPlayer']]
+            - ['ConnectFour.OpenGame', 'ConnectFour.JoinGame', 'ConnectFour.MakeMove', 'ConnectFour.GetGamesByPlayer']
         tags: [{ name: 'gaming.message-broker.topology' }]
 
     connect-four.game-requests-message-handler.consumer:

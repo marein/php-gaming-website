@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "edd1c9454f7f7060433fe94dbb66aa05",
+    "content-hash": "d5ce5dcd4c58336fb9bf32a835f7dcb9",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2317,12 +2317,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/gaming-platform/api.git",
-                "reference": "f126cfcebceec53f81d712a1b0d712a44f0d4908"
+                "reference": "3da446b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gaming-platform/api/zipball/f126cfcebceec53f81d712a1b0d712a44f0d4908",
-                "reference": "f126cfcebceec53f81d712a1b0d712a44f0d4908",
+                "url": "https://api.github.com/repos/gaming-platform/api/zipball/3da446b",
+                "reference": "3da446b",
                 "shasum": ""
             },
             "require": {

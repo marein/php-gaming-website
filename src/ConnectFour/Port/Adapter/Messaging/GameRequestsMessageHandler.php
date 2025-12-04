@@ -10,6 +10,7 @@ use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\MessageHandler;
 use Gaming\ConnectFour\Application\Game\Command\JoinCommand;
 use Gaming\ConnectFour\Application\Game\Command\MoveCommand;
+use Gaming\ConnectFour\Application\Game\Command\OpenCommand;
 use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Move;
@@ -20,6 +21,7 @@ use GamingPlatform\Api\ConnectFour\V1\Game\Move as ProtoMove;
 use GamingPlatform\Api\ConnectFour\V1\GetGamesByPlayerResponse;
 use GamingPlatform\Api\ConnectFour\V1\JoinGameResponse;
 use GamingPlatform\Api\ConnectFour\V1\MakeMoveResponse;
+use GamingPlatform\Api\ConnectFour\V1\OpenGameResponse;
 
 final class GameRequestsMessageHandler implements MessageHandler
 {
@@ -32,11 +34,34 @@ final class GameRequestsMessageHandler implements MessageHandler
     public function handle(Message $message, Context $context): void
     {
         match ($message->name()) {
+            'ConnectFour.OpenGame' => $this->handleOpenGame($message, $context),
             'ConnectFour.JoinGame' => $this->handleJoinGame($message, $context),
             'ConnectFour.MakeMove' => $this->handleMakeMove($message, $context),
             'ConnectFour.GetGamesByPlayer' => $this->handleGetGamesByPlayer($message, $context),
             default => true
         };
+    }
+
+    private function handleOpenGame(Message $message, Context $context): void
+    {
+        $request = ConnectFourV1Factory::createOpenGame($message->body());
+
+        $response = $this->commandBus->handle(
+            new OpenCommand(
+                $request->getPlayerId(),
+                $request->getWidth(),
+                $request->getHeight(),
+                $request->getStone(),
+                $request->getTimer()
+            )
+        );
+
+        $context->reply(
+            new Message(
+                'ConnectFour.OpenGameResponse',
+                new OpenGameResponse()->setGameId($response)->serializeToString()
+            )
+        );
     }
 
     private function handleJoinGame(Message $message, Context $context): void
