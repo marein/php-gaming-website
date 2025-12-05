@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\Common\Bus\Integration;
 
 use Gaming\Common\Bus\Bus;
-use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Integration\SymfonyValidatorBus;
 use Gaming\Common\Bus\Request;
-use Gaming\Common\Bus\Violation;
-use Gaming\Common\Bus\ViolationParameter;
+use Gaming\Common\Domain\Exception\DomainException;
+use Gaming\Common\Domain\Exception\Violation;
+use Gaming\Common\Domain\Exception\ViolationParameter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -51,9 +51,9 @@ class SymfonyValidatorBusTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowApplicationExceptionWithViolationsOnError(): void
+    public function itShouldThrowDomainExceptionWithViolationsOnError(): void
     {
-        $this->expectException(ApplicationException::class);
+        $this->expectException(DomainException::class);
 
         $request = $this->createRequest('Request');
         $innerBus = $this->createMock(Bus::class);
@@ -97,20 +97,14 @@ class SymfonyValidatorBusTest extends TestCase
 
         try {
             $bus->handle($request);
-        } catch (ApplicationException $e) {
+        } catch (DomainException $e) {
             $this->assertEquals(
                 [
-                    new Violation(
-                        'value',
-                        'limit_exceeded',
-                        [
-                            new ViolationParameter('limit', 10)
-                        ]
-                    ),
-                    new Violation('value', 'not_blank', []),
-                    new Violation('anotherValue', 'not_blank', [])
+                    new Violation('limit_exceeded', [new ViolationParameter('limit', 10)], 'value'),
+                    new Violation('not_blank', [], 'value'),
+                    new Violation('not_blank', [], 'anotherValue')
                 ],
-                $e->violations()
+                iterator_to_array($e->violations)
             );
             throw $e;
         }

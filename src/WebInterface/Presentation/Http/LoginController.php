@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Gaming\WebInterface\Presentation\Http;
 
 use Gaming\Common\Bus\Bus;
-use Gaming\Common\Bus\Exception\ApplicationException;
-use Gaming\Common\Bus\Integration\FormViolationMapper;
+use Gaming\Common\Domain\Exception\DomainException;
+use Gaming\Common\Domain\Integration\FormViolationMapper;
 use Gaming\Identity\Application\User\Query\UserByEmailQuery;
 use Gaming\WebInterface\Infrastructure\Security\User;
 use Gaming\WebInterface\Presentation\Http\Form\LoginType;
@@ -52,8 +52,8 @@ final class LoginController extends AbstractController
                         $this->generateUrl('signup_confirm', ['email' => $email], UrlGeneratorInterface::ABSOLUTE_URL)
                     )
                 ]);
-            } catch (ApplicationException $e) {
-                $this->formViolationMapper->mapViolations($form, $e->violations());
+            } catch (DomainException $e) {
+                $this->formViolationMapper->mapViolations($form, $e->violations);
             }
         }
 
