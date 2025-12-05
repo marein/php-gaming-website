@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Gaming\Common\Bus\Integration;
 
 use Gaming\Common\Bus\Bus;
-use Gaming\Common\Bus\Exception\ApplicationException;
 use Gaming\Common\Bus\Request;
-use Gaming\Common\Bus\Violation;
-use Gaming\Common\Bus\ViolationParameter;
+use Gaming\Common\Domain\Exception\DomainException;
+use Gaming\Common\Domain\Exception\Violation;
+use Gaming\Common\Domain\Exception\ViolationParameter;
+use Gaming\Common\Domain\Exception\Violations;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -26,8 +27,8 @@ final class SymfonyValidatorBus implements Bus
         $symfonyViolations = $this->validator->validate($request);
 
         if ($symfonyViolations->count() > 0) {
-            throw new ApplicationException(
-                $this->mapFromSymfonyViolations($symfonyViolations)
+            throw new DomainException(
+                new Violations(...$this->mapFromSymfonyViolations($symfonyViolations))
             );
         }
 
@@ -43,9 +44,9 @@ final class SymfonyValidatorBus implements Bus
     {
         return array_map(
             fn(ConstraintViolationInterface $constraintViolation): Violation => new Violation(
-                $constraintViolation->getPropertyPath(),
                 (string)$constraintViolation->getMessage(),
-                $this->mapFromSymfonyParameters($constraintViolation->getParameters())
+                $this->mapFromSymfonyParameters($constraintViolation->getParameters()),
+                $constraintViolation->getPropertyPath()
             ),
             iterator_to_array($symfonyViolations)
         );

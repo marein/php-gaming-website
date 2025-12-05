@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Common\Bus\Integration;
+namespace Gaming\Common\Domain\Integration;
 
-use Gaming\Common\Bus\Violation;
+use Gaming\Common\Domain\Exception\Violation;
+use Gaming\Common\Domain\Exception\Violations;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -21,12 +22,9 @@ final class FormViolationMapper
     ) {
     }
 
-    /**
-     * @param Violation[] $violations
-     */
-    public function mapViolations(FormInterface $form, array $violations): void
+    public function mapViolations(FormInterface $form, Violations $violations): void
     {
-        count($violations) > 0 && $this->errorMessage && $form->addError(
+        $violations->count() > 0 && $this->errorMessage && $form->addError(
             new FormError(
                 $this->translator?->trans($this->errorMessage, domain: $this->translationDomain) ?? $this->errorMessage
             )
@@ -39,24 +37,24 @@ final class FormViolationMapper
 
     private function mapViolation(FormInterface $form, Violation $violation): void
     {
-        $propertyPaths = explode('.', str_replace(['[', ']'], ['.', ''], $violation->propertyPath()));
+        $propertyPaths = explode('.', str_replace(['[', ']'], ['.', ''], $violation->propertyPath));
 
         foreach ($propertyPaths as $propertyPath) {
             $form = $form[$propertyPath] ?? $form;
         }
 
         $parameters = [];
-        foreach ($violation->parameters() as $violationParameter) {
-            $parameters['{{ ' . $violationParameter->name() . ' }}'] = $violationParameter->value();
+        foreach ($violation->parameters as $violationParameter) {
+            $parameters['{{ ' . $violationParameter->name . ' }}'] = $violationParameter->value;
         }
 
         $form->addError(
             new FormError(
                 $this->translator?->trans(
-                    $violation->identifier(),
+                    $violation->identifier,
                     $parameters,
                     $this->translationDomain
-                ) ?? strtr($violation->identifier(), $parameters)
+                ) ?? strtr($violation->identifier, $parameters)
             )
         );
     }

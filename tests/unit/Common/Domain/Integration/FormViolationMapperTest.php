@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Gaming\Tests\Unit\Common\Bus\Integration;
+namespace Gaming\Tests\Unit\Common\Domain\Integration;
 
-use Gaming\Common\Bus\Integration\FormViolationMapper;
-use Gaming\Common\Bus\Violation;
-use Gaming\Common\Bus\ViolationParameter;
+use Gaming\Common\Domain\Exception\Violation;
+use Gaming\Common\Domain\Exception\ViolationParameter;
+use Gaming\Common\Domain\Exception\Violations;
+use Gaming\Common\Domain\Integration\FormViolationMapper;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -27,7 +28,7 @@ final class FormViolationMapperTest extends TestCase
             ->add('username', TextType::class)
             ->getForm();
 
-        (new FormViolationMapper())->mapViolations($form, []);
+        (new FormViolationMapper())->mapViolations($form, new Violations());
 
         self::assertCount(0, $form->getErrors(true, true));
     }
@@ -121,20 +122,15 @@ final class FormViolationMapperTest extends TestCase
             ->add('friends', CollectionType::class)
             ->getForm();
 
-        $formViolationMapper->mapViolations($form, [
-            new Violation('email', 'invalid email {{ value }}', [
-                new ViolationParameter('value', 'test')
-            ]),
-            new Violation('username', 'invalid username {{ value }}', [
-                new ViolationParameter('value', 'test')
-            ]),
-            new Violation('friends[1]', 'invalid friend {{ value }}', [
-                new ViolationParameter('value', 'test')
-            ]),
-            new Violation('nofield', 'invalid nofield {{ value }}', [
-                new ViolationParameter('value', 'test')
-            ])
-        ]);
+        $formViolationMapper->mapViolations(
+            $form,
+            new Violations(
+                new Violation('invalid email {{ value }}', [new ViolationParameter('value', 'test')], 'email'),
+                new Violation('invalid username {{ value }}', [new ViolationParameter('value', 'test')], 'username'),
+                new Violation('invalid friend {{ value }}', [new ViolationParameter('value', 'test')], 'friends[1]'),
+                new Violation('invalid nofield {{ value }}', [new ViolationParameter('value', 'test')], 'nofield')
+            )
+        );
 
         return $form;
     }

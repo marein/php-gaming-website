@@ -101,7 +101,7 @@ services:
         arguments: ['@logger']
         tags: [{ name: kernel.event_listener, method: 'messageFailed' }]
 
-    Gaming\Common\Bus\Integration\ReplyWithErrorResponseOnMessageFailedListener:
+    Gaming\Common\Domain\Integration\ReplyWithErrorResponseOnMessageFailedListener:
         tags: [{ name: kernel.event_listener, method: 'messageFailed', priority: 50 }]
 
     Gaming\Common\EventStore\Integration\Symfony\ResetServicesListener:
@@ -139,7 +139,7 @@ services:
         arguments: ['%env(APP_METRICS_SOCKET)%', '@gaming.prometheus.registry', 'app', '@logger']
 
     gaming.form-violation-mapper:
-        class: Gaming\Common\Bus\Integration\FormViolationMapper
+        class: Gaming\Common\Domain\Integration\FormViolationMapper
 
     gaming.scheduler:
         class: Gaming\Common\Scheduler\PcntlScheduler
@@ -171,8 +171,8 @@ services:
         tags: [{ name: kernel.event_listener, event: kernel.exception, priority: -100 }]
 
     # Lower priority so that the profiler is respected.
-    Gaming\Common\Bus\Integration\ApplicationExceptionToJsonListener:
-        arguments: [[]]
+    Gaming\Common\Domain\Integration\RespondWithViolationsAsJsonOnKernelExceptionListener:
+        arguments: [[], '@translator']
         tags: [{ name: kernel.event_listener, event: kernel.exception, priority: -99 }]
 
     Gaming\WebInterface\Infrastructure\Symfony\HandleFragmentExceptions:
