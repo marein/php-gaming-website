@@ -20,7 +20,7 @@ abstract class SequenceBasedWinningRule implements WinningRule
         private readonly int $winningSequenceLength
     ) {
         if ($winningSequenceLength < self::MINIMUM) {
-            throw new WinningSequenceLengthTooShortException('The value must be at least ' . self::MINIMUM . '.');
+            throw new WinningSequenceLengthTooShortException(self::MINIMUM, $winningSequenceLength);
         }
     }
 

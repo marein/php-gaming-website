@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Exception;
 
-use Exception;
+use Gaming\Common\Domain\Exception\DomainException;
 
-class GameException extends Exception
+class GameException extends DomainException
 {
 }

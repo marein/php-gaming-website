@@ -111,8 +111,8 @@ final class GameRequestsMessageHandler implements MessageHandler
             new GamesByPlayerQuery(
                 $request->getPlayerId(),
                 State::tryFrom($request->getState()) ?? State::ALL,
-                $request->getPage(),
-                $request->getLimit()
+                max(1, $request->getPage()),
+                max(1, $request->getLimit())
             )
         );
 
