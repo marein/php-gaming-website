@@ -11,10 +11,8 @@ use Gaming\Common\MessageBroker\MessageHandler;
 use Gaming\Identity\Application\Bot\Command\RegisterBot\RegisterBot;
 use Gaming\Identity\Application\Bot\Query\Bot;
 use Gaming\Identity\Application\Bot\Query\GetBotByUsername\GetBotByUsername;
-use GamingPlatform\Api\Identity\V1\Bot as ProtoBot;
-use GamingPlatform\Api\Identity\V1\GetBotByUsernameResponse;
-use GamingPlatform\Api\Identity\V1\IdentityV1Factory;
-use GamingPlatform\Api\Identity\V1\RegisterBotResponse;
+use GamingPlatform\Api\Identity\V1\Bot as ProtoV1Bot;
+use GamingPlatform\Api\Identity\V1\IdentityV1;
 
 final class BotRequestsMessageHandler implements MessageHandler
 {
@@ -27,15 +25,15 @@ final class BotRequestsMessageHandler implements MessageHandler
     public function handle(Message $message, Context $context): void
     {
         match ($message->name()) {
-            'Identity.RegisterBot' => $this->handleRegisterBot($message, $context),
-            'Identity.GetBotByUsername' => $this->handleGetBotByUsername($message, $context),
+            IdentityV1::RegisterBotType => $this->handleRegisterBot($message, $context),
+            IdentityV1::GetBotByUsernameType => $this->handleGetBotByUsername($message, $context),
             default => true
         };
     }
 
     public function handleRegisterBot(Message $message, Context $context): void
     {
-        $request = IdentityV1Factory::createRegisterBot($message->body());
+        $request = IdentityV1::createRegisterBot($message->body());
 
         $response = $this->commandBus->handle(
             new RegisterBot($request->getUsername())
@@ -43,8 +41,8 @@ final class BotRequestsMessageHandler implements MessageHandler
 
         $context->reply(
             new Message(
-                'Identity.RegisterBotResponse',
-                new RegisterBotResponse()
+                IdentityV1::RegisterBotResponseType,
+                IdentityV1::createRegisterBotResponse()
                     ->setBotId($response->botId)
                     ->serializeToString()
             )
@@ -53,7 +51,7 @@ final class BotRequestsMessageHandler implements MessageHandler
 
     public function handleGetBotByUsername(Message $message, Context $context): void
     {
-        $request = IdentityV1Factory::createGetBotByUsername($message->body());
+        $request = IdentityV1::createGetBotByUsername($message->body());
 
         $response = $this->queryBus->handle(
             new GetBotByUsername($request->getUsername())
@@ -61,10 +59,10 @@ final class BotRequestsMessageHandler implements MessageHandler
 
         $context->reply(
             new Message(
-                'Identity.GetBotByUsernameResponse',
+                IdentityV1::GetBotByUsernameResponseType,
                 match ($response->bot) {
-                    null => new GetBotByUsernameResponse()->serializeToString(),
-                    default => new GetBotByUsernameResponse()
+                    null => IdentityV1::createGetBotByUsernameResponse()->serializeToString(),
+                    default => IdentityV1::createGetBotByUsernameResponse()
                         ->setBot($this->castBotToProtoBot($response->bot))
                         ->serializeToString()
                 }
@@ -72,9 +70,9 @@ final class BotRequestsMessageHandler implements MessageHandler
         );
     }
 
-    private function castBotToProtoBot(Bot $bot): ProtoBot
+    private function castBotToProtoBot(Bot $bot): ProtoV1Bot
     {
-        return new ProtoBot()
+        return IdentityV1::createBot()
             ->setBotId($bot->botId)
             ->setUsername($bot->username);
     }

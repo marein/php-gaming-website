@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "645b183842ef390a0433e6d4528556e2",
+    "content-hash": "a7466f2e81711e87f8534722cf0b80b5",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2313,16 +2313,16 @@
         },
         {
             "name": "gaming-platform/api",
-            "version": "1.4.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gaming-platform/api.git",
-                "reference": "10b82e3be84f7f9b9981d1827d7bb297bced4713"
+                "reference": "d752500f7c01a6a9479c4abf345c0584ebe93110"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gaming-platform/api/zipball/10b82e3be84f7f9b9981d1827d7bb297bced4713",
-                "reference": "10b82e3be84f7f9b9981d1827d7bb297bced4713",
+                "url": "https://api.github.com/repos/gaming-platform/api/zipball/d752500f7c01a6a9479c4abf345c0584ebe93110",
+                "reference": "d752500f7c01a6a9479c4abf345c0584ebe93110",
                 "shasum": ""
             },
             "require": {
@@ -2346,10 +2346,10 @@
             ],
             "description": "API definitions for the platform with generated code in various languages.",
             "support": {
-                "source": "https://github.com/gaming-platform/api/tree/1.4.0",
+                "source": "https://github.com/gaming-platform/api/tree/v1.5.0",
                 "issues": "https://github.com/gaming-platform/api/issues"
             },
-            "time": "2025-12-02T22:02:19+00:00"
+            "time": "2025-12-07T22:40:28+00:00"
         },
         {
             "name": "jms/metadata",

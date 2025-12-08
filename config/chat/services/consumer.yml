@@ -1,7 +1,9 @@
 services:
     chat.command-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
-        arguments: ['Chat.CommandListener', 'gaming', ['Chat.InitiateChat']]
+        arguments: ['Chat.CommandListener', 'gaming', [
+            !php/const GamingPlatform\Api\Chat\V1\ChatV1::InitiateChatType
+        ]]
         tags: [{ name: 'gaming.message-broker.topology' }]
 
     chat.command-message-handler.consumer:
@@ -18,7 +20,9 @@ services:
 
     chat.publish-to-browser-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
-        arguments: ['Chat.BrowserNotification', 'gaming', ['Chat.MessageWritten']]
+        arguments: ['Chat.BrowserNotification', 'gaming', [
+            !php/const GamingPlatform\Api\Chat\V1\ChatV1::MessageWrittenType
+        ]]
         tags: [{ name: 'gaming.message-broker.topology' }]
 
     chat.publish-to-browser-message-handler.consumer:

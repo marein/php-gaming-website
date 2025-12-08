@@ -9,8 +9,7 @@ use Gaming\Common\MessageBroker\Context;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\MessageHandler;
 use Gaming\ConnectFour\Application\Game\Command\AssignChatCommand;
-use GamingPlatform\Api\Chat\V1\ChatV1Factory;
-use GamingPlatform\Api\Chat\V1\InitiateChat;
+use GamingPlatform\Api\Chat\V1\ChatV1;
 
 final class RefereeMessageHandler implements MessageHandler
 {
@@ -22,7 +21,7 @@ final class RefereeMessageHandler implements MessageHandler
     public function handle(Message $message, Context $context): void
     {
         match ($message->name()) {
-            'Chat.InitiateChatResponse' => $this->handleInitiateChatResponse($message),
+            ChatV1::InitiateChatResponseType => $this->handleInitiateChatResponse($message),
             'ConnectFour.PlayerJoined' => $this->handlePlayerJoined($message, $context),
             default => true
         };
@@ -30,7 +29,7 @@ final class RefereeMessageHandler implements MessageHandler
 
     private function handleInitiateChatResponse(Message $message): void
     {
-        $response = ChatV1Factory::createInitiateChatResponse($message->body());
+        $response = ChatV1::createInitiateChatResponse($message->body());
 
         $this->commandBus->handle(
             new AssignChatCommand(
@@ -46,8 +45,8 @@ final class RefereeMessageHandler implements MessageHandler
 
         $context->request(
             new Message(
-                'Chat.InitiateChat',
-                (new InitiateChat())
+                ChatV1::InitiateChatType,
+                ChatV1::createInitiateChat()
                     ->setIdempotencyKey('connect-four.' . $payload['gameId'])
                     ->setCorrelationId($payload['gameId'])
                     ->setAuthors([])
