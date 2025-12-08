@@ -2317,12 +2317,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/gaming-platform/api.git",
-                "reference": "24f6c65e4c43923396bdfdf8269bd515febdf429"
+                "reference": "121916d2a127d8e9d1f98c69757bd30b7177e95e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gaming-platform/api/zipball/24f6c65e4c43923396bdfdf8269bd515febdf429",
-                "reference": "24f6c65e4c43923396bdfdf8269bd515febdf429",
+                "url": "https://api.github.com/repos/gaming-platform/api/zipball/121916d2a127d8e9d1f98c69757bd30b7177e95e",
+                "reference": "121916d2a127d8e9d1f98c69757bd30b7177e95e",
                 "shasum": ""
             },
             "require": {

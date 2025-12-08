@@ -17,6 +17,7 @@ use Gaming\ConnectFour\Application\Game\Query\Model\Game\Move;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\State;
 use GamingPlatform\Api\ConnectFour\V1\ConnectFourV1;
 use GamingPlatform\Api\ConnectFour\V1\Game as ProtoV1Game;
+use GamingPlatform\Api\ConnectFour\V1\GetGamesByPlayer\State as ProtoV1State;
 
 final class GameRequestsMessageHandler implements MessageHandler
 {
@@ -105,7 +106,13 @@ final class GameRequestsMessageHandler implements MessageHandler
         $response = $this->queryBus->handle(
             new GamesByPlayerQuery(
                 $request->getPlayerId(),
-                State::tryFrom($request->getState()) ?? State::ALL,
+                match ($request->getState()) {
+                    ProtoV1State::STATE_RUNNING => State::RUNNING,
+                    ProtoV1State::STATE_WON => State::WON,
+                    ProtoV1State::STATE_LOST => State::LOST,
+                    ProtoV1State::STATE_DRAWN => State::DRAWN,
+                    default => State::ALL
+                },
                 max(1, $request->getPage()),
                 max(1, $request->getLimit())
             )
