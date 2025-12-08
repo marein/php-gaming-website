@@ -17,4 +17,4 @@ services:
             - !service
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
                 arguments: ['@identity.bot-requests-message-handler.topology']
-        tags: [{ name: 'gaming.consumer', key: 'identity.command' }]
+        tags: [{ name: 'gaming.consumer', key: 'identity.bot-requests' }]

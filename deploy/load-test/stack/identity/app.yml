@@ -1,6 +1,18 @@
 version: '3.4'
 
 services:
+    identity-bot-requests:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console gaming:consume-messages identity.bot-requests -r 3
+        env_file: ../app.env
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=identity-bot-requests"
     identity-follow-event-store:
         image: marein/php-gaming-website:php-fpm
         command: bin/console identity:follow-event-store pointer all

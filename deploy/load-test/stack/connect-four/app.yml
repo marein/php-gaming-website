@@ -47,6 +47,18 @@ services:
                     - "node.labels.long-running==1"
             labels:
                 - "prometheus-job=connect-four-publish-to-browser"
+    connect-four-game-requests:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console gaming:consume-messages connect-four.game-requests -r 3
+        env_file: ../app.env
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=connect-four-game-requests"
 
 volumes:
     proxysql.sock:
