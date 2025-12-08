@@ -1,10 +1,12 @@
 services:
     connect-four.game-requests-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
-        arguments:
-            - 'ConnectFour.GameRequests'
-            - 'gaming'
-            - ['ConnectFour.OpenGame', 'ConnectFour.JoinGame', 'ConnectFour.MakeMove', 'ConnectFour.GetGamesByPlayer']
+        arguments: ['ConnectFour.GameRequests', 'gaming', [
+            !php/const GamingPlatform\Api\ConnectFour\V1\ConnectFourV1::OpenGameType,
+            !php/const GamingPlatform\Api\ConnectFour\V1\ConnectFourV1::JoinGameType,
+            !php/const GamingPlatform\Api\ConnectFour\V1\ConnectFourV1::MakeMoveType,
+            !php/const GamingPlatform\Api\ConnectFour\V1\ConnectFourV1::GetGamesByPlayerType
+        ]]
         tags: [{ name: 'gaming.message-broker.topology' }]
 
     connect-four.game-requests-message-handler.consumer:

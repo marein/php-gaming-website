@@ -60,7 +60,7 @@ customElements.define('chat-widget', class extends HTMLElement {
         this._input.addEventListener('keypress', this._onKeyPress.bind(this));
 
         sse.subscribe(`chat-${chatId}`, {
-            'Chat.MessageWritten': this._onMessageWritten.bind(this)
+            'Chat.MessageWritten.v1': this._onMessageWritten.bind(this)
         }, this._sseAbortController.signal);
     }
 

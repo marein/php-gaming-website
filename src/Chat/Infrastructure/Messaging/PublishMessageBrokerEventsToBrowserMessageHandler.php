@@ -9,7 +9,7 @@ use Gaming\Common\MessageBroker\Context;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\MessageHandler;
 use Gaming\Common\Usernames\Usernames;
-use GamingPlatform\Api\Chat\V1\ChatV1Factory;
+use GamingPlatform\Api\Chat\V1\ChatV1;
 
 final class PublishMessageBrokerEventsToBrowserMessageHandler implements MessageHandler
 {
@@ -22,14 +22,14 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
     public function handle(Message $message, Context $context): void
     {
         match ($message->name()) {
-            'Chat.MessageWritten' => $this->handleMessageWritten($message),
+            ChatV1::MessageWrittenType => $this->handleMessageWritten($message),
             default => true
         };
     }
 
     private function handleMessageWritten(Message $message): void
     {
-        $messageWritten = ChatV1Factory::createMessageWritten($message->body());
+        $messageWritten = ChatV1::createMessageWritten($message->body());
 
         $this->browserNotifier->publish(
             ['chat-' . $message->streamId()],

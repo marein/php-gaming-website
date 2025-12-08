@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d5ce5dcd4c58336fb9bf32a835f7dcb9",
+    "content-hash": "edd1c9454f7f7060433fe94dbb66aa05",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2317,12 +2317,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/gaming-platform/api.git",
-                "reference": "3da446b"
+                "reference": "24f6c65e4c43923396bdfdf8269bd515febdf429"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gaming-platform/api/zipball/3da446b",
-                "reference": "3da446b",
+                "url": "https://api.github.com/repos/gaming-platform/api/zipball/24f6c65e4c43923396bdfdf8269bd515febdf429",
+                "reference": "24f6c65e4c43923396bdfdf8269bd515febdf429",
                 "shasum": ""
             },
             "require": {
@@ -2349,7 +2349,7 @@
                 "source": "https://github.com/gaming-platform/api/tree/add-game-messages",
                 "issues": "https://github.com/gaming-platform/api/issues"
             },
-            "time": "2025-12-03T23:12:59+00:00"
+            "time": "2025-12-07T22:44:12+00:00"
         },
         {
             "name": "jms/metadata",

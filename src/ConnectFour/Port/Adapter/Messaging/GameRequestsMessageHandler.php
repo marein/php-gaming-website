@@ -15,13 +15,8 @@ use Gaming\ConnectFour\Application\Game\Query\GamesByPlayerQuery;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Move;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\State;
-use GamingPlatform\Api\ConnectFour\V1\ConnectFourV1Factory;
-use GamingPlatform\Api\ConnectFour\V1\Game as ProtoGame;
-use GamingPlatform\Api\ConnectFour\V1\Game\Move as ProtoMove;
-use GamingPlatform\Api\ConnectFour\V1\GetGamesByPlayerResponse;
-use GamingPlatform\Api\ConnectFour\V1\JoinGameResponse;
-use GamingPlatform\Api\ConnectFour\V1\MakeMoveResponse;
-use GamingPlatform\Api\ConnectFour\V1\OpenGameResponse;
+use GamingPlatform\Api\ConnectFour\V1\ConnectFourV1;
+use GamingPlatform\Api\ConnectFour\V1\Game as ProtoV1Game;
 
 final class GameRequestsMessageHandler implements MessageHandler
 {
@@ -34,17 +29,17 @@ final class GameRequestsMessageHandler implements MessageHandler
     public function handle(Message $message, Context $context): void
     {
         match ($message->name()) {
-            'ConnectFour.OpenGame' => $this->handleOpenGame($message, $context),
-            'ConnectFour.JoinGame' => $this->handleJoinGame($message, $context),
-            'ConnectFour.MakeMove' => $this->handleMakeMove($message, $context),
-            'ConnectFour.GetGamesByPlayer' => $this->handleGetGamesByPlayer($message, $context),
+            ConnectFourV1::OpenGameType => $this->handleOpenGame($message, $context),
+            ConnectFourV1::JoinGameType => $this->handleJoinGame($message, $context),
+            ConnectFourV1::MakeMoveType => $this->handleMakeMove($message, $context),
+            ConnectFourV1::GetGamesByPlayerType => $this->handleGetGamesByPlayer($message, $context),
             default => true
         };
     }
 
     private function handleOpenGame(Message $message, Context $context): void
     {
-        $request = ConnectFourV1Factory::createOpenGame($message->body());
+        $request = ConnectFourV1::createOpenGame($message->body());
 
         $response = $this->commandBus->handle(
             new OpenCommand(
@@ -58,15 +53,15 @@ final class GameRequestsMessageHandler implements MessageHandler
 
         $context->reply(
             new Message(
-                'ConnectFour.OpenGameResponse',
-                new OpenGameResponse()->setGameId($response)->serializeToString()
+                ConnectFourV1::OpenGameResponseType,
+                ConnectFourV1::createOpenGameResponse()->setGameId($response)->serializeToString()
             )
         );
     }
 
     private function handleJoinGame(Message $message, Context $context): void
     {
-        $request = ConnectFourV1Factory::createJoinGame($message->body());
+        $request = ConnectFourV1::createJoinGame($message->body());
 
         $this->commandBus->handle(
             new JoinCommand(
@@ -77,15 +72,15 @@ final class GameRequestsMessageHandler implements MessageHandler
 
         $context->reply(
             new Message(
-                'ConnectFour.JoinGameResponse',
-                new JoinGameResponse()->serializeToString()
+                ConnectFourV1::JoinGameResponseType,
+                ConnectFourV1::createJoinGameResponse()->serializeToString()
             )
         );
     }
 
     private function handleMakeMove(Message $message, Context $context): void
     {
-        $request = ConnectFourV1Factory::createMakeMove($message->body());
+        $request = ConnectFourV1::createMakeMove($message->body());
 
         $this->commandBus->handle(
             new MoveCommand(
@@ -97,15 +92,15 @@ final class GameRequestsMessageHandler implements MessageHandler
 
         $context->reply(
             new Message(
-                'ConnectFour.MakeMoveResponse',
-                new MakeMoveResponse()->serializeToString()
+                ConnectFourV1::MakeMoveResponseType,
+                ConnectFourV1::createMakeMoveResponse()->serializeToString()
             )
         );
     }
 
     private function handleGetGamesByPlayer(Message $message, Context $context): void
     {
-        $request = ConnectFourV1Factory::createGetGamesByPlayer($message->body());
+        $request = ConnectFourV1::createGetGamesByPlayer($message->body());
 
         $response = $this->queryBus->handle(
             new GamesByPlayerQuery(
@@ -118,9 +113,9 @@ final class GameRequestsMessageHandler implements MessageHandler
 
         $context->reply(
             new Message(
-                'ConnectFour.GetGamesByPlayerResponse',
-                new GetGamesByPlayerResponse()
-                    ->setGames($this->castGamesToProtoGames($response->games))
+                ConnectFourV1::GetGamesByPlayerResponseType,
+                ConnectFourV1::createGetGamesByPlayerResponse()
+                    ->setGames($this->castGamesToProtoV1Games($response->games))
                     ->setTotal($response->total)
                     ->serializeToString()
             )
@@ -130,17 +125,17 @@ final class GameRequestsMessageHandler implements MessageHandler
     /**
      * @param Game[] $games
      *
-     * @return ProtoGame[]
+     * @return ProtoV1Game[]
      */
-    private function castGamesToProtoGames(array $games): array
+    private function castGamesToProtoV1Games(array $games): array
     {
         return array_map(
-            static fn(Game $game) => new ProtoGame()
+            static fn(Game $game) => ConnectFourV1::createGame()
                 ->setGameId($game->gameId)
                 ->setCurrentPlayerId($game->currentPlayerId)
                 ->setMoves(
                     array_map(
-                        static fn(Move $move) => new ProtoMove()
+                        static fn(Move $move) => ConnectFourV1::createGame_Move()
                             ->setColor($move->color)
                             ->setX($move->x)
                             ->setY($move->y),

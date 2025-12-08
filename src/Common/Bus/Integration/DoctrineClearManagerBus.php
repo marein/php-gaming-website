@@ -18,10 +18,10 @@ final class DoctrineClearManagerBus implements Bus
 
     public function handle(Request $request): mixed
     {
-        $response = $this->bus->handle($request);
-
-        $this->manager->clear();
-
-        return $response;
+        try {
+            return $this->bus->handle($request);
+        } finally {
+            $this->manager->clear();
+        }
     }
 }
