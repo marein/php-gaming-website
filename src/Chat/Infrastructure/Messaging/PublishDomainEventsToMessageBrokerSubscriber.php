@@ -10,6 +10,7 @@ use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
+use GamingPlatform\Api\Chat\V1\ChatV1;
 
 final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventSubscriber
 {
@@ -37,8 +38,8 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
     {
         $this->publisher->send(
             new Message(
-                'Chat.MessageWritten',
-                (new \GamingPlatform\Api\Chat\V1\MessageWritten())
+                ChatV1::MessageWrittenType,
+                ChatV1::createMessageWritten()
                     ->setChatId($event->aggregateId())
                     ->setMessageId((string)$event->messageId())
                     ->setAuthorId($event->authorId())

@@ -10,6 +10,7 @@ use Gaming\Common\MessageBroker\Message;
 use Gaming\Common\MessageBroker\Publisher;
 use Gaming\Identity\Domain\Model\User\Event\UserArrived;
 use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
+use GamingPlatform\Api\Identity\V1\IdentityV1;
 
 final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventSubscriber
 {
@@ -38,8 +39,8 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
     {
         $this->publisher->send(
             new Message(
-                'Identity.UserArrived',
-                (new \GamingPlatform\Api\Identity\V1\UserArrived())
+                IdentityV1::UserArrivedType,
+                IdentityV1::createUserArrived()
                     ->setUserId($event->aggregateId())
                     ->serializeToString(),
                 $event->aggregateId()
@@ -51,8 +52,8 @@ final class PublishDomainEventsToMessageBrokerSubscriber implements StoredEventS
     {
         $this->publisher->send(
             new Message(
-                'Identity.UserSignedUp',
-                (new \GamingPlatform\Api\Identity\V1\UserSignedUp())
+                IdentityV1::UserSignedUpType,
+                IdentityV1::createUserSignedUp()
                     ->setUserId($event->aggregateId())
                     ->setEmail($event->email)
                     ->setUsername($event->username)
