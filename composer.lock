@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "edd1c9454f7f7060433fe94dbb66aa05",
+    "content-hash": "0b085f82ad9c4329424f745b00236f7b",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2313,16 +2313,16 @@
         },
         {
             "name": "gaming-platform/api",
-            "version": "dev-add-game-messages",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gaming-platform/api.git",
-                "reference": "121916d2a127d8e9d1f98c69757bd30b7177e95e"
+                "reference": "a092ca2cd93528c4ecf77fd4f8829ef7eb827c47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gaming-platform/api/zipball/121916d2a127d8e9d1f98c69757bd30b7177e95e",
-                "reference": "121916d2a127d8e9d1f98c69757bd30b7177e95e",
+                "url": "https://api.github.com/repos/gaming-platform/api/zipball/a092ca2cd93528c4ecf77fd4f8829ef7eb827c47",
+                "reference": "a092ca2cd93528c4ecf77fd4f8829ef7eb827c47",
                 "shasum": ""
             },
             "require": {
@@ -2346,10 +2346,10 @@
             ],
             "description": "API definitions for the platform with generated code in various languages.",
             "support": {
-                "source": "https://github.com/gaming-platform/api/tree/add-game-messages",
+                "source": "https://github.com/gaming-platform/api/tree/v1.6.0",
                 "issues": "https://github.com/gaming-platform/api/issues"
             },
-            "time": "2025-12-07T22:44:12+00:00"
+            "time": "2025-12-09T18:28:15+00:00"
         },
         {
             "name": "jms/metadata",
@@ -12605,7 +12605,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "gaming-platform/api": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
