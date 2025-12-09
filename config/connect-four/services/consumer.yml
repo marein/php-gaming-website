@@ -1,15 +1,10 @@
 services:
-    connect-four.game-requests-message-handler.topology:
+    connect-four.transient-rpc-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
-        arguments: ['ConnectFour.GameRequests', 'gaming', [
-            !php/const GamingPlatform\Api\ConnectFour\V1\ConnectFourV1::OpenGameType,
-            !php/const GamingPlatform\Api\ConnectFour\V1\ConnectFourV1::JoinGameType,
-            !php/const GamingPlatform\Api\ConnectFour\V1\ConnectFourV1::MakeMoveType,
-            !php/const GamingPlatform\Api\ConnectFour\V1\ConnectFourV1::GetGamesByPlayerType
-        ]]
+        arguments: ['ConnectFour.TransientRpc', 'gaming', ['ConnectFour.TransientRpc'], {'x-expires': 7000}]]
         tags: [{ name: 'gaming.message-broker.topology' }]
 
-    connect-four.game-requests-message-handler.consumer:
+    connect-four.transient-rpc-message-handler.consumer:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
         factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
         arguments:
@@ -18,8 +13,8 @@ services:
                 arguments: ['@connect-four.command-bus', '@connect-four.query-bus']
             - !service
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
-                arguments: ['@connect-four.game-requests-message-handler.topology']
-        tags: [{ name: 'gaming.consumer', key: 'connect-four.game-requests' }]
+                arguments: ['@connect-four.transient-rpc-message-handler.topology']
+        tags: [{ name: 'gaming.consumer', key: 'connect-four.transient-rpc' }]
 
     connect-four.referee-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
