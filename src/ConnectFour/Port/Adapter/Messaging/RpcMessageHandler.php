@@ -107,11 +107,12 @@ final class RpcMessageHandler implements MessageHandler
             new GamesByPlayerQuery(
                 $request->getPlayerId(),
                 match ($request->getState()) {
-                    ProtoV1State::STATE_RUNNING => State::RUNNING,
-                    ProtoV1State::STATE_WON => State::WON,
-                    ProtoV1State::STATE_LOST => State::LOST,
-                    ProtoV1State::STATE_DRAWN => State::DRAWN,
-                    default => State::ALL
+                    ProtoV1State::STATE_OPEN => State::Open,
+                    ProtoV1State::STATE_RUNNING => State::Running,
+                    ProtoV1State::STATE_WON => State::Won,
+                    ProtoV1State::STATE_LOST => State::Lost,
+                    ProtoV1State::STATE_DRAWN => State::Drawn,
+                    default => State::All
                 },
                 max(1, $request->getPage()),
                 max(1, $request->getLimit())

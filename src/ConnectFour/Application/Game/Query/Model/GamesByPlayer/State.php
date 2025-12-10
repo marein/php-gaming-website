@@ -6,9 +6,18 @@ namespace Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer;
 
 enum State: string
 {
-    case ALL = 'all';
-    case RUNNING = 'running';
-    case WON = 'won';
-    case LOST = 'lost';
-    case DRAWN = 'drawn';
+    case All = 'all';
+    case Open = 'open';
+    case Running = 'running';
+    case Won = 'won';
+    case Lost = 'lost';
+    case Drawn = 'drawn';
+
+    /**
+     * @return State[]
+     */
+    public static function visibleCases(): array
+    {
+        return [self::All, self::Running, self::Won, self::Lost, self::Drawn];
+    }
 }

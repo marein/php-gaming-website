@@ -19,8 +19,8 @@ final class PlayerSearchStatisticsHandler
         return $query->playerId === null
             ? new PlayerSearchStatisticsResponse(
                 array_combine(
-                    array_map(static fn(State $state): string => $state->value, State::cases()),
-                    array_fill(0, count(State::cases()), 0)
+                    array_map(static fn(State $state): string => $state->value, State::visibleCases()),
+                    array_fill(0, count(State::visibleCases()), 0)
                 )
             )
             : $this->gamesByPlayerStore->searchStatistics($query->playerId);

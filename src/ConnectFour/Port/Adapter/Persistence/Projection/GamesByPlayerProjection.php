@@ -10,6 +10,7 @@ use Gaming\Common\EventStore\StoredEventSubscriber;
 use Gaming\ConnectFour\Application\Game\Query\Model\GamesByPlayer\GamesByPlayerStore;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
+use Gaming\ConnectFour\Domain\Game\Event\GameOpened;
 use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
@@ -29,6 +30,7 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
         $content = $domainEvent->content;
 
         match ($content::class) {
+            GameOpened::class => $this->handleGameOpened($content),
             PlayerJoined::class => $this->handlePlayerJoined($content),
             GameDrawn::class => $this->handleGameDrawn($content),
             GameWon::class => $this->handleGameWon($content),
@@ -37,6 +39,14 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
             GameAborted::class => $this->handleGameAborted($content),
             default => true
         };
+    }
+
+    private function handleGameOpened(GameOpened $gameOpened): void
+    {
+        $this->gamesByPlayerStore->addOpen(
+            $gameOpened->aggregateId(),
+            $gameOpened->playerId()
+        );
     }
 
     private function handlePlayerJoined(PlayerJoined $playerJoined): void
@@ -86,11 +96,6 @@ final class GamesByPlayerProjection implements StoredEventSubscriber
 
     private function handleGameAborted(GameAborted $gameAborted): void
     {
-        // We're only interested in running games.
-        if ($gameAborted->opponentPlayerId() === '') {
-            return;
-        }
-
         $this->gamesByPlayerStore->addAbort(
             $gameAborted->aggregateId(),
             $gameAborted->abortedPlayerId(),

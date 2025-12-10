@@ -22,14 +22,21 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
     ) {
     }
 
+    public function addOpen(string $gameId, string $player): void
+    {
+        $this->predis->zadd($this->keyForPlayer($player, State::Open), [$gameId => microtime(true)]);
+    }
+
     public function addRunning(string $gameId, string $playerOne, string $playerTwo): void
     {
         $this->predis->pipeline(
             function (ClientContextInterface $pipeline) use ($gameId, $playerOne, $playerTwo): void {
-                $pipeline->zadd($this->keyForPlayer($playerOne, State::ALL), [$gameId => microtime(true)]);
-                $pipeline->zadd($this->keyForPlayer($playerOne, State::RUNNING), [$gameId => microtime(true)]);
-                $pipeline->zadd($this->keyForPlayer($playerTwo, State::ALL), [$gameId => microtime(true)]);
-                $pipeline->zadd($this->keyForPlayer($playerTwo, State::RUNNING), [$gameId => microtime(true)]);
+                $pipeline->zrem($this->keyForPlayer($playerOne, State::Open), $gameId);
+                $pipeline->zadd($this->keyForPlayer($playerOne, State::All), [$gameId => microtime(true)]);
+                $pipeline->zadd($this->keyForPlayer($playerOne, State::Running), [$gameId => microtime(true)]);
+                $pipeline->zrem($this->keyForPlayer($playerTwo, State::Open), $gameId);
+                $pipeline->zadd($this->keyForPlayer($playerTwo, State::All), [$gameId => microtime(true)]);
+                $pipeline->zadd($this->keyForPlayer($playerTwo, State::Running), [$gameId => microtime(true)]);
             }
         );
     }
@@ -38,10 +45,10 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
     {
         $this->predis->pipeline(
             function (ClientContextInterface $pipeline) use ($gameId, $playerOne, $playerTwo): void {
-                $pipeline->zrem($this->keyForPlayer($playerOne, State::RUNNING), $gameId);
-                $pipeline->zadd($this->keyForPlayer($playerOne, State::DRAWN), [$gameId => microtime(true)]);
-                $pipeline->zrem($this->keyForPlayer($playerTwo, State::RUNNING), $gameId);
-                $pipeline->zadd($this->keyForPlayer($playerTwo, State::DRAWN), [$gameId => microtime(true)]);
+                $pipeline->zrem($this->keyForPlayer($playerOne, State::Running), $gameId);
+                $pipeline->zadd($this->keyForPlayer($playerOne, State::Drawn), [$gameId => microtime(true)]);
+                $pipeline->zrem($this->keyForPlayer($playerTwo, State::Running), $gameId);
+                $pipeline->zadd($this->keyForPlayer($playerTwo, State::Drawn), [$gameId => microtime(true)]);
             }
         );
     }
@@ -50,10 +57,10 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
     {
         $this->predis->pipeline(
             function (ClientContextInterface $pipeline) use ($gameId, $winnerId, $loserId): void {
-                $pipeline->zrem($this->keyForPlayer($winnerId, State::RUNNING), $gameId);
-                $pipeline->zadd($this->keyForPlayer($winnerId, State::WON), [$gameId => microtime(true)]);
-                $pipeline->zrem($this->keyForPlayer($loserId, State::RUNNING), $gameId);
-                $pipeline->zadd($this->keyForPlayer($loserId, State::LOST), [$gameId => microtime(true)]);
+                $pipeline->zrem($this->keyForPlayer($winnerId, State::Running), $gameId);
+                $pipeline->zadd($this->keyForPlayer($winnerId, State::Won), [$gameId => microtime(true)]);
+                $pipeline->zrem($this->keyForPlayer($loserId, State::Running), $gameId);
+                $pipeline->zadd($this->keyForPlayer($loserId, State::Lost), [$gameId => microtime(true)]);
             }
         );
     }
@@ -62,10 +69,16 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
     {
         $this->predis->pipeline(
             function (ClientContextInterface $pipeline) use ($gameId, $playerOne, $playerTwo): void {
-                $pipeline->zrem($this->keyForPlayer($playerOne, State::ALL), $gameId);
-                $pipeline->zrem($this->keyForPlayer($playerOne, State::RUNNING), $gameId);
-                $pipeline->zrem($this->keyForPlayer($playerTwo, State::ALL), $gameId);
-                $pipeline->zrem($this->keyForPlayer($playerTwo, State::RUNNING), $gameId);
+                $pipeline->zrem($this->keyForPlayer($playerOne, State::All), $gameId);
+
+                if ($playerTwo === '') {
+                    $pipeline->zrem($this->keyForPlayer($playerOne, State::Open), $gameId);
+                    return;
+                }
+
+                $pipeline->zrem($this->keyForPlayer($playerOne, State::Running), $gameId);
+                $pipeline->zrem($this->keyForPlayer($playerTwo, State::All), $gameId);
+                $pipeline->zrem($this->keyForPlayer($playerTwo, State::Running), $gameId);
             }
         );
     }
@@ -74,10 +87,10 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
     {
         return new PlayerSearchStatisticsResponse(
             array_combine(
-                array_map(static fn(State $s): string => $s->value, State::cases()),
+                array_map(static fn(State $s): string => $s->value, State::visibleCases()),
                 $this->predis->pipeline(
                     function (ClientContextInterface $pipeline) use ($playerId): void {
-                        foreach (State::cases() as $state) {
+                        foreach (State::visibleCases() as $state) {
                             $pipeline->zcard($this->keyForPlayer($playerId, $state));
                         }
                     }
