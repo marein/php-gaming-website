@@ -9,7 +9,7 @@ services:
         factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
         arguments:
             - !service
-                class: Gaming\Identity\Port\Adapter\Messaging\BotRequestsMessageHandler
+                class: Gaming\Identity\Port\Adapter\Messaging\RpcMessageHandler
                 arguments: ['@identity.command-bus', '@identity.query-bus']
             - !service
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues

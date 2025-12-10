@@ -19,7 +19,7 @@ use GamingPlatform\Api\ConnectFour\V1\ConnectFourV1;
 use GamingPlatform\Api\ConnectFour\V1\Game as ProtoV1Game;
 use GamingPlatform\Api\ConnectFour\V1\GetGamesByPlayer\State as ProtoV1State;
 
-final class GameRequestsMessageHandler implements MessageHandler
+final class RpcMessageHandler implements MessageHandler
 {
     public function __construct(
         private readonly Bus $commandBus,

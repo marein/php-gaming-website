@@ -14,7 +14,7 @@ use Gaming\Identity\Application\Bot\Query\GetBotByUsername\GetBotByUsername;
 use GamingPlatform\Api\Identity\V1\Bot as ProtoV1Bot;
 use GamingPlatform\Api\Identity\V1\IdentityV1;
 
-final class BotRequestsMessageHandler implements MessageHandler
+final class RpcMessageHandler implements MessageHandler
 {
     public function __construct(
         private readonly Bus $commandBus,
