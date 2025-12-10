@@ -18,11 +18,11 @@ final class Size
     public function __construct(int $width, int $height)
     {
         if ($width < 2 || $height < 2) {
-            throw new InvalidSizeException('Width and height must be greater then 1.');
+            throw InvalidSizeException::tooSmall($width, $height);
         }
 
         if (($width * $height) % 2 !== 0) {
-            throw new InvalidSizeException('Product of width and height must be an even number.');
+            throw InvalidSizeException::productNotEven($width, $height);
         }
 
         $this->height = $height;

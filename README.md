@@ -250,7 +250,10 @@ Check out the purpose and architectural decisions of each context in the section
   **Purpose**: [Connect Four](/src/ConnectFour) handles games from players opening a game,
   through others joining and making moves, till they are finished (win, lose, or draw).
 
-  **Communication**: Its use cases are directly invoked by the Web Interface to reduce network hops and abstractions.
+  **Communication**: Its use cases are exposed via
+  [messaging](https://www.enterpriseintegrationpatterns.com/patterns/messaging/Messaging.html), utilizing
+  [Request-Reply](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html),
+  with some directly invoked by the Web Interface to reduce network hops and abstractions.
   To notify other contexts about what has happened, [Domain Events](https://martinfowler.com/eaaDev/DomainEvent.html)
   are stored in a [Transactional Outbox](https://en.wikipedia.org/wiki/Inbox_and_outbox_pattern) and
   later published in JSON format using

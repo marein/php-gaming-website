@@ -14,7 +14,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
         this._panicLevelThreeBelowMs = parseInt(this.getAttribute('panic-three-below-ms') || 3000);
         this._currentTickSound = null;
 
-        window.requestAnimationFrame(this._render);
+        this._animationFrameId = window.requestAnimationFrame(this._render);
 
         sse.subscribe(`connect-four-${this.getAttribute('game-id')}`, {
             'ConnectFour.PlayerJoined': this._onPlayerJoined,
@@ -29,6 +29,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
 
     disconnectedCallback() {
         this._sseAbortController.abort();
+        cancelAnimationFrame(this._animationFrameId);
     }
 
     _render = () => {
@@ -57,7 +58,7 @@ customElements.define('connect-four-timer', class extends HTMLElement {
             scriptune.play(`#BPM 300\nC5:s ${isPanicLevelThree ? '-:s C5:s' : ''}`)
         }
 
-        window.requestAnimationFrame(this._render);
+        this._animationFrameId = window.requestAnimationFrame(this._render);
     }
 
     _onPlayerJoined = e => {
