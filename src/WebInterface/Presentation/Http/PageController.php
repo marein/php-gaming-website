@@ -40,8 +40,8 @@ final class PageController extends AbstractController
 
     public function profileAction(#[CurrentUser] ?User $user, Request $request): Response
     {
-        $stateQuery = $request->query->get('state');
-        $state = State::tryFrom($stateQuery ?? State::All->value);
+        $stateQuery = $request->query->getString('state');
+        $state = State::tryFrom($stateQuery ?: State::All->value);
         if (!in_array($state, State::visibleCases(), true) || $stateQuery === State::All->value) {
             return $this->redirectToRoute('profile');
         }

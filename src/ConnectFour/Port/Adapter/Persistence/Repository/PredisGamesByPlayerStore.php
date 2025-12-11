@@ -71,7 +71,7 @@ final class PredisGamesByPlayerStore implements GamesByPlayerStore
             function (ClientContextInterface $pipeline) use ($gameId, $playerOne, $playerTwo): void {
                 $pipeline->zrem($this->keyForPlayer($playerOne, State::All), $gameId);
 
-                if ($playerTwo === '') {
+                if ($playerTwo === '') { // abort an open game
                     $pipeline->zrem($this->keyForPlayer($playerOne, State::Open), $gameId);
                     return;
                 }
