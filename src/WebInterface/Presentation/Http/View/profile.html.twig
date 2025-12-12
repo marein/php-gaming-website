@@ -24,11 +24,11 @@
         <div class="col-md-8 col-lg-9 gp-cf-game-list">
             <p class="small mb-1">
                 <span class="text-secondary">
-                    State: {{ app.request.query.get('state', 'all')|capitalize }}
+                    State: {{ ('state_' ~ state.value)|trans }}
                     •
-                    Page: {{ max(1, app.request.query.getInt('page', 1)) }}
+                    Page: {{ page }}
                 </span>
-                {% if app.request.query.get('state', 'all') != 'all' or app.request.query.get('page', 1) != 1 %}
+                {% if app.request.query.get('state', 'all') != 'all' or page != 1 %}
                     <span class="text-secondary">•</span>
                     <a href="{{ path('profile') }}">
                         Clear all filters
@@ -134,7 +134,7 @@
                 {% if gamesByPlayer.total > 0 %}
                     <div class="col-12">
                         {% include 'include/pagination.html.twig' with {
-                            'page': app.request.query.getInt('page', 1),
+                            'page': page,
                             'total': gamesByPlayer.total,
                             'limit': gamesPerPage,
                             'previousTitle': 'Games',

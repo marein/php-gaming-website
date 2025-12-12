@@ -8,6 +8,8 @@ use Gaming\ConnectFour\Application\Game\Query\PlayerSearchStatistics\PlayerSearc
 
 interface GamesByPlayerStore
 {
+    public function addOpen(string $gameId, string $player): void;
+
     public function addRunning(string $gameId, string $playerOne, string $playerTwo): void;
 
     public function addDraw(string $gameId, string $playerOne, string $playerTwo): void;
