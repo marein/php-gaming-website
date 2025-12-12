@@ -1,7 +1,7 @@
 services:
     connect-four.transient-rpc-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
-        arguments: ['ConnectFour.TransientRpc', 'gaming', ['ConnectFour.TransientRpc'], {'x-expires': 7000}]]
+        arguments: ['ConnectFour.TransientRpc', 'gaming', ['ConnectFour.TransientRpc'], {'x-message-ttl': 7000}]]
         tags: [{ name: 'gaming.message-broker.topology' }]
 
     connect-four.transient-rpc-message-handler.consumer:
