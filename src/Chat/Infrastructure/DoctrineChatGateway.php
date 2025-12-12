@@ -11,6 +11,7 @@ use Gaming\Chat\Application\ChatGateway;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Chat\Application\Exception\ChatAlreadyExistsException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
+use Gaming\Chat\Application\Exception\MessageAlreadyWrittenException;
 
 final class DoctrineChatGateway implements ChatGateway
 {
@@ -18,6 +19,7 @@ final class DoctrineChatGateway implements ChatGateway
         private readonly Connection $connection,
         private readonly string $chatTableName,
         private readonly string $messageTableName,
+        private readonly string $idempotencySecret
     ) {
     }
 
@@ -46,20 +48,28 @@ final class DoctrineChatGateway implements ChatGateway
         ChatId $chatId,
         string $authorId,
         string $message,
-        DateTimeImmutable $writtenAt
+        DateTimeImmutable $writtenAt,
+        ?string $idempotencyKey = null
     ): int {
-        $this->connection->insert(
-            $this->messageTableName,
-            [
-                'chatId' => $chatId->toString(),
-                'authorId' => $authorId,
-                'message' => $message,
-                'writtenAt' => $writtenAt
-            ],
-            ['uuid', 'string', 'string', 'datetime_immutable']
-        );
+        try {
+            $this->connection->insert(
+                $this->messageTableName,
+                [
+                    'chatId' => $chatId->toString(),
+                    'authorId' => $authorId,
+                    'message' => $message,
+                    'writtenAt' => $writtenAt,
+                    'idempotencyKey' => $idempotencyKey !== null
+                        ? sodium_crypto_generichash($chatId . $authorId . $idempotencyKey, $this->idempotencySecret, 16)
+                        : null
+                ],
+                ['uuid', 'uuid', 'string', 'datetime_immutable', 'binary']
+            );
 
-        return (int)$this->connection->lastInsertId();
+            return (int)$this->connection->lastInsertId();
+        } catch (UniqueConstraintViolationException) {
+            throw new MessageAlreadyWrittenException();
+        }
     }
 
     public function messages(ChatId $chatId, string $authorId, int $offset, int $limit): array
@@ -68,7 +78,7 @@ final class DoctrineChatGateway implements ChatGateway
         return $this->connection->createQueryBuilder()
             ->select('
                 m.id as messageId,
-                m.authorId,
+                BIN_TO_UUID(m.authorId) as authorId,
                 m.message,
                 DATE_FORMAT(m.writtenAt, "%Y-%m-%dT%T+00:00") as writtenAt
             ')

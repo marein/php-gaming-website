@@ -7,10 +7,10 @@ namespace Gaming\Chat\Application\Exception;
 use Gaming\Common\Domain\Exception\Violation;
 use Gaming\Common\Domain\Exception\Violations;
 
-final class AuthorNotAllowedException extends ChatException
+final class MessageAlreadyWrittenException extends ChatException
 {
     public function __construct()
     {
-        parent::__construct(new Violations(new Violation('author_not_allowed')));
+        parent::__construct(new Violations(new Violation('message_already_written')));
     }
 }

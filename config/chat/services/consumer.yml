@@ -1,22 +1,39 @@
 services:
-    chat.command-message-handler.topology:
+    chat.durable-rpc-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
-        arguments: ['Chat.CommandListener', 'gaming', [
+        arguments: ['Chat.DurableRpc', 'gaming', [
             !php/const GamingPlatform\Api\Chat\V1\ChatV1::InitiateChatType
         ]]
         tags: [{ name: 'gaming.message-broker.topology' }]
 
-    chat.command-message-handler.consumer:
+    chat.durable-rpc-message-handler.consumer:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
         factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
         arguments:
             - !service
-                class: Gaming\Chat\Presentation\Messaging\CommandMessageHandler
+                class: Gaming\Chat\Presentation\Messaging\RpcMessageHandler
                 arguments: ['@chat.command-bus']
             - !service
                 class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
-                arguments: ['@chat.command-message-handler.topology']
-        tags: [{ name: 'gaming.consumer', key: 'chat.command' }]
+                arguments: ['@chat.durable-rpc-message-handler.topology']
+        tags: [{ name: 'gaming.consumer', key: 'chat.durable-rpc' }]
+
+    chat.transient-rpc-message-handler.topology:
+      class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
+      arguments: ['Chat.TransientRpc', 'gaming', ['Chat.TransientRpc'], {'x-expires': 7000}]]
+      tags: [{ name: 'gaming.message-broker.topology' }]
+
+    chat.transient-rpc-message-handler.consumer:
+      class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
+      factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
+      arguments:
+        - !service
+          class: Gaming\Chat\Presentation\Messaging\RpcMessageHandler
+          arguments: ['@chat.command-bus']
+        - !service
+          class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
+          arguments: ['@chat.transient-rpc-message-handler.topology']
+      tags: [{ name: 'gaming.consumer', key: 'chat.transient-rpc' }]
 
     chat.publish-to-browser-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology

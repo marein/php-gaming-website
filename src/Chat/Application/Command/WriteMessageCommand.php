@@ -12,24 +12,10 @@ use Gaming\Common\Bus\Request;
 final class WriteMessageCommand implements Request
 {
     public function __construct(
-        private readonly string $chatId,
-        private readonly string $authorId,
-        private readonly string $message
+        public readonly string $chatId,
+        public readonly string $authorId,
+        public readonly string $message,
+        public readonly ?string $idempotencyKey = null
     ) {
-    }
-
-    public function chatId(): string
-    {
-        return $this->chatId;
-    }
-
-    public function authorId(): string
-    {
-        return $this->authorId;
-    }
-
-    public function message(): string
-    {
-        return $this->message;
     }
 }

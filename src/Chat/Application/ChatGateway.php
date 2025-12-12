@@ -7,6 +7,7 @@ namespace Gaming\Chat\Application;
 use DateTimeImmutable;
 use Gaming\Chat\Application\Exception\ChatAlreadyExistsException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
+use Gaming\Chat\Application\Exception\MessageAlreadyWrittenException;
 
 interface ChatGateway
 {
@@ -19,11 +20,15 @@ interface ChatGateway
      */
     public function create(ChatId $chatId, array $authors): void;
 
+    /**
+     * @throws MessageAlreadyWrittenException
+     */
     public function createMessage(
         ChatId $chatId,
         string $authorId,
         string $message,
-        DateTimeImmutable $writtenAt
+        DateTimeImmutable $writtenAt,
+        ?string $idempotencyKey = null
     ): int;
 
     /**

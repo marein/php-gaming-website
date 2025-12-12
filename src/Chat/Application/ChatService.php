@@ -12,6 +12,7 @@ use Gaming\Chat\Application\Exception\AuthorNotAllowedException;
 use Gaming\Chat\Application\Exception\ChatAlreadyExistsException;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
 use Gaming\Chat\Application\Exception\EmptyMessageException;
+use Gaming\Chat\Application\Exception\MessageAlreadyWrittenException;
 use Gaming\Chat\Application\Query\MessagesQuery;
 use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\EventStore;
@@ -38,12 +39,12 @@ final class ChatService
     public function initiateChat(InitiateChatCommand $initiateChatCommand): string
     {
         $chatId = $this->idempotentChatIdStorage->add(
-            $initiateChatCommand->idempotencyKey(),
+            $initiateChatCommand->idempotencyKey,
             $this->chatGateway->nextIdentity()
         );
 
         try {
-            $this->chatGateway->create($chatId, $initiateChatCommand->authors());
+            $this->chatGateway->create($chatId, $initiateChatCommand->authors);
             $this->eventStore->append(new DomainEvent($chatId->toString(), new ChatInitiated($chatId)));
         } catch (ChatAlreadyExistsException) {
             // This happens when a command with the same idempotency key is executed more than once.
@@ -63,9 +64,10 @@ final class ChatService
      */
     public function writeMessage(WriteMessageCommand $writeMessageCommand): void
     {
-        $chatId = ChatId::fromString($writeMessageCommand->chatId());
-        $authorId = $writeMessageCommand->authorId();
-        $message = trim(substr($writeMessageCommand->message(), 0, 140));
+        $chatId = ChatId::fromString($writeMessageCommand->chatId);
+        $authorId = $writeMessageCommand->authorId;
+        $message = trim(substr($writeMessageCommand->message, 0, 140));
+        $idempotencyKey = $writeMessageCommand->idempotencyKey;
 
         if ($message === '') {
             throw new EmptyMessageException();
@@ -81,8 +83,7 @@ final class ChatService
 
         $writtenAt = $this->clock->now();
 
-        $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt);
-
+        $messageId = $this->chatGateway->createMessage($chatId, $authorId, $message, $writtenAt, $idempotencyKey);
         $this->eventStore->append(
             new DomainEvent(
                 $chatId->toString(),

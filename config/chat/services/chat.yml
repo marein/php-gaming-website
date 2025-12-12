@@ -1,7 +1,7 @@
 services:
     chat.chat-gateway:
         class: Gaming\Chat\Infrastructure\DoctrineChatGateway
-        arguments: ['@chat.doctrine-dbal', 'chat', 'message']
+        arguments: ['@chat.doctrine-dbal', 'chat', 'message', '%kernel.secret%']
 
     chat.idempotent-chat-id-storage:
         class: Gaming\Common\IdempotentStorage\PredisIdempotentStorage
