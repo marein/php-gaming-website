@@ -61,6 +61,7 @@ final class ChatService
      * @throws ChatNotFoundException
      * @throws AuthorNotAllowedException
      * @throws EmptyMessageException
+     * @throws MessageAlreadyWrittenException
      */
     public function writeMessage(WriteMessageCommand $writeMessageCommand): void
     {
