@@ -28,12 +28,11 @@ services:
                 - "prometheus-job=chat-durable-rpc"
     chat-transient-rpc:
         image: marein/php-gaming-website:php-fpm
-        command: bin/console gaming:consume-messages chat.transient-rpc -r 3
+        command: bin/console gaming:consume-messages chat.transient-rpc
         env_file: ../app.env
         volumes:
             - proxysql.sock:/var/run/proxysql
         deploy:
-            replicas: 5
             placement:
                 constraints:
                     - "node.labels.long-running==1"
