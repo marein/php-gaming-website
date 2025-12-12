@@ -60,7 +60,7 @@ final class DoctrineChatGateway implements ChatGateway
                     'message' => $message,
                     'writtenAt' => $writtenAt,
                     'idempotencyKey' => $idempotencyKey !== null
-                        ? sodium_crypto_generichash($chatId . $authorId . $idempotencyKey, $this->idempotencySecret, 16)
+                        ? sodium_crypto_generichash($idempotencyKey, $this->idempotencySecret, 16)
                         : null
                 ],
                 ['uuid', 'uuid', 'string', 'datetime_immutable', 'binary']

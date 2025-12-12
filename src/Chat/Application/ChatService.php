@@ -68,7 +68,9 @@ final class ChatService
         $chatId = ChatId::fromString($writeMessageCommand->chatId);
         $authorId = $writeMessageCommand->authorId;
         $message = trim(substr($writeMessageCommand->message, 0, 140));
-        $idempotencyKey = $writeMessageCommand->idempotencyKey;
+        $idempotencyKey = $writeMessageCommand->idempotencyKey
+            ? $chatId . $authorId . $writeMessageCommand->idempotencyKey
+            : null;
 
         if ($message === '') {
             throw new EmptyMessageException();

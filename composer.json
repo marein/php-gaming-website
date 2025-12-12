@@ -30,6 +30,7 @@
     "ext-pcntl": "*",
     "ext-posix": "*",
     "ext-session": "*",
+    "ext-sodium": "*",
     "amphp/http-server": "^3.4",
     "doctrine/dbal": "^4.0",
     "doctrine/doctrine-bundle": "^2.11",

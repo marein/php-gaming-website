@@ -150,7 +150,7 @@ final class ChatServiceTest extends TestCase
         $chatGateway
             ->expects($this->once())
             ->method('createMessage')
-            ->with($chatId, $authorId, $message, $writtenAt, $idempotencyKey)
+            ->with($chatId, $authorId, $message, $writtenAt, $chatId . $authorId . $idempotencyKey)
             ->willReturn($messageId);
 
         $eventStore = new InMemoryEventStore();
