@@ -5,7 +5,6 @@ parameters:
   ignoreErrors:
     # Ignoring non-empty-string because there are currently many false positives.
     - message: '#(should return|expects) non-empty-string( but returns string|, string given)\.$#'
-    - message: '#^Call to an undefined method Symfony[^:]+::children\(\)\.$#'
     - message: '#^While loop condition is always true\.$#'
     - message: "#^Property Gaming\\\\Identity\\\\Domain\\\\Model\\\\Account\\\\Account\\:\\:\\$version#"
     - message: "#^Property Gaming\\\\Memory\\\\Domain\\\\Model\\\\Game\\\\Game\\:\\:\\$cards is never read, only written\\.$#"
