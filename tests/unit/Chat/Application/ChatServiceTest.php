@@ -138,6 +138,7 @@ final class ChatServiceTest extends TestCase
         $authorId = 'authorId';
         $message = 'message';
         $writtenAt = $clock->now();
+        $idempotencyKey = 'idempotencyKey';
         $messageId = 7;
 
         $chatGateway = $this->createMock(ChatGateway::class);
@@ -149,7 +150,7 @@ final class ChatServiceTest extends TestCase
         $chatGateway
             ->expects($this->once())
             ->method('createMessage')
-            ->with($chatId, $authorId, $message)
+            ->with($chatId, $authorId, $message, $writtenAt, $chatId . $authorId . $idempotencyKey)
             ->willReturn($messageId);
 
         $eventStore = new InMemoryEventStore();
@@ -165,7 +166,8 @@ final class ChatServiceTest extends TestCase
             new WriteMessageCommand(
                 $chatId->toString(),
                 $authorId,
-                $message
+                $message,
+                $idempotencyKey
             )
         );
 

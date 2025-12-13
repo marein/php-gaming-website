@@ -15,9 +15,10 @@ final class Version20170608203825 extends AbstractMigration
 
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('chatId', 'uuid');
-        $table->addColumn('authorId', 'string', ['length' => 36, 'fixed' => true]);
+        $table->addColumn('authorId', 'uuid');
         $table->addColumn('message', 'string', ['length' => 140]);
         $table->addColumn('writtenAt', 'datetime_immutable');
+        $table->addColumn('idempotencyKey', 'binary', ['length' => 16, 'fixed' => true, 'notnull' => false]);
 
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint(
@@ -25,6 +26,7 @@ final class Version20170608203825 extends AbstractMigration
             ['chatId'],
             ['id']
         );
+        $table->addUniqueIndex(['idempotencyKey'], 'uniq_idempotency_key');
     }
 
     public function down(Schema $schema): void

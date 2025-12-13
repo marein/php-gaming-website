@@ -13,9 +13,9 @@ services:
                     - "node.labels.long-running==1"
             labels:
                 - "prometheus-job=chat-follow-event-store"
-    chat-command:
+    chat-durable-rpc:
         image: marein/php-gaming-website:php-fpm
-        command: bin/console gaming:consume-messages chat.command -r 3
+        command: bin/console gaming:consume-messages chat.durable-rpc -r 3
         env_file: ../app.env
         volumes:
             - proxysql.sock:/var/run/proxysql
@@ -25,7 +25,19 @@ services:
                 constraints:
                     - "node.labels.long-running==1"
             labels:
-                - "prometheus-job=chat-command"
+                - "prometheus-job=chat-durable-rpc"
+    chat-transient-rpc:
+        image: marein/php-gaming-website:php-fpm
+        command: bin/console gaming:consume-messages chat.transient-rpc
+        env_file: ../app.env
+        volumes:
+            - proxysql.sock:/var/run/proxysql
+        deploy:
+            placement:
+                constraints:
+                    - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=chat-transient-rpc"
     chat-publish-to-browser:
         image: marein/php-gaming-website:php-fpm
         command: bin/console gaming:consume-messages chat.publish-to-browser -r 3

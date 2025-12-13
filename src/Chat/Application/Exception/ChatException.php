@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Chat\Application\Exception;
 
-use Exception;
+use Gaming\Common\Domain\Exception\DomainException;
 
-class ChatException extends Exception
+class ChatException extends DomainException
 {
 }

@@ -15,21 +15,8 @@ final class InitiateChatCommand implements Request
      * @param string[] $authors
      */
     public function __construct(
-        private readonly string $idempotencyKey,
-        private readonly array $authors
+        public readonly string $idempotencyKey,
+        public readonly array $authors
     ) {
-    }
-
-    public function idempotencyKey(): string
-    {
-        return $this->idempotencyKey;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function authors(): array
-    {
-        return $this->authors;
     }
 }
