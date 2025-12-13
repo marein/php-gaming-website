@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Integration\Common\DoctrineHeartbeatMiddleware;
 
+use Codeception\Attribute\DataProvider;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -11,6 +12,7 @@ use Doctrine\DBAL\Logging\Middleware as LoggerMiddleware;
 use Doctrine\DBAL\Tools\DsnParser;
 use Gaming\Common\DoctrineHeartbeatMiddleware\SchedulePeriodicHeartbeatMiddleware;
 use Gaming\Common\Scheduler\TestScheduler;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
@@ -18,9 +20,7 @@ use Symfony\Component\Clock\MockClock;
 
 final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldScheduleHeartbeatsUntilClosed(): void
     {
         $scheduler = new TestScheduler();
@@ -57,10 +57,8 @@ final class SchedulePeriodicHeartbeatMiddlewareTest extends TestCase
         self::assertSame(0, $scheduler->numberOfPendingJobs());
     }
 
-    /**
-     * @test
-     * @dataProvider withoutHeartbeatDataProvider
-     */
+    #[Test]
+    #[DataProvider('withoutHeartbeatDataProvider')]
     public function itShouldNotScheduleWithoutHeartbeatConfiguration(string $url, int $heartbeat): void
     {
         $scheduler = new TestScheduler();

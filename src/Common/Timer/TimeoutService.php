@@ -23,7 +23,7 @@ final class TimeoutService
     }
 
     /**
-     * @param string[] $timeoutIds
+     * @param list<string> $timeoutIds
      */
     public function remove(array $timeoutIds): void
     {

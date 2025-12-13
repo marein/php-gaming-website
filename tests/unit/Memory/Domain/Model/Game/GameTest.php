@@ -13,13 +13,12 @@ use Gaming\Memory\Domain\Model\Game\Event\PlayerLeft;
 use Gaming\Memory\Domain\Model\Game\Exception\GameNotOpenException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotAllowedToStartGameException;
 use Gaming\Memory\Domain\Model\Game\Game;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanNotJoinAlreadyRunningGame(): void
     {
         $this->expectException(GameNotOpenException::class);
@@ -30,9 +29,7 @@ class GameTest extends TestCase
         $game->join('playerId2');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function aPlayerCanLeaveAnOpenGame(): void
     {
         $game = $this->createOpenGameWithFourPlayers();
@@ -47,9 +44,7 @@ class GameTest extends TestCase
         self::assertEquals('playerId1', $domainEvents[0]->playerId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function ifTheLastPlayerLeavesTheGameTheGameGetsClosed(): void
     {
         $game = $this->createOpenGame();
@@ -67,9 +62,7 @@ class GameTest extends TestCase
         self::assertEquals($game->id()->toString(), $domainEvents[1]->aggregateId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanNotLeaveAlreadyRunningGame(): void
     {
         $this->expectException(GameNotOpenException::class);
@@ -80,9 +73,7 @@ class GameTest extends TestCase
         $game->leave('playerId1');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function theMainPlayerCanStartTheGame(): void
     {
         $game = $this->createOpenGameWithFourPlayers();
@@ -97,9 +88,7 @@ class GameTest extends TestCase
         self::assertEquals(['playerId1', 'playerId2', 'playerId3', 'playerId4'], $domainEvents[0]->playerIds());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function onlyTheMainPlayerCanStartTheGame(): void
     {
         $this->expectException(PlayerNotAllowedToStartGameException::class);
@@ -109,9 +98,7 @@ class GameTest extends TestCase
         $game->start('playerId2');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canNotStartAlreadyRunningGame(): void
     {
         $this->expectException(GameNotOpenException::class);

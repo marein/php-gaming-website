@@ -11,13 +11,12 @@ use Gaming\Tests\Unit\Common\Bus\Fixture\EmptyHandler;
 use Gaming\Tests\Unit\Common\Bus\Fixture\FirstRequest;
 use Gaming\Tests\Unit\Common\Bus\Fixture\SecondRequest;
 use Gaming\Tests\Unit\Common\Bus\Fixture\UniversalHandler;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class PsrCallableRoutingBusTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowMissingHandlerException(): void
     {
         $this->expectException(BusException::class);
@@ -25,9 +24,7 @@ final class PsrCallableRoutingBusTest extends TestCase
         (new PsrCallableRoutingBus(new TestContainer()))->handle(new FirstRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowMissingHandlerExceptionIfHandlerIsNotCallable(): void
     {
         $this->expectException(BusException::class);
@@ -40,9 +37,7 @@ final class PsrCallableRoutingBusTest extends TestCase
         $bus->handle(new FirstRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldRouteRequestToHandlerAndReturnItsValue(): void
     {
         $bus = new PsrCallableRoutingBus(

@@ -13,7 +13,7 @@ interface TimeoutStore
     public function add(array $timeouts): void;
 
     /**
-     * @param string[] $timeoutIds
+     * @param list<string> $timeoutIds
      */
     public function remove(array $timeoutIds): void;
 

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
+use Codeception\Attribute\DataProvider;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Gaming\ConnectFour\Domain\Game\GameId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
 class GameIdTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itCanBeGenerated(): void
     {
         $gameId = GameId::generate();
@@ -21,9 +21,7 @@ class GameIdTest extends TestCase
         $this->assertTrue(Uuid::isValid($gameId->toString()));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itCanBeCreatedFromString(): void
     {
         $expected = Uuid::v6()->toRfc4122();
@@ -33,9 +31,7 @@ class GameIdTest extends TestCase
         $this->assertSame($expected, $gameId->toString());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itCanBeTypeCastedToString(): void
     {
         $gameId = GameId::generate();
@@ -44,10 +40,8 @@ class GameIdTest extends TestCase
         $this->assertTrue(Uuid::isValid((string)$gameId));
     }
 
-    /**
-     * @test
-     * @dataProvider invalidStringProvider
-     */
+    #[Test]
+    #[DataProvider('invalidStringProvider')]
     public function itShouldThrowGameNotFoundExceptionOnInvalidString(string $invalidString): void
     {
         $this->expectException(GameNotFoundException::class);

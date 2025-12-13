@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 
+use Codeception\Attribute\DataProvider;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
@@ -11,13 +12,12 @@ use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Gaming\ConnectFour\Domain\Game\Exception\OutOfSizeException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class BoardTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldBeCreatedWithEmptyFields(): void
     {
         $board = $this->createBoard();
@@ -38,9 +38,7 @@ class BoardTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function aStoneCanBeDropped(): void
     {
         $board = $this->createBoard();
@@ -59,9 +57,7 @@ class BoardTest extends TestCase
         $this->assertEquals($board, $boardCopy);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function aStoneCanNotBeDroppedWhenColumnAlreadyFilled(): void
     {
         $this->expectException(ColumnAlreadyFilledException::class);
@@ -77,9 +73,7 @@ class BoardTest extends TestCase
         $boardWithStone->dropStone(Stone::Yellow, 1);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowExceptionIfGivenColumnIsOutOfSize(): void
     {
         $this->expectException(OutOfSizeException::class);
@@ -90,11 +84,10 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider columnProvider
-     *
      * @param Field[] $expectedFields
      */
+    #[Test]
+    #[DataProvider('columnProvider')]
     public function itShouldFindFieldsByColumn(int $column, array $expectedFields): void
     {
         $board = $this->createBoard();
@@ -145,11 +138,10 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider rowProvider
-     *
      * @param Field[] $expectedFields
      */
+    #[Test]
+    #[DataProvider('rowProvider')]
     public function itShouldFindFieldsByRow(int $row, array $expectedFields): void
     {
         $board = $this->createBoard();
@@ -203,11 +195,10 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider mainDiagonalProvider
-     *
      * @param Field[] $expectedFields
      */
+    #[Test]
+    #[DataProvider('mainDiagonalProvider')]
     public function itShouldFindFieldsInMainDiagonal(Point $point, array $expectedFields): void
     {
         $board = $this->createBoard();
@@ -257,11 +248,10 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider counterDiagonalProvider
-     *
      * @param Field[] $expectedFields
      */
+    #[Test]
+    #[DataProvider('counterDiagonalProvider')]
     public function itShouldFindFieldsInCounterDiagonal(Point $point, array $expectedFields): void
     {
         $board = $this->createBoard();

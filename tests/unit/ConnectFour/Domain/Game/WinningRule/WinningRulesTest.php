@@ -10,13 +10,12 @@ use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRule;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class WinningRulesTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldCalculateForWin(): void
     {
         $size = new Size(7, 6);

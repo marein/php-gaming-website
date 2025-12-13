@@ -8,13 +8,12 @@ use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Identity\Domain\Model\Account\AccountId;
 use Gaming\Identity\Domain\Model\Bot\Bot;
 use Gaming\Identity\Domain\Model\Bot\Event\BotRegistered;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class BotTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldRegister(): void
     {
         $botId = AccountId::generate();

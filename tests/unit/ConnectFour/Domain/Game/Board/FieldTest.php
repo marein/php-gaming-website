@@ -7,13 +7,12 @@ namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class FieldTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldBeCreatedEmpty(): void
     {
         $field = Field::empty(new Point(0, 1));
@@ -22,9 +21,7 @@ class FieldTest extends TestCase
         $this->assertEquals(Stone::None, $field->stone());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function aStoneCanBePlaced(): void
     {
         $field = Field::empty(new Point(0, 1));
@@ -35,9 +32,7 @@ class FieldTest extends TestCase
         $this->assertEquals(Stone::Red, $fieldWithStone->stone());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itCanBeTypeCastedToString(): void
     {
         $field = Field::empty(new Point(0, 1));

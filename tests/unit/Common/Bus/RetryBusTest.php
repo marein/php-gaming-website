@@ -8,14 +8,13 @@ use Gaming\Common\Bus\Bus;
 use Gaming\Common\Bus\Request;
 use Gaming\Common\Bus\RetryBus;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 final class RetryBusTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowAnExceptionIfNumberOfRetriesIsLowerThanOne(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -30,9 +29,7 @@ final class RetryBusTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldRetry(): void
     {
         $bus = $this->createMock(Bus::class);
@@ -61,9 +58,7 @@ final class RetryBusTest extends TestCase
         $retryBus->handle($this->createRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowTheApplicationExceptionWhenNumberOfRetriesAreReached(): void
     {
         $this->expectException(RuntimeException::class);
@@ -93,9 +88,7 @@ final class RetryBusTest extends TestCase
         $retryBus->handle($this->createRequest());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowTheApplicationExceptionIfItsNotTheConfiguredException(): void
     {
         $this->expectException(RuntimeException::class);

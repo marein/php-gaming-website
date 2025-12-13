@@ -18,14 +18,13 @@ use Gaming\Chat\Application\Query\MessagesQuery;
 use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\InMemoryEventStore;
 use Gaming\Common\IdempotentStorage\InMemoryIdempotentStorage;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 
 final class ChatServiceTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldInitiateChatExactlyOnce(): void
     {
         $expectedChatId = ChatId::generate();
@@ -70,9 +69,7 @@ final class ChatServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowMessageEmptyException(): void
     {
         $this->expectException(EmptyMessageException::class);
@@ -94,9 +91,7 @@ final class ChatServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldAllowOnlyAuthorsAssignedToChat(): void
     {
         $this->expectException(AuthorNotAllowedException::class);
@@ -127,9 +122,7 @@ final class ChatServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldWriteMessage(): void
     {
         $clock = new MockClock();
@@ -182,9 +175,7 @@ final class ChatServiceTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldReturnMessages(): void
     {
         $chatId = ChatId::generate();
