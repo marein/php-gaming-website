@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 
 use Gaming\ConnectFour\Domain\Game\Board\Point;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class PointTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldBeCreatedWithItsValues(): void
     {
         $point = new Point(3, 4);

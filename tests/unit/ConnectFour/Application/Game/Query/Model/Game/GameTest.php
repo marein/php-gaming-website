@@ -10,13 +10,12 @@ use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\GameDrawn;
 use Gaming\ConnectFour\Domain\Game\Game as DomainGame;
 use Gaming\ConnectFour\Domain\Game\GameId;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldProjectEvents(): void
     {
         $now = new DateTimeImmutable();
@@ -86,9 +85,7 @@ class GameTest extends TestCase
         $this->assertEquals($expectedSerializedGame, json_encode($game, JSON_THROW_ON_ERROR));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldBeMarkedAsFinishedWhenGameAborted(): void
     {
         $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
@@ -102,9 +99,7 @@ class GameTest extends TestCase
         $this->assertEquals('', $game->currentPlayerId);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldBeMarkedAsFinishedWhenGameResigned(): void
     {
         $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
@@ -123,9 +118,7 @@ class GameTest extends TestCase
         $this->assertEquals('', $game->currentPlayerId);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldBeMarkedAsFinishedWhenGameWon(): void
     {
         $domainGame = DomainGame::open(GameId::generate(), Configuration::common(), 'player1');
@@ -155,9 +148,7 @@ class GameTest extends TestCase
         $this->assertEquals('', $game->currentPlayerId);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldBeMarkedAsDrawWhenGameDrawn(): void
     {
         $game = new Game();
@@ -169,9 +160,7 @@ class GameTest extends TestCase
         $this->assertEquals('', $game->currentPlayerId);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldHandleTimeouts(): void
     {
         // First player

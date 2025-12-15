@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 
+use Codeception\Attribute\DataProvider;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Exception\InvalidSizeException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class SizeTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider correctSizeProvider
-     */
+    #[Test]
+    #[DataProvider('correctSizeProvider')]
     public function itShouldBeCreatedSuccessfully(int $width, int $height): void
     {
         $size = new Size($width, $height);
@@ -32,10 +32,8 @@ class SizeTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider wrongSizeProvider
-     */
+    #[Test]
+    #[DataProvider('wrongSizeProvider')]
     public function itShouldThrowAnExceptionOnInvalidSizes(int $width, int $height): void
     {
         $this->expectException(InvalidSizeException::class);

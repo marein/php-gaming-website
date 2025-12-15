@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Chat\Application;
 
+use Codeception\Attribute\DataProvider;
 use Gaming\Chat\Application\ChatId;
 use Gaming\Chat\Application\Exception\ChatNotFoundException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
 class ChatIdTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itCanBeGenerated(): void
     {
         $chatId = ChatId::generate();
@@ -21,9 +21,7 @@ class ChatIdTest extends TestCase
         $this->assertTrue(Uuid::isValid($chatId->toString()));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itCanBeCreatedFromString(): void
     {
         $expected = Uuid::v6()->toRfc4122();
@@ -33,9 +31,7 @@ class ChatIdTest extends TestCase
         $this->assertSame($expected, $chatId->toString());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itCanBeTypeCastedToString(): void
     {
         $chatId = ChatId::generate();
@@ -44,10 +40,8 @@ class ChatIdTest extends TestCase
         $this->assertTrue(Uuid::isValid((string)$chatId));
     }
 
-    /**
-     * @test
-     * @dataProvider invalidStringProvider
-     */
+    #[Test]
+    #[DataProvider('invalidStringProvider')]
     public function itShouldThrowChatNotFoundExceptionOnInvalidString(string $invalidString): void
     {
         $this->expectException(ChatNotFoundException::class);

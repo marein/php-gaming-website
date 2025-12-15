@@ -10,6 +10,7 @@ use Gaming\Common\Bus\Request;
 use Gaming\Common\Domain\Exception\DomainException;
 use Gaming\Common\Domain\Exception\Violation;
 use Gaming\Common\Domain\Exception\ViolationParameter;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -19,9 +20,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SymfonyValidatorBusTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldForwardRequestToHandlerAndReturnItsValue(): void
     {
         $request = $this->createRequest('Request');
@@ -48,9 +47,7 @@ class SymfonyValidatorBusTest extends TestCase
         $this->assertSame($response, $bus->handle($request));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowDomainExceptionWithViolationsOnError(): void
     {
         $this->expectException(DomainException::class);

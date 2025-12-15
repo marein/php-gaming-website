@@ -11,13 +11,12 @@ use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\WinningSequenceLengthTooShortException;
 use Gaming\ConnectFour\Domain\Game\WinningRule\VerticalWinningRule;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class VerticalWinningRuleTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowIfWinningSequenceLengthIsTooShort(): void
     {
         $this->expectException(WinningSequenceLengthTooShortException::class);
@@ -25,9 +24,7 @@ class VerticalWinningRuleTest extends TestCase
         new VerticalWinningRule(3);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldCalculateForWin(): void
     {
         $size = new Size(7, 6);

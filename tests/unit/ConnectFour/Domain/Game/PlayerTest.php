@@ -8,13 +8,12 @@ use Gaming\Common\Timer\GameTimer;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
 use Gaming\ConnectFour\Domain\Game\Exception\PlayerHasInvalidStoneException;
 use Gaming\ConnectFour\Domain\Game\Player;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class PlayerTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldBeCreatedWithItsValues(): void
     {
         $id = uniqid();
@@ -26,9 +25,7 @@ class PlayerTest extends TestCase
         $this->assertEquals($stone, $player->stone());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldNotBeCreatedWithNoneStone(): void
     {
         $this->expectException(PlayerHasInvalidStoneException::class);

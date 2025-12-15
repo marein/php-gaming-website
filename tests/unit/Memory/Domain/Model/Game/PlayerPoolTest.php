@@ -9,13 +9,12 @@ use Gaming\Memory\Domain\Model\Game\Exception\PlayerNotJoinedException;
 use Gaming\Memory\Domain\Model\Game\Exception\PlayerPoolIsEmptyException;
 use Gaming\Memory\Domain\Model\Game\Player;
 use Gaming\Memory\Domain\Model\Game\PlayerPool;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class PlayerPoolTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldSwitchPlayers(): void
     {
         $first = new Player('0');
@@ -45,9 +44,7 @@ class PlayerPoolTest extends TestCase
         $this->assertEquals($playerPool->current(), $first);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playersCanLeave(): void
     {
         $first = new Player('0');
@@ -69,9 +66,7 @@ class PlayerPoolTest extends TestCase
         $this->assertTrue($playerPool->isEmpty());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowAnExceptionIfPlayerAlreadyJoined(): void
     {
         $this->expectException(PlayerAlreadyJoinedException::class);
@@ -85,9 +80,7 @@ class PlayerPoolTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowAnExceptionIfPlayerNotJoined(): void
     {
         $this->expectException(PlayerNotJoinedException::class);
@@ -101,9 +94,7 @@ class PlayerPoolTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowAnExceptionIfPlayerPoolIsEmptyWhenSwitching(): void
     {
         $this->expectException(PlayerPoolIsEmptyException::class);
@@ -119,9 +110,7 @@ class PlayerPoolTest extends TestCase
         $playerPool->switch();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowAnExceptionIfPlayerPoolIsEmptyWhenGetCurrent(): void
     {
         $this->expectException(PlayerPoolIsEmptyException::class);

@@ -8,13 +8,12 @@ use Gaming\Common\Scheduler\Handler;
 use Gaming\Common\Scheduler\NullHandler;
 use Gaming\Common\Scheduler\PcntlScheduler;
 use Gaming\Common\Scheduler\Scheduler;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class PcntlSchedulerTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldSchedule(): void
     {
         $expectedCount = 2;

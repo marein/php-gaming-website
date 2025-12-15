@@ -23,7 +23,7 @@ final class TimerProjection implements StoredEventSubscriber
     private array $additions = [];
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     private array $removals = [];
 

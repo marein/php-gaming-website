@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
 use Closure;
+use Codeception\Attribute\DataProvider;
 use DateTimeImmutable;
 use Gaming\Common\Timer\MoveTimer;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
@@ -31,6 +32,7 @@ use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -39,9 +41,7 @@ use PHPUnit\Framework\TestCase;
  */
 class GameTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function aChatCanBeAssigned(): void
     {
         $game = $this->createOpenGame();
@@ -60,9 +60,7 @@ class GameTest extends TestCase
         self::assertCount(0, $game->flushDomainEvents());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanNotAbortAnOpenGameIfPlayerIsNotOwner(): void
     {
         $this->expectException(PlayerNotOwnerException::class);
@@ -72,9 +70,7 @@ class GameTest extends TestCase
             ->abort('playerId3');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanAbortAnOpenGame(): void
     {
         $game = $this->createOpenGame();
@@ -90,9 +86,7 @@ class GameTest extends TestCase
         self::assertEquals('', $domainEvents[0]->opponentPlayerId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function samePlayerCanNotJoinAnOpenGame(): void
     {
         $this->expectException(PlayersNotUniqueException::class);
@@ -102,9 +96,7 @@ class GameTest extends TestCase
             ->join('playerId1');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanNotMoveTwiceInARunningGame(): void
     {
         $this->expectException(UnexpectedPlayerException::class);
@@ -115,9 +107,7 @@ class GameTest extends TestCase
         $game->move('playerId1', 2);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanResignARunningGameAfterTheSecondMove(): void
     {
         $game = $this->createRunningGame();
@@ -135,9 +125,7 @@ class GameTest extends TestCase
         self::assertEquals('playerId2', $domainEvents[2]->opponentPlayerId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanNotResignARunningGameBeforeTheSecondMove(): void
     {
         $this->expectException(GameNotRunningException::class);
@@ -148,9 +136,7 @@ class GameTest extends TestCase
         $game->resign('playerId1');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanNotResignARunningGameIfPlayerIsNotOwner(): void
     {
         $this->expectException(PlayerNotOwnerException::class);
@@ -162,9 +148,7 @@ class GameTest extends TestCase
         $game->resign('playerId3');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanAbortARunningGameBeforeTheSecondMove(): void
     {
         $game = $this->createRunningGame();
@@ -181,9 +165,7 @@ class GameTest extends TestCase
         self::assertEquals('playerId2', $domainEvents[1]->opponentPlayerId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanNotAbortARunningGameAfterTheSecondMove(): void
     {
         $this->expectException(GameRunningException::class);
@@ -195,9 +177,7 @@ class GameTest extends TestCase
         $game->abort('playerId1');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function playerCanNotAbortARunningGameIfPlayerIsNotOwner(): void
     {
         $this->expectException(PlayerNotOwnerException::class);
@@ -207,9 +187,7 @@ class GameTest extends TestCase
         $game->abort('playerId3');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function timeoutHappensOnMove(): Game
     {
         $game = $this->createRunningGame();
@@ -229,9 +207,7 @@ class GameTest extends TestCase
         return $game;
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function timeoutAbortsInTheFirstTwoMoves(): void
     {
         // First move
@@ -262,10 +238,8 @@ class GameTest extends TestCase
         self::assertEquals('playerId2', $domainEvents[1]->abortedPlayerId());
     }
 
-    /**
-     * @test
-     * @dataProvider unallowedTransitionsProvider
-     */
+    #[Test]
+    #[DataProvider('unallowedTransitionsProvider')]
     public function unallowedTransitions(Closure $prepare, string $exceptionClass): void
     {
         $this->expectException($exceptionClass);

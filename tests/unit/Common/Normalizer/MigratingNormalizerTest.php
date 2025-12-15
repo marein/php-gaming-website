@@ -10,13 +10,12 @@ use Gaming\Common\Normalizer\Migrations;
 use Gaming\Common\Normalizer\Normalizer;
 use Gaming\Common\Normalizer\Test\TestMigration;
 use Gaming\Common\Normalizer\Test\TestNormalizer;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class MigratingNormalizerTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldAddTheLatestVersionKeyAfterNormalization(): void
     {
         $migratingNormalizer = $this->createMigratingNormalizer(
@@ -30,9 +29,7 @@ final class MigratingNormalizerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldApplyAllMigrationsBeforeDenormalizeBeginningFromTheLatest(): void
     {
         $migratingNormalizer = $this->createMigratingNormalizer(
@@ -66,9 +63,7 @@ final class MigratingNormalizerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldIgnoreAllTypesWithoutMigrations(): void
     {
         $migratingNormalizer = $this->createMigratingNormalizer(
@@ -87,9 +82,7 @@ final class MigratingNormalizerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldIgnoreAnyTypeButArrays(): void
     {
         $migration = $this->createMock(Migration::class);

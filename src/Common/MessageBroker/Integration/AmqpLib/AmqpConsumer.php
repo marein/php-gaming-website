@@ -25,7 +25,7 @@ final class AmqpConsumer implements Consumer
     /**
      * @var ArrayObject<int, AmqpContext>
      */
-    private readonly ArrayObject $pendingMessageToContext;
+    private ArrayObject $pendingMessageToContext;
 
     /**
      * @param positive-int $prefetchCount
@@ -84,13 +84,13 @@ final class AmqpConsumer implements Consumer
 
     private function onPositiveAcknowledgement(AMQPMessage $pendingMessage): void
     {
-        $this->pendingMessageToContext[$pendingMessage->getDeliveryTag()]
+        ($this->pendingMessageToContext[$pendingMessage->getDeliveryTag()] ?? null)
             ?->resolvePositiveAcknowledgement($pendingMessage);
     }
 
     private function onNegativeAcknowledgement(AMQPMessage $pendingMessage): void
     {
-        $this->pendingMessageToContext[$pendingMessage->getDeliveryTag()]
+        ($this->pendingMessageToContext[$pendingMessage->getDeliveryTag()] ?? null)
             ?->resolveNegativeAcknowledgement($pendingMessage);
     }
 

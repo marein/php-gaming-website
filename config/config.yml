@@ -115,9 +115,9 @@ services:
     Gaming\Common\SymfonyPrometheus\CollectMetricsListener:
         arguments: ['@gaming.prometheus.registry', 'app']
         tags:
-            - { name: kernel.event_listener, event: kernel.request, priority: 1024 }]
-            - { name: kernel.event_listener, event: kernel.response, priority: -1024 }]
-            - { name: kernel.event_listener, event: kernel.exception, priority: 1024 }]
+            - { name: kernel.event_listener, event: kernel.request, priority: 1024 }
+            - { name: kernel.event_listener, event: kernel.response, priority: -1024 }
+            - { name: kernel.event_listener, event: kernel.exception, priority: 1024 }
 
     Gaming\Common\DoctrinePrometheusMiddleware\CollectMetricsMiddleware:
         arguments: ['@gaming.prometheus.registry', 'app']

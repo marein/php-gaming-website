@@ -1,7 +1,7 @@
 services:
     identity.transient-rpc-message-handler.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
-        arguments: ['Identity.TransientRpc', 'gaming', ['Identity.TransientRpc'], {'x-message-ttl': 7000}]]
+        arguments: ['Identity.TransientRpc', 'gaming', ['Identity.TransientRpc'], { 'x-message-ttl': 7000 }]
         tags: [{ name: 'gaming.message-broker.topology' }]
 
     identity.transient-rpc-message-handler.consumer:

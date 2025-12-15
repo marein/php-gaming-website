@@ -6,13 +6,12 @@ namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Timer;
 
 use DateTimeImmutable;
 use Gaming\Common\Timer\GameTimer;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GameTimerTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itWorks(): void
     {
         $now = new DateTimeImmutable();

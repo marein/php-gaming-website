@@ -9,13 +9,12 @@ use Gaming\Identity\Domain\Model\User\Event\UserArrived;
 use Gaming\Identity\Domain\Model\User\Event\UserSignedUp;
 use Gaming\Identity\Domain\Model\User\Exception\UserAlreadySignedUpException;
 use Gaming\Identity\Domain\Model\User\User;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldArrive(): void
     {
         $userId = AccountId::generate();
@@ -28,9 +27,7 @@ final class UserTest extends TestCase
         self::assertEquals($userId->toString(), $domainEvents[0]->content->aggregateId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldSignUp(): void
     {
         $userId = AccountId::generate();
@@ -46,9 +43,7 @@ final class UserTest extends TestCase
         self::assertEquals('marein', $domainEvents[1]->content->username);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldThrowAnExceptionIfAlreadySignedUp(): void
     {
         $this->expectException(UserAlreadySignedUpException::class);

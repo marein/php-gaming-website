@@ -8,6 +8,7 @@ use Gaming\Common\Domain\Exception\Violation;
 use Gaming\Common\Domain\Exception\ViolationParameter;
 use Gaming\Common\Domain\Exception\Violations;
 use Gaming\Common\Domain\Integration\FormViolationMapper;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,9 +19,7 @@ use Symfony\Contracts\Translation\TranslatorTrait;
 
 final class FormViolationMapperTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldHandleEmptyViolations(): void
     {
         $form = (new FormFactoryBuilder(true))->getFormFactory()->createBuilder()
@@ -33,9 +32,7 @@ final class FormViolationMapperTest extends TestCase
         self::assertCount(0, $form->getErrors(true, true));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldMapToTheCorrectFields(): void
     {
         $form = $this->createFormAndMapViolations(new FormViolationMapper());
@@ -59,9 +56,7 @@ final class FormViolationMapperTest extends TestCase
         self::assertSame('invalid friend test', $errors[0]->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function itShouldUseTheTranslator(): void
     {
         $translator = new class implements TranslatorInterface {
