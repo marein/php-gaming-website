@@ -29,7 +29,7 @@ final class ChatId
     {
         try {
             return new self(Uuid::fromRfc4122($chatId));
-        } catch (Exception $exception) {
+        } catch (Exception) {
             // This occurs if the given string is an invalid Uuid, hence an invalid ChatId.
             // Throw exception, that the chat can't be found.
             throw new ChatNotFoundException();

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gaming\Identity\Domain\Model\Account\Exception;
 
-use Exception;
+use Gaming\Common\Domain\Exception\DomainException;
 
-class AccountException extends Exception
+class AccountException extends DomainException
 {
 }

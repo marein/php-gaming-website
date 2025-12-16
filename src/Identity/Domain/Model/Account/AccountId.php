@@ -30,8 +30,8 @@ final class AccountId
     {
         try {
             return new self(Uuid::fromRfc4122($accountId));
-        } catch (Exception $exception) {
-            throw new AccountNotFoundException(previous: $exception);
+        } catch (Exception) {
+            throw new AccountNotFoundException();
         }
     }
 
@@ -42,8 +42,8 @@ final class AccountId
     {
         try {
             return new self(Uuid::fromRfc4122($userId));
-        } catch (Exception $exception) {
-            throw new UserNotFoundException(previous: $exception);
+        } catch (Exception) {
+            throw new UserNotFoundException();
         }
     }
 
