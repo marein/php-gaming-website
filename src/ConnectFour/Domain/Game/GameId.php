@@ -29,7 +29,7 @@ final class GameId
     {
         try {
             return new self(Uuid::fromRfc4122($gameId));
-        } catch (Exception $exception) {
+        } catch (Exception) {
             // This occurs if the given string is an invalid Uuid, hence an invalid GameId.
             // Throw exception, that the game can't be found.
             throw new GameNotFoundException();

@@ -20,30 +20,35 @@ final class RespondWithViolationsAsJsonOnKernelExceptionListener
      */
     public function __construct(
         private readonly array $identifierToStatusCode,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
+        private readonly string $defaultIdentifier = 'an_error_occurred'
     ) {
     }
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        $exception = $event->getThrowable();
-
-        if (!($exception instanceof DomainException)) {
-            return;
-        }
-
         if ($event->getRequest()->getRequestFormat() !== 'json') {
             return;
         }
 
+        $exception = $event->getThrowable();
+
         $event->setResponse(
-            new JsonResponse(
-                [
-                    'message' => $this->extractMessage($exception->violations),
-                    'violations' => $this->transformViolationsToArray($exception->violations)
-                ],
-                $this->statusCodeFromFirstMatchingViolationName($exception)
-            )
+            match (true) {
+                $exception instanceof DomainException => new JsonResponse(
+                    [
+                        'message' => $this->extractMessage($exception->violations),
+                        'violations' => $this->transformViolationsToArray($exception->violations)
+                    ],
+                    $this->statusCodeFromFirstMatchingViolationName($exception)
+                ),
+                default => new JsonResponse(
+                    [
+                        'message' => $this->translator->trans($this->defaultIdentifier)
+                    ],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                )
+            }
         );
     }
 
