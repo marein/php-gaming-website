@@ -14,7 +14,10 @@ interface Channel
     public function send(mixed $message): void;
 
     /**
+     * @param int|null $timeout Timeout in seconds. 0 means no wait. Null means wait indefinitely.
+     *
+     * @return mixed What was received or null on timeout.
      * @throws ForkPoolException
      */
-    public function receive(): mixed;
+    public function receive(?int $timeout = null): mixed;
 }

@@ -32,9 +32,11 @@ final class StreamChannel implements Channel
         }
     }
 
-    public function receive(): mixed
+    public function receive(?int $timeout = null): mixed
     {
-        while (!$this->canReadFromResource());
+        if (!$this->canReadFromResource($timeout)) {
+            return null;
+        }
 
         $message = @fgets($this->resource);
         if ($message === false || !str_ends_with($message, "\n")) {
@@ -49,13 +51,17 @@ final class StreamChannel implements Channel
         return unserialize(base64_decode($message));
     }
 
-    private function canReadFromResource(): bool
+    private function canReadFromResource(?int $timeout = null): bool
     {
-        set_error_handler(fn() => true);
-        $read = [$this->resource];
-        $write = $except = null;
-        $canReadFromResource = stream_select($read, $write, $except, 120, null) === 1;
-        restore_error_handler();
+        do {
+            $start = time();
+            set_error_handler(fn() => true);
+            $read = [$this->resource];
+            $write = $except = null;
+            $canReadFromResource = stream_select($read, $write, $except, $timeout, null) === 1;
+            restore_error_handler();
+            $timeout !== null && $timeout -= (time() - $start);
+        } while (!$canReadFromResource && ($timeout > 0 || $timeout === null));
 
         return $canReadFromResource;
     }
