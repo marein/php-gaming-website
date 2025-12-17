@@ -35,6 +35,7 @@ final class ForkPoolConsumer implements Consumer
 
         $this->forkPool->signal()->enableAsyncDispatch()->forwardSignalAndWait([SIGINT, SIGTERM]);
         $this->forkPool->wait()->killAllWhenAnyExits(SIGTERM);
+        exit(1);
     }
 
     public function stop(): void

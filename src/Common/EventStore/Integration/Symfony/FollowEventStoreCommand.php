@@ -145,7 +145,7 @@ final class FollowEventStoreCommand extends Command
 
         $forkPool->wait()->killAllWhenAnyExits(SIGTERM);
 
-        return Command::SUCCESS;
+        return Command::FAILURE;
     }
 
     /**
