@@ -25,7 +25,7 @@ final class NullChannelPairFactory implements ChannelPairFactory
                 throw new ForkPoolException('Cannot send to null channel.');
             }
 
-            public function receive(): mixed
+            public function receive(?int $timeout = null): mixed
             {
                 throw new ForkPoolException('Cannot receive from null channel.');
             }
