@@ -11,5 +11,5 @@ interface GapDetection
     /**
      * @throws Throwable
      */
-    public function shouldWaitForStoredEventWithId(int $id): bool;
+    public function shouldWaitForStoredEventWithId(int $expectedId, StoredEvent $actualEvent): bool;
 }

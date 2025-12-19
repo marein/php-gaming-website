@@ -141,7 +141,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
         }
     }
 
-    public function shouldWaitForStoredEventWithId(int $id): bool
+    public function shouldWaitForStoredEventWithId(int $expectedId, StoredEvent $actualEvent): bool
     {
         $currentIsolationLevel = $this->connection->getTransactionIsolation();
 
@@ -151,7 +151,7 @@ final class DoctrineEventStore implements EventStore, PollableEventStore, Cleana
                 ->select('COUNT(id)')
                 ->from($this->table, 'e')
                 ->where('e.id = :id')
-                ->setParameter('id', $id)
+                ->setParameter('id', $expectedId)
                 ->executeQuery()
                 ->fetchOne() > 0;
 
