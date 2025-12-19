@@ -92,7 +92,7 @@ final class ChannelsTest extends TestCase
             return;
         }
 
-        $this->fail('itShouldThrowOnSynchronizeTimeout did not throw an exception.');
+        $this->fail(__FUNCTION__ . ' did not throw an exception.');
     }
 
     private function createChannels(int $count): Channels
@@ -129,7 +129,7 @@ final class ChannelsTest extends TestCase
         ?int $sleepSeconds = null,
         bool $success = true
     ): Channel {
-        return new class($called, $withTimeout, $sleepSeconds, $success) implements Channel {
+        return new class ($called, $withTimeout, $sleepSeconds, $success) implements Channel {
             public function __construct(
                 private bool &$called,
                 private int $withTimeout,
