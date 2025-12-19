@@ -60,11 +60,17 @@ final class ChannelsTest extends TestCase
     }
 
     #[Test]
+    public function itShouldSynchronizeWithTimeout(): void
+    {
+        $this->createSynchronizeChannels(100, 10)->synchronize(10);
+    }
+
+    #[Test]
     public function itShouldThrowOnSynchronizeFailure(): void
     {
         $this->expectException(ForkPoolException::class);
 
-        $this->createSynchronizeChannels(100, 'invalid')->synchronize();
+        $this->createSynchronizeChannels(100, receive: 'invalid')->synchronize();
     }
 
     private function createChannels(int $count): Channels
@@ -79,13 +85,16 @@ final class ChannelsTest extends TestCase
         return new Channels($channels);
     }
 
-    private function createSynchronizeChannels(int $count, string $receive = Channel::MESSAGE_SYNC_ACK): Channels
-    {
+    private function createSynchronizeChannels(
+        int $count,
+        ?int $timeout = null,
+        string $receive = Channel::MESSAGE_SYNC_ACK
+    ): Channels {
         $channels = [];
         for ($i = 1; $i <= $count; $i++) {
             $channel = $this->createMock(Channel::class);
             $channel->method('send')->with(Channel::MESSAGE_SYNC);
-            $channel->method('receive')->willReturn($receive);
+            $channel->method('receive')->with($timeout)->willReturn($receive);
             $channels[] = $channel;
         }
 
