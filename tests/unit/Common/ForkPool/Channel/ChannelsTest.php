@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\Common\ForkPool\Channel;
 
+use Exception;
 use Gaming\Common\ForkPool\Channel\Channel;
 use Gaming\Common\ForkPool\Channel\Channels;
 use Gaming\Common\ForkPool\Exception\ForkPoolException;
@@ -60,17 +61,38 @@ final class ChannelsTest extends TestCase
     }
 
     #[Test]
-    public function itShouldSynchronizeWithTimeout(): void
-    {
-        $this->createSynchronizeChannels(100, 10)->synchronize(10);
-    }
-
-    #[Test]
-    public function itShouldThrowOnSynchronizeFailure(): void
+    public function itShouldThrowOnSynchronizeWithInvalidMessage(): void
     {
         $this->expectException(ForkPoolException::class);
 
         $this->createSynchronizeChannels(100, receive: 'invalid')->synchronize();
+    }
+
+    #[Test]
+    public function itShouldThrowOnSynchronizeWhenTimeout(): void
+    {
+        $called1 = $called2 = $called3 = $called4 = $called5 = false;
+
+        try {
+            // Passing a clock just to fake timeouts for this little test doesn’t feel right.
+            // Using sleep with max 1s instead.
+            new Channels(
+                [
+                    $this->createSleepingChannel($called1, 1, 360), // This times out, but succeeds in the last second.
+                    $this->createSleepingChannel($called2), // This succeeds immediately.
+                    $this->createSleepingChannel($called3), // This too.
+                    $this->createSleepingChannel($called4, 0, 360, false), // This actually times out.
+                    $this->createSleepingChannel($called5) // This is never called.
+                ]
+            )->synchronize(1);
+        } catch (ForkPoolException) {
+            $this->assertSame([true, true, true, true], [$called1, $called2, $called3, $called4]);
+            $this->assertSame(false, $called5);
+
+            return;
+        }
+
+        $this->fail('itShouldThrowOnSynchronizeTimeout did not throw an exception.');
     }
 
     private function createChannels(int $count): Channels
@@ -99,5 +121,41 @@ final class ChannelsTest extends TestCase
         }
 
         return new Channels($channels);
+    }
+
+    private function createSleepingChannel(
+        bool &$called,
+        int $withTimeout = 0,
+        ?int $sleepSeconds = null,
+        bool $success = true
+    ): Channel {
+        return new class($called, $withTimeout, $sleepSeconds, $success) implements Channel {
+            public function __construct(
+                private bool &$called,
+                private int $withTimeout,
+                private readonly ?int $sleepSeconds,
+                private readonly bool $success,
+            ) {
+            }
+
+            public function send(mixed $message): void
+            {
+            }
+
+            public function receive(?int $timeout = null): ?string
+            {
+                $this->called = true;
+
+                if ($this->withTimeout !== $timeout) {
+                    throw new Exception('Unexpected timeout value.');
+                }
+
+                if ($timeout !== null && $this->sleepSeconds !== null) {
+                    usleep(min($this->sleepSeconds, $timeout) * 1000000 + 100000); // Extra 0.1s to be sure.
+                }
+
+                return $this->success ? Channel::MESSAGE_SYNC_ACK : null;
+            }
+        };
     }
 }

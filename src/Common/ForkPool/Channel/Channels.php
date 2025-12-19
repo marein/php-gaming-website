@@ -45,9 +45,11 @@ final class Channels
         }
 
         foreach ($this->channels as $channel) {
-            if ($channel->receive($timeout) !== Channel::MESSAGE_SYNC_ACK) {
+            $start = time();
+            if ($channel->receive(max(0, $timeout)) !== Channel::MESSAGE_SYNC_ACK) {
                 throw new ForkPoolException('Failed to synchronize all channels.');
             }
+            $timeout !== null && $timeout -= time() - $start;
         }
     }
 }
