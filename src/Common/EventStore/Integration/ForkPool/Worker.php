@@ -19,7 +19,7 @@ final class Worker implements Task
     {
         while ($message = $channel->receive()) {
             match ($message) {
-                'COMMIT' => $this->handleCommit($channel),
+                Channel::MESSAGE_SYNC => $this->handleCommit($channel),
                 default => $this->storedEventSubscriber->handle($message)
             };
         }
@@ -31,6 +31,6 @@ final class Worker implements Task
     {
         $this->storedEventSubscriber->commit();
 
-        $channel->send('ACK');
+        $channel->send(Channel::MESSAGE_SYNC_ACK);
     }
 }

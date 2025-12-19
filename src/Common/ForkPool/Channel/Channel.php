@@ -8,6 +8,9 @@ use Gaming\Common\ForkPool\Exception\ForkPoolException;
 
 interface Channel
 {
+    public const string MESSAGE_SYNC = 'SYNC';
+    public const string MESSAGE_SYNC_ACK = 'SYNC_ACK';
+
     /**
      * @throws ForkPoolException
      */
