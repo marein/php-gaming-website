@@ -30,6 +30,9 @@ final class TimeoutService
         $this->timeoutStore->remove($timeoutIds);
     }
 
+    /**
+     * @param Closure(list<string>): void $handler
+     */
     public function listen(
         Closure $handler,
         int $lookaheadWindowMs = 3000,
@@ -41,19 +44,22 @@ final class TimeoutService
             $estimatedSleepTime = $maxSleepMs * 1000;
 
             $timeouts = $this->timeoutStore->find($nowMs + $lookaheadWindowMs);
-            $handledTimeoutIds = [];
+            $affectedTimeoutIds = [];
             foreach ($timeouts as $timeoutId => $handleAt) {
                 $timeoutIn = max(0, $handleAt - $nowMs);
                 $estimatedSleepTime = min($estimatedSleepTime, $timeoutIn * 1000);
 
                 if ($timeoutIn === 0) {
-                    $handler($timeoutId);
-                    $handledTimeoutIds[] = $timeoutId;
+                    $affectedTimeoutIds[] = $timeoutId;
                 }
             }
-            $this->timeoutStore->remove($handledTimeoutIds);
 
-            usleep(min($maxSleepMs * 1000, $estimatedSleepTime));
+            $nowBeforeHandling = (int)(microtime(true) * 1000);
+            $handler($affectedTimeoutIds);
+            $this->timeoutStore->remove($affectedTimeoutIds);
+            $estimatedSleepTime -= (int)(microtime(true) * 1000 - $nowBeforeHandling) * 1000;
+
+            usleep(min($maxSleepMs * 1000, max(0, $estimatedSleepTime)));
         }
     }
 }

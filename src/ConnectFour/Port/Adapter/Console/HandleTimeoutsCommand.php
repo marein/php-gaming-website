@@ -5,27 +5,30 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Port\Adapter\Console;
 
 use Gaming\Common\Bus\Bus;
+use Gaming\Common\ForkPool\Integration\Prometheus\ExposeMetricsTask;
+use Gaming\Common\Timer\Integration\HandleTimeoutsCommandTemplate;
 use Gaming\Common\Timer\TimeoutService;
 use Gaming\ConnectFour\Application\Game\Command\TimeoutCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Prometheus\RegistryInterface;
 
-final class HandleTimeoutsCommand extends Command
+final class HandleTimeoutsCommand extends HandleTimeoutsCommandTemplate
 {
     public function __construct(
         private readonly Bus $commandBus,
-        private readonly TimeoutService $timeoutService
+        TimeoutService $timeoutService,
+        RegistryInterface $prometheusRegistry,
+        ExposeMetricsTask $exposeMetricsTask
     ) {
-        parent::__construct();
+        parent::__construct(
+            $timeoutService,
+            $prometheusRegistry,
+            'connect_four',
+            $exposeMetricsTask
+        );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function handleTimeout(string $timeoutId): void
     {
-        $this->timeoutService->listen(
-            fn(string $timeoutId) => $this->commandBus->handle(new TimeoutCommand($timeoutId))
-        );
-
-        return Command::SUCCESS;
+        $this->commandBus->handle(new TimeoutCommand($timeoutId));
     }
 }
