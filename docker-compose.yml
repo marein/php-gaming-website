@@ -188,6 +188,7 @@ services:
     connect-four-bot:
         image: ghcr.io/gaming-platform/service-connect-four-bot
 #        build: { context: ../service-connect-four-bot, target: development }
+#        volumes: [../service-connect-four-bot/:/project:delegated]
         environment:
             APP_USERNAME: 'BOT_random'
             APP_LEVEL: '0'
