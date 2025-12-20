@@ -10,6 +10,7 @@ use Gaming\Common\ForkPool\Channel\StreamChannelPairFactory;
 use Gaming\Common\ForkPool\ClosureTask;
 use Gaming\Common\ForkPool\ForkPool;
 use Gaming\Common\ForkPool\Integration\Prometheus\ExposeMetricsTask;
+use Gaming\Common\Timer\CancellationToken;
 use Gaming\Common\Timer\TimeoutService;
 use Prometheus\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -80,9 +81,15 @@ abstract class HandleTimeoutsCommandTemplate extends Command
             )
         );
 
-        $forkPool
+        $coordinator = $forkPool
             ->fork(
                 new ClosureTask(function (Channel $channel) use ($workerChannels): int {
+                    $cancellationToken = new CancellationToken();
+                    pcntl_async_signals(true);
+                    foreach ([SIGINT, SIGTERM] as $signal) {
+                        pcntl_signal($signal, static fn() => $cancellationToken->cancel());
+                    }
+
                     $this->timeoutService->listen(
                         static function (array $timeoutIds) use ($workerChannels): void {
                             foreach ($timeoutIds as $timeoutId) {
@@ -90,7 +97,8 @@ abstract class HandleTimeoutsCommandTemplate extends Command
                             }
 
                             $workerChannels->synchronize();
-                        }
+                        },
+                        cancellationToken: $cancellationToken
                     );
 
                     return 0;
@@ -99,7 +107,19 @@ abstract class HandleTimeoutsCommandTemplate extends Command
 
         $forkPool->fork($this->exposeMetricsTask);
 
-        $forkPool->signal()->enableAsyncDispatch()->forwardSignalAndWait([SIGINT, SIGTERM]);
+        $forkPool->signal()
+            ->enableAsyncDispatch()
+            ->on(
+                [SIGINT, SIGTERM],
+                static function () use ($forkPool, $coordinator): void {
+                    $coordinator->kill(SIGTERM);
+                    $forkPool->wait()->killAllWhenAnyExits(SIGTERM);
+
+                    exit(0);
+                },
+                false
+            );
+
         $forkPool->wait()->killAllWhenAnyExits(SIGTERM);
 
         return Command::FAILURE;

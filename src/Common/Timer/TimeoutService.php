@@ -37,29 +37,29 @@ final class TimeoutService
         Closure $handler,
         int $lookaheadWindowMs = 3000,
         int $maxSleepMs = 250,
-        bool &$shouldRun = true
+        CancellationToken $cancellationToken = new CancellationToken()
     ): void {
-        while ($shouldRun) {
+        while (!$cancellationToken->isCancelled) {
             $nowMs = (int)(microtime(true) * 1000);
-            $estimatedSleepTime = $maxSleepMs * 1000;
+            $estimatedSleepTimeUs = $maxSleepMs * 1000;
 
             $timeouts = $this->timeoutStore->find($nowMs + $lookaheadWindowMs);
             $affectedTimeoutIds = [];
             foreach ($timeouts as $timeoutId => $handleAt) {
-                $timeoutIn = max(0, $handleAt - $nowMs);
-                $estimatedSleepTime = min($estimatedSleepTime, $timeoutIn * 1000);
+                $timeoutInMs = max(0, $handleAt - $nowMs);
+                $estimatedSleepTimeUs = min($estimatedSleepTimeUs, $timeoutInMs * 1000);
 
-                if ($timeoutIn === 0) {
+                if ($timeoutInMs === 0) {
                     $affectedTimeoutIds[] = $timeoutId;
                 }
             }
 
-            $nowBeforeHandling = (int)(microtime(true) * 1000);
+            $nowMsBeforeHandling = (int)(microtime(true) * 1000);
             $handler($affectedTimeoutIds);
             $this->timeoutStore->remove($affectedTimeoutIds);
-            $estimatedSleepTime -= (int)(microtime(true) * 1000 - $nowBeforeHandling) * 1000;
+            $estimatedSleepTimeUs -= (int)(microtime(true) * 1000 - $nowMsBeforeHandling) * 1000;
 
-            usleep(min($maxSleepMs * 1000, max(0, $estimatedSleepTime)));
+            usleep(min($maxSleepMs * 1000, max(0, $estimatedSleepTimeUs)));
         }
     }
 }
