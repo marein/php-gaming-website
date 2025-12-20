@@ -12,6 +12,8 @@ use Gaming\Common\EventStore\Integration\ForkPool\Publisher;
 use Gaming\Common\EventStore\Integration\ForkPool\Worker;
 use Gaming\Common\EventStore\PollableEventStore;
 use Gaming\Common\EventStore\StoredEventSubscriber;
+use Gaming\Common\ForkPool\Channel\Channel;
+use Gaming\Common\ForkPool\Channel\Channels;
 use Gaming\Common\ForkPool\Channel\StreamChannelPairFactory;
 use Gaming\Common\ForkPool\ForkPool;
 use Gaming\Common\ForkPool\Task;
@@ -112,11 +114,13 @@ final class FollowEventStoreCommand extends Command
                     $this->pollableEventStore,
                     $this->eventStorePointerFactory->withName((string)$input->getArgument('pointer')),
                     new ForwardToChannelStoredEventSubscriber(
-                        array_map(
-                            fn() => $forkPool->fork(
-                                new Worker($this->getStoredEventSubscriber($subscriberNames))
-                            )->channel(),
-                            range(1, $parallelism)
+                        new Channels(
+                            array_map(
+                                fn(): Channel => $forkPool->fork(
+                                    new Worker($this->getStoredEventSubscriber($subscriberNames))
+                                )->channel(),
+                                range(1, $parallelism)
+                            )
                         )
                     ),
                     max(1, (int)$input->getOption('batch')),
