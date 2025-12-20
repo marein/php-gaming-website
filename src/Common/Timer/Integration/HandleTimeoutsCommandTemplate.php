@@ -57,71 +57,72 @@ abstract class HandleTimeoutsCommandTemplate extends Command
 
         $workerChannels = new Channels(
             array_map(
-                fn(): Channel => $forkPool->fork(
-                    new ClosureTask(function (Channel $channel): int {
-                        while ($message = $channel->receive()) {
-                            if ($message === Channel::MESSAGE_SYNC) {
-                                $channel->send(Channel::MESSAGE_SYNC_ACK);
-                                continue;
-                            }
-
-                            $this->handleTimeout((string)$message);
-
-                            $this->prometheusRegistry->getOrRegisterCounter(
-                                $this->metricsNamespace,
-                                'handled_timeouts_total',
-                                'Total number of handled timeouts.'
-                            )->inc();
-                        }
-
-                        return 0;
-                    })
-                )->channel(),
+                fn(): Channel => $forkPool->fork($this->createWorkerTask())->channel(),
                 range(1, $parallelism)
             )
         );
 
-        $coordinator = $forkPool
-            ->fork(
-                new ClosureTask(function (Channel $channel) use ($workerChannels): int {
-                    $cancellationToken = new CancellationToken();
-                    pcntl_async_signals(true);
-                    foreach ([SIGINT, SIGTERM] as $signal) {
-                        pcntl_signal($signal, static fn() => $cancellationToken->cancel());
-                    }
-
-                    $this->timeoutService->listen(
-                        static function (array $timeoutIds) use ($workerChannels): void {
-                            foreach ($timeoutIds as $timeoutId) {
-                                $workerChannels->roundRobin()->send($timeoutId);
-                            }
-
-                            $workerChannels->synchronize();
-                        },
-                        cancellationToken: $cancellationToken
-                    );
-
-                    return 0;
-                })
-            );
+        $coordinator = $forkPool->fork($this->createCoordinatorTask($workerChannels));
 
         $forkPool->fork($this->exposeMetricsTask);
 
-        $forkPool->signal()
-            ->enableAsyncDispatch()
-            ->on(
-                [SIGINT, SIGTERM],
-                static function () use ($forkPool, $coordinator): void {
-                    $coordinator->kill(SIGTERM);
-                    $forkPool->wait()->killAllWhenAnyExits(SIGTERM);
+        $forkPool->signal()->enableAsyncDispatch()->on(
+            [SIGINT, SIGTERM],
+            static function () use ($forkPool, $coordinator): void {
+                $coordinator->kill(SIGTERM);
+                $forkPool->wait()->killAllWhenAnyExits(SIGTERM);
 
-                    exit(0);
-                },
-                false
-            );
+                exit(0);
+            },
+            false
+        );
 
         $forkPool->wait()->killAllWhenAnyExits(SIGTERM);
 
         return Command::FAILURE;
+    }
+
+    private function createWorkerTask(): ClosureTask
+    {
+        return new ClosureTask(function (Channel $channel): int {
+            while ($message = $channel->receive()) {
+                match ($message) {
+                    Channel::MESSAGE_SYNC => $channel->send(Channel::MESSAGE_SYNC_ACK),
+                    default => $this->handleTimeout($message)
+                };
+            }
+
+            return 0;
+        });
+    }
+
+    private function createCoordinatorTask(Channels $workerChannels): ClosureTask
+    {
+        return new ClosureTask(function (Channel $channel) use ($workerChannels): int {
+            $cancellationToken = new CancellationToken();
+            pcntl_async_signals(true);
+            foreach ([SIGINT, SIGTERM] as $signal) {
+                pcntl_signal($signal, static fn() => $cancellationToken->cancel());
+            }
+
+            $this->timeoutService->listen(
+                function (array $timeoutIds) use ($workerChannels): void {
+                    foreach ($timeoutIds as $timeoutId) {
+                        $workerChannels->roundRobin()->send($timeoutId);
+                    }
+
+                    $workerChannels->synchronize();
+
+                    $this->prometheusRegistry->getOrRegisterCounter(
+                        $this->metricsNamespace,
+                        'handled_timeouts_total',
+                        'Total number of handled timeouts.'
+                    )->incBy(count($timeoutIds));
+                },
+                cancellationToken: $cancellationToken
+            );
+
+            return 0;
+        });
     }
 }
