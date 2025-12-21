@@ -140,6 +140,9 @@ final class RpcMessageHandler implements MessageHandler
         return array_map(
             static fn(Game $game) => ConnectFourV1::createGame()
                 ->setGameId($game->gameId)
+                ->setChatId($game->chatId)
+                ->setWidth($game->width)
+                ->setHeight($game->height)
                 ->setCurrentPlayerId($game->currentPlayerId)
                 ->setMoves(
                     array_map(
