@@ -22,7 +22,11 @@ services:
                 description: 'Publish number of running games to the browser.'
 
     Gaming\ConnectFour\Port\Adapter\Console\HandleTimeoutsCommand:
-        arguments: ['@connect-four.command-bus', '@connect-four.timeout-service']
+        arguments:
+            - '@connect-four.command-bus'
+            - '@connect-four.timeout-service'
+            - '@gaming.prometheus.registry'
+            - '@gaming.prometheus.task'
         tags:
             -   name: console.command
                 command: connect-four:handle-timeouts

@@ -34,6 +34,8 @@ services:
             placement:
                 constraints:
                     - "node.labels.long-running==1"
+            labels:
+                - "prometheus-job=connect-four-handle-timeouts"
     connect-four-publish-to-browser:
         image: marein/php-gaming-website:php-fpm
         command: bin/console gaming:consume-messages connect-four.publish-to-browser -r 5
