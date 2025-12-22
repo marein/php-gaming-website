@@ -12,4 +12,8 @@ use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGames;
  */
 final class OpenGamesQuery implements Request
 {
+    public function __construct(
+        public readonly int $limit
+    ) {
+    }
 }

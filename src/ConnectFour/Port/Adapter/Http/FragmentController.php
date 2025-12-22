@@ -36,7 +36,7 @@ final class FragmentController extends AbstractController
     public function openGamesAction(): Response
     {
         return $this->render('@connect-four/open-games.html.twig', [
-            'openGames' => $openGames = $this->queryBus->handle(new OpenGamesQuery()),
+            'openGames' => $openGames = $this->queryBus->handle(new OpenGamesQuery(100)),
             'usernames' => $this->usernames->byIds(
                 array_map(
                     static fn(OpenGame $openGame) => $openGame->playerId,

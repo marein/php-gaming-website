@@ -10,5 +10,5 @@ interface OpenGameStore
 
     public function remove(string $gameId): void;
 
-    public function all(): OpenGames;
+    public function all(int $limit): OpenGames;
 }
