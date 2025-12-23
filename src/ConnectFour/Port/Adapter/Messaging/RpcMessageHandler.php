@@ -35,7 +35,7 @@ final class RpcMessageHandler implements MessageHandler
             ConnectFourV1::OpenGameType => $this->handleOpenGame($message, $context),
             ConnectFourV1::JoinGameType => $this->handleJoinGame($message, $context),
             ConnectFourV1::MakeMoveType => $this->handleMakeMove($message, $context),
-//            ConnectFourV1::GetOpenGamesType => $this->handleGetOpenGames($message, $context),
+            ConnectFourV1::GetOpenGamesType => $this->handleGetOpenGames($message, $context),
             ConnectFourV1::GetGamesByPlayerType => $this->handleGetGamesByPlayer($message, $context),
             default => true
         };
@@ -102,34 +102,34 @@ final class RpcMessageHandler implements MessageHandler
         );
     }
 
-//    private function handleGetOpenGames(Message $message, Context $context): void
-//    {
-//        $request = ConnectFourV1::createGetOpenGames($message->body());
-//
-//        $response = $this->queryBus->handle(
-//            new OpenGamesQuery(
-//                $request->getLimit()
-//            )
-//        );
-//
-//        $context->reply(
-//            new Message(
-//                ConnectFourV1::GetOpenGamesResponseType,
-//                ConnectFourV1::createGetOpenGamesResponse()
-//                    ->setGames(
-//                        array_map(
-//                            static fn(OpenGame $game) => ConnectFourV1::createGetOpenGamesResponse_Game()
-//                                ->setGameId($game->gameId)
-//                                ->setWidth($game->width)
-//                                ->setHeight($game->height)
-//                                ->setPlayerId($game->playerId),
-//                            $response->games()
-//                        )
-//                    )
-//                    ->serializeToString()
-//            )
-//        );
-//    }
+    private function handleGetOpenGames(Message $message, Context $context): void
+    {
+        $request = ConnectFourV1::createGetOpenGames($message->body());
+
+        $response = $this->queryBus->handle(
+            new OpenGamesQuery(
+                $request->getLimit()
+            )
+        );
+
+        $context->reply(
+            new Message(
+                ConnectFourV1::GetOpenGamesResponseType,
+                ConnectFourV1::createGetOpenGamesResponse()
+                    ->setGames(
+                        array_map(
+                            static fn(OpenGame $game) => ConnectFourV1::createGetOpenGamesResponse_Game()
+                                ->setGameId($game->gameId)
+                                ->setWidth($game->width)
+                                ->setHeight($game->height)
+                                ->setPlayerId($game->playerId),
+                            $response->games()
+                        )
+                    )
+                    ->serializeToString()
+            )
+        );
+    }
 
     private function handleGetGamesByPlayer(Message $message, Context $context): void
     {
