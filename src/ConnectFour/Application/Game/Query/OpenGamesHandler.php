@@ -9,15 +9,13 @@ use Gaming\ConnectFour\Application\Game\Query\Model\OpenGames\OpenGameStore;
 
 final class OpenGamesHandler
 {
-    private OpenGameStore $openGameStore;
-
-    public function __construct(OpenGameStore $openGameStore)
-    {
-        $this->openGameStore = $openGameStore;
+    public function __construct(
+        private readonly OpenGameStore $openGameStore
+    ) {
     }
 
     public function __invoke(OpenGamesQuery $query): OpenGames
     {
-        return $this->openGameStore->all();
+        return $this->openGameStore->all($query->limit);
     }
 }

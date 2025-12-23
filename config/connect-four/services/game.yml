@@ -17,7 +17,7 @@ services:
 
     connect-four.open-game-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisOpenGameStore
-        arguments: ['@connect-four.predis', 'open-games']
+        arguments: ['@connect-four.predis', 'open-games', '@connect-four.normalizer']
 
     connect-four.running-games-store:
         class: Gaming\ConnectFour\Port\Adapter\Persistence\Repository\PredisRunningGameStore

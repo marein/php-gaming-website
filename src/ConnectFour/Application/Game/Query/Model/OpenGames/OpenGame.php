@@ -8,6 +8,8 @@ final class OpenGame
 {
     public function __construct(
         public readonly string $gameId,
+        public readonly int $width,
+        public readonly int $height,
         public readonly string $playerId
     ) {
     }

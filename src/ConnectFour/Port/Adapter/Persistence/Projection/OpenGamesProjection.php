@@ -27,22 +27,17 @@ final class OpenGamesProjection implements StoredEventSubscriber
         $content = $domainEvent->content;
 
         match ($content::class) {
-            GameOpened::class => $this->saveGame($content->aggregateId(), $content->playerId()),
+            GameOpened::class => $this->openGameStore->save(
+                new OpenGame(
+                    $content->aggregateId(),
+                    $content->width(),
+                    $content->height(),
+                    $content->playerId()
+                )
+            ),
             GameAborted::class,
-            PlayerJoined::class => $this->removeGame($content->aggregateId()),
+            PlayerJoined::class => $this->openGameStore->remove($content->aggregateId()),
             default => true
         };
-    }
-
-    private function saveGame(string $gameId, string $playerId): void
-    {
-        $this->openGameStore->save(
-            new OpenGame($gameId, $playerId)
-        );
-    }
-
-    private function removeGame(string $gameId): void
-    {
-        $this->openGameStore->remove($gameId);
     }
 }
