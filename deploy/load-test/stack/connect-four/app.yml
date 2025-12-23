@@ -64,6 +64,9 @@ services:
     connect-four-bot:
         image: ghcr.io/gaming-platform/service-connect-four-bot
         env_file: ../bot.env
+        deploy:
+            labels:
+                - "prometheus-job=connect-four-bot"
 
 volumes:
     proxysql.sock:
