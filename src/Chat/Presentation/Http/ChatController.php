@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\WebInterface\Presentation\Http;
+namespace Gaming\Chat\Presentation\Http;
 
 use Gaming\Chat\Application\Command\WriteMessageCommand;
 use Gaming\Chat\Application\Query\MessagesQuery;

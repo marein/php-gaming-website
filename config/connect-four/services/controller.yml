@@ -14,3 +14,8 @@ services:
             - '@gaming.usernames'
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']
+
+    connect-four.game-controller:
+        class: Gaming\ConnectFour\Port\Adapter\Http\GameController
+        arguments: ['@connect-four.command-bus', '@web-interface.security']
+        tags: ['controller.service_arguments']

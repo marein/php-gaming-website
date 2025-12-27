@@ -24,7 +24,7 @@ security:
             pattern: ^/
             lazy: true
             login_link:
-                check_route: login_check
+                check_route: identity_login_check
                 signature_properties: ['userIdentifier']
             logout:
                 path: /logout

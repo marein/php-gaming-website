@@ -10,6 +10,9 @@ gaming_platform_bus:
         identity_command: ~
         identity_query: ~
 
+twig:
+    paths: { '%kernel.project_dir%/src/Identity/Port/Adapter/Http/View': identity }
+
 doctrine:
     dbal:
         connections:

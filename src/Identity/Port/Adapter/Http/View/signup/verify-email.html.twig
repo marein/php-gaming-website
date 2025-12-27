@@ -1,4 +1,4 @@
-{% extends '@web-interface/signup/layout/base.html.twig' %}
+{% extends '@identity/signup/layout/base.html.twig' %}
 
 {% set page_title = 'Confirm and play!' %}
 {% set step = 2 %}
@@ -17,7 +17,7 @@
     <p class="text-center">
         We've sent a verification link to your inbox. Click the link in the email to complete your signup.
         If you don't see the email, check your spam folder or
-        <a href="{{ path('signup', {'username': app.request.get('username')}) }}">click here to try again</a>.
+        <a href="{{ path('identity_signup', {'username': app.request.get('username')}) }}">click here to try again</a>.
     </p>
     <p class="text-danger text-center fw-bolder">
         No email has been sent because this feature is still in development,

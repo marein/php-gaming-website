@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\WebInterface\Presentation\Http;
+namespace Gaming\ConnectFour\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\ConnectFour\Application\Game\Command\AbortCommand;
@@ -13,7 +13,7 @@ use Gaming\WebInterface\Infrastructure\Security\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-final class ConnectFourController
+final class GameController
 {
     public function __construct(
         private readonly Bus $connectFourCommandBus,

@@ -1,4 +1,4 @@
-{% extends '@web-interface/login/layout/base.html.twig' %}
+{% extends '@identity/login/layout/base.html.twig' %}
 
 {% set page_title = 'Check your inbox!' %}
 
@@ -16,7 +16,7 @@
     <p class="text-center">
         We’ve sent a login link to your inbox. Click the link in the email to log in.
         If you don't see the email, check your spam folder or
-        <a href="{{ path('login') }}">click here to try again</a>.
+        <a href="{{ path('identity_login') }}">click here to try again</a>.
     </p>
     {% if app.request.get('loginUrl') %}
         <p class="text-danger text-center fw-bolder">
