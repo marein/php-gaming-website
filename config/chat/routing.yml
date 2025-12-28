@@ -1,0 +1,11 @@
+chat_write_message:
+    path: /api/chat/chats/{chatId}/write-message
+    methods: [POST]
+    controller: chat.chat-controller::writeMessageAction
+    defaults: { _format: json }
+
+chat_messages:
+    path: /api/chat/chats/{chatId}/messages
+    methods: [GET]
+    controller: chat.chat-controller::messagesAction
+    defaults: { _format: json }

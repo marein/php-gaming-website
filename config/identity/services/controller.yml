@@ -1,0 +1,21 @@
+services:
+    identity.signup-controller:
+        class: Gaming\Identity\Port\Adapter\Http\SignupController
+        arguments:
+            - '@uri_signer'
+            - '@web-interface.security'
+            - '@identity.command-bus'
+            - '@gaming.form-violation-mapper'
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']
+
+    identity.login-controller:
+        class: Gaming\Identity\Port\Adapter\Http\LoginController
+        arguments:
+            - '@security.authentication_utils'
+            - '@security.authenticator.firewall_aware_login_link_handler'
+            - '@uri_signer'
+            - '@identity.query-bus'
+            - '@gaming.form-violation-mapper'
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']

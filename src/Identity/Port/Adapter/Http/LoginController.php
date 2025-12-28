@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Gaming\WebInterface\Presentation\Http;
+namespace Gaming\Identity\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Domain\Exception\DomainException;
 use Gaming\Common\Domain\Integration\FormViolationMapper;
 use Gaming\Identity\Application\User\Query\UserByEmailQuery;
+use Gaming\Identity\Port\Adapter\Http\Form\LoginType;
 use Gaming\WebInterface\Infrastructure\Security\User;
-use Gaming\WebInterface\Presentation\Http\Form\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,12 +44,16 @@ final class LoginController extends AbstractController
                 $email = (string)$form->get('email')->getData();
                 $user = $this->identityQueryBus->handle(new UserByEmailQuery($email));
 
-                return $this->redirectToRoute('login_check_inbox', [
+                return $this->redirectToRoute('identity_login_check_inbox', [
                     'loginUrl' => $user === null ? null : $this->loginLinkHandler->createLoginLink(
                         new User($user->userId)
                     ),
                     'signupUrl' => $user !== null ? null : $this->uriSigner->sign(
-                        $this->generateUrl('signup_confirm', ['email' => $email], UrlGeneratorInterface::ABSOLUTE_URL)
+                        $this->generateUrl(
+                            'identity_signup_confirm',
+                            ['email' => $email],
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        )
                     )
                 ]);
             } catch (DomainException $e) {
@@ -57,7 +61,7 @@ final class LoginController extends AbstractController
             }
         }
 
-        return $this->render('@web-interface/login/index.html.twig', [
+        return $this->render('@identity/login/index.html.twig', [
             'form' => $form,
             'lastAuthenticationError' => $this->authenticationUtils->getLastAuthenticationError()
         ]);
@@ -69,6 +73,6 @@ final class LoginController extends AbstractController
             return $this->redirectToRoute('lobby');
         }
 
-        return $this->render('@web-interface/login/check-inbox.html.twig');
+        return $this->render('@identity/login/check-inbox.html.twig');
     }
 }

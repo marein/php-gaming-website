@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gaming\WebInterface\Presentation\Http\Form;
+namespace Gaming\Identity\Port\Adapter\Http\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;

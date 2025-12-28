@@ -1,11 +1,3 @@
-_symfony_logout:
-    resource: security.route_loader.logout
-    type: service
-
-###############################################
-#                    Pages                    #
-###############################################
-
 lobby:
     path: /
     methods: [GET]
@@ -26,80 +18,8 @@ game:
     methods: [GET]
     controller: web-interface.page-controller::gameAction
 
-signup:
-    path: /signup
-    methods: [GET, POST]
-    controller: web-interface.signup-controller::indexAction
-
-signup_verify_email:
-    path: /signup/verify-email
-    methods: [GET]
-    controller: web-interface.signup-controller::verifyEmailAction
-
-signup_confirm:
-    path: /signup/confirm
-    methods: [GET, POST]
-    controller: web-interface.signup-controller::confirmAction
-
-login:
-    path: /login
-    methods: [GET, POST]
-    controller: web-interface.login-controller::indexAction
-
-login_check_inbox:
-    path: /login/check-inbox
-    methods: [GET]
-    controller: web-interface.login-controller::checkInboxAction
-
-login_check:
-    path: /login/check
-
 server_time:
     path: /api/server-time
     methods: [GET]
     controller: web-interface.server-time-controller::serverTimeAction
-    defaults: { _format: json }
-
-###############################################
-#                Chat Service                 #
-###############################################
-
-write_message:
-    path: /api/chat/chats/{chatId}/write-message
-    methods: [POST]
-    controller: web-interface.chat-controller::writeMessageAction
-    defaults: { _format: json }
-
-messages:
-    path: /api/chat/chats/{chatId}/messages
-    methods: [GET]
-    controller: web-interface.chat-controller::messagesAction
-    defaults: { _format: json }
-
-###############################################
-#             Connect Four Service            #
-###############################################
-
-abort:
-    path: /api/connect-four/games/{gameId}/abort
-    methods: [POST]
-    controller: web-interface.connect-four-controller::abortAction
-    defaults: { _format: json }
-
-resign:
-    path: /api/connect-four/games/{gameId}/resign
-    methods: [POST]
-    controller: web-interface.connect-four-controller::resignAction
-    defaults: { _format: json }
-
-join:
-    path: /api/connect-four/games/{gameId}/join
-    methods: [POST]
-    controller: web-interface.connect-four-controller::joinAction
-    defaults: { _format: json }
-
-move:
-    path: /api/connect-four/games/{gameId}/move
-    methods: [POST]
-    controller: web-interface.connect-four-controller::moveAction
     defaults: { _format: json }

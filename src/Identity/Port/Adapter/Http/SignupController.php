@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Gaming\WebInterface\Presentation\Http;
+namespace Gaming\Identity\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Domain\Exception\DomainException;
 use Gaming\Common\Domain\Integration\FormViolationMapper;
 use Gaming\Identity\Application\User\Command\SignUpCommand;
+use Gaming\Identity\Port\Adapter\Http\Form\SignupType;
 use Gaming\WebInterface\Infrastructure\Security\Security;
 use Gaming\WebInterface\Infrastructure\Security\User;
-use Gaming\WebInterface\Presentation\Http\Form\SignupType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,10 +48,14 @@ final class SignupController extends AbstractController
                     )
                 );
 
-                return $this->redirectToRoute('signup_verify_email', [
+                return $this->redirectToRoute('identity_signup_verify_email', [
                     'username' => $form->get('username')->getData(),
                     'confirmUrl' => $this->uriSigner->sign(
-                        $this->generateUrl('signup_confirm', $form->getData(), UrlGeneratorInterface::ABSOLUTE_URL)
+                        $this->generateUrl(
+                            'identity_signup_confirm',
+                            $form->getData(),
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        )
                     )
                 ]);
             } catch (DomainException $e) {
@@ -59,7 +63,7 @@ final class SignupController extends AbstractController
             }
         }
 
-        return $this->render('@web-interface/signup/index.html.twig', ['form' => $form]);
+        return $this->render('@identity/signup/index.html.twig', ['form' => $form]);
     }
 
     public function verifyEmailAction(#[CurrentUser] ?User $user, Request $request): Response
@@ -68,7 +72,7 @@ final class SignupController extends AbstractController
             return $this->redirectToRoute('lobby');
         }
 
-        return $this->render('@web-interface/signup/verify-email.html.twig');
+        return $this->render('@identity/signup/verify-email.html.twig');
     }
 
     public function confirmAction(#[CurrentUser] ?User $user, Request $request): Response
@@ -109,6 +113,6 @@ final class SignupController extends AbstractController
             }
         }
 
-        return $this->render('@web-interface/signup/confirm.html.twig', ['form' => $form]);
+        return $this->render('@identity/signup/confirm.html.twig', ['form' => $form]);
     }
 }

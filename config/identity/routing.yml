@@ -1,0 +1,31 @@
+_symfony_logout:
+  resource: security.route_loader.logout
+  type: service
+
+identity_signup:
+  path: /signup
+  methods: [GET, POST]
+  controller: identity.signup-controller::indexAction
+
+identity_signup_verify_email:
+  path: /signup/verify-email
+  methods: [GET]
+  controller: identity.signup-controller::verifyEmailAction
+
+identity_signup_confirm:
+  path: /signup/confirm
+  methods: [GET, POST]
+  controller: identity.signup-controller::confirmAction
+
+identity_login:
+  path: /login
+  methods: [GET, POST]
+  controller: identity.login-controller::indexAction
+
+identity_login_check_inbox:
+  path: /login/check-inbox
+  methods: [GET]
+  controller: identity.login-controller::checkInboxAction
+
+identity_login_check:
+  path: /login/check

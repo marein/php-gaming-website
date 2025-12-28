@@ -1,0 +1,5 @@
+services:
+    chat.chat-controller:
+        class: Gaming\Chat\Presentation\Http\ChatController
+        arguments: ['@chat.command-bus', '@chat.query-bus', '@web-interface.security', '@gaming.usernames']
+        tags: ['controller.service_arguments']

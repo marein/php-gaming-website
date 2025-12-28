@@ -17,3 +17,27 @@ connect_four_challenge:
     path: /challenge/{id}
     methods: [GET]
     controller: connect-four.challenge-controller::showAction
+
+connect_four_abort_game:
+    path: /api/connect-four/games/{gameId}/abort
+    methods: [POST]
+    controller: connect-four.game-controller::abortAction
+    defaults: { _format: json }
+
+connect_four_resign_game:
+    path: /api/connect-four/games/{gameId}/resign
+    methods: [POST]
+    controller: connect-four.game-controller::resignAction
+    defaults: { _format: json }
+
+connect_four_join_game:
+    path: /api/connect-four/games/{gameId}/join
+    methods: [POST]
+    controller: connect-four.game-controller::joinAction
+    defaults: { _format: json }
+
+connect_four_move_game:
+    path: /api/connect-four/games/{gameId}/move
+    methods: [POST]
+    controller: connect-four.game-controller::moveAction
+    defaults: { _format: json }
