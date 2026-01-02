@@ -1,14 +1,10 @@
-<div class="card">
+<div class="card gp-cf-game-list">
     <div class="card-body d-flex flex-column">
         <h3 class="card-title">Connect Four</h3>
-        <div class="gp-cf-game gp-cf-game--disabled mb-3">
-            <div class="gp-cf-game__field"></div>
-            <div class="gp-cf-game__field"></div>
-            <div class="gp-cf-game__field"></div>
-            <div class="gp-cf-game__field"></div>
-            <div class="gp-cf-game__field"></div>
-            <div class="gp-cf-game__field"></div>
-            <div class="gp-cf-game__field"></div>
+        <div class="gp-cf-game gp-cf-game--disabled mb-3 w-66 align-self-center">
+            {% for i in 1..(7 * 4) %}
+                <div class="gp-cf-game__field"></div>
+            {% endfor %}
             <div class="gp-cf-game__field"></div>
             <div class="gp-cf-game__field"></div>
             <div class="gp-cf-game__field"><div class="gp-cf-token gp-cf-token--yellow"></div></div>
