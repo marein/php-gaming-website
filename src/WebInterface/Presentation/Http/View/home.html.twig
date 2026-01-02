@@ -1,0 +1,14 @@
+{% extends 'layout/condensed.html.twig' %}
+
+{% set page_title = 'Home' %}
+
+{% block content %}
+    <div class="container container-narrow">
+        {{ render_ssi(controller('identity.fragment-controller::homeHeaderAction')) }}
+        <div class="row row-cards">
+            <div class="col-md-4">
+                {{ render_ssi(controller('connect-four.fragment-controller::homeTileAction')) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

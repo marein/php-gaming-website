@@ -1,0 +1,16 @@
+{% extends 'layout/condensed.html.twig' %}
+
+{% block context_nav %}
+    <header class="navbar navbar-expand">
+        <div class="container-xxl">
+            <ul class="navbar-nav">
+                <li class="nav-item{{ app.request.attributes.get('_route') == 'connect_four_lobby' ? ' active' }}">
+                    <a class="nav-link" href="{{ path('connect_four_lobby') }}">Lobby</a>
+                </li>
+                <li class="nav-item{{ app.request.attributes.get('_route') == 'connect_four_history' ? ' active' }}">
+                    <a class="nav-link" href="{{ path('connect_four_history') }}">History</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+{% endblock %}

@@ -2,12 +2,20 @@ html {
     scroll-padding-top: 10px;
 }
 
-html:has(.navbar.sticky-top) {
+html:has(.sticky-top > .navbar) {
     scroll-padding-top: 66px;
 }
 
-html:has(.navbar.sticky-top) .page-body .sticky-md-top {
+html:has(.sticky-top > .navbar) .page-body .sticky-md-top {
     top: 66px;
+}
+
+html:has(.sticky-top > .navbar + .navbar) {
+    scroll-padding-top: 120px;
+}
+
+html:has(.sticky-top > .navbar + .navbar) .page-body .sticky-md-top {
+    top: 120px;
 }
 
 [data-title] {
