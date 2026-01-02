@@ -4,40 +4,42 @@
 {% set visiblePages = visiblePages|default(3) %}
 {% set queryParameter = queryParameter|default('page') %}
 
-<ul class="pagination pagination-outline">
-    {% for i in 1..totalPages %}
-        {% if 0 == (currentPage - visiblePages) - loop.index %}
-            <li class="page-item">
-                <a href="{{ (app.request.pathInfo ~ '?' ~ (app.request.query.all|merge({(queryParameter): 1})|url_encode))|e }}"
-                   class="page-link">
-                    1
-                </a>
-            </li>
-            {% if 1 != loop.index %}
+{% if totalPages > 1 %}
+    <ul class="pagination pagination-outline">
+        {% for i in 1..totalPages %}
+            {% if 0 == (currentPage - visiblePages) - loop.index %}
+                <li class="page-item">
+                    <a href="{{ (app.request.pathInfo ~ '?' ~ (app.request.query.all|merge({(queryParameter): 1})|url_encode))|e }}"
+                       class="page-link">
+                        1
+                    </a>
+                </li>
+                {% if 1 != loop.index %}
+                    <li class="page-item">
+                        <span class="page-link disabled">&hellip;</span>
+                    </li>
+                {% endif %}
+            {% elseif 0 == (currentPage + visiblePages) - loop.index  and (currentPage + visiblePages) < totalPages %}
                 <li class="page-item">
                     <span class="page-link disabled">&hellip;</span>
                 </li>
+            {% elseif 0 < (currentPage - visiblePages) - loop.index %}
+            {% elseif 0 > (currentPage + visiblePages) - loop.index %}
+            {% else %}
+                <li class="page-item{{ currentPage == loop.index ? ' active' }}">
+                    <a href="{{ (app.request.pathInfo ~ '?' ~ (app.request.query.all|merge({(queryParameter): loop.index})|url_encode))|e }}"
+                       class="page-link">
+                        {{ loop.index }}
+                    </a>
+                </li>
             {% endif %}
-        {% elseif 0 == (currentPage + visiblePages) - loop.index  and (currentPage + visiblePages) < totalPages %}
+        {% endfor %}
+        {% if currentPage != totalPages and (currentPage + visiblePages) < totalPages %}
             <li class="page-item">
-                <span class="page-link disabled">&hellip;</span>
-            </li>
-        {% elseif 0 < (currentPage - visiblePages) - loop.index %}
-        {% elseif 0 > (currentPage + visiblePages) - loop.index %}
-        {% else %}
-            <li class="page-item{{ currentPage == loop.index ? ' active' }}">
-                <a href="{{ (app.request.pathInfo ~ '?' ~ (app.request.query.all|merge({(queryParameter): loop.index})|url_encode))|e }}"
-                   class="page-link">
-                    {{ loop.index }}
+                <a href="{{ (app.request.pathInfo ~ '?' ~ (app.request.query.all|merge({(queryParameter): totalPages})|url_encode))|e }}"
+                   class="page-link">{{ totalPages }}
                 </a>
             </li>
         {% endif %}
-    {% endfor %}
-    {% if currentPage != totalPages and (currentPage + visiblePages) < totalPages %}
-        <li class="page-item">
-            <a href="{{ (app.request.pathInfo ~ '?' ~ (app.request.query.all|merge({(queryParameter): totalPages})|url_encode))|e }}"
-               class="page-link">{{ totalPages }}
-            </a>
-        </li>
-    {% endif %}
-</ul>
+    </ul>
+{% endif %}
