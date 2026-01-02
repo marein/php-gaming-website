@@ -47,7 +47,7 @@ final class ChallengeController extends AbstractController
             ]);
         }
 
-        return $this->redirectToRoute('lobby');
+        return $this->redirectToRoute('connect_four_lobby');
     }
 
     public function abortChallengeAction(string $id): Response
@@ -59,7 +59,7 @@ final class ChallengeController extends AbstractController
             )
         );
 
-        return $this->redirectToRoute('lobby');
+        return $this->redirectToRoute('connect_four_lobby');
     }
 
     public function acceptChallengeAction(string $id): Response
@@ -71,7 +71,7 @@ final class ChallengeController extends AbstractController
             )
         );
 
-        return $this->redirectToRoute('game', ['id' => $id]);
+        return $this->redirectToRoute('connect_four_game', ['id' => $id]);
     }
 
     public function showAction(string $id): Response
@@ -79,7 +79,7 @@ final class ChallengeController extends AbstractController
         $game = $this->queryBus->handle(new GameQuery($id));
 
         if ($game->state !== $game::STATE_OPEN) {
-            return $this->redirectToRoute('game', ['id' => $id], Response::HTTP_MOVED_PERMANENTLY);
+            return $this->redirectToRoute('connect_four_game', ['id' => $id], Response::HTTP_MOVED_PERMANENTLY);
         }
 
         return $this->render('@connect-four/challenge.html.twig', [

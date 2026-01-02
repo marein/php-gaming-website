@@ -13,7 +13,7 @@ class GameService {
      */
     redirectTo(gameId) {
         this.httpClient.redirectTo(
-            '/game/' + gameId
+            '/connect-four/game/' + gameId
         );
     }
 

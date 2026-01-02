@@ -31,7 +31,7 @@ final class SignupController extends AbstractController
     public function indexAction(#[CurrentUser] ?User $user, Request $request): Response
     {
         if ($user?->isSignedUp) {
-            return $this->redirectToRoute('lobby');
+            return $this->redirectToRoute('home');
         }
 
         $form = $this->createForm(SignupType::class, $request->query->all())
@@ -69,7 +69,7 @@ final class SignupController extends AbstractController
     public function verifyEmailAction(#[CurrentUser] ?User $user, Request $request): Response
     {
         if ($user?->isSignedUp) {
-            return $this->redirectToRoute('lobby');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('@identity/signup/verify-email.html.twig');
@@ -78,7 +78,7 @@ final class SignupController extends AbstractController
     public function confirmAction(#[CurrentUser] ?User $user, Request $request): Response
     {
         if ($user?->isSignedUp) {
-            return $this->redirectToRoute('lobby');
+            return $this->redirectToRoute('home');
         }
 
         if (!$this->uriSigner->checkRequest($request)) {
@@ -107,7 +107,7 @@ final class SignupController extends AbstractController
 
                 $this->security->forceUser()->forceRefreshAtNextRequest();
 
-                return $this->redirectToRoute('lobby');
+                return $this->redirectToRoute('home');
             } catch (DomainException $e) {
                 $this->formViolationMapper->mapViolations($form, $e->violations);
             }

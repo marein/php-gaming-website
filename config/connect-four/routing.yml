@@ -1,20 +1,35 @@
+connect_four_lobby:
+    path: /connect-four
+    methods: [GET]
+    controller: connect-four.page-controller::lobbyAction
+
+connect_four_history:
+    path: /connect-four/history
+    methods: [GET]
+    controller: connect-four.page-controller::historyAction
+
+connect_four_game:
+    path: /connect-four/game/{id}
+    methods: [GET]
+    controller: connect-four.page-controller::gameAction
+
 connect_four_open:
-    path: /api/connect-four/games/open
+    path: /connect-four/games/open
     methods: [POST]
     controller: connect-four.challenge-controller::openAction
 
 connect_four_abort_challenge:
-    path: /challenge/{id}/abort
+    path: /connect-four/challenge/{id}/abort
     methods: [POST]
     controller: connect-four.challenge-controller::abortChallengeAction
 
 connect_four_accept_challenge:
-    path: /challenge/{id}/accept
+    path: /connect-four/challenge/{id}/accept
     methods: [POST]
     controller: connect-four.challenge-controller::acceptChallengeAction
 
 connect_four_challenge:
-    path: /challenge/{id}
+    path: /connect-four/challenge/{id}
     methods: [GET]
     controller: connect-four.challenge-controller::showAction
 

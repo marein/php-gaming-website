@@ -1,0 +1,25 @@
+{% from "macro/username.html.twig" import render as renderUsername %}
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h1 class="card-title">
+            {% if app.user and app.user.isSignedUp %}
+                Happy to see you, {{ renderUsername(app.user.username) }}!
+            {% else %}
+                Welcome, {{ app.user ? renderUsername(app.user.username) : 'Guest' }}!
+            {% endif %}
+        </h1>
+        <p class="card-text">
+            Pick a game to start playing.
+        </p>
+        {% if not app.user or not app.user.isSignedUp %}
+            <p>
+                You’re currently playing as a guest.
+                <strong><a href="{{ path('identity_login') }}">Log in</a></strong>
+                or
+                <strong><a href="{{ path('identity_signup') }}">sign up for free</a></strong>
+                to keep your game history and statistics.
+            </p>
+        {% endif %}
+    </div>
+</div>

@@ -1,7 +1,7 @@
-{% extends 'layout/condensed.html.twig' %}
+{% extends '@connect-four/base.html.twig' %}
 {% from "macro/username.html.twig" import render as renderUsername %}
 
-{% set page_title = 'Profile' %}
+{% set page_title = 'History' %}
 
 {% block content %}
     <div class="row mb-3">
@@ -30,7 +30,7 @@
                 </span>
                 {% if app.request.query.get('state', 'all') != 'all' or page != 1 %}
                     <span class="text-secondary">•</span>
-                    <a href="{{ path('profile') }}">
+                    <a href="{{ path('connect_four_history') }}">
                         Clear all filters
                     </a>
                 {% endif %}
@@ -113,7 +113,7 @@
                                     <div style="aspect-ratio: {{ game.width }}/{{ game.height }};"></div>
                                 </connect-four-game>
                             </div>
-                            <a href="{{ path('game', {'id': game.gameId}) }}"
+                            <a href="{{ path('connect_four_game', {'id': game.gameId}) }}"
                                class="card-btn flex-grow-0">
                                 Show game
                             </a>
@@ -132,13 +132,11 @@
                     </div>
                 {% endfor %}
                 {% if gamesByPlayer.total > 0 %}
-                    <div class="col-12">
+                    <div class="col-12 justify-content-end">
                         {% include 'include/pagination.html.twig' with {
-                            'page': page,
-                            'total': gamesByPlayer.total,
-                            'limit': gamesPerPage,
-                            'previousTitle': 'Games',
-                            'nextTitle': 'Games'
+                            currentPage: page,
+                            totalItems: gamesByPlayer.total,
+                            itemsPerPage: gamesPerPage
                         } %}
                     </div>
                 {% endif %}

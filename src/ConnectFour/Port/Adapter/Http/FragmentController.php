@@ -62,4 +62,10 @@ final class FragmentController extends AbstractController
             )
         ]);
     }
+
+    #[Cache(public: true, maxage: 10)]
+    public function homeTileAction(): Response
+    {
+        return $this->render('@connect-four/home-tile.html.twig');
+    }
 }

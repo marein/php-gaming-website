@@ -5,7 +5,7 @@ customElements.define('volume-control', class extends HTMLElement {
     connectedCallback() {
         this.append(html`
             <input type="checkbox" class="gp-dropdown-toggle" id="volume-control-dropdown">
-            <label class="nav-link" for="volume-control-dropdown">
+            <label class="nav-link cursor-pointer" for="volume-control-dropdown">
                 ${this._iconHighVolume = html`
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
