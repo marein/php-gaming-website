@@ -12,7 +12,7 @@ class GameCest
         $this->prepareOpenGameScenario($I);
 
         $I->submitForm('[data-abort-form]', []);
-        $I->retrySeeInCurrentUrl('/');
+        $I->retrySeeInCurrentUrl('/connect-four');
     }
 
     public function iCanAbortAGameWithAJoinedFriend(AcceptanceTester $I): void
@@ -47,13 +47,13 @@ class GameCest
 
     private function prepareOpenGameScenario(AcceptanceTester $I): string
     {
-        $I->amOnPage('/');
+        $I->amOnPage('/connect-four');
         $I->click('label[for="open-game-dropdown"]');
         $I->waitForElementVisible('[data-open-game-button]');
         $I->click('[data-open-game-button]');
 
-        $I->retrySeeCurrentUrlMatches('#^/challenge/(.*)$#');
-        preg_match('#^/challenge/(.*)$#', $I->grabFromCurrentUrl(), $matches);
+        $I->retrySeeCurrentUrlMatches('#^/connect-four/challenge/(.*)$#');
+        preg_match('#^/connect-four/challenge/(.*)$#', $I->grabFromCurrentUrl(), $matches);
 
         return $matches[1];
     }
@@ -64,16 +64,16 @@ class GameCest
 
         $friend->does(
             static function (AcceptanceTester $I) use ($gameId): void {
-                $I->amOnPage('/');
+                $I->amOnPage('/connect-four');
                 $I->waitForElement('[data-game-id="' . $gameId . '"]');
                 $I->click('[data-game-id="' . $gameId . '"]');
                 $I->retry(10);
-                $I->retrySeeCurrentUrlEquals('/game/' . $gameId);
+                $I->retrySeeCurrentUrlEquals('/connect-four/game/' . $gameId);
             }
         );
 
         $I->retry(10);
-        $I->retrySeeCurrentUrlEquals('/game/' . $gameId);
+        $I->retrySeeCurrentUrlEquals('/connect-four/game/' . $gameId);
 
         return $gameId;
     }

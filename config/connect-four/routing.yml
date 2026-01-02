@@ -1,5 +1,5 @@
 connect_four_lobby:
-    path: /connect-four/lobby
+    path: /connect-four
     methods: [GET]
     controller: connect-four.page-controller::lobbyAction
 
