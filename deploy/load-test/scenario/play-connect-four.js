@@ -37,13 +37,13 @@ export default function () {
 }
 
 function open(jar) {
-    let url = `${baseUrl}/api/connect-four/games/open`;
+    let url = `${baseUrl}/connect-four/games/open`;
     let response = http.post(
         url,
         {'open[size]': '7x6', 'open[variant]': 'standard', 'open[timer]': 'game:60000:0', 'open[color]': '1'},
         {jar, headers, redirects: 0}
     );
-    return response.headers['Location'].match(/\/challenge\/(.*)$/)[1];
+    return response.headers['Location'].match(/\/connect-four\/challenge\/(.*)$/)[1];
 }
 
 function join(jar, gameId) {
