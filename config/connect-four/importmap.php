@@ -8,6 +8,7 @@ return [
     'connect-four-running-games' => ['path' => 'js/ConnectFour/RunningGames.js'],
     'connect-four-game-list' => ['path' => 'js/ConnectFour/GameList.js'],
     'connect-four-game' => ['path' => 'js/ConnectFour/Game.js'],
+    'connect-four-animated-game' => ['path' => 'js/ConnectFour/AnimatedGame.js'],
     'connect-four-player-status' => ['path' => 'js/ConnectFour/PlayerStatus.js'],
     'connect-four-player-username' => ['path' => 'js/ConnectFour/PlayerUsername.js'],
     'connect-four-timer' => ['path' => 'js/ConnectFour/Timer.js'],
