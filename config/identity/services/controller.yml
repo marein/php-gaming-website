@@ -19,3 +19,8 @@ services:
             - '@gaming.form-violation-mapper'
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']
+
+    identity.fragment-controller:
+        class: Gaming\Identity\Port\Adapter\Http\FragmentController
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']

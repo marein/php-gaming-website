@@ -1,0 +1,28 @@
+<connect-four-animated-game class="card gp-cf-game-list">
+    <div class="card-body d-flex flex-column">
+        <h3 class="card-title">Connect Four</h3>
+            <div class="gp-cf-game gp-cf-game--disabled align-self-center w-66 mb-3">
+                {% for i in 1..(7 * 4) %}
+                    <div class="gp-cf-game__field"></div>
+                {% endfor %}
+                <div class="gp-cf-game__field"></div>
+                <div class="gp-cf-game__field"></div>
+                <div class="gp-cf-game__field" data-move="2"><div class="gp-cf-token gp-cf-token--yellow"></div></div>
+                <div class="gp-cf-game__field" data-move="4"><div class="gp-cf-token gp-cf-token--yellow"></div></div>
+                <div class="gp-cf-game__field"></div>
+                <div class="gp-cf-game__field"></div>
+                <div class="gp-cf-game__field"></div>
+                <div class="gp-cf-game__field"></div>
+                <div class="gp-cf-game__field" data-move="6"><div class="gp-cf-token gp-cf-token--yellow"></div></div>
+                <div class="gp-cf-game__field gp-cf-game__field--highlight" data-move="1" data-win><div class="gp-cf-token"></div></div>
+                <div class="gp-cf-game__field gp-cf-game__field--highlight" data-move="3" data-win><div class="gp-cf-token"></div></div>
+                <div class="gp-cf-game__field gp-cf-game__field--highlight" data-move="5" data-win><div class="gp-cf-token"></div></div>
+                <div class="gp-cf-game__field gp-cf-game__field--highlight  gp-cf-game__field--current" data-move="7" data-win><div class="gp-cf-token"></div></div>
+                <div class="gp-cf-game__field"></div>
+            </div>
+        <p class="flex-fill align-content-end small">
+            Drop tokens, line them up, and outsmart your opponent.
+        </p>
+        <a href="{{ path('connect_four_lobby') }}" class="btn btn-outline-primary">Play</a>
+    </div>
+</connect-four-animated-game>

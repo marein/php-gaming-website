@@ -1,4 +1,4 @@
-{% extends 'layout/condensed.html.twig' %}
+{% extends '@connect-four/base.html.twig' %}
 {% from "macro/username.html.twig" import render as renderUsername %}
 
 {% if app.user ? app.user.userIdentifier == game.openedBy %}

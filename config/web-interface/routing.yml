@@ -1,22 +1,12 @@
-lobby:
+home:
     path: /
     methods: [GET]
-    controller: web-interface.page-controller::lobbyAction
+    controller: web-interface.page-controller::homeAction
 
 metrics:
     path: /metrics
     methods: [GET]
     controller: web-interface.metrics-controller::showAction
-
-profile:
-    path: /profile
-    methods: [GET]
-    controller: web-interface.page-controller::profileAction
-
-game:
-    path: /game/{id}
-    methods: [GET]
-    controller: web-interface.page-controller::gameAction
 
 server_time:
     path: /api/server-time

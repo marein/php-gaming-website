@@ -33,7 +33,7 @@ final class LoginController extends AbstractController
     public function indexAction(#[CurrentUser] ?User $user, Request $request): Response
     {
         if ($user?->isSignedUp) {
-            return $this->redirectToRoute('lobby');
+            return $this->redirectToRoute('home');
         }
 
         $form = $this->createForm(LoginType::class)
@@ -70,7 +70,7 @@ final class LoginController extends AbstractController
     public function checkInboxAction(#[CurrentUser] ?User $user): Response
     {
         if ($user?->isSignedUp) {
-            return $this->redirectToRoute('lobby');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('@identity/login/check-inbox.html.twig');

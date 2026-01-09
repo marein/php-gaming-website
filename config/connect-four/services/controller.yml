@@ -1,4 +1,10 @@
 services:
+    connect-four.page-controller:
+        class: Gaming\ConnectFour\Port\Adapter\Http\PageController
+        arguments: ['@connect-four.query-bus', '@gaming.usernames']
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']
+
     connect-four.fragment-controller:
         class: Gaming\ConnectFour\Port\Adapter\Http\FragmentController
         arguments: ['@connect-four.query-bus', '@gaming.usernames']

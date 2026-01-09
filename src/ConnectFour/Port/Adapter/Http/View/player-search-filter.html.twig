@@ -6,7 +6,7 @@
     <div class="subheader mb-2">State</div>
     <div class="list-group mb-3">
         {% for state, total in playerSearchStatistics.states %}
-            <a href="{{ path('profile', state == 'all' ? {} :{state: state}) }}"
+            <a href="{{ path('connect_four_history', state == 'all' ? {} : {state: state}) }}"
                class="list-group-item list-group-item-action d-flex align-items-center{{ app.request.query.get('state', 'all') == state ? ' active' }}">
                 {{ ('state_' ~ state)|trans }}
                 <small class="text-secondary ms-auto">{{ total }}</small>
