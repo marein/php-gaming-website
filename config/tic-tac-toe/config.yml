@@ -1,0 +1,4 @@
+imports: [{ resource: services/ }]
+
+twig:
+    paths: { '%kernel.project_dir%/src/TicTacToe/Port/Adapter/Http/View': tic-tac-toe }

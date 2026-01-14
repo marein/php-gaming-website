@@ -1,0 +1,10 @@
+services:
+    tic-tac-toe.fragment-controller:
+        class: Gaming\TicTacToe\Port\Adapter\Http\FragmentController
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']
+
+    tic-tac-toe.lobby-controller:
+        class: Gaming\TicTacToe\Port\Adapter\Http\LobbyController
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']

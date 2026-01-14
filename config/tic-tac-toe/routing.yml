@@ -1,0 +1,4 @@
+tic_tac_toe_lobby:
+    path: /tic-tac-toe
+    methods: [GET]
+    controller: tic-tac-toe.lobby-controller::lobbyAction
