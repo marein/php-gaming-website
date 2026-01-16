@@ -1,0 +1,16 @@
+services:
+    tic-tac-toe.predis:
+        class: Predis\Client
+        arguments: ['%env(APP_TIC_TAC_TOE_PREDIS_CLIENT_URL)%', { prefix: 'tic-tac-toe:' }]
+
+    tic-tac-toe.doctrine-dbal:
+        alias: 'doctrine.dbal.tic_tac_toe_connection'
+
+    tic-tac-toe.event-store:
+        class: Gaming\Common\EventStore\Integration\Doctrine\DoctrineEventStore
+        arguments:
+            - '@tic-tac-toe.doctrine-dbal'
+            - 'event_store'
+            - !service
+                class: Gaming\Common\EventStore\Integration\JmsSerializer\JmsContentSerializer
+                arguments: ['@tic-tac-toe.jms', 'Gaming\Common\Domain\DomainEvent']

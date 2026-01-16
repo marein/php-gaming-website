@@ -2,3 +2,23 @@ tic_tac_toe_lobby:
     path: /tic-tac-toe
     methods: [GET]
     controller: tic-tac-toe.lobby-controller::lobbyAction
+
+tic_tac_toe_open_challenge:
+    path: /tic-tac-toe/challenges/open
+    methods: [POST]
+    controller: tic-tac-toe.challenge-controller::openAction
+
+tic_tac_toe_withdraw_challenge:
+    path: /tic-tac-toe/challenge/{id}/abort
+    methods: [POST]
+    controller: tic-tac-toe.challenge-controller::withdrawAction
+
+tic_tac_toe_accept_challenge:
+    path: /tic-tac-toe/challenge/{id}/accept
+    methods: [POST]
+    controller: tic-tac-toe.challenge-controller::acceptAction
+
+tic_tac_toe_challenge:
+    path: /tic-tac-toe/challenge/{id}
+    methods: [GET]
+    controller: tic-tac-toe.challenge-controller::showAction

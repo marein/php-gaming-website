@@ -8,3 +8,11 @@ services:
         class: Gaming\TicTacToe\Port\Adapter\Http\LobbyController
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']
+
+    tic-tac-toe.challenge-controller:
+        class: Gaming\TicTacToe\Port\Adapter\Http\ChallengeController
+        arguments: [
+            '@tic-tac-toe.command-bus', '@tic-tac-toe.query-bus', '@gaming.usernames', '@web-interface.security'
+        ]
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']

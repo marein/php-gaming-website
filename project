@@ -83,7 +83,7 @@ tests() {
 }
 
 unit() {
-    docker compose run --rm php vendor/bin/codecept run --skip acceptance --coverage-html
+    docker compose run --rm php vendor/bin/codecept run "$@" --skip acceptance --coverage-html
 }
 
 sniffer() {

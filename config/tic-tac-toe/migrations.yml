@@ -1,0 +1,5 @@
+migrations_paths:
+    'Gaming\TicTacToe\Port\Adapter\Persistence\Migration': '../../src/TicTacToe/Port/Adapter/Persistence/Migration'
+table_storage:
+    table_name: migration_versions
+connection: tic_tac_toe

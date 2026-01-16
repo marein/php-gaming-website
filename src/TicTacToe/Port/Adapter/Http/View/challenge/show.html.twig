@@ -1,0 +1,56 @@
+{% extends '@tic-tac-toe/base.html.twig' %}
+{% from "macro/username.html.twig" import render as renderUsername %}
+
+{% if app.user ? app.user.userIdentifier == challenge.challengerId %}
+    {% set page_title = 'Waiting for opponent...' %}
+{% else %}
+    {% set page_title = 'Accept the challenge' %}
+{% endif %}
+
+{% block content %}
+    <div class="container-narrow">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="container-tight">
+                    <h1>
+                        {% if app.user ? app.user.userIdentifier == challenge.challengerId %}
+                            Waiting for opponent
+                        {% else %}
+                            Accept the challenge
+                        {% endif %}
+                    </h1>
+                    <p>
+                        {% if app.user ? app.user.userIdentifier == challenge.challengerId %}
+                            Once another player joins, you'll be automatically redirected.
+                        {% else %}
+                            Player
+                            <strong>{{ renderUsername(usernames[challenge.challengerId]) }}</strong>
+                            is waiting for an opponent.
+                        {% endif %}
+                    </p>
+                    <p class="fw-bold">
+                        Standard • 3 x 3<br />
+                        X • 15s/move
+                    </p>
+                    {% if app.user ? app.user.userIdentifier == challenge.challengerId %}
+                        <div class="gp-ttt-token-loading w-75">
+                            {% for i in 0..6 %}
+                                <span class="gp-ttt-token-{{ i is even ? 'x' : 'o' }}"></span>
+                            {% endfor %}
+                        </div>
+                        <tic-tac-toe-redirect challenge-id="{{ challenge.challengeId|e('html_attr') }}"></tic-tac-toe-redirect>
+                        <form action="{{ path('tic_tac_toe_withdraw_challenge', {id: challenge.challengeId}) }}"
+                              method="post">
+                            <button type="submit" class="btn btn-outline-danger">Withdraw</button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('tic_tac_toe_accept_challenge', {id: challenge.challengeId}) }}"
+                              method="post">
+                            <button type="submit" class="btn btn-outline-success">Join now</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
