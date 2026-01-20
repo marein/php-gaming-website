@@ -43,12 +43,11 @@ final class Challenge implements CollectsDomainEvents
 
     public static function fromHistory(ChallengeId $challengeId, DomainEvents $domainEvents): self
     {
-        $challenge = new self($challengeId, new DomainEvents((string)$challengeId, $domainEvents->streamVersion()));
-        foreach ($domainEvents->flush() as $domainEvent) {
-            $challenge->apply($domainEvent->content);
-        }
-
-        return $challenge;
+        return array_reduce(
+            $domainEvents->flush(),
+            static fn(Challenge $challenge, DomainEvent $event): Challenge => $challenge->apply($event->content),
+            new self($challengeId, new DomainEvents((string)$challengeId, $domainEvents->streamVersion()))
+        );
     }
 
     /**
@@ -110,12 +109,15 @@ final class Challenge implements CollectsDomainEvents
         $this->apply($event);
     }
 
-    private function apply(object $event): void
+    private function apply(object $event): self
     {
         match ($event::class) {
             ChallengeOpened::class => $this->challengerId = $event->challengerId,
             ChallengeAccepted::class,
             ChallengeWithdrawn::class => $this->state = self::STATE_CLOSED,
+            default => null
         };
+
+        return $this;
     }
 }
