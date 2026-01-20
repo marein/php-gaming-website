@@ -2,7 +2,6 @@ import {client} from './Common/HttpClient.js'
 import './Common/NotificationList.js'
 import '@tabler/core/dist/css/tabler.min.css'
 import '../css/app.css'
-import '../css/tic-tac-toe.css'
 
 window.fetch = (fetch => (resource, options = {}) => fetch(
     resource,

@@ -35,7 +35,8 @@
                     {% if app.user ? app.user.userIdentifier == challenge.challengerId %}
                         <div class="gp-ttt-token-loading w-75">
                             {% for i in 0..6 %}
-                                <span class="gp-ttt-token-{{ i is even ? 'x' : 'o' }}"></span>
+                                <span class="gp-ttt-token-{{ i is even ? 'x' : 'o' }}"
+                                      style="--token-index: {{ i }}"></span>
                             {% endfor %}
                         </div>
                         <tic-tac-toe-redirect challenge-id="{{ challenge.challengeId|e('html_attr') }}"></tic-tac-toe-redirect>

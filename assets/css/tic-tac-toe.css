@@ -104,9 +104,7 @@
 }
 
 .gp-ttt-game__field--highlight .gp-ttt-token-o,
-.gp-ttt-game__field--highlight .gp-ttt-token-x,
-.gp-ttt-token-loading .gp-ttt-token-o,
-.gp-ttt-token-loading .gp-ttt-token-x {
+.gp-ttt-game__field--highlight .gp-ttt-token-x {
     animation: gp-ttt-token-bounce 3s infinite;
 }
 
@@ -130,6 +128,26 @@
     gap: var(--tblr-spacer-1);
     margin: 0 auto var(--tblr-spacer-3);
 }
+
+.gp-ttt-token-loading .gp-ttt-token-o,
+.gp-ttt-token-loading .gp-ttt-token-x {
+    --token-index: 0;
+    scale: .9;
+    animation: gp-ttt-token-loading 1.4s linear calc(var(--token-index) * .1s) infinite;
+}
+
+@keyframes gp-ttt-token-loading {
+    0%, 100% {
+        scale: .9;
+    }
+    15% {
+        scale: 1;
+    }
+    30% {
+        scale: .9;
+    }
+}
+
 
 .gp-ttt-token-loading > * {
     flex: 1 0 10%;
