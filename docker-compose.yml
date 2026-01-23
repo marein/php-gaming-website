@@ -180,6 +180,11 @@ services:
         command: bin/restartOnChange bin/console identity:follow-event-store pointer all
         labels:
             - "prometheus-job=identity-follow-event-store"
+    php-tic-tac-toe-follow-event-store:
+        <<: *php-container
+        command: bin/restartOnChange bin/console tic-tac-toe:follow-event-store pointer all
+        labels:
+            - "prometheus-job=identity-follow-event-store"
     php-consume-messages:
         <<: *php-container
         command: bin/restartOnChange bin/console gaming:consume-messages all

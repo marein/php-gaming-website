@@ -1,0 +1,15 @@
+services:
+    tic-tac-toe.follow-event-store-command:
+        class: Gaming\Common\EventStore\Integration\Symfony\FollowEventStoreCommand
+        arguments:
+            - '@tic-tac-toe.event-store'
+            - !service
+                class: Gaming\Common\EventStore\Integration\Predis\PredisEventStorePointerFactory
+                arguments: ['@tic-tac-toe.predis']
+            - !tagged_locator { tag: 'tic-tac-toe.stored-event-subscriber', index_by: 'key' }
+            - '@event_dispatcher'
+            - '@gaming.prometheus.task'
+        tags:
+            -   name: console.command
+                command: tic-tac-toe:follow-event-store
+                description: 'Publish events to subscribers.'

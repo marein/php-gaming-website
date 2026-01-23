@@ -3,12 +3,33 @@
 {% set page_title = 'Lobby' %}
 
 {% block content %}
-    <div class="container container-narrow">
-        <div class="card">
-            <div class="card-body">
-                <form method="POST" action="{{ path('tic_tac_toe_open_challenge') }}">
-                    <button type="submit" class="btn">New game</button>
-                </form>
+    <div class="row row-cards">
+        <div class="col-lg-3 order-first">
+            <div class="card">
+                <div class="card-body">
+                    <p>
+                        <span class="badge bg-blue text-blue-fg">?</span>
+                        running games
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <tic-tac-toe-challenges open-challenges="{{ openChallenges|json_encode|e('html_attr') }}"
+                                    usernames="{{ usernames|json_encode|e('html_attr') }}"
+                                    player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
+                                    accept-url="{{ path('tic_tac_toe_api_accept_challenge', {'id': 'CHALLENGE_ID'})|e('html_attr') }}"
+                                    withdraw-url="{{ path('tic_tac_toe_api_withdraw_challenge', {'id': 'CHALLENGE_ID'})|e('html_attr') }}"
+                                    maximum-number-of-challenges="10">
+            </tic-tac-toe-challenges>
+        </div>
+        <div class="col-lg-3 order-first order-lg-last">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="{{ path('tic_tac_toe_open_challenge') }}">
+                        <button type="submit" class="btn btn-primary w-100">New game</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

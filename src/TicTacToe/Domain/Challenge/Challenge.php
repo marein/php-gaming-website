@@ -28,13 +28,15 @@ final class Challenge implements CollectsDomainEvents
     ) {
     }
 
-    public static function open(ChallengeId $challengeId, string $challengerId): self
+    public static function open(ChallengeId $challengeId, string $playerId): self
     {
         $challenge = new self($challengeId, new DomainEvents($challengeId->toString()));
         $challenge->record(
             new ChallengeOpened(
                 $challengeId->toString(),
-                $challengerId
+                3,
+                3,
+                $playerId
             )
         );
 
@@ -112,7 +114,7 @@ final class Challenge implements CollectsDomainEvents
     private function apply(object $event): self
     {
         match ($event::class) {
-            ChallengeOpened::class => $this->challengerId = $event->challengerId,
+            ChallengeOpened::class => $this->challengerId = $event->playerId,
             ChallengeAccepted::class,
             ChallengeWithdrawn::class => $this->state = self::STATE_CLOSED,
             default => null

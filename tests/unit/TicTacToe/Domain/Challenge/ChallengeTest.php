@@ -33,7 +33,7 @@ class ChallengeTest extends TestCase
         $challenge = Challenge::fromHistory($challengeId, new DomainEvents($challengeId->toString(), 1, [
             new DomainEvent(
                 $challengeId->toString(),
-                new ChallengeOpened($challengeId->toString(), 'player1'),
+                new ChallengeOpened($challengeId->toString(), 3, 3, 'player1'),
                 1
             )
         ]));
@@ -154,7 +154,7 @@ class ChallengeTest extends TestCase
         $this->assertEquals($challenge->flushDomainEvents(), [
             new DomainEvent(
                 $challenge->challengeId->toString(),
-                new ChallengeOpened($challenge->challengeId->toString(), $challengerId),
+                new ChallengeOpened($challenge->challengeId->toString(), 3, 3, $challengerId),
                 1
             )
         ]);

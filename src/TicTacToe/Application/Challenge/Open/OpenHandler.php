@@ -18,7 +18,7 @@ final class OpenHandler
     {
         $challengeId = $this->challenges->nextIdentity();
 
-        $this->challenges->add(Challenge::open($challengeId, $request->challengerId));
+        $this->challenges->add(Challenge::open($challengeId, $request->playerId));
 
         return new OpenResponse($challengeId->toString());
     }

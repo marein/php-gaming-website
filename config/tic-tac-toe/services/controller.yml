@@ -6,6 +6,7 @@ services:
 
     tic-tac-toe.lobby-controller:
         class: Gaming\TicTacToe\Port\Adapter\Http\LobbyController
+        arguments: ['@tic-tac-toe.query-bus', '@gaming.usernames']
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']
 
@@ -14,5 +15,11 @@ services:
         arguments: [
             '@tic-tac-toe.command-bus', '@tic-tac-toe.query-bus', '@gaming.usernames', '@web-interface.security'
         ]
+        calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
+        tags: ['controller.service_arguments', 'container.service_subscriber']
+
+    tic-tac-toe.api-controller:
+        class: Gaming\TicTacToe\Port\Adapter\Http\ApiController
+        arguments: ['@tic-tac-toe.command-bus', '@web-interface.security']
         calls: [[setContainer, ['@Psr\Container\ContainerInterface']]]
         tags: ['controller.service_arguments', 'container.service_subscriber']

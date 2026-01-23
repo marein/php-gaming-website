@@ -12,7 +12,7 @@ use Gaming\Common\Bus\Request;
 final class OpenRequest implements Request
 {
     public function __construct(
-        public readonly string $challengerId
+        public readonly string $playerId
     ) {
     }
 }

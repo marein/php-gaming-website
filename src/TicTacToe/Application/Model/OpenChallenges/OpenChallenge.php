@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gaming\TicTacToe\Domain\Challenge\Event;
+namespace Gaming\TicTacToe\Application\Model\OpenChallenges;
 
-use Gaming\Common\Domain\DomainEvent;
-
-final class ChallengeOpened implements DomainEvent
+final class OpenChallenge
 {
     public function __construct(
         public readonly string $challengeId,
@@ -14,10 +12,5 @@ final class ChallengeOpened implements DomainEvent
         public readonly int $height,
         public readonly string $playerId
     ) {
-    }
-
-    public function aggregateId(): string
-    {
-        return $this->challengeId;
     }
 }
