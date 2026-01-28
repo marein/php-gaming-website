@@ -16,10 +16,6 @@ customElements.define('tic-tac-toe-animated-game', class extends HTMLElement {
 
         this.addEventListener('mouseenter', this.#onMouseEnter);
         this.addEventListener('mouseleave', this.#onMouseLeave);
-
-        if (this.matches(':hover')) {
-            this.#onMouseEnter();
-        }
     }
 
     disconnectedCallback() {
