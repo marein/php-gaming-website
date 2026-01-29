@@ -1,0 +1,28 @@
+services:
+    tic-tac-toe.open-challenges-store:
+        class: Gaming\TicTacToe\Port\Adapter\Persistence\Repository\PredisOpenChallengesStore
+        arguments: ['@tic-tac-toe.predis', 'open-challenges', '@tic-tac-toe.normalizer']
+
+    tic-tac-toe.challenge-repository:
+        class: Gaming\TicTacToe\Port\Adapter\Persistence\Repository\EventStoreChallenges
+        arguments: ['@tic-tac-toe.event-store']
+
+    Gaming\TicTacToe\Application\Challenge\Accept\AcceptHandler:
+        arguments: ['@tic-tac-toe.challenge-repository']
+        tags: [{ name: 'gaming_platform_bus.handler', bus: 'tic_tac_toe_command' }]
+
+    Gaming\TicTacToe\Application\Challenge\Open\OpenHandler:
+        arguments: ['@tic-tac-toe.challenge-repository']
+        tags: [{ name: 'gaming_platform_bus.handler', bus: 'tic_tac_toe_command' }]
+
+    Gaming\TicTacToe\Application\Challenge\Withdraw\WithdrawHandler:
+        arguments: ['@tic-tac-toe.challenge-repository']
+        tags: [{ name: 'gaming_platform_bus.handler', bus: 'tic_tac_toe_command' }]
+
+    Gaming\TicTacToe\Application\Challenge\All\AllHandler:
+        arguments: ['@tic-tac-toe.open-challenges-store']
+        tags: [{ name: 'gaming_platform_bus.handler', bus: 'tic_tac_toe_query' }]
+
+    Gaming\TicTacToe\Application\Challenge\GetById\GetByIdHandler:
+        arguments: ['@tic-tac-toe.event-store']
+        tags: [{ name: 'gaming_platform_bus.handler', bus: 'tic_tac_toe_query' }]

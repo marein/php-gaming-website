@@ -1,0 +1,13 @@
+services:
+    tic-tac-toe.command-bus:
+        alias: gaming_platform_bus.tic_tac_toe_command
+
+    tic-tac-toe.transactional-command-bus:
+        class: Gaming\Common\Bus\Integration\DoctrineTransactionalBus
+        decorates: 'tic-tac-toe.command-bus'
+        arguments: ['@.inner', '@tic-tac-toe.doctrine-dbal']
+
+    tic-tac-toe.validating-command-bus:
+        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
+        decorates: 'tic-tac-toe.command-bus'
+        arguments: ['@.inner', '@validator']

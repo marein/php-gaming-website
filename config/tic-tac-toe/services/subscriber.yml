@@ -1,0 +1,8 @@
+services:
+    Gaming\TicTacToe\Port\Adapter\Persistence\Projection\OpenChallengesProjection:
+        arguments: ['@tic-tac-toe.open-challenges-store']
+        tags: [{ name: 'tic-tac-toe.stored-event-subscriber', key: 'open-challenges-projection' }]
+
+    Gaming\TicTacToe\Port\Adapter\Messaging\PublishDomainEventsToMessageBrokerSubscriber:
+        arguments: ['@gaming.message-broker.gaming-exchange-publisher', '@tic-tac-toe.normalizer']
+        tags: [{ name: 'tic-tac-toe.stored-event-subscriber', key: 'publish-to-message-broker' }]
