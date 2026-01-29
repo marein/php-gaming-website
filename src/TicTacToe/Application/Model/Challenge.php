@@ -18,7 +18,10 @@ final class Challenge
         public readonly string $challengeId,
         public private(set) string $challengerId = '',
         public private(set) string $status = self::STATUS_OPEN,
-        public private(set) string $acceptorId = ''
+        public private(set) string $acceptorId = '',
+        public private(set) int $size = 3,
+        public private(set) ?int $preferredToken = null,
+        public private(set) string $timer = ''
     ) {
     }
 
@@ -38,6 +41,9 @@ final class Challenge
     {
         $this->status = self::STATUS_OPEN;
         $this->challengerId = $event->playerId;
+        $this->size = $event->size;
+        $this->preferredToken = $event->preferredToken;
+        $this->timer = $event->timer;
     }
 
     private function onChallengeAccepted(ChallengeAccepted $event): void

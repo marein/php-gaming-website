@@ -28,7 +28,12 @@ final class ChallengeController extends AbstractController
     {
         return $this->redirectToRoute('tic_tac_toe_challenge', [
             'id' => $this->commandBus->handle(
-                new OpenRequest($this->security->forceUser()->getUserIdentifier())
+                new OpenRequest(
+                    $this->security->forceUser()->getUserIdentifier(),
+                    3,
+                    0,
+                    'move:15000'
+                )
             )->challengeId
         ]);
     }

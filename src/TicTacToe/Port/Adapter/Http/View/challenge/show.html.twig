@@ -29,8 +29,8 @@
                         {% endif %}
                     </p>
                     <p class="fw-bold">
-                        Standard • 3 x 3<br />
-                        X • 15s/move
+                        Standard • {{ challenge.size }} x {{ challenge.size }}<br />
+                        {{ ('ttt:token_' ~ challenge.preferredToken|default('random'))|trans }} • {{ ('ttt:' ~ challenge.timer)|trans }}
                     </p>
                     {% if app.user ? app.user.userIdentifier == challenge.challengerId %}
                         <div class="gp-ttt-token-loading w-75">

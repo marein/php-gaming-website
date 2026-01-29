@@ -14,6 +14,7 @@ use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeWithdrawn;
 use Gaming\TicTacToe\Domain\Challenge\Exception\CannotAcceptOwnChallengeException;
 use Gaming\TicTacToe\Domain\Challenge\Exception\CannotWithdrawException;
 use Gaming\TicTacToe\Domain\Challenge\Exception\NotOpenException;
+use Gaming\TicTacToe\Domain\Game\Configuration;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -33,7 +34,7 @@ class ChallengeTest extends TestCase
         $challenge = Challenge::fromHistory($challengeId, new DomainEvents($challengeId->toString(), 1, [
             new DomainEvent(
                 $challengeId->toString(),
-                new ChallengeOpened($challengeId->toString(), 3, 3, 'player1'),
+                new ChallengeOpened($challengeId->toString(), 3, null, 'move:15000', 'player1'),
                 1
             )
         ]));
@@ -149,12 +150,12 @@ class ChallengeTest extends TestCase
 
     private function createOpenChallenge(string $challengerId): Challenge
     {
-        $challenge = Challenge::open(ChallengeId::generate(), $challengerId);
+        $challenge = Challenge::open(ChallengeId::generate(), $challengerId, Configuration::common());
 
         $this->assertEquals($challenge->flushDomainEvents(), [
             new DomainEvent(
                 $challenge->challengeId->toString(),
-                new ChallengeOpened($challenge->challengeId->toString(), 3, 3, $challengerId),
+                new ChallengeOpened($challenge->challengeId->toString(), 3, null, 'move:15000', $challengerId),
                 1
             )
         ]);

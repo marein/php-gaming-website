@@ -30,8 +30,9 @@ final class OpenChallengesProjection implements StoredEventSubscriber
             ChallengeOpened::class => $this->openChallengesStore->save(
                 new OpenChallenge(
                     $content->challengeId,
-                    $content->width,
-                    $content->height,
+                    $content->size,
+                    $content->preferredToken,
+                    $content->timer,
                     $content->playerId
                 )
             ),

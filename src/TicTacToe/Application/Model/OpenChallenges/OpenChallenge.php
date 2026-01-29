@@ -8,8 +8,9 @@ final class OpenChallenge
 {
     public function __construct(
         public readonly string $challengeId,
-        public readonly int $width,
-        public readonly int $height,
+        public readonly int $size,
+        public readonly ?int $preferredToken,
+        public readonly string $timer,
         public readonly string $playerId
     ) {
     }

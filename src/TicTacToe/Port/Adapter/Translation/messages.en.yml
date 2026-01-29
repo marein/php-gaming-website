@@ -1,0 +1,6 @@
+ttt:move:15000: '15s/move'
+ttt:move:15000_small: '15s'
+ttt:token_random: 'Random'
+ttt:token_random_small: 'R'
+ttt:token_1: 'X'
+ttt:token_2: 'O'

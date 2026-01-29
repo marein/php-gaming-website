@@ -20,7 +20,13 @@
                                     player-id="{{ app.user ? app.user.userIdentifier|e('html_attr') }}"
                                     accept-url="{{ path('tic_tac_toe_api_accept_challenge', {'id': 'CHALLENGE_ID'})|e('html_attr') }}"
                                     withdraw-url="{{ path('tic_tac_toe_api_withdraw_challenge', {'id': 'CHALLENGE_ID'})|e('html_attr') }}"
-                                    maximum-number-of-challenges="10">
+                                    maximum-number-of-challenges="10"
+                                    translations="{{ {
+                                        'ttt:token_random': 'ttt:token_random_small'|trans,
+                                        'ttt:token_1': 'ttt:token_1'|trans,
+                                        'ttt:token_2': 'ttt:token_2'|trans,
+                                        'ttt:move:15000': 'ttt:move:15000_small'|trans
+                                    }|json_encode|e('html_attr') }}">
             </tic-tac-toe-challenges>
         </div>
         <div class="col-lg-3 order-first order-lg-last">

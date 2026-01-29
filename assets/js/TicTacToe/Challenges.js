@@ -3,7 +3,7 @@ import * as sse from '../Common/EventSource.js'
 import {createUsernameNode} from '../Identity/utils.js'
 
 /**
- * @typedef {{challengeId: String, width: Number, height: Number, playerId: String, playerUsername: String}} OpenChallenge
+ * @typedef {{challengeId: String, size: Number, preferredToken: Number|null, timer: String, playerId: String, playerUsername: String}} OpenChallenge
  */
 
 customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
@@ -16,8 +16,7 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
                     <thead>
                     <tr>
                         <th class="w-75">Player</th>
-                        <th>Size</th>
-                        <th>Rating</th>
+                        <th>Config</th>
                     </tr>
                     </thead>
                     ${this._challenges = html`<tbody class="cursor-pointer border-0"></tbody>`}
@@ -27,6 +26,7 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
 
         this._playerId = this.getAttribute('player-id');
         this._maximumNumberOfChallengesInList = parseInt(this.getAttribute('maximum-number-of-challenges'));
+        this._translations = JSON.parse(this.getAttribute('translations'));
         this._pendingOpenChallenges = new Map();
         this._scheduleRenderTimeout = null;
         this._useScheduleRenderAfter = Date.now() + 750;
@@ -81,8 +81,11 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
             <tr data="${openChallenge}"
                 class="${this._playerId === openChallenge.playerId ? 'table-success' : 'table-light'}">
                 <td>${createUsernameNode(openChallenge.playerUsername)}</td>
-                <td>${openChallenge.width} x ${openChallenge.height}</td>
-                <td></td>
+                <td>
+                    ${openChallenge.size}x${openChallenge.size},
+                    ${this._translateToken(openChallenge.preferredToken)},
+                    ${this._translations['ttt:' + openChallenge.timer] ?? openChallenge.timer}
+                </td>
             </tr>
         `;
 
@@ -109,6 +112,11 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
         return row;
     }
 
+    _translateToken = token => {
+        const key = 'ttt:token_' + (token || 'random');
+        return this._translations[key] ?? key;
+    }
+
     _removeChallenge = challengeId => {
         this._pendingOpenChallenges.delete(challengeId);
 
@@ -125,8 +133,9 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
     _onChallengeOpened = event => {
         const openChallenge = {
             challengeId: event.detail.challengeId,
-            width: event.detail.width,
-            height: event.detail.height,
+            size: event.detail.size,
+            preferredToken: event.detail.preferredToken,
+            timer: event.detail.timer,
             playerId: event.detail.playerId,
             playerUsername: event.detail.playerUsername
         };

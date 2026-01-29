@@ -1,5 +1,10 @@
 imports: [{ resource: services/ }]
 
+framework:
+    translator:
+        paths:
+            - '%kernel.project_dir%/src/TicTacToe/Port/Adapter/Translation'
+
 gaming_platform_bus:
     buses:
         tic_tac_toe_command: ~

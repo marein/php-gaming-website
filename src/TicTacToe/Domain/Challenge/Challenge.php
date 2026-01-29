@@ -13,6 +13,7 @@ use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeWithdrawn;
 use Gaming\TicTacToe\Domain\Challenge\Exception\CannotAcceptOwnChallengeException;
 use Gaming\TicTacToe\Domain\Challenge\Exception\CannotWithdrawException;
 use Gaming\TicTacToe\Domain\Challenge\Exception\NotOpenException;
+use Gaming\TicTacToe\Domain\Game\Configuration;
 
 final class Challenge implements CollectsDomainEvents
 {
@@ -28,14 +29,15 @@ final class Challenge implements CollectsDomainEvents
     ) {
     }
 
-    public static function open(ChallengeId $challengeId, string $playerId): self
+    public static function open(ChallengeId $challengeId, string $playerId, Configuration $configuration): self
     {
         $challenge = new self($challengeId, new DomainEvents($challengeId->toString()));
         $challenge->record(
             new ChallengeOpened(
                 $challengeId->toString(),
-                3,
-                3,
+                $configuration->size,
+                $configuration->preferredToken?->value,
+                (string)$configuration->timer,
                 $playerId
             )
         );
