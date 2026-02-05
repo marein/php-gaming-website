@@ -24,7 +24,7 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
             'TicTacToe.ChallengeOpened' => $this->handleChallengeOpened($message),
             'TicTacToe.ChallengeAccepted',
             'TicTacToe.ChallengeWithdrawn' => $this->browserNotifier->publish(
-                ['ttt-lobby'],
+                ['ttt-lobby', 'ttt-challenge-' . $message->streamId()],
                 $message->name(),
                 $message->body()
             ),
