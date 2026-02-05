@@ -10,8 +10,10 @@ use Gaming\TicTacToe\Application\Challenge\Accept\AcceptRequest;
 use Gaming\TicTacToe\Application\Challenge\GetById\GetByIdRequest;
 use Gaming\TicTacToe\Application\Challenge\Open\OpenRequest;
 use Gaming\TicTacToe\Application\Challenge\Withdraw\WithdrawRequest;
+use Gaming\TicTacToe\Port\Adapter\Http\Form\OpenType;
 use Gaming\WebInterface\Infrastructure\Security\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ChallengeController extends AbstractController
@@ -24,18 +26,25 @@ final class ChallengeController extends AbstractController
     ) {
     }
 
-    public function openAction(): Response
+    public function openAction(Request $request): Response
     {
-        return $this->redirectToRoute('tic_tac_toe_challenge', [
-            'id' => $this->commandBus->handle(
-                new OpenRequest(
-                    $this->security->forceUser()->getUserIdentifier(),
-                    3,
-                    0,
-                    'move:15000'
-                )
-            )->challengeId
-        ]);
+        $form = $this->createForm(OpenType::class)
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->redirectToRoute('tic_tac_toe_challenge', [
+                'id' => $this->commandBus->handle(
+                    new OpenRequest(
+                        $this->security->forceUser()->getUserIdentifier(),
+                        (int)$form->get('size')->getData(),
+                        (int)$form->get('token')->getData(),
+                        $form->get('timer')->getData()
+                    )
+                )->challengeId
+            ]);
+        }
+
+        return $this->redirectToRoute('tic_tac_toe_lobby');
     }
 
     public function showAction(string $id): Response

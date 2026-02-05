@@ -11,8 +11,8 @@ use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeAccepted;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeOpened;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeWithdrawn;
 use Gaming\TicTacToe\Domain\Challenge\Exception\CannotAcceptOwnChallengeException;
-use Gaming\TicTacToe\Domain\Challenge\Exception\CannotWithdrawException;
-use Gaming\TicTacToe\Domain\Challenge\Exception\NotOpenException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeAlreadyClosedException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\OnlyChallengerCanWithdrawException;
 use Gaming\TicTacToe\Domain\Game\Configuration;
 
 final class Challenge implements CollectsDomainEvents
@@ -55,17 +55,17 @@ final class Challenge implements CollectsDomainEvents
     }
 
     /**
-     * @throws NotOpenException
-     * @throws CannotWithdrawException
+     * @throws ChallengeAlreadyClosedException
+     * @throws OnlyChallengerCanWithdrawException
      */
     public function withdraw(string $playerId): void
     {
         if ($this->state !== self::STATE_OPEN) {
-            throw new NotOpenException();
+            throw new ChallengeAlreadyClosedException();
         }
 
         if ($this->challengerId !== $playerId) {
-            throw new CannotWithdrawException();
+            throw new OnlyChallengerCanWithdrawException();
         }
 
         $this->record(
@@ -77,13 +77,13 @@ final class Challenge implements CollectsDomainEvents
     }
 
     /**
-     * @throws NotOpenException
+     * @throws ChallengeAlreadyClosedException
      * @throws CannotAcceptOwnChallengeException
      */
     public function accept(string $acceptorId): void
     {
         if ($this->state !== self::STATE_OPEN) {
-            throw new NotOpenException();
+            throw new ChallengeAlreadyClosedException();
         }
 
         if ($this->challengerId === $acceptorId) {

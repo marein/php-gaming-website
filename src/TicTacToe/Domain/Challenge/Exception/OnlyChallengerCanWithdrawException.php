@@ -7,10 +7,10 @@ namespace Gaming\TicTacToe\Domain\Challenge\Exception;
 use Gaming\Common\Domain\Exception\Violation;
 use Gaming\Common\Domain\Exception\Violations;
 
-final class ChallengerCannotAcceptOwnChallengeException extends ChallengeException
+final class OnlyChallengerCanWithdrawException extends ChallengeException
 {
     public function __construct()
     {
-        parent::__construct(new Violations(new Violation('challenger_cannot_accept_own_challenge')));
+        parent::__construct(new Violations(new Violation('only_challenger_can_withdraw')));
     }
 }
