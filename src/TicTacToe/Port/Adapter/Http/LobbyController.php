@@ -25,7 +25,7 @@ final class LobbyController extends AbstractController
             'openChallenges' => $openChallenges = $this->queryBus->handle(new AllRequest(100))->openChallenges,
             'usernames' => $this->usernames->byIds(
                 array_map(
-                    static fn(OpenChallenge $openChallenge): string => $openChallenge->playerId,
+                    static fn(OpenChallenge $openChallenge): string => $openChallenge->challengerId,
                     $openChallenges
                 )
             )

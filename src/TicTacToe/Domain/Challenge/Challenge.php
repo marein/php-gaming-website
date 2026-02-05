@@ -116,7 +116,7 @@ final class Challenge implements CollectsDomainEvents
     private function apply(object $event): self
     {
         match ($event::class) {
-            ChallengeOpened::class => $this->challengerId = $event->playerId,
+            ChallengeOpened::class => $this->challengerId = $event->challengerId,
             ChallengeAccepted::class,
             ChallengeWithdrawn::class => $this->state = self::STATE_CLOSED,
             default => null

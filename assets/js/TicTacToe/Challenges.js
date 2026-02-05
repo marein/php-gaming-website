@@ -3,7 +3,7 @@ import * as sse from '../Common/EventSource.js'
 import {createUsernameNode} from '../Identity/utils.js'
 
 /**
- * @typedef {{challengeId: String, size: Number, preferredToken: Number|null, timer: String, playerId: String, playerUsername: String}} OpenChallenge
+ * @typedef {{challengeId: String, size: Number, preferredToken: Number|null, timer: String, challengerId: String, challengerUsername: String}} OpenChallenge
  */
 
 customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
@@ -34,7 +34,7 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
         JSON.parse(this.getAttribute("open-challenges")).forEach(challenge => {
             this._pendingOpenChallenges.set(
                 challenge.challengeId,
-                {...challenge, playerUsername: usernames[challenge.playerId]}
+                {...challenge, challengerUsername: usernames[challenge.challengerId]}
             );
         });
 
@@ -79,8 +79,8 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
     _createChallengeNode = openChallenge => {
         const row = html`
             <tr data="${openChallenge}"
-                class="${this._playerId === openChallenge.playerId ? 'table-success' : 'table-light'}">
-                <td>${createUsernameNode(openChallenge.playerUsername)}</td>
+                class="${this._playerId === openChallenge.challengerId ? 'table-success' : 'table-light'}">
+                <td>${createUsernameNode(openChallenge.challengerUsername)}</td>
                 <td>
                     ${openChallenge.size}x${openChallenge.size},
                     ${this._translateToken(openChallenge.preferredToken)},
@@ -96,7 +96,7 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
             row.classList.add('table-secondary', 'cursor-default');
             row.classList.remove('table-success', 'table-light');
 
-            if (this._playerId === openChallenge.playerId) {
+            if (this._playerId === openChallenge.challengerId) {
                 const url = this.getAttribute('withdraw-url').replace('CHALLENGE_ID', openChallenge.challengeId);
                 fetch(url, {method: 'POST'})
                     .then(() => true)
@@ -136,8 +136,8 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
             size: event.detail.size,
             preferredToken: event.detail.preferredToken,
             timer: event.detail.timer,
-            playerId: event.detail.playerId,
-            playerUsername: event.detail.playerUsername
+            challengerId: event.detail.challengerId,
+            challengerUsername: event.detail.challengerUsername
         };
 
         if (this._challenges.querySelector(`[data-challenge-id="${openChallenge.challengeId}"]`)) return;

@@ -40,7 +40,7 @@ final class Challenge
     private function onChallengeOpened(ChallengeOpened $event): void
     {
         $this->status = self::STATUS_OPEN;
-        $this->challengerId = $event->playerId;
+        $this->challengerId = $event->challengerId;
         $this->size = $event->size;
         $this->preferredToken = $event->preferredToken;
         $this->timer = $event->timer;

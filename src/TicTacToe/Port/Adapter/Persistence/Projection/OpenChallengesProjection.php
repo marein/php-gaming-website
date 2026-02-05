@@ -33,7 +33,7 @@ final class OpenChallengesProjection implements StoredEventSubscriber
                     $content->size,
                     $content->preferredToken,
                     $content->timer,
-                    $content->playerId
+                    $content->challengerId
                 )
             ),
             ChallengeWithdrawn::class,

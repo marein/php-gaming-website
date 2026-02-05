@@ -35,7 +35,7 @@ final class PublishMessageBrokerEventsToBrowserMessageHandler implements Message
     private function handleChallengeOpened(Message $message): void
     {
         $body = json_decode($message->body(), true, flags: JSON_THROW_ON_ERROR);
-        $body['playerUsername'] = $this->usernames->byIds([$body['playerId']])[$body['playerId']];
+        $body['challengerUsername'] = $this->usernames->byIds([$body['challengerId']])[$body['challengerId']];
 
         $this->browserNotifier->publish(
             ['ttt-lobby'],

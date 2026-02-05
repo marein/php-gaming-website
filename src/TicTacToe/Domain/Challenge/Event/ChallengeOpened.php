@@ -13,7 +13,7 @@ final class ChallengeOpened implements DomainEvent
         public readonly int $size,
         public readonly ?int $preferredToken,
         public readonly string $timer,
-        public readonly string $playerId
+        public readonly string $challengerId
     ) {
     }
 
