@@ -11,9 +11,7 @@ use Gaming\TicTacToe\Domain\Challenge\ChallengeId;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeAccepted;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeOpened;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeWithdrawn;
-use Gaming\TicTacToe\Domain\Challenge\Exception\CannotAcceptOwnChallengeException;
-use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeAlreadyClosedException;
-use Gaming\TicTacToe\Domain\Challenge\Exception\OnlyChallengerCanWithdrawException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeException;
 use Gaming\TicTacToe\Domain\Game\Configuration;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -71,7 +69,7 @@ class ChallengeTest extends TestCase
     #[Test]
     public function onlyChallengerCanWithdrawChallenge(): void
     {
-        $this->expectException(OnlyChallengerCanWithdrawException::class);
+        $this->expectException(ChallengeException::class);
 
         $challenge = $this->createOpenChallenge('player1');
 
@@ -81,7 +79,7 @@ class ChallengeTest extends TestCase
     #[Test]
     public function cannotWithdrawAlreadyWithdrawnChallenge(): void
     {
-        $this->expectException(ChallengeAlreadyClosedException::class);
+        $this->expectException(ChallengeException::class);
 
         $challenge = $this->createOpenChallenge('player1');
         $challenge->withdraw('player1');
@@ -92,7 +90,7 @@ class ChallengeTest extends TestCase
     #[Test]
     public function cannotWithdrawAcceptedChallenge(): void
     {
-        $this->expectException(ChallengeAlreadyClosedException::class);
+        $this->expectException(ChallengeException::class);
 
         $challenge = $this->createOpenChallenge('player1');
         $challenge->accept('player2');
@@ -119,7 +117,7 @@ class ChallengeTest extends TestCase
     #[Test]
     public function challengerCannotAcceptOwnChallenge(): void
     {
-        $this->expectException(CannotAcceptOwnChallengeException::class);
+        $this->expectException(ChallengeException::class);
 
         $challenge = $this->createOpenChallenge('player1');
 
@@ -129,7 +127,7 @@ class ChallengeTest extends TestCase
     #[Test]
     public function cannotAcceptAlreadyAcceptedChallenge(): void
     {
-        $this->expectException(ChallengeAlreadyClosedException::class);
+        $this->expectException(ChallengeException::class);
 
         $challenge = $this->createOpenChallenge('player1');
         $challenge->accept('player2');
@@ -140,7 +138,7 @@ class ChallengeTest extends TestCase
     #[Test]
     public function cannotAcceptWithdrawnChallenge(): void
     {
-        $this->expectException(ChallengeAlreadyClosedException::class);
+        $this->expectException(ChallengeException::class);
 
         $challenge = $this->createOpenChallenge('player1');
         $challenge->withdraw('player1');
