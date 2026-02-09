@@ -20,6 +20,11 @@ class ChallengeException extends DomainException
         return new self(new Violations(new Violation('cannot_accept_own_challenge')));
     }
 
+    public static function notFound(): self
+    {
+        return new self(new Violations(new Violation('challenge_not_found')));
+    }
+
     public static function onlyChallengerCanWithdraw(): self
     {
         return new self(new Violations(new Violation('only_challenger_can_withdraw')));

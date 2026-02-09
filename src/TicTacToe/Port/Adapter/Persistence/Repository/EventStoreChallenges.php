@@ -13,7 +13,7 @@ use Gaming\TicTacToe\Domain\Challenge\Challenge;
 use Gaming\TicTacToe\Domain\Challenge\ChallengeId;
 use Gaming\TicTacToe\Domain\Challenge\Challenges;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeOpened;
-use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeNotFoundException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeException;
 
 final class EventStoreChallenges implements Challenges
 {
@@ -36,7 +36,7 @@ final class EventStoreChallenges implements Challenges
     {
         $domainEvents = $this->eventStore->byStreamId($challengeId->toString());
         if (count($domainEvents) === 0 || !$domainEvents[0]->content instanceof ChallengeOpened) {
-            throw new ChallengeNotFoundException();
+            throw ChallengeException::notFound();
         }
 
         $challenge = Challenge::fromHistory(

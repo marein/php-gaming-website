@@ -7,7 +7,7 @@ namespace Gaming\TicTacToe\Application\Challenge\GetById;
 use Gaming\Common\EventStore\EventStore;
 use Gaming\TicTacToe\Application\Model\Challenge;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeOpened;
-use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeNotFoundException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeException;
 
 final class GetByIdHandler
 {
@@ -20,7 +20,7 @@ final class GetByIdHandler
     {
         $domainEvents = $this->eventStore->byStreamId($request->challengeId);
         if (count($domainEvents) === 0 || !$domainEvents[0]->content instanceof ChallengeOpened) {
-            throw new ChallengeNotFoundException();
+            throw ChallengeException::notFound();
         }
 
         return new GetByIdResponse(
