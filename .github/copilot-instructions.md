@@ -42,6 +42,9 @@ class ChallengeException extends DomainException
 ```
 When an exception is explicitly caught to drive alternate control flow, use a dedicated exception class that is
 `final` and extends the context base (e.g., `final class ChallengeNotFoundException extends ChallengeException`).
+These control-flow exception classes must declare their own constructor, and that constructor may accept scalar
+violation parameters to pass through, so the concrete type is always instantiated directly when needed.
+Each named constructor should instantiate `Violations`/`ViolationParameter` directly, following the example above.
 Every domain exception must populate `Violations` (and any parameters) so error translation is always available.
 
 ### Cleanup
