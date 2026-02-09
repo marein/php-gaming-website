@@ -6,6 +6,7 @@ namespace Gaming\Tests\Unit\TicTacToe\Domain\Challenge;
 
 use Gaming\Common\EventStore\DomainEvent;
 use Gaming\Common\EventStore\DomainEvents;
+use Gaming\Common\Domain\Test\DomainAssert;
 use Gaming\TicTacToe\Domain\Challenge\Challenge;
 use Gaming\TicTacToe\Domain\Challenge\ChallengeId;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeAccepted;
@@ -69,33 +70,39 @@ class ChallengeTest extends TestCase
     #[Test]
     public function onlyChallengerCanWithdrawChallenge(): void
     {
-        $this->expectException(ChallengeException::class);
-
         $challenge = $this->createOpenChallenge('player1');
 
-        $challenge->withdraw('player2');
+        DomainAssert::expectViolation(
+            fn() => $challenge->withdraw('player2'),
+            ChallengeException::class,
+            'only_challenger_can_withdraw'
+        );
     }
 
     #[Test]
     public function cannotWithdrawAlreadyWithdrawnChallenge(): void
     {
-        $this->expectException(ChallengeException::class);
-
         $challenge = $this->createOpenChallenge('player1');
         $challenge->withdraw('player1');
 
-        $challenge->withdraw('player1');
+        DomainAssert::expectViolation(
+            fn() => $challenge->withdraw('player1'),
+            ChallengeException::class,
+            'challenge_already_closed'
+        );
     }
 
     #[Test]
     public function cannotWithdrawAcceptedChallenge(): void
     {
-        $this->expectException(ChallengeException::class);
-
         $challenge = $this->createOpenChallenge('player1');
         $challenge->accept('player2');
 
-        $challenge->withdraw('player1');
+        DomainAssert::expectViolation(
+            fn() => $challenge->withdraw('player1'),
+            ChallengeException::class,
+            'challenge_already_closed'
+        );
     }
 
     #[Test]
@@ -117,33 +124,39 @@ class ChallengeTest extends TestCase
     #[Test]
     public function challengerCannotAcceptOwnChallenge(): void
     {
-        $this->expectException(ChallengeException::class);
-
         $challenge = $this->createOpenChallenge('player1');
 
-        $challenge->accept('player1');
+        DomainAssert::expectViolation(
+            fn() => $challenge->accept('player1'),
+            ChallengeException::class,
+            'cannot_accept_own_challenge'
+        );
     }
 
     #[Test]
     public function cannotAcceptAlreadyAcceptedChallenge(): void
     {
-        $this->expectException(ChallengeException::class);
-
         $challenge = $this->createOpenChallenge('player1');
         $challenge->accept('player2');
 
-        $challenge->accept('another-player2');
+        DomainAssert::expectViolation(
+            fn() => $challenge->accept('another-player2'),
+            ChallengeException::class,
+            'challenge_already_closed'
+        );
     }
 
     #[Test]
     public function cannotAcceptWithdrawnChallenge(): void
     {
-        $this->expectException(ChallengeException::class);
-
         $challenge = $this->createOpenChallenge('player1');
         $challenge->withdraw('player1');
 
-        $challenge->accept('player2');
+        DomainAssert::expectViolation(
+            fn() => $challenge->accept('player2'),
+            ChallengeException::class,
+            'challenge_already_closed'
+        );
     }
 
     private function createOpenChallenge(string $challengerId): Challenge
