@@ -11,14 +11,14 @@ use PHPUnit\Framework\Assert;
 final class DomainAssert
 {
     /**
-     * @param array<string, bool|int|float|string> $expectedParameters
      * @param class-string<DomainException> $expectedException
+     * @param array<string, bool|int|float|string> $expectedParameters
      */
     public static function expectViolation(
         Closure $action,
+        string $expectedException,
         string $expectedIdentifier,
-        array $expectedParameters = [],
-        string $expectedException = DomainException::class
+        array $expectedParameters = []
     ): void {
         try {
             $action();

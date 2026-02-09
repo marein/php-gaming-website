@@ -54,9 +54,9 @@ Remove unused code introduced by changes (classes, methods, config, assets) unle
 - Unit tests mirror the `src/` structure in `tests/unit/`
 - Use PHPUnit attributes: `#[Test]`
 - Test namespace: `Gaming\Tests\Unit\{Context}\...`
-- For domain exceptions, assert via `DomainAssert::expectViolation` with the expected identifier,
-  violation parameters as `['name' => value]`, and optionally the concrete exception class.
-  Use `expectException` only for non-domain exceptions.
+- For domain exceptions, assert via `DomainAssert::expectViolation` with the expected exception
+  class, identifier, and optional violation parameters as `['name' => value]` (omit the
+  parameters argument when empty). Use `expectException` only for non-domain exceptions.
 - The closure passed to `DomainAssert::expectViolation` must contain only the single action that
   triggers the exception. All setup (creating objects, calling prior methods) belongs before the call.
 
