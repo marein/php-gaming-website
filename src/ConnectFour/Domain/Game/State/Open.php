@@ -9,8 +9,7 @@ use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Configuration;
 use Gaming\ConnectFour\Domain\Game\Event\GameAborted;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerJoined;
-use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
-use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class Open implements State
@@ -56,7 +55,7 @@ final class Open implements State
     public function abort(GameId $gameId, string $playerId): Transition
     {
         if ($this->playerId !== $playerId) {
-            throw new PlayerNotOwnerException();
+            throw GameException::playerNotOwner();
         }
 
         return new Transition(
@@ -72,7 +71,7 @@ final class Open implements State
 
     public function resign(GameId $gameId, string $playerId): Transition
     {
-        throw new GameNotRunningException();
+        throw GameException::notRunning();
     }
 
     public function move(
@@ -81,11 +80,11 @@ final class Open implements State
         int $column,
         DateTimeImmutable $now = new DateTimeImmutable()
     ): Transition {
-        throw new GameNotRunningException();
+        throw GameException::notRunning();
     }
 
     public function timeout(GameId $gameId, DateTimeImmutable $now = new DateTimeImmutable()): Transition
     {
-        throw new GameNotRunningException();
+        throw GameException::notRunning();
     }
 }

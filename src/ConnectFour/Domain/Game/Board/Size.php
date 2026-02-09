@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Board;
 
-use Gaming\ConnectFour\Domain\Game\Exception\InvalidSizeException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 
 final class Size
 {
@@ -13,16 +13,16 @@ final class Size
     private int $height;
 
     /**
-     * @throws InvalidSizeException
+     * @throws GameException
      */
     public function __construct(int $width, int $height)
     {
         if ($width < 2 || $height < 2) {
-            throw InvalidSizeException::tooSmall($width, $height);
+            throw GameException::invalidSizeTooSmall($width, $height);
         }
 
         if (($width * $height) % 2 !== 0) {
-            throw InvalidSizeException::productNotEven($width, $height);
+            throw GameException::invalidSizeNotEven($width, $height);
         }
 
         $this->height = $height;

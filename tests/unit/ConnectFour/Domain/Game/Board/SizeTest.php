@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 
 use Codeception\Attribute\DataProvider;
+use Gaming\Common\Domain\Test\DomainAssert;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
-use Gaming\ConnectFour\Domain\Game\Exception\InvalidSizeException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -34,22 +35,25 @@ class SizeTest extends TestCase
 
     #[Test]
     #[DataProvider('wrongSizeProvider')]
-    public function itShouldThrowAnExceptionOnInvalidSizes(int $width, int $height): void
+    public function itShouldThrowAnExceptionOnInvalidSizes(int $width, int $height, string $expectedIdentifier): void
     {
-        $this->expectException(InvalidSizeException::class);
-
-        new Size($width, $height);
+        DomainAssert::expectViolation(
+            fn() => new Size($width, $height),
+            GameException::class,
+            $expectedIdentifier,
+            ['width' => $width, 'height' => $height]
+        );
     }
 
     public function wrongSizeProvider(): array
     {
         return [
-            [3, 3],
-            [5, 5],
-            [-1, 3],
-            [2, -3],
-            [-1, -3],
-            [1, 1]
+            [3, 3, 'invalid_size.not_even'],
+            [5, 5, 'invalid_size.not_even'],
+            [-1, 3, 'invalid_size.too_small'],
+            [2, -3, 'invalid_size.too_small'],
+            [-1, -3, 'invalid_size.too_small'],
+            [1, 1, 'invalid_size.too_small']
         ];
     }
 }

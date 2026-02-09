@@ -9,7 +9,7 @@ use Gaming\Common\Timer\GameTimer;
 use Gaming\Common\Timer\Timer;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
-use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
 
 final class Configuration
@@ -45,7 +45,7 @@ final class Configuration
     }
 
     /**
-     * @throws PlayersNotUniqueException
+     * @throws GameException
      */
     public function createPlayers(
         string $playerId,

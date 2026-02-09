@@ -14,7 +14,7 @@ use Gaming\Common\Normalizer\Normalizer;
 use Gaming\Common\Sharding\Shards;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game as GameQueryModel;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
-use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 use Gaming\ConnectFour\Domain\Game\Game;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Games;
@@ -66,7 +66,7 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
                 'SELECT * FROM ' . $this->tableName . ' g WHERE g.id = ?',
                 [$id],
                 ['uuid']
-            ) ?: throw new GameNotFoundException();
+            ) ?: throw GameException::notFound();
 
             $game = $this->denormalizeGame($row['aggregate']);
             $operation($game);
@@ -93,7 +93,7 @@ final class DoctrineJsonGameRepository implements Games, GameFinder
 
         $domainEvents = $this->eventStore->withConnection($connection)->byStreamId(
             $gameId->toString()
-        ) ?: throw new GameNotFoundException();
+        ) ?: throw GameException::notFound();
 
         $game = new GameQueryModel();
         foreach ($domainEvents as $domainEvent) {

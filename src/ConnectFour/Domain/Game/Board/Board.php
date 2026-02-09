@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\ConnectFour\Domain\Game\Board;
 
-use Gaming\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
-use Gaming\ConnectFour\Domain\Game\Exception\OutOfSizeException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 
 final class Board
 {
@@ -45,8 +44,7 @@ final class Board
     }
 
     /**
-     * @throws ColumnAlreadyFilledException
-     * @throws OutOfSizeException
+     * @throws GameException
      */
     public function dropStone(Stone $stone, int $column): Board
     {
@@ -61,13 +59,12 @@ final class Board
     }
 
     /**
-     * @throws ColumnAlreadyFilledException
-     * @throws OutOfSizeException
+     * @throws GameException
      */
     private function findPositionOfFirstEmptyFieldInColumn(int $column): int
     {
         if ($column < 1 || $column > $this->size->width()) {
-            throw new OutOfSizeException();
+            throw GameException::outOfSize();
         }
 
         $reversedFields = array_reverse($this->fields, true);
@@ -78,7 +75,7 @@ final class Board
             }
         }
 
-        throw new ColumnAlreadyFilledException();
+        throw GameException::columnAlreadyFilled();
     }
 
     /**

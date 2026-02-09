@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\WinningRule;
 
+use Gaming\Common\Domain\Test\DomainAssert;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
-use Gaming\ConnectFour\Domain\Game\Exception\WinningSequenceLengthTooShortException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 use Gaming\ConnectFour\Domain\Game\WinningRule\VerticalWinningRule;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
 use PHPUnit\Framework\Attributes\Test;
@@ -19,9 +20,12 @@ class VerticalWinningRuleTest extends TestCase
     #[Test]
     public function itShouldThrowIfWinningSequenceLengthIsTooShort(): void
     {
-        $this->expectException(WinningSequenceLengthTooShortException::class);
-
-        new VerticalWinningRule(3);
+        DomainAssert::expectViolation(
+            fn() => new VerticalWinningRule(3),
+            GameException::class,
+            'winning_sequence_length_too_short',
+            ['min' => 4, 'value' => 3]
+        );
     }
 
     #[Test]

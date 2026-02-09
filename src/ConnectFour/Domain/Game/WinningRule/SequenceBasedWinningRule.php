@@ -7,20 +7,20 @@ namespace Gaming\ConnectFour\Domain\Game\WinningRule;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
-use Gaming\ConnectFour\Domain\Game\Exception\WinningSequenceLengthTooShortException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameException;
 
 abstract class SequenceBasedWinningRule implements WinningRule
 {
     private const int MINIMUM = 4;
 
     /**
-     * @throws WinningSequenceLengthTooShortException
+     * @throws GameException
      */
     public function __construct(
         private readonly int $winningSequenceLength
     ) {
         if ($winningSequenceLength < self::MINIMUM) {
-            throw new WinningSequenceLengthTooShortException(self::MINIMUM, $winningSequenceLength);
+            throw GameException::winningSequenceLengthTooShort(self::MINIMUM, $winningSequenceLength);
         }
     }
 
