@@ -14,7 +14,7 @@ use Gaming\TicTacToe\Domain\Game\Token;
 final class OpenHandler
 {
     public function __construct(
-        public readonly Challenges $challenges
+        private readonly Challenges $challenges
     ) {
     }
 

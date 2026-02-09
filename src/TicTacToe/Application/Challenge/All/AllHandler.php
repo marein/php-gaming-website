@@ -9,7 +9,7 @@ use Gaming\TicTacToe\Application\Model\OpenChallenges\OpenChallengesStore;
 final class AllHandler
 {
     public function __construct(
-        public readonly OpenChallengesStore $openChallengesStore
+        private readonly OpenChallengesStore $openChallengesStore
     ) {
     }
 

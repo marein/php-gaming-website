@@ -11,7 +11,7 @@ use Gaming\TicTacToe\Domain\Challenge\Challenges;
 final class AcceptHandler
 {
     public function __construct(
-        public readonly Challenges $challenges
+        private readonly Challenges $challenges
     ) {
     }
 

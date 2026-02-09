@@ -12,7 +12,7 @@ use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeNotFoundException;
 final class GetByIdHandler
 {
     public function __construct(
-        public readonly EventStore $eventStore
+        private readonly EventStore $eventStore
     ) {
     }
 
