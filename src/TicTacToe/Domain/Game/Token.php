@@ -11,6 +11,6 @@ enum Token: int
 
     public static function random(): self
     {
-        return self::from(rand(1, 2));
+        return self::from(random_int(1, 2));
     }
 }

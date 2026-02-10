@@ -40,7 +40,7 @@ customElements.define('tic-tac-toe-animated-game', class extends HTMLElement {
                 e.classList.remove('gp-ttt-game__field--highlight', 'gp-ttt-game__field--current')
             });
             moveElement.classList.add('gp-ttt-game__field--highlight', 'gp-ttt-game__field--current');
-            this.querySelector('[data-move="' + moveElement.dataset.move + '"]').replaceWith(moveElement);
+            this.querySelector('[data-move="' + moveElement.dataset.move + '"]')?.replaceWith(moveElement);
 
             const isLastMove = i === this.#moveElements.length - 1;
             isLastMove && this.#showFinalState();
@@ -64,7 +64,7 @@ customElements.define('tic-tac-toe-animated-game', class extends HTMLElement {
             const clone = this.#plainElement.cloneNode();
             clone.dataset.move = e.dataset.move;
             if (e.hasAttribute('data-win')) clone.dataset.win = e.dataset.win;
-            this.querySelector('[data-move="' + e.dataset.move + '"]').replaceWith(clone);
+            this.querySelector('[data-move="' + e.dataset.move + '"]')?.replaceWith(clone);
         });
     }
 
@@ -73,8 +73,7 @@ customElements.define('tic-tac-toe-animated-game', class extends HTMLElement {
             e.classList.remove('gp-ttt-game__field--highlight', 'gp-ttt-game__field--current');
             k === this.#moveElements.length - 1 && e.classList.add('gp-ttt-game__field--current');
             e.hasAttribute('data-win') && e.classList.add('gp-ttt-game__field--highlight');
-            this.querySelector('[data-move="' + e.dataset.move + '"]').replaceWith(e);
+            this.querySelector('[data-move="' + e.dataset.move + '"]')?.replaceWith(e);
         });
     }
 });
-
