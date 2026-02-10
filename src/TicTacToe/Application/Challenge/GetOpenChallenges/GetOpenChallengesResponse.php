@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Gaming\TicTacToe\Application\Challenge\All;
+namespace Gaming\TicTacToe\Application\Challenge\GetOpenChallenges;
 
 use Gaming\TicTacToe\Application\Model\OpenChallenges\OpenChallenge;
 
-final class AllResponse
+final class GetOpenChallengesResponse
 {
     /**
      * @param OpenChallenge[] $openChallenges

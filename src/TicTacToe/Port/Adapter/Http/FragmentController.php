@@ -6,7 +6,7 @@ namespace Gaming\TicTacToe\Port\Adapter\Http;
 
 use Gaming\Common\Bus\Bus;
 use Gaming\Common\Usernames\Usernames;
-use Gaming\TicTacToe\Application\Challenge\All\AllRequest;
+use Gaming\TicTacToe\Application\Challenge\GetOpenChallenges\GetOpenChallengesRequest;
 use Gaming\TicTacToe\Application\Model\OpenChallenges\OpenChallenge;
 use Gaming\TicTacToe\Port\Adapter\Http\Form\OpenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,7 +44,9 @@ final class FragmentController extends AbstractController
     public function openChallengesAction(): Response
     {
         return $this->render('@tic-tac-toe/open-challenges.html.twig', [
-            'openChallenges' => $openChallenges = $this->queryBus->handle(new AllRequest(100))->openChallenges,
+            'openChallenges' => $openChallenges = $this->queryBus->handle(
+                new GetOpenChallengesRequest(100)
+            )->openChallenges,
             'usernames' => $this->usernames->byIds(
                 array_map(
                     static fn(OpenChallenge $openChallenge): string => $openChallenge->challengerId,

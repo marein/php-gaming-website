@@ -19,7 +19,7 @@ services:
         arguments: ['@tic-tac-toe.challenge-repository']
         tags: [{ name: 'gaming_platform_bus.handler', bus: 'tic_tac_toe_command' }]
 
-    Gaming\TicTacToe\Application\Challenge\All\AllHandler:
+    Gaming\TicTacToe\Application\Challenge\GetOpenChallenges\GetOpenChallengesHandler:
         arguments: ['@tic-tac-toe.open-challenges-store']
         tags: [{ name: 'gaming_platform_bus.handler', bus: 'tic_tac_toe_query' }]
 
