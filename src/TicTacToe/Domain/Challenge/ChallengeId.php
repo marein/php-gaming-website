@@ -6,6 +6,7 @@ namespace Gaming\TicTacToe\Domain\Challenge;
 
 use Exception;
 use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeNotFoundException;
 use Symfony\Component\Uid\Uuid;
 
 final class ChallengeId
@@ -32,7 +33,7 @@ final class ChallengeId
         } catch (Exception) {
             // This occurs if the given string is an invalid Uuid, hence an invalid ChallengeId.
             // Throw exception, that the challenge can't be found.
-            throw ChallengeException::notFound();
+            throw new ChallengeNotFoundException();
         }
     }
 

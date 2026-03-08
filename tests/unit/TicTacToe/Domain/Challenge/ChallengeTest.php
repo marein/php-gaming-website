@@ -12,7 +12,9 @@ use Gaming\TicTacToe\Domain\Challenge\ChallengeId;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeAccepted;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeOpened;
 use Gaming\TicTacToe\Domain\Challenge\Event\ChallengeWithdrawn;
-use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\CannotAcceptOwnChallengeException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\ChallengeAlreadyClosedException;
+use Gaming\TicTacToe\Domain\Challenge\Exception\OnlyChallengerCanWithdrawException;
 use Gaming\TicTacToe\Domain\Game\Configuration;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -74,7 +76,7 @@ class ChallengeTest extends TestCase
 
         DomainAssert::expectViolation(
             fn() => $challenge->withdraw('player2'),
-            ChallengeException::class,
+            OnlyChallengerCanWithdrawException::class,
             'only_challenger_can_withdraw'
         );
     }
@@ -87,7 +89,7 @@ class ChallengeTest extends TestCase
 
         DomainAssert::expectViolation(
             fn() => $challenge->withdraw('player1'),
-            ChallengeException::class,
+            ChallengeAlreadyClosedException::class,
             'challenge_already_closed'
         );
     }
@@ -100,7 +102,7 @@ class ChallengeTest extends TestCase
 
         DomainAssert::expectViolation(
             fn() => $challenge->withdraw('player1'),
-            ChallengeException::class,
+            ChallengeAlreadyClosedException::class,
             'challenge_already_closed'
         );
     }
@@ -128,7 +130,7 @@ class ChallengeTest extends TestCase
 
         DomainAssert::expectViolation(
             fn() => $challenge->accept('player1'),
-            ChallengeException::class,
+            CannotAcceptOwnChallengeException::class,
             'cannot_accept_own_challenge'
         );
     }
@@ -141,7 +143,7 @@ class ChallengeTest extends TestCase
 
         DomainAssert::expectViolation(
             fn() => $challenge->accept('another-player2'),
-            ChallengeException::class,
+            ChallengeAlreadyClosedException::class,
             'challenge_already_closed'
         );
     }
@@ -154,7 +156,7 @@ class ChallengeTest extends TestCase
 
         DomainAssert::expectViolation(
             fn() => $challenge->accept('player2'),
-            ChallengeException::class,
+            ChallengeAlreadyClosedException::class,
             'challenge_already_closed'
         );
     }

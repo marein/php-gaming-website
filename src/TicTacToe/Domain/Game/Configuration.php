@@ -7,6 +7,7 @@ namespace Gaming\TicTacToe\Domain\Game;
 use Gaming\Common\Timer\MoveTimer;
 use Gaming\Common\Timer\Timer;
 use Gaming\TicTacToe\Domain\Game\Exception\GameException;
+use Gaming\TicTacToe\Domain\Game\Exception\SizeOutOfRangeException;
 
 final class Configuration
 {
@@ -19,7 +20,7 @@ final class Configuration
         public readonly Timer $timer
     ) {
         if ($size < 3 || $size > 9) {
-            throw GameException::sizeOutOfRange($size, 3, 9);
+            throw new SizeOutOfRangeException($size, 3, 9);
         }
     }
 
