@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\WinningRule;
 
+use Gaming\Common\Domain\Test\DomainAssert;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
@@ -19,9 +20,12 @@ class HorizontalWinningRuleTest extends TestCase
     #[Test]
     public function itShouldThrowIfWinningSequenceLengthIsTooShort(): void
     {
-        $this->expectException(WinningSequenceLengthTooShortException::class);
-
-        new HorizontalWinningRule(3);
+        DomainAssert::expectViolation(
+            fn() => new HorizontalWinningRule(3),
+            WinningSequenceLengthTooShortException::class,
+            'winning_sequence_length_too_short',
+            ['min' => 4, 'value' => 3]
+        );
     }
 
     #[Test]

@@ -24,28 +24,14 @@ boundaries between contexts.
 All services are explicitly wired in `config/` YAML files. There is no autowiring.
 
 ### Exceptions
-The context/aggregate base exception type (e.g., `ChallengeException`) must extend `DomainException`. Use named
-constructors on that base exception rather than individual exception classes:
-```php
-class ChallengeException extends DomainException
-{
-    public static function notFound(): self
-    {
-        return new self(new Violations(new Violation('challenge_not_found')));
-    }
+The context/aggregate base exception (for example `ChallengeException`) must be declared `abstract` and
+extend `DomainException`. Every distinct domain error must have its own dedicated `final` exception class
+that extends the context base. Each concrete exception must declare its own constructor and build
+`Violations`/`ViolationParameter` itself so error translation is always available.
 
-    public static function alreadyClosed(): self
-    {
-        return new self(new Violations(new Violation('challenge_already_closed')));
-    }
-}
-```
-When an exception is explicitly caught to drive alternate control flow, use a dedicated exception class that is
-`final` and extends the context base (e.g., `final class ChallengeNotFoundException extends ChallengeException`).
-These control-flow exception classes must declare their own constructor, and that constructor may accept scalar
-violation parameters to pass through, so the concrete type is always instantiated directly when needed.
-Each named constructor should instantiate `Violations`/`ViolationParameter` directly, following the example above.
-Every domain exception must populate `Violations` (and any parameters) so error translation is always available.
+When related errors share a conceptual group (e.g. multiple ways a value can fail the same validation), introduce
+an abstract exception class between the context base and the concrete finals. This enables a single `@throws`
+annotation and a shared catch type. The abstract class must not define a constructor.
 
 ### Cleanup
 Remove unused code introduced by changes (classes, methods, config, assets) unless explicitly asked to keep it.

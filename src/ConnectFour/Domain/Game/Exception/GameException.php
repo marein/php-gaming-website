@@ -6,6 +6,6 @@ namespace Gaming\ConnectFour\Domain\Game\Exception;
 
 use Gaming\Common\Domain\Exception\DomainException;
 
-class GameException extends DomainException
+abstract class GameException extends DomainException
 {
 }
