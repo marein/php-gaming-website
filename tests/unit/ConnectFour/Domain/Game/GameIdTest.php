@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 
 use Codeception\Attribute\DataProvider;
+use Gaming\Common\Domain\Test\DomainAssert;
 use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use PHPUnit\Framework\Attributes\Test;
@@ -44,9 +45,11 @@ class GameIdTest extends TestCase
     #[DataProvider('invalidStringProvider')]
     public function itShouldThrowGameNotFoundExceptionOnInvalidString(string $invalidString): void
     {
-        $this->expectException(GameNotFoundException::class);
-
-        GameId::fromString($invalidString);
+        DomainAssert::expectViolation(
+            fn() => GameId::fromString($invalidString),
+            GameNotFoundException::class,
+            'game_not_found'
+        );
     }
 
     /**

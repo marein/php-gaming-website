@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 
 use Codeception\Attribute\DataProvider;
+use Gaming\Common\Domain\Test\DomainAssert;
 use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
@@ -60,8 +61,6 @@ class BoardTest extends TestCase
     #[Test]
     public function aStoneCanNotBeDroppedWhenColumnAlreadyFilled(): void
     {
-        $this->expectException(ColumnAlreadyFilledException::class);
-
         $board = $this->createBoard();
 
         $boardWithStone = $board->dropStone(Stone::Red, 1);
@@ -70,17 +69,24 @@ class BoardTest extends TestCase
         $boardWithStone = $boardWithStone->dropStone(Stone::Yellow, 1);
         $boardWithStone = $boardWithStone->dropStone(Stone::Red, 1);
         $boardWithStone = $boardWithStone->dropStone(Stone::Red, 1);
-        $boardWithStone->dropStone(Stone::Yellow, 1);
+
+        DomainAssert::expectViolation(
+            fn() => $boardWithStone->dropStone(Stone::Yellow, 1),
+            ColumnAlreadyFilledException::class,
+            'column_already_filled'
+        );
     }
 
     #[Test]
     public function itShouldThrowExceptionIfGivenColumnIsOutOfSize(): void
     {
-        $this->expectException(OutOfSizeException::class);
-
         $board = $this->createBoard();
 
-        $board->dropStone(Stone::Red, 8);
+        DomainAssert::expectViolation(
+            fn() => $board->dropStone(Stone::Red, 8),
+            OutOfSizeException::class,
+            'out_of_size'
+        );
     }
 
     /**

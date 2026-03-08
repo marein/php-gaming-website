@@ -7,6 +7,7 @@ namespace Gaming\Tests\Unit\ConnectFour\Domain\Game;
 use Closure;
 use Codeception\Attribute\DataProvider;
 use DateTimeImmutable;
+use Gaming\Common\Domain\Test\DomainAssert;
 use Gaming\Common\Timer\MoveTimer;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
@@ -63,11 +64,13 @@ class GameTest extends TestCase
     #[Test]
     public function playerCanNotAbortAnOpenGameIfPlayerIsNotOwner(): void
     {
-        $this->expectException(PlayerNotOwnerException::class);
+        $game = $this->createOpenGame();
 
-        $this
-            ->createOpenGame()
-            ->abort('playerId3');
+        DomainAssert::expectViolation(
+            fn() => $game->abort('playerId3'),
+            PlayerNotOwnerException::class,
+            'player_not_owner'
+        );
     }
 
     #[Test]
@@ -89,22 +92,27 @@ class GameTest extends TestCase
     #[Test]
     public function samePlayerCanNotJoinAnOpenGame(): void
     {
-        $this->expectException(PlayersNotUniqueException::class);
+        $game = $this->createOpenGame();
 
-        $this
-            ->createOpenGame()
-            ->join('playerId1');
+        DomainAssert::expectViolation(
+            fn() => $game->join('playerId1'),
+            PlayersNotUniqueException::class,
+            'players_not_unique'
+        );
     }
 
     #[Test]
     public function playerCanNotMoveTwiceInARunningGame(): void
     {
-        $this->expectException(UnexpectedPlayerException::class);
-
         $game = $this->createRunningGame();
 
         $game->move('playerId1', 1);
-        $game->move('playerId1', 2);
+
+        DomainAssert::expectViolation(
+            fn() => $game->move('playerId1', 2),
+            UnexpectedPlayerException::class,
+            'unexpected_player'
+        );
     }
 
     #[Test]
@@ -128,24 +136,30 @@ class GameTest extends TestCase
     #[Test]
     public function playerCanNotResignARunningGameBeforeTheSecondMove(): void
     {
-        $this->expectException(GameNotRunningException::class);
-
         $game = $this->createRunningGame();
 
         $game->move('playerId1', 1);
-        $game->resign('playerId1');
+
+        DomainAssert::expectViolation(
+            fn() => $game->resign('playerId1'),
+            GameNotRunningException::class,
+            'game_not_running'
+        );
     }
 
     #[Test]
     public function playerCanNotResignARunningGameIfPlayerIsNotOwner(): void
     {
-        $this->expectException(PlayerNotOwnerException::class);
-
         $game = $this->createRunningGame();
 
         $game->move('playerId1', 1);
         $game->move('playerId2', 2);
-        $game->resign('playerId3');
+
+        DomainAssert::expectViolation(
+            fn() => $game->resign('playerId3'),
+            PlayerNotOwnerException::class,
+            'player_not_owner'
+        );
     }
 
     #[Test]
@@ -168,23 +182,28 @@ class GameTest extends TestCase
     #[Test]
     public function playerCanNotAbortARunningGameAfterTheSecondMove(): void
     {
-        $this->expectException(GameRunningException::class);
-
         $game = $this->createRunningGame();
 
         $game->move('playerId1', 1);
         $game->move('playerId2', 2);
-        $game->abort('playerId1');
+
+        DomainAssert::expectViolation(
+            fn() => $game->abort('playerId1'),
+            GameRunningException::class,
+            'game_already_running'
+        );
     }
 
     #[Test]
     public function playerCanNotAbortARunningGameIfPlayerIsNotOwner(): void
     {
-        $this->expectException(PlayerNotOwnerException::class);
-
         $game = $this->createRunningGame();
 
-        $game->abort('playerId3');
+        DomainAssert::expectViolation(
+            fn() => $game->abort('playerId3'),
+            PlayerNotOwnerException::class,
+            'player_not_owner'
+        );
     }
 
     #[Test]
@@ -240,44 +259,203 @@ class GameTest extends TestCase
 
     #[Test]
     #[DataProvider('unallowedTransitionsProvider')]
-    public function unallowedTransitions(Closure $prepare, string $exceptionClass): void
-    {
-        $this->expectException($exceptionClass);
-        $prepare();
+    public function unallowedTransitions(
+        Closure $prepare,
+        Closure $action,
+        string $exceptionClass,
+        string $exceptionIdentifier
+    ): void {
+        $game = $prepare();
+
+        DomainAssert::expectViolation(
+            fn() => $action($game),
+            $exceptionClass,
+            $exceptionIdentifier
+        );
     }
 
     public function unallowedTransitionsProvider(): iterable
     {
-        yield [fn() => $this->createOpenGame()->resign('playerId1'), GameNotRunningException::class];
-        yield [fn() => $this->createOpenGame()->move('playerId1', 1), GameNotRunningException::class];
-        yield [fn() => $this->createOpenGame()->timeout(), GameNotRunningException::class];
-        yield [fn() => $this->createRunningGame()->join('playerId2'), GameRunningException::class];
-        yield [fn() => $this->createRunningGame()->timeout(), NoTimeoutException::class];
-        yield [fn() => $this->createWonGame()->join('playerId2'), GameFinishedException::class];
-        yield [fn() => $this->createWonGame()->move('playerId1', 1), GameFinishedException::class];
-        yield [fn() => $this->createWonGame()->resign('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createWonGame()->abort('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createWonGame()->timeout(), GameFinishedException::class];
-        yield [fn() => $this->createResignedGame()->join('playerId2'), GameFinishedException::class];
-        yield [fn() => $this->createResignedGame()->move('playerId1', 1), GameFinishedException::class];
-        yield [fn() => $this->createResignedGame()->resign('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createResignedGame()->abort('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createResignedGame()->timeout(), GameFinishedException::class];
-        yield [fn() => $this->createDrawnGame()->join('playerId2'), GameFinishedException::class];
-        yield [fn() => $this->createDrawnGame()->move('playerId1', 1), GameFinishedException::class];
-        yield [fn() => $this->createDrawnGame()->resign('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createDrawnGame()->abort('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createDrawnGame()->timeout(), GameFinishedException::class];
-        yield [fn() => $this->createAbortedGame()->join('playerId2'), GameFinishedException::class];
-        yield [fn() => $this->createAbortedGame()->move('playerId1', 1), GameFinishedException::class];
-        yield [fn() => $this->createAbortedGame()->resign('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createAbortedGame()->abort('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createAbortedGame()->timeout(), GameFinishedException::class];
-        yield [fn() => $this->createTimedOutGame()->join('playerId2'), GameFinishedException::class];
-        yield [fn() => $this->createTimedOutGame()->move('playerId1', 1), GameFinishedException::class];
-        yield [fn() => $this->createTimedOutGame()->resign('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createTimedOutGame()->abort('playerId1'), GameFinishedException::class];
-        yield [fn() => $this->createTimedOutGame()->timeout(), GameFinishedException::class];
+        yield [
+            fn() => $this->createOpenGame(),
+            static fn(Game $game) => $game->resign('playerId1'),
+            GameNotRunningException::class,
+            'game_not_running'
+        ];
+        yield [
+            fn() => $this->createOpenGame(),
+            static fn(Game $game) => $game->move('playerId1', 1),
+            GameNotRunningException::class,
+            'game_not_running'
+        ];
+        yield [
+            fn() => $this->createOpenGame(),
+            static fn(Game $game) => $game->timeout(),
+            GameNotRunningException::class,
+            'game_not_running'
+        ];
+        yield [
+            fn() => $this->createRunningGame(),
+            static fn(Game $game) => $game->join('playerId2'),
+            GameRunningException::class,
+            'game_already_running'
+        ];
+        yield [
+            fn() => $this->createRunningGame(),
+            static fn(Game $game) => $game->timeout(),
+            NoTimeoutException::class,
+            'no_timeout'
+        ];
+        yield [
+            fn() => $this->createWonGame(),
+            static fn(Game $game) => $game->join('playerId2'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createWonGame(),
+            static fn(Game $game) => $game->move('playerId1', 1),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createWonGame(),
+            static fn(Game $game) => $game->resign('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createWonGame(),
+            static fn(Game $game) => $game->abort('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createWonGame(),
+            static fn(Game $game) => $game->timeout(),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createResignedGame(),
+            static fn(Game $game) => $game->join('playerId2'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createResignedGame(),
+            static fn(Game $game) => $game->move('playerId1', 1),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createResignedGame(),
+            static fn(Game $game) => $game->resign('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createResignedGame(),
+            static fn(Game $game) => $game->abort('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createResignedGame(),
+            static fn(Game $game) => $game->timeout(),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createDrawnGame(),
+            static fn(Game $game) => $game->join('playerId2'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createDrawnGame(),
+            static fn(Game $game) => $game->move('playerId1', 1),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createDrawnGame(),
+            static fn(Game $game) => $game->resign('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createDrawnGame(),
+            static fn(Game $game) => $game->abort('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createDrawnGame(),
+            static fn(Game $game) => $game->timeout(),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createAbortedGame(),
+            static fn(Game $game) => $game->join('playerId2'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createAbortedGame(),
+            static fn(Game $game) => $game->move('playerId1', 1),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createAbortedGame(),
+            static fn(Game $game) => $game->resign('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createAbortedGame(),
+            static fn(Game $game) => $game->abort('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createAbortedGame(),
+            static fn(Game $game) => $game->timeout(),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createTimedOutGame(),
+            static fn(Game $game) => $game->join('playerId2'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createTimedOutGame(),
+            static fn(Game $game) => $game->move('playerId1', 1),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createTimedOutGame(),
+            static fn(Game $game) => $game->resign('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createTimedOutGame(),
+            static fn(Game $game) => $game->abort('playerId1'),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
+        yield [
+            fn() => $this->createTimedOutGame(),
+            static fn(Game $game) => $game->timeout(),
+            GameFinishedException::class,
+            'game_already_finished'
+        ];
     }
 
     private function createOpenGame(): Game
