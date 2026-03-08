@@ -6,7 +6,7 @@ namespace Gaming\ConnectFour\Application\Game\Query;
 
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\Game;
 use Gaming\ConnectFour\Application\Game\Query\Model\Game\GameFinder;
-use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Gaming\ConnectFour\Domain\Game\GameId;
 
 final class GameHandler
@@ -19,7 +19,7 @@ final class GameHandler
     }
 
     /**
-     * @throws GameException
+     * @throws GameNotFoundException
      */
     public function __invoke(GameQuery $query): Game
     {

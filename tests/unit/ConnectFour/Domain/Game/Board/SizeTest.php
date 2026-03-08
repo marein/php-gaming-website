@@ -7,7 +7,8 @@ namespace Gaming\Tests\Unit\ConnectFour\Domain\Game\Board;
 use Codeception\Attribute\DataProvider;
 use Gaming\Common\Domain\Test\DomainAssert;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
-use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\Exception\SizeProductNotEvenException;
+use Gaming\ConnectFour\Domain\Game\Exception\SizeTooSmallException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -35,11 +36,15 @@ class SizeTest extends TestCase
 
     #[Test]
     #[DataProvider('wrongSizeProvider')]
-    public function itShouldThrowAnExceptionOnInvalidSizes(int $width, int $height, string $expectedIdentifier): void
-    {
+    public function itShouldThrowAnExceptionOnInvalidSizes(
+        int $width,
+        int $height,
+        string $expectedException,
+        string $expectedIdentifier
+    ): void {
         DomainAssert::expectViolation(
             fn() => new Size($width, $height),
-            GameException::class,
+            $expectedException,
             $expectedIdentifier,
             ['width' => $width, 'height' => $height]
         );
@@ -48,12 +53,12 @@ class SizeTest extends TestCase
     public function wrongSizeProvider(): array
     {
         return [
-            [3, 3, 'invalid_size.not_even'],
-            [5, 5, 'invalid_size.not_even'],
-            [-1, 3, 'invalid_size.too_small'],
-            [2, -3, 'invalid_size.too_small'],
-            [-1, -3, 'invalid_size.too_small'],
-            [1, 1, 'invalid_size.too_small']
+            [3, 3, SizeProductNotEvenException::class, 'invalid_size_not_even'],
+            [5, 5, SizeProductNotEvenException::class, 'invalid_size_not_even'],
+            [-1, 3, SizeTooSmallException::class, 'invalid_size_too_small'],
+            [2, -3, SizeTooSmallException::class, 'invalid_size_too_small'],
+            [-1, -3, SizeTooSmallException::class, 'invalid_size_too_small'],
+            [1, 1, SizeTooSmallException::class, 'invalid_size_too_small']
         ];
     }
 }

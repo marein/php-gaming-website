@@ -5,24 +5,25 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Domain\Game;
 
 use DateTimeImmutable;
-use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\Exception\PlayerNotOwnerException;
+use Gaming\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 
 final class Players
 {
     /**
-     * @throws GameException
+     * @throws PlayersNotUniqueException
      */
     private function __construct(
         private readonly Player $currentPlayer,
         private readonly Player $nextPlayer
     ) {
         if ($currentPlayer->id() === $nextPlayer->id()) {
-            throw GameException::playersNotUnique();
+            throw new PlayersNotUniqueException();
         }
     }
 
     /**
-     * @throws GameException
+     * @throws PlayersNotUniqueException
      */
     public static function start(
         Player $currentPlayer,
@@ -54,7 +55,7 @@ final class Players
     }
 
     /**
-     * @throws GameException
+     * @throws PlayerNotOwnerException
      */
     public function get(string $playerId): Player
     {
@@ -66,11 +67,11 @@ final class Players
             return $this->nextPlayer;
         }
 
-        throw GameException::playerNotOwner();
+        throw new PlayerNotOwnerException();
     }
 
     /**
-     * @throws GameException
+     * @throws PlayerNotOwnerException
      */
     public function opponentOf(string $playerId): Player
     {
@@ -82,6 +83,6 @@ final class Players
             return $this->currentPlayer;
         }
 
-        throw GameException::playerNotOwner();
+        throw new PlayerNotOwnerException();
     }
 }

@@ -9,7 +9,7 @@ use Gaming\ConnectFour\Domain\Game\Board\Board;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
-use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\Exception\WinningSequenceLengthTooShortException;
 use Gaming\ConnectFour\Domain\Game\WinningRule\DiagonalWinningRule;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningSequence;
 use PHPUnit\Framework\Attributes\Test;
@@ -22,7 +22,7 @@ class DiagonalWinningRuleTest extends TestCase
     {
         DomainAssert::expectViolation(
             fn() => new DiagonalWinningRule(3),
-            GameException::class,
+            WinningSequenceLengthTooShortException::class,
             'winning_sequence_length_too_short',
             ['min' => 4, 'value' => 3]
         );

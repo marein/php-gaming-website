@@ -7,12 +7,12 @@ namespace Gaming\ConnectFour\Domain\Game;
 use DateTimeImmutable;
 use Gaming\Common\Timer\Timer;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
-use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\Exception\PlayerHasInvalidStoneException;
 
 final class Player
 {
     /**
-     * @throws GameException
+     * @throws PlayerHasInvalidStoneException
      */
     public function __construct(
         private readonly string $playerId,
@@ -23,12 +23,12 @@ final class Player
     }
 
     /**
-     * @throws GameException
+     * @throws PlayerHasInvalidStoneException
      */
     private function guardPlayerHasCorrectStone(Stone $stone): void
     {
         if ($stone === Stone::None) {
-            throw GameException::playerHasInvalidStone();
+            throw new PlayerHasInvalidStoneException();
         }
     }
 

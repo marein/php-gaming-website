@@ -11,7 +11,8 @@ use Gaming\ConnectFour\Domain\Game\Board\Field;
 use Gaming\ConnectFour\Domain\Game\Board\Point;
 use Gaming\ConnectFour\Domain\Game\Board\Size;
 use Gaming\ConnectFour\Domain\Game\Board\Stone;
-use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
+use Gaming\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -71,7 +72,7 @@ class BoardTest extends TestCase
 
         DomainAssert::expectViolation(
             fn() => $boardWithStone->dropStone(Stone::Yellow, 1),
-            GameException::class,
+            ColumnAlreadyFilledException::class,
             'column_already_filled'
         );
     }
@@ -83,7 +84,7 @@ class BoardTest extends TestCase
 
         DomainAssert::expectViolation(
             fn() => $board->dropStone(Stone::Red, 8),
-            GameException::class,
+            OutOfSizeException::class,
             'out_of_size'
         );
     }

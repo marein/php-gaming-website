@@ -12,7 +12,10 @@ use Gaming\ConnectFour\Domain\Game\Event\GameResigned;
 use Gaming\ConnectFour\Domain\Game\Event\GameTimedOut;
 use Gaming\ConnectFour\Domain\Game\Event\GameWon;
 use Gaming\ConnectFour\Domain\Game\Event\PlayerMoved;
-use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameRunningException;
+use Gaming\ConnectFour\Domain\Game\Exception\NoTimeoutException;
+use Gaming\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Gaming\ConnectFour\Domain\Game\GameId;
 use Gaming\ConnectFour\Domain\Game\Players;
 use Gaming\ConnectFour\Domain\Game\WinningRule\WinningRules;
@@ -110,13 +113,13 @@ final class Running implements State
         string $playerId,
         DateTimeImmutable $now = new DateTimeImmutable()
     ): Transition {
-        throw GameException::alreadyRunning();
+        throw new GameRunningException();
     }
 
     public function abort(GameId $gameId, string $playerId): Transition
     {
         if (!$this->isAbortable()) {
-            throw GameException::alreadyRunning();
+            throw new GameRunningException();
         }
 
         return new Transition(
@@ -134,7 +137,7 @@ final class Running implements State
     public function resign(GameId $gameId, string $playerId): Transition
     {
         if ($this->isAbortable()) {
-            throw GameException::notRunning();
+            throw new GameNotRunningException();
         }
 
         return new Transition(
@@ -153,7 +156,7 @@ final class Running implements State
     {
         $currentPlayer = $this->players->current()->endTurn($now);
         if ($currentPlayer->remainingMs() > 0) {
-            throw GameException::noTimeout();
+            throw new NoTimeoutException();
         }
 
         if ($this->isAbortable()) {
@@ -180,12 +183,12 @@ final class Running implements State
     }
 
     /**
-     * @throws GameException
+     * @throws UnexpectedPlayerException
      */
     private function guardExpectedPlayer(string $playerId): void
     {
         if ($this->players->current()->id() !== $playerId) {
-            throw GameException::unexpectedPlayer();
+            throw new UnexpectedPlayerException();
         }
     }
 }

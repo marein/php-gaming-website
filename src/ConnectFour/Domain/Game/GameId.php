@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gaming\ConnectFour\Domain\Game;
 
 use Exception;
-use Gaming\ConnectFour\Domain\Game\Exception\GameException;
+use Gaming\ConnectFour\Domain\Game\Exception\GameNotFoundException;
 use Symfony\Component\Uid\Uuid;
 
 final class GameId
@@ -23,7 +23,7 @@ final class GameId
     }
 
     /**
-     * @throws GameException
+     * @throws GameNotFoundException
      */
     public static function fromString(string $gameId): GameId
     {
@@ -32,7 +32,7 @@ final class GameId
         } catch (Exception) {
             // This occurs if the given string is an invalid Uuid, hence an invalid GameId.
             // Throw exception, that the game can't be found.
-            throw GameException::notFound();
+            throw new GameNotFoundException();
         }
     }
 
