@@ -9,7 +9,7 @@ tic_tac_toe_open_challenge:
     controller: tic-tac-toe.challenge-controller::openAction
 
 tic_tac_toe_withdraw_challenge:
-    path: /tic-tac-toe/challenge/{id}/abort
+    path: /tic-tac-toe/challenge/{id}/withdraw
     methods: [POST]
     controller: tic-tac-toe.challenge-controller::withdrawAction
 

@@ -154,7 +154,7 @@ customElements.define('tic-tac-toe-challenges', class extends HTMLElement {
     _onUserArrived = event => {
         this._playerId = event.detail.userId;
 
-        this.querySelectorAll(`[data-player-id="${this._playerId}"]`)
+        this.querySelectorAll(`[data-challenger-id="${this._playerId}"]`)
             .forEach(challenge => challenge.classList.replace('table-light', 'table-success'));
     }
 

@@ -7,6 +7,11 @@ services:
         decorates: 'tic-tac-toe.command-bus'
         arguments: ['@.inner', '@tic-tac-toe.doctrine-dbal']
 
+    tic-tac-toe.retry-command-bus:
+        class: Gaming\Common\Bus\RetryBus
+        decorates: 'tic-tac-toe.command-bus'
+        arguments: ['@.inner', 3, 'Gaming\Common\Domain\Exception\ConcurrencyException']
+
     tic-tac-toe.validating-command-bus:
         class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
         decorates: 'tic-tac-toe.command-bus'
