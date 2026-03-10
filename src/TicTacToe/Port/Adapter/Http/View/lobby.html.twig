@@ -1,0 +1,25 @@
+{% extends '@tic-tac-toe/base.html.twig' %}
+
+{% set page_title = 'Lobby' %}
+
+{% block content %}
+    <div class="row row-cards">
+        <div class="col-lg-3 order-first">
+            <div class="card">
+                <div class="card-body">
+                    {{ render_ssi(controller('tic-tac-toe.fragment-controller::statisticsAction')) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            {{ render_ssi(controller('tic-tac-toe.fragment-controller::openChallengesAction')) }}
+        </div>
+        <div class="col-lg-3 order-first order-lg-last">
+            <div class="card">
+                <div class="card-body">
+                    {{ render_ssi(controller('tic-tac-toe.fragment-controller::openAction', {}, {wide: 1})) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

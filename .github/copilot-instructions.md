@@ -18,6 +18,10 @@ The UI is composed using SSI (Server Side Includes) and Custom Elements. SSI ren
 different contexts into a page. Custom Elements encapsulate client-side behavior. Both serve as transclusion
 boundaries between contexts.
 
+### CSRF Protection
+CSRF protection is handled globally by `marein/symfony-standard-headers-csrf-bundle`. It validates Origin/Referer
+headers on all unsafe requests at the kernel level. No per-route or per-form CSRF tokens are needed.
+
 ## Conventions
 
 ### Wiring

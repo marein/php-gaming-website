@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "${APP_TIC_TAC_TOE_RUN_MIGRATIONS}" = "1" ] || [ "${APP_RUN_MIGRATIONS}" = "1" ]
+then
+    bin/console doctrine:database:create \
+        --connection=tic_tac_toe \
+        --if-not-exists
+    bin/console doctrine:migrations:migrate \
+        --configuration=config/tic-tac-toe/migrations.yml \
+        --conn=tic_tac_toe \
+        --allow-no-migration \
+        --no-interaction
+fi

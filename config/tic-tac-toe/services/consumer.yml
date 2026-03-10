@@ -1,0 +1,17 @@
+services:
+    tic-tac-toe.publish-to-browser-message-handler.topology:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\QueueTopology
+        arguments: ['TicTacToe.BrowserNotification', 'gaming', ['TicTacToe.#']]
+        tags: [{ name: 'gaming.message-broker.topology' }]
+
+    tic-tac-toe.publish-to-browser-message-handler.consumer:
+        class: Gaming\Common\MessageBroker\Integration\AmqpLib\AmqpConsumer
+        factory: ['@gaming.message-broker.amqp-consumer-factory', 'create']
+        arguments:
+            - !service
+                class: Gaming\TicTacToe\Port\Adapter\Messaging\PublishMessageBrokerEventsToBrowserMessageHandler
+                arguments: ['@gaming.browser-notifier', '@gaming.usernames']
+            - !service
+                class: Gaming\Common\MessageBroker\Integration\AmqpLib\QueueConsumer\ConsumeQueues
+                arguments: ['@tic-tac-toe.publish-to-browser-message-handler.topology']
+        tags: [{ name: 'gaming.consumer', key: 'tic-tac-toe.publish-to-browser' }]

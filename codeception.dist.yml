@@ -24,4 +24,5 @@ coverage:
         - src/ConnectFour/Domain/*
         - src/Identity/Domain/*
         - src/Memory/Domain/*
+        - src/TicTacToe/Domain/*
         - src/Chat/Application/*

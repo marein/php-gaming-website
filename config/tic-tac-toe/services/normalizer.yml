@@ -1,0 +1,13 @@
+services:
+    tic-tac-toe.jms:
+        class: JMS\Serializer\Serializer
+        factory: ['Gaming\Common\JmsSerializer\JmsSerializerFactory', 'create']
+        arguments:
+            - '%kernel.debug%'
+            - '%kernel.cache_dir%/tic-tac-toe/jms'
+            - { 'Gaming': '%kernel.project_dir%/src/TicTacToe/Port/Adapter/Persistence/Jms' }
+            - !tagged_iterator tic-tac-toe.jms.subscriber
+
+    tic-tac-toe.normalizer:
+        class: Gaming\Common\Normalizer\Integration\JmsSerializerNormalizer
+        arguments: ['@tic-tac-toe.jms']

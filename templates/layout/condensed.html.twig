@@ -20,12 +20,15 @@
                             <label for="game-picker" class="btn btn-outline-secondary dropdown-toggle">
                                 {% if app.request.attributes.get('_route') starts with 'connect_four_' %}
                                     Connect Four
+                                {% elseif app.request.attributes.get('_route') starts with 'tic_tac_toe_' %}
+                                    Tic Tac Toe
                                 {% else %}
                                     Pick a Game
                                 {% endif %}
                             </label>
                             <div class="dropdown-menu dropdown-menu-start dropdown-menu-arrow" data-bs-popper>
                                 <a href="{{ path('connect_four_lobby') }}" class="dropdown-item">Connect Four</a>
+                                <a href="{{ path('tic_tac_toe_lobby') }}" class="dropdown-item">Tic Tac Toe</a>
                             </div>
                         </div>
                     </div>

@@ -1,0 +1,8 @@
+services:
+    tic-tac-toe.query-bus:
+        alias: gaming_platform_bus.tic_tac_toe_query
+
+    tic-tac-toe.validating-query-bus:
+        class: Gaming\Common\Bus\Integration\SymfonyValidatorBus
+        decorates: 'tic-tac-toe.query-bus'
+        arguments: ['@.inner', '@validator']

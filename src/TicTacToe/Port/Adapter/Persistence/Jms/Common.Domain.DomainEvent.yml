@@ -1,0 +1,7 @@
+Gaming\Common\Domain\DomainEvent:
+  discriminator:
+    field_name: '#'
+    map:
+      ChallengeAccepted: Gaming\TicTacToe\Domain\Challenge\Event\ChallengeAccepted
+      ChallengeOpened: Gaming\TicTacToe\Domain\Challenge\Event\ChallengeOpened
+      ChallengeWithdrawn: Gaming\TicTacToe\Domain\Challenge\Event\ChallengeWithdrawn
