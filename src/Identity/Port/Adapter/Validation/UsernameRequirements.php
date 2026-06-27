@@ -12,13 +12,16 @@ use Symfony\Component\Validator\Constraints\Regex;
 #[Attribute]
 final class UsernameRequirements extends Compound
 {
-    public bool $withBotRestriction = true;
+    public function __construct(
+        public bool $withBotRestriction = true
+    ) {
+        parent::__construct();
+    }
 
     protected function getConstraints(array $options): array
     {
         $constraints = [
-            // Cannot access property directly, because Symfony sets it after the getConstraints call.
-            !isset($options['withBotRestriction']) || $options['withBotRestriction']
+            $this->withBotRestriction
                 ? new Regex('/(b|8)+_*(o|0)+_*(t|7|4)+_*/i', 'The username {{ value }} is reserved.', match: false)
                 : null,
             new Length(min: 3, max: 20),

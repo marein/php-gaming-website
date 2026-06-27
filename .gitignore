@@ -2,6 +2,7 @@
 /codeception.yml
 /phpcs.xml
 /phpstan.neon
+/config/reference.php
 /tests/acceptance.suite.yml
 /tests/unit.suite.yml
 /vendor

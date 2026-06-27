@@ -18,16 +18,16 @@
         If you don't see the email, check your spam folder or
         <a href="{{ path('identity_login') }}">click here to try again</a>.
     </p>
-    {% if app.request.get('loginUrl') %}
+    {% if app.request.query.get('loginUrl') %}
         <p class="text-danger text-center fw-bolder">
             No email has been sent because this feature is still in development,
-            <a href="{{ app.request.get('loginUrl') }}">click here</a> to login.
+            <a href="{{ app.request.query.get('loginUrl') }}">click here</a> to login.
         </p>
     {% endif %}
-    {% if app.request.get('signupUrl') %}
+    {% if app.request.query.get('signupUrl') %}
         <p class="text-danger text-center fw-bolder">
             No email has been sent because this feature is still in development,
-            <a href="{{ app.request.get('signupUrl') }}">click here</a> to sign up.
+            <a href="{{ app.request.query.get('signupUrl') }}">click here</a> to sign up.
         </p>
     {% endif %}
 {% endblock %}

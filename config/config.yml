@@ -56,7 +56,7 @@ services:
 
     gaming.message-broker.topology:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\Topology\CompositeTopology
-        arguments: [!tagged { tag: 'gaming.message-broker.topology' }]
+        arguments: [!tagged_iterator { tag: 'gaming.message-broker.topology' }]
 
     gaming.message-broker.message-translator:
         class: Gaming\Common\MessageBroker\Integration\AmqpLib\MessageTranslator\ConfigurableMessageTranslator

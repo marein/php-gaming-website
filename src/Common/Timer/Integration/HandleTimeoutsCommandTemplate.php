@@ -37,7 +37,7 @@ abstract class HandleTimeoutsCommandTemplate extends Command
 
     abstract protected function handleTimeout(string $timeoutId): void;
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->addOption(

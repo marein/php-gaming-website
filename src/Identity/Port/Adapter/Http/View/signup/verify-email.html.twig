@@ -17,10 +17,10 @@
     <p class="text-center">
         We've sent a verification link to your inbox. Click the link in the email to complete your signup.
         If you don't see the email, check your spam folder or
-        <a href="{{ path('identity_signup', {'username': app.request.get('username')}) }}">click here to try again</a>.
+        <a href="{{ path('identity_signup', {'username': app.request.query.get('username')}) }}">click here to try again</a>.
     </p>
     <p class="text-danger text-center fw-bolder">
         No email has been sent because this feature is still in development,
-        <a href="{{ app.request.get('confirmUrl', '/') }}">click here</a> to continue.
+        <a href="{{ app.request.query.get('confirmUrl', '/') }}">click here</a> to continue.
     </p>
 {% endblock %}

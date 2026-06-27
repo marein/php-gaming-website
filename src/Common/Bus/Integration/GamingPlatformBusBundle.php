@@ -19,11 +19,6 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service_l
 
 final class GamingPlatformBusBundle extends AbstractBundle implements CompilerPassInterface
 {
-    public function build(ContainerBuilder $container): void
-    {
-        $container->addCompilerPass($this);
-    }
-
     public function configure(DefinitionConfigurator $definition): void
     {
         $definition->rootNode()

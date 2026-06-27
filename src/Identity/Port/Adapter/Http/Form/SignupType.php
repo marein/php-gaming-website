@@ -16,7 +16,7 @@ final class SignupType extends AbstractType
     /**
      * @param array{confirm: bool} $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('email', EmailType::class, [
@@ -52,7 +52,7 @@ final class SignupType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['confirm' => false, 'attr' => ['id' => 'signup-form']]);
     }
