@@ -1,0 +1,15 @@
+{{ include('@!WebProfiler/Profiler/toolbar_js.html.twig') }}
+<script>
+    document.head.append(document.querySelector('body > link[href="{{ url('_wdt_stylesheet') }}"]'));
+
+    document.addEventListener('htmx:before:swap', e => {
+        if (e.detail.ctx.target !== document.body) return;
+
+        document.querySelectorAll('body > .sf-toolbar').forEach(toolbar => document.documentElement.append(toolbar));
+    });
+    document.addEventListener('htmx:after:swap', e => {
+        if (e.detail.ctx.target !== document.body) return;
+
+        document.querySelectorAll('html > .sf-toolbar').forEach(toolbar => document.body.append(toolbar));
+    });
+</script>

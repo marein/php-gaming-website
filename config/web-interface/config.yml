@@ -11,6 +11,8 @@ framework:
 
 twig:
     paths: { '%kernel.project_dir%/src/WebInterface/Presentation/Http/View': web-interface }
+    globals:
+        asset_version: '@Gaming\WebInterface\Infrastructure\Symfony\AssetVersion'
 
 security:
     providers:
@@ -31,8 +33,3 @@ security:
     access_control:
         - { path: '^/metrics', roles: PUBLIC_ACCESS, ips: ['%env(APP_METRICS_TRUSTED_IPS)%'] }
         - { path: '^/metrics', roles: ROLE_NO_ACCESS }
-
-when@dev:
-    services:
-        Gaming\WebInterface\Infrastructure\Symfony\ReplaceSymfonyToolbar:
-            tags: [{ name: kernel.event_listener, event: kernel.response }]

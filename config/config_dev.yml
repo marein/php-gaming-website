@@ -7,7 +7,9 @@ framework:
         resource: '%kernel.project_dir%/config/routing_dev.yml'
 
 web_profiler:
-    toolbar: true
+    toolbar:
+        enabled: true
+        ajax_replace: true
 
 monolog:
     handlers:
