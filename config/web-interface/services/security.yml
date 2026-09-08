@@ -6,3 +6,7 @@ services:
     web-interface.security.user_provider:
         class: Gaming\WebInterface\Infrastructure\Security\UserProvider
         arguments: ['@identity.query-bus', '@clock']
+
+    web-interface.security.redirect-to-login:
+        class: Gaming\WebInterface\Infrastructure\Security\RedirectToLogin
+        arguments: ['@router', 'identity_login', '@security.token_storage']

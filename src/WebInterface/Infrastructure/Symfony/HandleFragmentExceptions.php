@@ -25,10 +25,12 @@ final class HandleFragmentExceptions
 
         $event->setResponse(
             new Response(
-                '<pe-include src="' . $event->getRequest()->getRequestUri() . '"
-                             delay="' . rand($this->minDelay, $this->maxDelay) . '">
+                '<div hx-get="' . $event->getRequest()->getRequestUri() . '"
+                      hx-trigger="load delay:' . rand($this->minDelay, $this->maxDelay) . 'ms"
+                      hx-swap="outerHTML"
+                      hx-sync="">
                     <span class="spinner-border spinner-border-sm" role="status"></span>
-                </pe-include>',
+                </div>',
                 match (true) {
                     $event->getThrowable() instanceof HttpException => $event->getThrowable()->getStatusCode(),
                     default => Response::HTTP_INTERNAL_SERVER_ERROR
